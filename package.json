@@ -1,0 +1,14 @@
+{
+  "name": "eosdac-filler",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "<michael@eosdac.io>",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.19.0",
+    "eosjs": "./eosjs",
+    "node-fetch": "^2.2.0",
+    "text-encoding": "^0.6.4",
+    "ws": "^6.0.0"
+  }
+}
