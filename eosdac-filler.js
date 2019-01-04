@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const config = require("./config")
 
 const commander = require('commander');
 const { Api, JsonRpc } = require('eosjs');
@@ -8,39 +9,29 @@ const fetch = require('node-fetch');
 
 const { Connection } = require("./connection")
 
+var kue = require('kue')
+const cluster = require('cluster')
+
 let rpc;
 const signatureProvider = null;
-const chainId = "e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473";
 
 
-// const abiTypes = Serialize.getTypesFromAbi(Serialize.createInitialTypes(), abiAbi);
-
-const MongoLong = require('mongodb').Long;
 const MongoClient = require('mongodb').MongoClient;
 
 
-const url = 'mongodb://localhost:27017';
-const dbName = 'eosdac';
-const traceCollection = 'traces';
-const stateCollection = 'states';
-
-
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function toJsonNoBin(x) {
-    return JSON.stringify(x, (k, v) => {
-        if (v instanceof Uint8Array)
-            return "...";
-        return v;
-    }, 4)
-}
 
 class FillAPI {
-    constructor({ startBlock = 0, endBlock = 0xffffffff, chain = 'jungle', irreversibleOnly = false, replay = false }) {
+    constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false }) {
         let socketAddress
-        switch (chain){
+
+        this.config = require(`./${config}.config`)
+        this.config_name = config
+
+        socketAddress = this.config.eos.wsEndpoint
+        this.contracts = this.config.eos.contracts
+        rpc = new JsonRpc(this.config.eos.endpoint, { fetch });
+
+        /*switch (chain){
             case 'jungle':
                 socketAddress = 'ws://jungle.eosdac.io:8080';
                 this.contracts = ['kasdactokens', 'dacelections', 'eosdacdoshhq', 'dacmultisigs'];
@@ -51,32 +42,42 @@ class FillAPI {
                 this.contracts = ['eosdactokens', 'daccustodian', 'eosdacthedac', 'dacmultisigs'];
                 rpc = new JsonRpc("https://eu.eosdac.io", { fetch });
                 break;
-        }
+        }*/
 
         console.log(this.contracts)
 
         this.api = new Api({
-            rpc, signatureProvider, chainId, textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
+            rpc, signatureProvider, chainId:this.config.chainId, textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
         });
 
-        this.chain = chain
-        this.trace_collection = traceCollection + '_' + chain
-        this.state_collection = stateCollection + '_' + chain
+        this.trace_collection = this.config.mongo.traceCollection + '_' + config
+        this.state_collection = this.config.mongo.stateCollection + '_' + config
 
         this.head_block = 0;
 
+        this.queue = kue.createQueue({
+            prefix: 'q',
+            redis: this.config.redis
+        })
+
+        console.log("Starting Kue admin interface")
+
+        kue.app.listen(3000)
+
+        console.log("Connecting to Mongo")
+
         const self = this;
-        MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
+        MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, function(err, client) {
             if (err){
                 console.error("\nFailed to connect\n", err)
             }
             else if (client){
-                self.db = client.db(dbName);
+                self.db = client.db(self.config.mongo.dbName);
 
                 self.connection = new Connection({
                     socketAddress,
                     receivedAbi: async () => {
-                        if (!replay) {
+                        if (!replay && startBlock == 0) {
                             console.log("Checking head block to continue")
                             const state_col = self.db.collection(self.state_collection);
                             let hb_data = await state_col.findOne({name: 'head_block'})
@@ -115,58 +116,39 @@ class FillAPI {
         }
     }
 
-    interested(account, name){
-        if (this.contracts.includes(account) || (account == 'eosio' && ['linkauth', 'unlinkauth'].includes(name))){
-            return true
-        }
-
-        return false;
-    }
 
     async handleFork(block_num){
         const col = this.db.collection(this.trace_collection)
         return col.deleteMany({block_num:{$gte:block_num}})
     }
 
-    async handleAction(block_num, action){
-        try {
-            // console.log(action);
-            // do not include receipt handlers
-            if (this.interested(action.act.account, action.act.name) && action.receipt[1].receiver == action.act.account){
-                //console.log("action\n", action);
-                let actions = [];
-                actions.push(action.act)
-                this.api.deserializeActions(actions)
-                    .then(act => {
-                        for (let action_data of act){
-                            const col = this.db.collection(this.trace_collection);
-                            action_data.recv_sequence = new MongoLong.fromString(action.receipt[1].recv_sequence)
-                            action_data.global_sequence = new MongoLong.fromString(action.receipt[1].global_sequence)
-                            let doc = {block_num, action:action_data}
-                            // console.log("ACT\n", act, "INSERT\n", doc, "\nACTION RECEIPT\n", action.receipt);
-                            console.log("\nINSERT\n", doc);
-                            col.updateOne({block_num}, {$addToSet:{actions:action_data}}, {upsert:true}).catch(console.log);
-                        }
-                    })
-                    .catch(e => {
-                        console.log("ERROR deserializeActions", e);
-                    });
-            }
+    async queueAction(block_num, action){
+        // console.log(action)
+        let data = {
+            block_num,
+            action:action.act,
+            receiver:action.receipt[1].receiver,
+            receiver_sequence: action.receipt[1].recv_sequence,
+            global_sequence: action.receipt[1].global_sequence
+        }
+        this.queue.create('action', data).save()
 
-            if (action.inline_traces.length){
-                for (let itc of action.inline_traces){
-                    //console.log("inline trace\n", itc);
-                    if (itc[0] == 'action_trace_v0'){
-                        this.handleAction(block_num, itc[1]);
-                    }
+
+        if (action.inline_traces.length){
+            for (let itc of action.inline_traces){
+                //console.log("inline trace\n", itc);
+                if (itc[0] == 'action_trace_v0'){
+                    await this.queueAction(block_num, itc[1]);
                 }
             }
         }
-        catch (e){
-            console.log(e);
-        }
-
     }
+
+    async queueBlock(block_num, traces){
+        let data = {block_num, traces}
+        this.queue.create('block_traces', data).save()
+    }
+
 
     async receivedBlock(response, block, traces, deltas) {
         if (!response.this_block)
@@ -180,26 +162,15 @@ class FillAPI {
 
         this.head_block = block_num;
 
-        if (!(block_num % 100))
+        if (!(block_num % 100)){
             console.info("received block " + block_num);
+            this.queue.inactiveCount((err, total) => {
+                console.info("redis queue length " + total)
+            })
+        }
 
         if (traces){
-            for (let trace of traces){
-                switch (trace[0]){
-                    case 'transaction_trace_v0':
-                        const trx = trace[1];
-                        for (let action of trx.action_traces){
-                            //console.log(action)
-                            switch (action[0]){
-                                case 'action_trace_v0':
-                                    this.handleAction(block_num, action[1]);
-                                    break;
-                            }
-                        }
-                        break;
-                }
-
-            }
+            this.queueBlock(block_num, traces)
         }
 
         const state_col = this.db.collection(this.state_collection);
@@ -214,7 +185,7 @@ commander
     .option('-s, --start-block <start-block>', 'Start at this block')
     .option('-e, --end-block <end-block>', 'End block', 0xffffffff)
     .option('-i, --irreversible-only', 'Only follow irreversible', false)
-    .option('-c, --chain [jungle|mainnet]', 'Chain environment',  /^(jungle|mainnet)$/i, 'jungle')
+    .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  /^([a-z0-9*])$/i, 'jungle')
     .option('-r, --replay', 'Force replay (ignore head block)', false)
     .parse(process.argv);
 
