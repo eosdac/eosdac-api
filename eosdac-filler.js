@@ -118,6 +118,7 @@ class FillAPI {
         MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, function(err, client) {
             if (err){
                 console.error("\nFailed to connect\n", err)
+                done(err)
             }
             else if (client){
                 self.db = client.db(self.config.mongo.dbName);
@@ -138,6 +139,8 @@ class FillAPI {
 
 
                         await self.start(true, startBlock, endBlock);
+
+                        done()
                     },
                     receivedBlock: self.receivedBlock.bind(self),
                 });
