@@ -70,9 +70,9 @@ class FillAPI {
 
                 console.log(`Replaying up to lib : ${lib}`)
 
-                let from = 0;
-                let to = 999999;
                 let chunk_size = 500000
+                let from = 0;
+                let to = chunk_size - 1;
                 let break_now = false
                 while (true){
                     console.log(`adding job for ${from} to ${to}`)
