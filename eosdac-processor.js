@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-
+const fs = require('fs')
 const commander = require('commander');
 const { Api, JsonRpc } = require('eosjs');
 const { TextDecoder, TextEncoder } = require('text-encoding');
@@ -17,6 +17,8 @@ const MongoClient = require('mongodb').MongoClient;
 let rpc;
 const signatureProvider = null;
 
+var access = fs.createWriteStream('consumers.log')
+process.stdout.write = process.stderr.write = access.write.bind(access)
 
 
 class JobProcessor {
