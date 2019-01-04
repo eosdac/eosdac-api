@@ -18,12 +18,13 @@ const signatureProvider = null;
 const MongoClient = require('mongodb').MongoClient;
 
 
-var access = fs.createWriteStream('filler.log')
-process.stdout.write = process.stderr.write = access.write.bind(access)
+// var access = fs.createWriteStream('filler.log')
+// process.stdout.write = process.stderr.write = access.write.bind(access)
 
 
 class FillAPI {
     constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false }) {
+
         let socketAddress
 
         this.config = require(`./${config}.config`)
@@ -32,19 +33,6 @@ class FillAPI {
         socketAddress = this.config.eos.wsEndpoint
         this.contracts = this.config.eos.contracts
         rpc = new JsonRpc(this.config.eos.endpoint, { fetch });
-
-        /*switch (chain){
-            case 'jungle':
-                socketAddress = 'ws://jungle.eosdac.io:8080';
-                this.contracts = ['kasdactokens', 'dacelections', 'eosdacdoshhq', 'dacmultisigs'];
-                rpc = new JsonRpc("http://jungle2.eosdac.io:8882", { fetch });
-                break;
-            case 'mainnet':
-                socketAddress = 'ws://as1.eosdac.io:8080';
-                this.contracts = ['eosdactokens', 'daccustodian', 'eosdacthedac', 'dacmultisigs'];
-                rpc = new JsonRpc("https://eu.eosdac.io", { fetch });
-                break;
-        }*/
 
         console.log(this.contracts)
 
@@ -62,9 +50,67 @@ class FillAPI {
             redis: this.config.redis
         })
 
-        console.log("Starting Kue admin interface")
 
-        kue.app.listen(3000)
+
+
+        if (cluster.isMaster) {
+            console.log("Starting Kue admin interface")
+
+            kue.app.listen(3000)
+
+            for (let i = 0; i < this.config.clusterSize; i++) {
+                cluster.fork()
+            }
+
+            // get lib and then insert ranges up to there in batches of 1m
+            this.api.rpc.get_info().then((info) => {
+
+                const lib = info.last_irreversible_block_num
+                this.lib = lib
+
+                console.log(`Replaying up to lib : ${lib}`)
+
+                let from = 0;
+                let to = 999999;
+                let chunk_size = 500000
+                let break_now = false
+                while (true){
+                    console.log(`adding job for ${from} to ${to}`)
+                    this.queue.create('block_range', {from, to}).save()
+
+                    if (to == lib){
+                        break_now = true
+                    }
+
+                    from += chunk_size
+                    to += chunk_size
+
+                    if (to > lib){
+                        to = lib
+                    }
+
+                    if (from > to){
+                        break_now = true
+                    }
+
+                    if (break_now){
+                        break
+                    }
+                }
+            })
+
+
+        } else {
+            this.queue.process('block_range', 1, this.processBlockRange.bind(this))
+        }
+
+    }
+
+    processBlockRange(job, done){
+        let startBlock = job.data.from
+        let endBlock = job.data.to
+
+        console.log(`Starting at block ${startBlock}, ending at ${endBlock}`)
 
         console.log("Connecting to Mongo")
 
@@ -77,21 +123,21 @@ class FillAPI {
                 self.db = client.db(self.config.mongo.dbName);
 
                 self.connection = new Connection({
-                    socketAddress,
+                    socketAddress: self.config.eos.wsEndpoint,
                     receivedAbi: async () => {
-                        if (!replay && startBlock == 0) {
+                        /*if (!replay && startBlock == 0) {
                             console.log("Checking head block to continue")
                             const state_col = self.db.collection(self.state_collection);
                             let hb_data = await state_col.findOne({name: 'head_block'})
                             if (hb_data) {
                                 startBlock = hb_data.block_num + 1
                             }
-                        }
-
-                        console.log(`Starting at block ${startBlock}`)
+                        }*/
 
 
-                        await self.start(irreversibleOnly, startBlock, endBlock);
+
+
+                        await self.start(true, startBlock, endBlock);
                     },
                     receivedBlock: self.receivedBlock.bind(self),
                 });
