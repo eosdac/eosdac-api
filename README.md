@@ -14,7 +14,7 @@ This requires the development branch of eosjs
 
 `cd eosjs`
 
-*You will need npm version 10*
+*You will need node version 10*
 
 `npm i`
 
