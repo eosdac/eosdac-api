@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const config = require("./config")
 
 const commander = require('commander');
 const { Api, JsonRpc } = require('eosjs');
@@ -17,7 +16,6 @@ const signatureProvider = null;
 
 
 const MongoClient = require('mongodb').MongoClient;
-
 
 
 class FillAPI {
