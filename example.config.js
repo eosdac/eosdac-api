@@ -1,5 +1,6 @@
 module.exports = {
     redisPrefix: 'q',
+    fillClusterSize: 4,
     clusterSize: 10,
     redis: {
         port: 6379,

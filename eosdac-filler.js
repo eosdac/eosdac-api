@@ -58,7 +58,7 @@ class FillAPI {
 
             kue.app.listen(3000)
 
-            for (let i = 0; i < this.config.clusterSize; i++) {
+            for (let i = 0; i < this.config.fillClusterSize; i++) {
                 cluster.fork()
             }
 
