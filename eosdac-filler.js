@@ -183,7 +183,7 @@ class FillAPI {
             receiver_sequence: action.receipt[1].recv_sequence,
             global_sequence: action.receipt[1].global_sequence
         }
-        this.queue.create('action', data).save()
+        this.queue.create('action', data).removeOnComplete( true ).save()
 
 
         if (action.inline_traces.length){
@@ -198,7 +198,7 @@ class FillAPI {
 
     async queueBlock(block_num, traces){
         let data = {block_num, traces}
-        this.queue.create('block_traces', data).save()
+        this.queue.create('block_traces', data).removeOnComplete( true ).save()
     }
 
 
