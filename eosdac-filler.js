@@ -207,10 +207,10 @@ class FillAPI {
             return;
         let block_num = response.this_block.block_num;
 
-        if ( block_num <= this.head_block ){
+        /*if ( block_num <= this.head_block ){
             console.log(`Detected fork: current:${block_num} <= head:${this.head_block}`)
             await this.handleFork(block_num)
-        }
+        }*/
 
         this.head_block = block_num;
 
