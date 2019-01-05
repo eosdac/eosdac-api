@@ -183,5 +183,4 @@ commander
     .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  /^([a-z0-9*])$/i, 'jungle')
     .parse(process.argv);
 
-// const monitor = new Monitor(commander);
-const fill = new JobProcessor(commander);
+const processor = new JobProcessor(commander);
