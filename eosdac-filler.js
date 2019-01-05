@@ -18,8 +18,8 @@ const signatureProvider = null;
 const MongoClient = require('mongodb').MongoClient;
 
 
-// var access = fs.createWriteStream('filler.log')
-// process.stdout.write = process.stderr.write = access.write.bind(access)
+var access = fs.createWriteStream('filler.log')
+process.stdout.write = process.stderr.write = access.write.bind(access)
 
 
 class FillAPI {
