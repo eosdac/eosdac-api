@@ -25,6 +25,7 @@ const MongoClient = require('mongodb').MongoClient;
 class FillAPI {
     constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false }) {
 
+        console.log(`Loading config ${config}.config.js`)
         let socketAddress
 
         this.config = require(`./${config}.config`)
@@ -236,7 +237,7 @@ commander
     .option('-s, --start-block <start-block>', 'Start at this block')
     .option('-e, --end-block <end-block>', 'End block', 0xffffffff)
     .option('-i, --irreversible-only', 'Only follow irreversible', false)
-    .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  /^([a-z0-9*])$/i, 'jungle')
+    .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  'jungle')
     .option('-r, --replay', 'Force replay (ignore head block)', false)
     .parse(process.argv);
 

@@ -180,7 +180,7 @@ class JobProcessor {
 
 commander
     .version('0.1', '-v, --version')
-    .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  /^([a-z0-9*])$/i, 'jungle')
+    .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  'jungle')
     .parse(process.argv);
 
 const processor = new JobProcessor(commander);
