@@ -77,7 +77,7 @@ class FillAPI {
                 let break_now = false
                 while (true){
                     console.log(`adding job for ${from} to ${to}`)
-                    this.queue.create('block_range', {from, to}).save()
+                    this.queue.create('block_range', {from, to}).removeOnComplete( true ).save()
 
                     if (to == lib){
                         break_now = true
