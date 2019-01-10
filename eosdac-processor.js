@@ -12,9 +12,6 @@ const cluster = require('cluster')
 const MongoClient = require('mongodb').MongoClient;
 const {ActionHandler, BlockHandler} = require('./eosdac-handlers')
 
-let rpc;
-const signatureProvider = null;
-
 // var access = fs.createWriteStream('consumers.log')
 // process.stdout.write = process.stderr.write = access.write.bind(access)
 
@@ -28,6 +25,11 @@ class JobProcessor {
             prefix: this.config.redisPrefix,
             redis: this.config.redis
         })
+
+        const rpc = new JsonRpc(this.config.eos.endpoint, { fetch });
+        this.api = new Api({
+            rpc, null, chainId:this.config.chainId, textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
+        });
 
         this.action_handler = new ActionHandler({queue:this.queue, config:this.config})
         this.block_handler = new BlockHandler({queue:this.queue, action_handler:this.action_handler, config:this.config})
