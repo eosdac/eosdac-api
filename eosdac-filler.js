@@ -192,6 +192,7 @@ class BlockReceiver {
     /* mode 0 = serial, 1 = parallel */
     constructor({ startBlock = 0, endBlock = 0xffffffff, config, mode = 0 }){
         this.trace_handlers = []
+        this.done_handlers = []
 
         // console.log(config)
 
@@ -207,6 +208,10 @@ class BlockReceiver {
 
     }
 
+    registerDoneHandler(h){
+        this.done_handlers.push(h)
+    }
+
     registerTraceHandler(h){
         this.trace_handlers.push(h)
     }
@@ -220,11 +225,7 @@ class BlockReceiver {
     }
 
     async start(){
-        // check for resume data
-        const self = this
-        if (!this.complete){
-            throw "Already started"
-        }
+        // TODO: check for resume data
 
         if (this.connection){
             this.connection = null
@@ -316,6 +317,9 @@ class BlockReceiver {
         if (this.current_block === this.end_block -1){
             console.log("Im done")
             this.complete = true
+            this.done_handlers.map((handler) => {
+                handler()
+            })
         }
 
         // const state_col = this.db.collection(this.state_collection);
@@ -369,7 +373,7 @@ class FillManager {
                 const info = await this.api.rpc.get_info()
                 const lib = info.last_irreversible_block_num
 
-                let chunk_size = 100000
+                let chunk_size = 500000
                 let from = 0;
                 let to = chunk_size; // to is not inclusive
                 let break_now = false
@@ -449,9 +453,11 @@ class FillManager {
 
         let br = new BlockReceiver({startBlock:start_block, endBlock:end_block, mode:1, config:this.config})
         br.registerTraceHandler(block_handler)
-        await br.start()
-
-        done()
+        br.registerDoneHandler(() => {
+            console.log("Done with block range")
+            done()
+        })
+        br.start()
     }
 }
 
