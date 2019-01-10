@@ -2,9 +2,6 @@
 
 const fs = require('fs')
 const commander = require('commander');
-const { Api, JsonRpc } = require('eosjs');
-const { TextDecoder, TextEncoder } = require('text-encoding');
-const fetch = require('node-fetch');
 
 const kue = require('kue')
 const cluster = require('cluster')
@@ -26,10 +23,6 @@ class JobProcessor {
             redis: this.config.redis
         })
 
-        const rpc = new JsonRpc(this.config.eos.endpoint, { fetch });
-        this.api = new Api({
-            rpc, null, chainId:this.config.chainId, textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
-        });
 
         this.action_handler = new ActionHandler({queue:this.queue, config:this.config})
         this.block_handler = new BlockHandler({queue:this.queue, action_handler:this.action_handler, config:this.config})
@@ -39,10 +32,6 @@ class JobProcessor {
     async start(){
         this.contracts = this.config.eos.contracts;
 
-        rpc = new JsonRpc(this.config.eos.endpoint, { fetch });
-        this.api = new Api({
-            rpc, signatureProvider, chainId:this.config.eos.chainId, textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
-        });
 
         if (cluster.isMaster) {
             console.log("Starting processor...")

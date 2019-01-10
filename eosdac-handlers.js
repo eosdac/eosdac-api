@@ -2,11 +2,19 @@
 const MongoLong = require('mongodb').Long
 const MongoClient = require('mongodb').MongoClient
 
+const { Api, JsonRpc } = require('eosjs')
+const { TextDecoder, TextEncoder } = require('text-encoding')
+const fetch = require('node-fetch')
 
 class ActionHandler {
     constructor({queue, db, config}){
         this.queue = queue
         this.config = config
+
+        const rpc = new JsonRpc(this.config.eos.endpoint, { fetch });
+        this.api = new Api({
+            rpc, signatureProvider: null, chainId:this.config.chainId, textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
+        });
 
         this.connectDb()
     }
