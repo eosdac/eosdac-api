@@ -35,6 +35,7 @@ class JobProcessor {
 
         if (cluster.isMaster) {
             console.log("Starting processor...")
+            kue.app.listen(3001)
 
             for (let i = 0; i < this.config.clusterSize; i++) {
                 cluster.fork()
