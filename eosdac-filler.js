@@ -144,13 +144,13 @@ class FillManager {
 
         console.log(`Starting block listener ${start_block} to ${end_block}`)
 
-        const action_handler = new ActionHandler({queue: this.queue, config: this.config})
-        const block_handler = new BlockHandler({queue: this.queue, action_handler, config: this.config})
-
         if (this.br) {
             console.log("Already have BlockReceiver")
             this.br.restart(start_block, end_block)
         } else {
+            const action_handler = new ActionHandler({queue: this.queue, config: this.config})
+            const block_handler = new BlockHandler({queue: this.queue, action_handler, config: this.config})
+
             this.br = new BlockReceiver({startBlock: start_block, endBlock: end_block, mode: 1, config: this.config})
             this.br.registerTraceHandler(block_handler)
             this.br.registerDoneHandler(() => {
