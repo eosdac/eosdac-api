@@ -31,6 +31,7 @@ class FillManager {
         this.start_block = startBlock
         this.end_block = endBlock
         this.replay = replay
+        this.br = null
 
         console.log(`Loading config ${config}.config.js`)
     }
@@ -137,22 +138,26 @@ class FillManager {
 
     }
 
-    async processBlockRange(job, done){
+    async processBlockRange(job, done) {
         const start_block = job.data.from
         const end_block = job.data.to
 
         console.log(`Starting block listener ${start_block} to ${end_block}`)
 
-        const action_handler = new ActionHandler({queue:this.queue, config:this.config})
-        const block_handler = new BlockHandler({queue:this.queue, action_handler, config:this.config})
+        const action_handler = new ActionHandler({queue: this.queue, config: this.config})
+        const block_handler = new BlockHandler({queue: this.queue, action_handler, config: this.config})
 
-        let br = new BlockReceiver({startBlock:start_block, endBlock:end_block, mode:1, config:this.config})
-        br.registerTraceHandler(block_handler)
-        br.registerDoneHandler(() => {
-            console.log("Done with block range")
-            done()
-        })
-        br.start()
+        if (this.br) {
+            console.log("Already have BlockReceiver")
+            this.br.restart(start_block, end_block)
+        } else {
+            this.br = new BlockReceiver({startBlock: start_block, endBlock: end_block, mode: 1, config: this.config})
+            this.br.registerTraceHandler(block_handler)
+            this.br.registerDoneHandler(() => {
+                done()
+            })
+            this.br.start()
+        }
     }
 }
 
