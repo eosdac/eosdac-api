@@ -57,6 +57,13 @@ class BlockReceiver {
         });
     }
 
+    async restart(startBlock, endBlock){
+        this.start_block = startBlock
+        this.end_block = endBlock
+
+        await this.requestBlocks()
+    }
+
     async connectDb(){
         return new Promise((resolve, reject) => {
             MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
