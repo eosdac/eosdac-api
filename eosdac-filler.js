@@ -25,13 +25,14 @@ const BlockReceiver = require('./eosdac-blockreceiver')
 
 
 class FillManager {
-    constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false }) {
+    constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false, test = 0 }) {
         this.config = require(`./${config}.config`)
         this.config_name = config
         this.start_block = startBlock
         this.end_block = endBlock
         this.replay = replay
         this.br = null
+        this.test_block = test
 
         console.log(`Loading config ${config}.config.js`)
     }
@@ -72,8 +73,8 @@ class FillManager {
                 const lib = info.last_irreversible_block_num
 
                 let chunk_size = 500000
-                let from = 0;
-                let to = chunk_size; // to is not inclusive
+                let from = this.start_block;
+                let to = from + chunk_size; // to is not inclusive
                 let break_now = false
                 while (true){
                     console.log(`adding job for ${from} to ${to}`)
@@ -128,6 +129,22 @@ class FillManager {
             }
 
         }
+        else if (this.test_block){
+            queue = kue.createQueue({
+                prefix: this.config.redisPrefix,
+                redis: this.config.redis
+            })
+            kue.app.listen(3000)
+
+            const action_handler = new ActionHandler({queue: queue, config: this.config})
+            const block_handler = new BlockHandler({queue: queue, action_handler, config: this.config})
+
+
+            this.br = new BlockReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:1, config:this.config})
+            this.br.registerTraceHandler(block_handler)
+            this.br.registerDeltaHandler(delta_handler)
+            this.br.start()
+        }
         else {
             if (start_block === 0){
                 // TODO: need to look for restart point
@@ -136,7 +153,7 @@ class FillManager {
             console.log(`No replay, starting in synchronous mode`)
 
             this.br = new BlockReceiver({startBlock:start_block, mode:0, config:this.config})
-            // this.br.registerTraceHandler(block_handler)
+            this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
             this.br.start()
         }
@@ -168,8 +185,9 @@ class FillManager {
 
 commander
     .version('0.1', '-v, --version')
-    .option('-s, --start-block <start-block>', 'Start at this block')
-    .option('-e, --end-block <end-block>', 'End block (exclusive)', 0xffffffff)
+    .option('-s, --start-block <start-block>', 'Start at this block', parseInt, 0)
+    .option('-t, --test <block>', 'Test mode, specify a single block to pull and process', parseInt, 0)
+    .option('-e, --end-block <end-block>', 'End block (exclusive)', parseInt, 0xffffffff)
     .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  'jungle')
     .option('-r, --replay', 'Force replay (ignore head block)', false)
     .parse(process.argv);
