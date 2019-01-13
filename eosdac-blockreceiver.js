@@ -21,8 +21,6 @@ class BlockReceiver {
         this.current_block = -1
         this.complete = true
 
-        this.state_collection = 'state'
-
     }
 
     registerDoneHandler(h){
@@ -116,7 +114,7 @@ class BlockReceiver {
 
         this.current_block = block_num
 
-        if (!(block_num % 100)){
+        if (!(block_num % 100) || (this.end_block - this.start_block) < 50){
             console.info(`BlockReceiver : received block ${block_num}`);
             let {start, end, current} = this.status()
             console.info(`Start: ${start}, End: ${end}, Current: ${current}`)
@@ -157,7 +155,7 @@ class BlockReceiver {
             })
         }
 
-        // const state_col = this.db.collection(this.state_collection);
+        // const state_col = this.db.collection(this.state_collection)
         // state_col.updateOne({name:'head_block'}, {$set:{block_num}}, {upsert:true})
 
     } // receivedBlock
