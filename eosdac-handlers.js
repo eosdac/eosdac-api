@@ -124,7 +124,7 @@ class ActionHandler {
 }
 
 
-class BlockHandler {
+class TraceHandler {
     constructor({queue, action_handler, config}) {
         this.queue = queue
         this.action_handler = action_handler
@@ -152,7 +152,7 @@ class BlockHandler {
         })
     }
 
-    async queueBlock(block_num, traces) {
+    async queueTrace(block_num, traces) {
         const data = {block_num, traces}
         this.queue.create('block_traces', data).removeOnComplete(true).save()
     }
@@ -170,7 +170,7 @@ class BlockHandler {
         }
     }
 
-    async processBlock(block_num, traces) {
+    async processTrace(block_num, traces) {
         //console.log(`Process block ${block_num}`)
 
         for (const trace of traces) {
@@ -349,5 +349,5 @@ class DeltaHandler {
 }
 
 
-module.exports = {ActionHandler, BlockHandler, DeltaHandler}
+module.exports = {ActionHandler, TraceHandler, DeltaHandler}
 
