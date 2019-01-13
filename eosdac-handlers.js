@@ -125,9 +125,31 @@ class ActionHandler {
 
 
 class BlockHandler {
-    constructor({queue, action_handler}) {
+    constructor({queue, action_handler, config}) {
         this.queue = queue
         this.action_handler = action_handler
+        this.config = config
+
+        this.connectDb()
+    }
+
+    async connectDb() {
+        this.db = await this._connectDb()
+    }
+
+    async _connectDb() {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    const db = client.db(this.config.mongo.dbName)
+                    const col_traces = db.collection(this.config.mongo.traceCollection)
+                    col_traces.createIndex({block_num:-1})
+                    resolve(db)
+                }
+            }).bind(this))
+        })
     }
 
     async queueBlock(block_num, traces) {
@@ -167,6 +189,9 @@ class BlockHandler {
             }
 
         }
+
+        const trace_col = this.db.collection(this.config.mongo.traceCollection)
+        trace_col.insertOne({block_num, actions:[]}).catch(()=>{console.log(e)});
     }
 }
 
@@ -271,7 +296,7 @@ class DeltaHandler {
                                 const data = type.deserialize(data_sb)
 
 
-                            if (this.interested(data[1].sender) || (data[1].sender == '.............' && this.interested(data[1].payer))){
+                            if (this.interested(data[1].sender) || (data[1].sender === '.............' && this.interested(data[1].payer))){
                                 console.log(data)
                                 console.log(data[1].sender)
 
