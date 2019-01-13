@@ -73,6 +73,12 @@ class FillManager {
                 const lib = info.last_irreversible_block_num
 
                 let chunk_size = 500000
+                const range = lib - this.start_block
+                console.log(`Range : ${range}`)
+                if (chunk_size > (range / 5)){
+                    console.log('small chunks')
+                    chunk_size = parseInt((range) / 5)
+                }
                 let from = this.start_block;
                 let to = from + chunk_size; // to is not inclusive
                 let break_now = false
