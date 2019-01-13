@@ -16,7 +16,7 @@ const signatureProvider = null;
 
 
 
-const {ActionHandler, BlockHandler} = require('./eosdac-handlers')
+const {ActionHandler, BlockHandler, DeltaHandler} = require('./eosdac-handlers')
 const BlockReceiver = require('./eosdac-blockreceiver')
 
 // var access = fs.createWriteStream('filler.log')
@@ -52,8 +52,10 @@ class FillManager {
 
         const action_handler = new ActionHandler({queue, config:this.config})
         const block_handler = new BlockHandler({queue, action_handler, config:this.config})
+        const delta_handler = new DeltaHandler({queue, config:this.config})
 
         if (this.replay){
+            console.log(`Replaying`)
 
             queue = kue.createQueue({
                 prefix: this.config.redisPrefix,
@@ -131,8 +133,11 @@ class FillManager {
                 // TODO: need to look for restart point
             }
 
+            console.log(`No replay, starting in synchronous mode`)
+
             this.br = new BlockReceiver({startBlock:start_block, mode:0, config:this.config})
-            this.br.registerTraceHandler(block_handler)
+            // this.br.registerTraceHandler(block_handler)
+            this.br.registerDeltaHandler(delta_handler)
             this.br.start()
         }
 
