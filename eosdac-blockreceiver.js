@@ -139,10 +139,10 @@ class BlockReceiver {
         if (traces){
             this.trace_handlers.map((handler) => {
                 if (this.mode === 0){
-                    handler.processBlock(block_num, traces)
+                    handler.processTrace(block_num, traces)
                 }
                 else {
-                    handler.queueBlock(block_num, traces)
+                    handler.queueTrace(block_num, traces)
                 }
             })
         }

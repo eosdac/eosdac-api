@@ -7,7 +7,7 @@ const kue = require('kue')
 const cluster = require('cluster')
 
 const MongoClient = require('mongodb').MongoClient;
-const {ActionHandler, BlockHandler} = require('./eosdac-handlers')
+const {ActionHandler, TraceHandler} = require('./eosdac-handlers')
 
 // var access = fs.createWriteStream('consumers.log')
 // process.stdout.write = process.stderr.write = access.write.bind(access)
@@ -25,7 +25,7 @@ class JobProcessor {
 
 
         this.action_handler = new ActionHandler({queue:this.queue, config:this.config})
-        this.block_handler = new BlockHandler({queue:this.queue, action_handler:this.action_handler, config:this.config})
+        this.block_handler = new TraceHandler({queue:this.queue, action_handler:this.action_handler, config:this.config})
     }
 
 

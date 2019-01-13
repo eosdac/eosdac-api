@@ -16,7 +16,7 @@ const signatureProvider = null;
 
 
 
-const {ActionHandler, BlockHandler, DeltaHandler} = require('./eosdac-handlers')
+const {ActionHandler, TraceHandler, DeltaHandler} = require('./eosdac-handlers')
 const BlockReceiver = require('./eosdac-blockreceiver')
 
 // var access = fs.createWriteStream('filler.log')
@@ -52,7 +52,7 @@ class FillManager {
 
 
         const action_handler = new ActionHandler({queue, config:this.config})
-        const block_handler = new BlockHandler({queue, action_handler, config:this.config})
+        const block_handler = new TraceHandler({queue, action_handler, config:this.config})
         const delta_handler = new DeltaHandler({queue, config:this.config})
 
         if (this.replay){
@@ -140,10 +140,11 @@ class FillManager {
                 prefix: this.config.redisPrefix,
                 redis: this.config.redis
             })
-            kue.app.listen(3000)
+            kue.app.listen(3002)
+
 
             const action_handler = new ActionHandler({queue: queue, config: this.config})
-            const block_handler = new BlockHandler({queue: queue, action_handler, config: this.config})
+            const block_handler = new TraceHandler({queue: queue, action_handler, config: this.config})
 
 
             this.br = new BlockReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:1, config:this.config})
@@ -177,7 +178,7 @@ class FillManager {
             this.br.restart(start_block, end_block)
         } else {
             const action_handler = new ActionHandler({queue: this.queue, config: this.config})
-            const block_handler = new BlockHandler({queue: this.queue, action_handler, config: this.config})
+            const block_handler = new TraceHandler({queue: this.queue, action_handler, config: this.config})
 
             this.br = new BlockReceiver({startBlock: start_block, endBlock: end_block, mode: 1, config: this.config})
             this.br.registerTraceHandler(block_handler)
