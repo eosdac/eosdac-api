@@ -1,3 +1,4 @@
+const {Serialize} = require("eosjs");
 
 const MongoClient = require('mongodb').MongoClient
 const { Connection } = require("./connection")
@@ -7,6 +8,7 @@ class BlockReceiver {
     /* mode 0 = serial, 1 = parallel */
     constructor({ startBlock = 0, endBlock = 0xffffffff, config, mode = 0 }){
         this.trace_handlers = []
+        this.delta_handlers = []
         this.done_handlers = []
 
         // console.log(config)
@@ -31,6 +33,10 @@ class BlockReceiver {
         this.trace_handlers.push(h)
     }
 
+    registerDeltaHandler(h){
+        this.delta_handlers.push(h)
+    }
+
     status(){
         const start = this.start_block
         const end = this.end_block
@@ -40,19 +46,15 @@ class BlockReceiver {
     }
 
     async start(){
-        // TODO: check for resume data
-
-        if (this.connection){
-            this.connection = null
-        }
-
         this.complete = false
 
         this.db = await this.connectDb()
 
         this.connection = new Connection({
             socketAddress: this.config.eos.wsEndpoint,
-            receivedAbi: this.requestBlocks.bind(this),
+            receivedAbi: (() => {
+                this.requestBlocks()
+            }).bind(this),
             receivedBlock: this.receivedBlock.bind(this),
         });
     }
@@ -85,8 +87,8 @@ class BlockReceiver {
                 end_block_num: this.end_block,
                 have_positions:[],
                 fetch_block: false,
-                fetch_traces: true,
-                fetch_deltas: false,
+                fetch_traces: (this.trace_handlers.length > 0),
+                fetch_deltas: (this.delta_handlers.length > 0),
             });
         } catch (e) {
             console.error(e);
@@ -123,6 +125,17 @@ class BlockReceiver {
             // this.queue.inactiveCount((err, total) => {
             //     console.info("redis queue length " + total)
             // })
+        }
+
+        if (deltas && deltas.length){
+            this.delta_handlers.map(((handler) => {
+                if (this.mode === 0){
+                    handler.processDelta(block_num, deltas, this.connection.types)
+                }
+                else {
+                    handler.queueDelta(block_num, deltas, this.connection.types)
+                }
+            }).bind(this))
         }
 
         if (traces){
