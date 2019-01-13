@@ -114,7 +114,7 @@ class BlockReceiver {
 
         this.current_block = block_num
 
-        if (!(block_num % 100) || (this.end_block - this.start_block) < 50){
+        if (!(block_num % 1000) || (this.end_block - this.start_block) < 50){
             console.info(`BlockReceiver : received block ${block_num}`);
             let {start, end, current} = this.status()
             console.info(`Start: ${start}, End: ${end}, Current: ${current}`)
