@@ -49,7 +49,7 @@ class JobProcessor {
                     this.db = client.db(this.config.mongo.dbName);
                 }
 
-                this.queue.process('block_traces', 1, this.block_handler.processBlockJob.bind(this.block_handler))
+                this.queue.process('block_traces', 1, this.block_handler.processTraceJob.bind(this.block_handler))
                 this.queue.process('action', 1, this.action_handler.processActionJob.bind(this.action_handler))
             }).bind(this));
         }
