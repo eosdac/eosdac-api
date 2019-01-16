@@ -191,7 +191,7 @@ class TraceHandler {
         }
 
         const trace_col = this.db.collection(this.config.mongo.traceCollection)
-        trace_col.insertOne({block_num, actions:[]}).catch(()=>{console.log(e)});
+        trace_col.insertOne({block_num, actions:[]}).catch((e)=>{console.log(e)});
     }
 }
 
