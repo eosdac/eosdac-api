@@ -53,8 +53,9 @@ class ActionHandler {
                 action_data.global_sequence = new MongoLong.fromString(global_sequence)
                 let doc = {block_num, action: action_data}
                 // console.log("ACT\n", act, "INSERT\n", doc, "\nACTION RECEIPT\n", action.receipt);
-                console.log("\nINSERT\n", doc)
-                col.updateOne({block_num}, {$addToSet: {actions: action_data}}, {upsert: true}).catch(console.log)
+                let index = `actions.${action_data.global_sequence}`
+                console.log("\nINSERT\n", doc, index)
+                col.updateOne({block_num}, {$set: {[index]: action_data}}, {upsert: true}).catch(console.log)
             }
         } catch (e) {
             console.log("ERROR deserializeActions", e);
@@ -129,6 +130,9 @@ class TraceHandler {
         this.queue = queue
         this.action_handler = action_handler
         this.config = config
+        this.block_insert_queue = []
+
+        setInterval(this.flushQueue.bind(this), 10000)
 
         this.connectDb()
     }
@@ -157,12 +161,12 @@ class TraceHandler {
         this.queue.create('block_traces', data).removeOnComplete(true).save()
     }
 
-    async processBlockJob(job, done) {
+    async processTraceJob(job, done) {
         const traces = job.data.traces
         const block_num = job.data.block_num
 
         try {
-            await this.processBlock(block_num, traces)
+            await this.processTrace(block_num, traces)
 
             done()
         } catch (e) {
@@ -190,8 +194,16 @@ class TraceHandler {
 
         }
 
-        const trace_col = this.db.collection(this.config.mongo.traceCollection)
-        trace_col.insertOne({block_num, actions:[]}).catch((e)=>{console.log(e)});
+        this.block_insert_queue.push({"insertOne":{block_num, actions:[]}})
+
+
+    }
+
+    async flushQueue(){
+        if (this.block_insert_queue.length){
+            const trace_col = this.db.collection(this.config.mongo.traceCollection)
+            trace_col.bulkWrite(this.block_insert_queue, {ordered :false}).catch((e) => {console.log('Error in bulk update', e)})
+        }
     }
 }
 
