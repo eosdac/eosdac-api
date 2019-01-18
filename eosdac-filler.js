@@ -160,7 +160,7 @@ class FillManager {
             console.log(`No replay, starting in synchronous mode`)
 
             this.br = new BlockReceiver({startBlock:start_block, mode:0, config:this.config})
-            this.br.registerTraceHandler(block_handler)
+            // this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
             this.br.start()
         }

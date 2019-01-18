@@ -5,6 +5,9 @@ const {Api, JsonRpc, Serialize} = require('eosjs')
 const {TextDecoder, TextEncoder} = require('text-encoding')
 const fetch = require('node-fetch')
 
+var elasticsearch = require('elasticsearch')
+var crypto = require('crypto')
+
 class ActionHandler {
     constructor({queue, db, config}) {
         this.queue = queue
@@ -116,7 +119,7 @@ class ActionHandler {
     }
 
     interested(account, name) {
-        if (this.config.eos.contracts.includes(account) || (account == 'eosio' && ['linkauth', 'unlinkauth'].includes(name))) {
+        if (this.config.eos.contracts.includes(account) || (account == 'eosio' && ['voteproducer'].includes(name))) {
             return true
         }
 
@@ -202,7 +205,7 @@ class TraceHandler {
     async flushQueue(){
         if (this.block_insert_queue.length){
             const trace_col = this.db.collection(this.config.mongo.traceCollection)
-            trace_col.bulkWrite(this.block_insert_queue, {ordered :false}).catch((e) => {console.log('Error in bulk update', e)})
+            trace_col.bulkWrite(this.block_insert_queue, {ordered :false}).catch((e) => {})
         }
     }
 }
@@ -220,6 +223,12 @@ class DeltaHandler {
             textDecoder: new TextDecoder(),
             textEncoder: new TextEncoder(),
         });
+
+        this.elastic = new elasticsearch.Client(this.config.elasticsearch);
+
+        this.payers = {}
+
+        setInterval(() => {console.log(this.payers)}, 5000)
 
     }
 
@@ -251,6 +260,12 @@ class DeltaHandler {
     }
 
     async processDelta(block_num, deltas, types) {
+        const timestampFromBlockNum = async (block) => {
+            const block_data = await this.api.rpc.get_block(block)
+            return block_data.timestamp
+        }
+        const timestamp = await timestampFromBlockNum(block_num)
+
         for (const delta of deltas) {
             switch (delta[0]) {
                 case 'table_delta_v0':
@@ -308,9 +323,9 @@ class DeltaHandler {
                                 const data = type.deserialize(data_sb)
 
 
-                            if (this.interested(data[1].sender) || (data[1].sender === '.............' && this.interested(data[1].payer))){
-                                console.log(data)
-                                console.log(data[1].sender)
+                            if (true || this.interested(data[1].sender) || (data[1].sender === '.............' && this.interested(data[1].payer))){
+                                // console.log(row)
+                                // console.log(data[1].sender)
 
                                 const packed = Serialize.hexToUint8Array(data[1].packed_trx)
                                 const type_trx = types.get('transaction')
@@ -320,14 +335,54 @@ class DeltaHandler {
                                     array: packed
                                 })
                                 const data_trx = type_trx.deserialize(sb_trx)
+                                delete data_trx.max_cpu_usage_ms
+                                delete data_trx.max_net_usage_words
+                                delete data_trx.ref_block_num
+                                delete data_trx.ref_block_prefix
+                                delete data_trx.context_free_actions
+                                delete data_trx.transaction_extensions
 
-                                console.log("Generated transaction", data_trx)
+
+                                // let actions = [];
+                                // console.log('hi')
+                                for (let a=0;a<data_trx.actions.length;a++){
+                                    delete data_trx.actions[a].data
+                                    //     = new Uint8Array(Object.values(data_trx.actions[a].data))
+                                    // actions.push(data_trx.actions[a])
+                                }
+                                const acts = data_trx.actions;
+                                delete data_trx.actions
+                                let a_idx = 0
+                                acts.forEach((a) => {
+                                    delete a.authorization
+
+                                    data_trx.action = a
+
+                                    const tx_id = Serialize.arrayToHex(row.data) + parseInt(row.present) + a_idx
+
+                                    const id = crypto.createHash('sha256').update(tx_id).digest('hex');
+
+                                    const store_data = {timestamp, present:row.present, data:data_trx, sender:data[1].sender, payer:data[1].payer, block_num}
+                                    this.elastic.index({index:'generated-03', id, type:'generated_transaction', body:store_data})
+
+                                    console.log("Generated transaction", store_data)
+
+                                    a_idx++
+                                })
+
+
+
+                                if (typeof this.payers[data[1].payer] == 'undefined'){
+                                    this.payers[data[1].payer] = 0
+                                }
+                                this.payers[data[1].payer]++
 
                             }
                         }
                     } else if (['resource_usage', 'resource_limits_state', 'resource_limits_config'].includes(delta[1].name)) {
 
                     } else if (['contract_table'].includes(delta[1].name)) {
+                        continue
                         for (const row of delta[1].rows) {
                             const type_trx = types.get('contract_table')
                             const sb_trx = new Serialize.SerialBuffer({
