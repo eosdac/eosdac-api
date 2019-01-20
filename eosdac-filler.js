@@ -75,9 +75,9 @@ class FillManager {
                 let chunk_size = 500000
                 const range = lib - this.start_block
                 console.log(`Range : ${range}`)
-                if (chunk_size > (range / 5)){
+                if (chunk_size > (range / this.config.fillClusterSize)){
                     console.log('small chunks')
-                    chunk_size = parseInt((range) / 5)
+                    chunk_size = parseInt((range) / this.config.fillClusterSize)
                 }
                 let from = this.start_block;
                 let to = from + chunk_size; // to is not inclusive
@@ -160,8 +160,8 @@ class FillManager {
             console.log(`No replay, starting in synchronous mode`)
 
             this.br = new BlockReceiver({startBlock:start_block, mode:0, config:this.config})
-            // this.br.registerTraceHandler(block_handler)
-            this.br.registerDeltaHandler(delta_handler)
+            this.br.registerTraceHandler(block_handler)
+            // this.br.registerDeltaHandler(delta_handler)
             this.br.start()
         }
 
