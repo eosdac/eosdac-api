@@ -257,7 +257,10 @@ class DeltaHandler {
             textEncoder: new TextEncoder(),
         });
 
-        this.elastic = new elasticsearch.Client(this.config.elasticsearch);
+        if (this.config.elasticsearch){
+            this.elastic = new elasticsearch.Client(this.config.elasticsearch)
+        }
+
 
         this.payers = {}
 
@@ -386,23 +389,24 @@ class DeltaHandler {
                                 const acts = data_trx.actions;
                                 delete data_trx.actions
                                 let a_idx = 0
-                                acts.forEach((a) => {
-                                    delete a.authorization
+                                if (this.elastic){
+                                    acts.forEach((a) => {
+                                        delete a.authorization
 
-                                    data_trx.action = a
+                                        data_trx.action = a
 
-                                    const tx_id = Serialize.arrayToHex(row.data) + parseInt(row.present) + a_idx
+                                        const tx_id = Serialize.arrayToHex(row.data) + parseInt(row.present) + a_idx
 
-                                    const id = crypto.createHash('sha256').update(tx_id).digest('hex');
+                                        const id = crypto.createHash('sha256').update(tx_id).digest('hex');
 
-                                    const store_data = {timestamp, present:row.present, data:data_trx, sender:data[1].sender, payer:data[1].payer, block_num}
-                                    this.elastic.index({index:'generated-03', id, type:'generated_transaction', body:store_data})
+                                        const store_data = {timestamp, present:row.present, data:data_trx, sender:data[1].sender, payer:data[1].payer, block_num}
+                                        this.elastic.index({index:'generated-03', id, type:'generated_transaction', body:store_data})
 
-                                    console.log("Generated transaction", store_data)
+                                        console.log("Generated transaction", store_data)
 
-                                    a_idx++
-                                })
-
+                                        a_idx++
+                                    })
+                                }
 
 
                                 if (typeof this.payers[data[1].payer] == 'undefined'){
