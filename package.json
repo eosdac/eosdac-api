@@ -6,11 +6,12 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^2.19.0",
+    "elasticsearch": "^15.3.0",
     "eosjs": "./eosjs",
+    "kue": "^0.11.5",
     "mongodb": "^3.1",
     "node-fetch": "^2.2.0",
     "text-encoding": "^0.6.4",
-    "ws": "^6.0.0",
-    "kue": "^0.11.5"
+    "ws": "^6.0.0"
   }
 }
