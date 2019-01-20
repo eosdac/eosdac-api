@@ -23,6 +23,8 @@ class ActionHandler {
         });
 
         this.connectDb()
+
+        this.parseInterestedConfig()
     }
 
     async connectDb() {
@@ -118,8 +120,38 @@ class ActionHandler {
         }
     }
 
+    parseInterestedConfig(){
+        this.interested_data = {
+            contracts: [],
+            actions: [],
+            contract_actions: []
+        }
+        this.config.eos.contracts.forEach((contract_str) => {
+            if (contract_str.indexOf(':') == -1){
+                this.interested_data.contracts.push(contract_str)
+            }
+            else {
+                let [c, a] = contract_str.split(':')
+                if (a == '*'){
+                    this.interested_data.contracts.push(c)
+                }
+                else if (c == '*'){
+                    this.interested_data.actions.push(a)
+                }
+                else {
+                    this.interested_data.contract_actions.push([c, a])
+                }
+            }
+        })
+    }
+
     interested(account, name) {
-        if (this.config.eos.contracts.includes(account) || (account == 'eosio' && ['voteproducer'].includes(name))) {
+        if (name == 'onblock'){
+            return false
+        }
+        if (this.interested_data.contracts.includes(account) ||
+            this.interested_data.actions.includes(name) ||
+            (this.interested_data.contract_actions[0] == account && this.interested_data.contract_actions[1] == name)){
             return true
         }
 
@@ -165,6 +197,7 @@ class TraceHandler {
     }
 
     async processTraceJob(job, done) {
+        //console.log(`Processing job : ${job.id}, type : ${job.type}`)
         const traces = job.data.traces
         const block_num = job.data.block_num
 
@@ -228,7 +261,7 @@ class DeltaHandler {
 
         this.payers = {}
 
-        setInterval(() => {console.log(this.payers)}, 5000)
+        // setInterval(() => {console.log(this.payers)}, 5000)
 
     }
 
