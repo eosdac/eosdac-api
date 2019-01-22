@@ -56,11 +56,11 @@ class ActionHandler {
                 const col = this.db.collection(this.config.mongo.traceCollection);
                 action_data.recv_sequence = new MongoLong.fromString(receiver_sequence)
                 action_data.global_sequence = new MongoLong.fromString(global_sequence)
-                let doc = {block_num, action: action_data}
+                //let doc = {block_num, action: action_data}
                 // console.log("ACT\n", act, "INSERT\n", doc, "\nACTION RECEIPT\n", action.receipt);
-                let index = `actions.${action_data.global_sequence}`
-                console.log("\nINSERT\n", doc, index)
-                col.updateOne({block_num}, {$set: {[index]: action_data}}, {upsert: true}).catch(console.log)
+                // let index = `actions.gs${action_data.global_sequence}`
+                console.log("\nINSERT\n", action_data)
+                col.updateOne({block_num}, {$addToSet: {action: action_data}}, {upsert: true}).catch(console.log)
             }
         } catch (e) {
             console.log("ERROR deserializeActions", e);
@@ -348,6 +348,8 @@ class DeltaHandler {
                         }
 
                     } else if (delta[1].name == 'generated_transaction') {
+                        // console.log(delta[1]);
+                        // return
 
                         for (const row of delta[1].rows) {
                                 const type = types.get(delta[1].name)
@@ -361,7 +363,7 @@ class DeltaHandler {
 
                             if (true || this.interested(data[1].sender) || (data[1].sender === '.............' && this.interested(data[1].payer))){
                                 // console.log(row)
-                                // console.log(data[1].sender)
+                                // console.log(data[1].sender_id)
 
                                 const packed = Serialize.hexToUint8Array(data[1].packed_trx)
                                 const type_trx = types.get('transaction')
@@ -397,7 +399,7 @@ class DeltaHandler {
 
                                         const tx_id = Serialize.arrayToHex(row.data) + parseInt(row.present) + a_idx
 
-                                        const id = crypto.createHash('sha256').update(tx_id).digest('hex');
+                                        const id = crypto.createHash('sha256').update(data[1].sender + '-' + data[1].sender_id).digest('hex');
 
                                         const store_data = {timestamp, present:row.present, data:data_trx, sender:data[1].sender, payer:data[1].payer, block_num}
                                         this.elastic.index({index:'generated-03', id, type:'generated_transaction', body:store_data})
