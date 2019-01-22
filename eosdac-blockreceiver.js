@@ -21,6 +21,10 @@ class BlockReceiver {
         this.current_block = -1
         this.complete = true
 
+        const mode_str = (mode==0)?'serial':'parallel';
+
+        console.log(`Created BlockReceiver, Start : ${startBlock}, End : ${endBlock}, Mode : ${mode_str}`);
+
     }
 
     registerDoneHandler(h){
