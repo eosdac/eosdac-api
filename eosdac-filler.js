@@ -33,6 +33,7 @@ class FillManager {
         this.replay = replay
         this.br = null
         this.test_block = test
+        this.job_done = null
 
         console.log(`Loading config ${config}.config.js`)
     }
@@ -50,7 +51,7 @@ class FillManager {
             rpc, signatureProvider, chainId:this.config.chainId, textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
         });
 
-        cluster.on('exit', (worker, code, signal) => {
+        cluster.on('exit', ((worker, code, signal) => {
             if (signal) {
                 console.log(`FillManager : worker was killed by signal: ${signal}`);
             } else if (code !== 0) {
@@ -62,8 +63,15 @@ class FillManager {
             if (worker.isDead()){
                 console.log(`Worker is dead, starting a new one`)
                 cluster.fork()
+
+                if (worker.isMaster){
+                    console.log('Main thread died :(')
+                }
+                if (this.job_done){
+                    this.job_done(new Error("Error - Job died"))
+                }
             }
-        });
+        }).bind(this));
 
         const action_handler = new ActionHandler({queue, config:this.config})
         const block_handler = new TraceHandler({queue, action_handler, config:this.config})
@@ -177,6 +185,9 @@ class FillManager {
         const start_block = job.data.from
         const end_block = job.data.to
 
+        // used if the process dies
+        this.job_done = done
+
         console.log(`Starting block listener ${start_block} to ${end_block}`)
 
         if (this.br) {
@@ -191,7 +202,7 @@ class FillManager {
             this.br.registerDoneHandler(() => {
                 done()
             })
-            this.br.registerProgressHandler(((progress) => {job.progress(progress)}).bind(this))
+            this.br.registerProgressHandler(((progress) => {job.progress(progress, 100)}).bind(this))
             this.br.start()
         }
     }
