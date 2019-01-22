@@ -146,7 +146,7 @@ class ActionHandler {
     }
 
     interested(account, name) {
-        if (name == 'onblock'){
+        if (name === 'onblock'){
             return false
         }
         if (this.interested_data.contracts.includes(account) ||
