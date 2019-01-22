@@ -102,7 +102,7 @@ class ActionHandler {
 
             if (this.queue) {
                 console.log(`Queueing action for ${action.act.account}::${action.act.name}`)
-                this.queue.create('action', data).save()
+                this.queue.create('action', data).removeOnComplete(true).save()
             } else {
                 console.log(`Processing action for ${action.act.account}::${action.act.name}`)
                 this.processAction(data)
