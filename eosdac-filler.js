@@ -50,13 +50,26 @@ class FillManager {
             rpc, signatureProvider, chainId:this.config.chainId, textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
         });
 
+        cluster.on('exit', (worker, code, signal) => {
+            if (signal) {
+                console.log(`FillManager : worker was killed by signal: ${signal}`);
+            } else if (code !== 0) {
+                console.log(`FillManager : worker exited with error code: ${code}`);
+            } else {
+                console.log('FillManager : worker success!');
+            }
+
+            if (worker.isDead()){
+                console.log(`Worker is dead, starting a new one`)
+                cluster.fork()
+            }
+        });
 
         const action_handler = new ActionHandler({queue, config:this.config})
         const block_handler = new TraceHandler({queue, action_handler, config:this.config})
         const delta_handler = new DeltaHandler({queue, config:this.config})
 
         if (this.replay){
-            console.log(`Replaying`)
 
             queue = kue.createQueue({
                 prefix: this.config.redisPrefix,
@@ -68,6 +81,8 @@ class FillManager {
 
             if (cluster.isMaster){
                 kue.app.listen(3000)
+
+                console.log(`Replaying from ${this.start_block} in parallel mode`)
 
                 const info = await this.api.rpc.get_info()
                 const lib = info.last_irreversible_block_num
@@ -113,16 +128,6 @@ class FillManager {
 
                 for (let i = 0; i < this.config.fillClusterSize; i++) {
                     let worker = cluster.fork()
-                    worker.on('exit', (code, signal) => {
-                        if (signal) {
-                            console.log(`FillManager : worker was killed by signal: ${signal}`);
-                            let worker = cluster.fork()
-                        } else if (code !== 0) {
-                            console.log(`FillManager : worker exited with error code: ${code}`);
-                        } else {
-                            console.log('FillManager : worker success!');
-                        }
-                    });
                 }
 
                 // Start in serial mode from lib onwards
@@ -147,6 +152,7 @@ class FillManager {
             const block_handler = new TraceHandler({queue: queue, action_handler, config: this.config})
 
 
+            console.log(`Testing single block ${this.test_block}`);
             this.br = new BlockReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:1, config:this.config})
             this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
@@ -160,8 +166,8 @@ class FillManager {
             console.log(`No replay, starting in synchronous mode`)
 
             this.br = new BlockReceiver({startBlock:start_block, mode:0, config:this.config})
-            this.br.registerTraceHandler(block_handler)
-            // this.br.registerDeltaHandler(delta_handler)
+            // this.br.registerTraceHandler(block_handler)
+            this.br.registerDeltaHandler(delta_handler)
             this.br.start()
         }
 
@@ -185,6 +191,7 @@ class FillManager {
             this.br.registerDoneHandler(() => {
                 done()
             })
+            this.br.registerProgressHandler(((progress) => {job.progress(progress)}).bind(this))
             this.br.start()
         }
     }
