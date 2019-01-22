@@ -10,6 +10,7 @@ class BlockReceiver {
         this.trace_handlers = []
         this.delta_handlers = []
         this.done_handlers = []
+        this.progress_handlers = []
 
         // console.log(config)
 
@@ -37,6 +38,10 @@ class BlockReceiver {
 
     registerDeltaHandler(h){
         this.delta_handlers.push(h)
+    }
+
+    registerProgressHandler(h){
+        this.progress_handlers.push(h)
     }
 
     status(){
@@ -158,6 +163,10 @@ class BlockReceiver {
                 handler()
             })
         }
+
+        this.progress_handlers.map((handler) => {
+            handler(100 * ((block_num - this.start_block) / this.end_block))
+        })
 
         // const state_col = this.db.collection(this.state_collection)
         // state_col.updateOne({name:'head_block'}, {$set:{block_num}}, {upsert:true})
