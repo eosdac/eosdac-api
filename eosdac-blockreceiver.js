@@ -73,6 +73,10 @@ class BlockReceiver {
         await this.requestBlocks()
     }
 
+    destroy(){
+        console.log(`Destroying (TODO)`)
+    }
+
     async connectDb(){
         return new Promise((resolve, reject) => {
             MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
@@ -157,7 +161,6 @@ class BlockReceiver {
         }
 
         if (this.current_block === this.end_block -1){
-            console.log("Im done")
             this.complete = true
             this.done_handlers.map((handler) => {
                 handler()
