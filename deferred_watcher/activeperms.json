@@ -1,0 +1,24 @@
+{
+  "threshold": 2,
+  "keys": [
+    {
+      "key": "EOS5oDSBSgnVAwDCs8Y6ujny58ePB6ia3kNMUsqxU9Xo1qf6ZBgWJ",
+      "weight": 1
+    }
+  ],
+  "accounts": [
+    {
+      "permission": {
+        "actor": "guardianbot1",
+        "permission": "eosio.code"
+      },
+      "weight": 2
+    }
+  ],
+  "waits": [
+    {
+      "wait_sec": 30,
+      "weight": 1
+    }
+  ]
+}
