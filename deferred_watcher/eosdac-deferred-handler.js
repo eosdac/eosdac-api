@@ -22,7 +22,6 @@ class DeltaHandler {
         const privkey = '5KkVnP742xubajqLY89xhQLmm51yFgtnevCabQYRp8upxdqGRHL'
 
         const signatureProvider = new JsSignatureProvider.default([privkey]);
-        console.log(signatureProvider)
 
         this.api = new Api({
             rpc,
