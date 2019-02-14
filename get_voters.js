@@ -16,8 +16,8 @@ MongoClient.connect(config.mongo.url, {useNewUrlParser: true}, ((err, client) =>
         const col = db.collection('deltas')
 
         const res = col.aggregate([
-            {'$match':{code:"dacelections", table:'votes'}},
-            {'$sort':{block_num:1, code:1, scope:1, primary_key:1, table:1}},
+            {'$match':{code:"dacelections", table:'votes'/*, block_num:{$lte:3750792}*/}},
+            {'$sort':{block_num:1}},
             {'$group':{
                     _id:{code:"$code", table:"$table", scope:"$scope", primary_key:"$primary_key"},
                     block_num:{'$last':"$block_num"},
@@ -28,7 +28,8 @@ MongoClient.connect(config.mongo.url, {useNewUrlParser: true}, ((err, client) =>
                     primary_key:{'$last':"$primary_key"},
                     present:{'$last':"$present"}
                 }
-            }
+            },
+            {'$match': {present:true}}
         ], (err, results) => {
 
             results.forEach((doc) => {
@@ -38,7 +39,6 @@ MongoClient.connect(config.mongo.url, {useNewUrlParser: true}, ((err, client) =>
             })
 
         })
-
 
     }
 
