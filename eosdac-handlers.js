@@ -32,15 +32,17 @@ class ActionHandler {
     }
 
     async _connectDb() {
-        return new Promise((resolve, reject) => {
-            MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
-                if (err) {
-                    reject(err)
-                } else {
-                    resolve(client.db(this.config.mongo.dbName))
-                }
-            }).bind(this))
-        })
+        if (this.config.mongo){
+            return new Promise((resolve, reject) => {
+                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(client.db(this.config.mongo.dbName))
+                    }
+                }).bind(this))
+            })
+        }
     }
 
     async processAction({block_num, action, receiver, receiver_sequence, global_sequence}) {
@@ -52,16 +54,22 @@ class ActionHandler {
 
             const act = await this.api.deserializeActions(actions);
 
-            for (let action_data of act) {
-                const col = this.db.collection(this.config.mongo.traceCollection);
-                action_data.recv_sequence = new MongoLong.fromString(receiver_sequence)
-                action_data.global_sequence = new MongoLong.fromString(global_sequence)
-                //let doc = {block_num, action: action_data}
-                // console.log("ACT\n", act, "INSERT\n", doc, "\nACTION RECEIPT\n", action.receipt);
-                // let index = `actions.gs${action_data.global_sequence}`
-                console.log("\nINSERT\n", action_data)
-                col.updateOne({block_num}, {$addToSet: {action: action_data}}, {upsert: true}).catch(console.log)
+            if (this.db){
+                for (let action_data of act) {
+                    const col = this.db.collection(this.config.mongo.traceCollection);
+                    action_data.recv_sequence = new MongoLong.fromString(receiver_sequence)
+                    action_data.global_sequence = new MongoLong.fromString(global_sequence)
+                    //let doc = {block_num, action: action_data}
+                    // console.log("ACT\n", act, "INSERT\n", doc, "\nACTION RECEIPT\n", action.receipt);
+                    // let index = `actions.gs${action_data.global_sequence}`
+                    console.log("\nINSERT\n", action_data)
+                    col.updateOne({block_num}, {$addToSet: {action: action_data}}, {upsert: true}).catch(console.log)
+                }
             }
+            else {
+                console.log(act)
+            }
+
         } catch (e) {
             console.log("ERROR deserializeActions", e);
             console.log(e)
@@ -177,18 +185,20 @@ class TraceHandler {
     }
 
     async _connectDb() {
-        return new Promise((resolve, reject) => {
-            MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
-                if (err) {
-                    reject(err)
-                } else {
-                    const db = client.db(this.config.mongo.dbName)
-                    const col_traces = db.collection(this.config.mongo.traceCollection)
-                    col_traces.createIndex({block_num:-1})
-                    resolve(db)
-                }
-            }).bind(this))
-        })
+        if (this.config.mongo){
+            return new Promise((resolve, reject) => {
+                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        const db = client.db(this.config.mongo.dbName)
+                        // const col_traces = db.collection(this.config.mongo.traceCollection)
+                        // col_traces.createIndex({block_num:-1})
+                        resolve(db)
+                    }
+                }).bind(this))
+            })
+        }
     }
 
     async queueTrace(block_num, traces) {
@@ -244,9 +254,10 @@ class TraceHandler {
 }
 
 class DeltaHandler {
-    constructor({queue, config, types}) {
+    constructor({queue, config}) {
         this.queue = queue
         this.config = config
+        this.tables = new Map
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
         this.api = new Api({
@@ -261,11 +272,31 @@ class DeltaHandler {
             this.elastic = new elasticsearch.Client(this.config.elasticsearch)
         }
 
+        this.connectDb()
+
 
         this.payers = {}
 
         // setInterval(() => {console.log(this.payers)}, 5000)
 
+    }
+
+    async connectDb() {
+        this.db = await this._connectDb()
+    }
+
+    async _connectDb() {
+        if (this.config.mongo){
+            return new Promise((resolve, reject) => {
+                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(client.db(this.config.mongo.dbName))
+                    }
+                }).bind(this))
+            })
+        }
     }
 
     async getTableType (code, table){
@@ -292,64 +323,111 @@ class DeltaHandler {
         return contract.types.get(type)
     }
 
-    queueDelta(block_num, deltas) {
+
+    async processDeltaJob(job, done) {
+        //console.log(`Processing job : ${job.id}, type : ${job.type}`)
+        const deltas = job.data.deltas
+        const abi = job.data.abi
+        const block_num = job.data.block_num
+        // console.log(job.data)
+
+        try {
+            // console.log(abi)
+            const types = Serialize.getTypesFromAbi(Serialize.createInitialTypes(), abi);
+            for (const table of abi.tables)
+                this.tables.set(table.name, table.type);
+            await this.processDelta(block_num, deltas, types)
+
+            done()
+        } catch (e) {
+            done(e)
+        }
+    }
+
+    queueDelta(block_num, deltas, abi) {
+        const data = {block_num, deltas, abi}
+        this.queue.create('block_deltas', data).removeOnComplete(true).save()
     }
 
     async processDelta(block_num, deltas, types) {
-        const timestampFromBlockNum = async (block) => {
-            const block_data = await this.api.rpc.get_block(block)
-            return block_data.timestamp
-        }
-        const timestamp = await timestampFromBlockNum(block_num)
+        // console.log(`received block ${block_num}`)
+        // const timestampFromBlockNum = async (block) => {
+        //     const block_data = await this.api.rpc.get_block(block)
+        //     return block_data.timestamp
+        // }
+        // const timestamp = await timestampFromBlockNum(block_num)
 
         for (const delta of deltas) {
+            // console.log(delta)
             switch (delta[0]) {
                 case 'table_delta_v0':
                     if (delta[1].name == 'contract_row') {
-                        continue
                         for (const row of delta[1].rows) {
-                            //console.log(row)
+                            // console.log(row)
                             const type = types.get(delta[1].name)
                             const sb = new Serialize.SerialBuffer({
                                 textEncoder: new TextEncoder,
                                 textDecoder: new TextDecoder,
-                                array: row.data
+                                array: new Uint8Array(Object.values(row.data))
                             });
 
-                            const row_version = sb.get() // ?
-                            const code = sb.getName()
-                            const scope = sb.getName()
-                            const table = sb.getName()
-                            const primary_key = sb.getUint64AsNumber()
-                            const payer = sb.getName()
-                            const data_raw = sb.getBytes()
+
+                            let row_version, code, scope ,table, primary_key, payer, data_raw
+                            try {
+                                row_version = sb.get() // ?
+                                code = sb.getName()
+                                scope = sb.getName()
+                                table = sb.getName()
+                                primary_key = sb.getUint64AsNumber()
+                                payer = sb.getName()
+                                data_raw = sb.getBytes()
+
+                                // console.log(`code ${code}`)
+                                // console.log(`table ${table}`)
+                            }
+                            catch (e){
+                                console.error(`Error processing row.data for ${block_num} : ${e.message}`)
+                                const data_raw = null
+                            }
 
 
                             if (this.interested(code)) {
                                 // console.log(abi)
 
-                                const type = await this.getTableType(code, table)
+                                const table_type = await this.getTableType(code, table)
                                 const data_sb = new Serialize.SerialBuffer({
                                     textEncoder: new TextEncoder,
                                     textDecoder: new TextDecoder,
                                     array: data_raw
                                 })
-                                const data = type.deserialize(data_sb)
+                                const data = table_type.deserialize(data_sb)
 
-                                // console.log(`row version ${row_version}`)
-                                console.log(`code ${code}`)
-                                // console.log(`scope ${scope}`)
-                                console.log(`table ${table}`)
-                                // console.log(`primary_key ${primary_key}`)
-                                // console.log(`payer ${payer}`)
-                                // console.log(`data`)
-                                console.log(data)
+                                if (code != 'eosio'){
+                                    console.log(`row version ${row_version}`)
+                                    console.log(`code ${code}`)
+                                    console.log(`scope ${scope}`)
+                                    console.log(`table ${table}`)
+                                    console.log(`primary_key ${primary_key}`)
+                                    console.log(`payer ${payer}`)
+                                    // console.log(`data`)
+                                    console.log(data)
+
+                                    const doc = {
+                                        block_num, code, scope, table, primary_key, payer, data, present: row.present
+                                    }
+
+
+                                    const col = this.db.collection('deltas')
+                                    col.insertOne(doc)
+                                }
                             }
+
                         }
 
                     } else if (delta[1].name == 'generated_transaction') {
                         // console.log(delta[1]);
                         // return
+                        continue
 
                         for (const row of delta[1].rows) {
                                 const type = types.get(delta[1].name)
@@ -361,7 +439,7 @@ class DeltaHandler {
                                 const data = type.deserialize(data_sb)
 
 
-                            if (true || this.interested(data[1].sender) || (data[1].sender === '.............' && this.interested(data[1].payer))){
+                            if (this.interested(data[1].sender) || (data[1].sender === '.............' && this.interested(data[1].payer))){
                                 // console.log(row)
                                 // console.log(data[1].sender_id)
 
@@ -381,17 +459,19 @@ class DeltaHandler {
                                 delete data_trx.transaction_extensions
 
 
-                                // let actions = [];
-                                // console.log('hi')
-                                for (let a=0;a<data_trx.actions.length;a++){
-                                    delete data_trx.actions[a].data
-                                    //     = new Uint8Array(Object.values(data_trx.actions[a].data))
-                                    // actions.push(data_trx.actions[a])
-                                }
-                                const acts = data_trx.actions;
-                                delete data_trx.actions
-                                let a_idx = 0
+
                                 if (this.elastic){
+                                    // let actions = [];
+                                    // console.log('hi')
+                                    for (let a=0;a<data_trx.actions.length;a++){
+                                        delete data_trx.actions[a].data
+                                        //     = new Uint8Array(Object.values(data_trx.actions[a].data))
+                                        // actions.push(data_trx.actions[a])
+                                    }
+                                    const acts = data_trx.actions;
+                                    delete data_trx.actions
+                                    let a_idx = 0
+
                                     acts.forEach((a) => {
                                         delete a.authorization
 
@@ -409,6 +489,19 @@ class DeltaHandler {
                                         a_idx++
                                     })
                                 }
+                                else {
+
+                                    let actions = [];
+                                    for (let a=0;a<data_trx.actions.length;a++){
+                                        // delete data_trx.actions[a].data
+                                        //     = new Uint8Array(Object.values(data_trx.actions[a].data))
+                                        actions.push(data_trx.actions[a])
+                                    }
+
+                                    data_trx.actions = await this.api.deserializeActions(actions)
+
+                                    console.log(data[1].sender, data_trx.actions[0].data, block_num, data[1].trx_id)
+                                }
 
 
                                 if (typeof this.payers[data[1].payer] == 'undefined'){
@@ -420,22 +513,6 @@ class DeltaHandler {
                         }
                     } else if (['resource_usage', 'resource_limits_state', 'resource_limits_config'].includes(delta[1].name)) {
 
-                    } else if (['contract_table'].includes(delta[1].name)) {
-                        continue
-                        for (const row of delta[1].rows) {
-                            const type_trx = types.get('contract_table')
-                            const sb_trx = new Serialize.SerialBuffer({
-                                textEncoder: new TextEncoder,
-                                textDecoder: new TextDecoder,
-                                array: row.data
-                            })
-                            const data_trx = type_trx.deserialize(sb_trx)
-                            if (this.interested(data_trx[1].code)){
-                                console.log(data_trx[1])
-                            }
-
-                        }
-
                     } else {
                     }
                     break;
@@ -446,7 +523,7 @@ class DeltaHandler {
     }
 
     interested(account, name) {
-        if (this.config.eos.contracts.includes(account) || (account == 'eosio' && ['linkauth', 'unlinkauth'].includes(name))) {
+        if (this.config.eos.contracts.includes(account)){
             return true
         }
 

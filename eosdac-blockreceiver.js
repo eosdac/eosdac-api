@@ -11,6 +11,7 @@ class BlockReceiver {
         this.delta_handlers = []
         this.done_handlers = []
         this.progress_handlers = []
+        this.fork_handlers = []
 
         // console.log(config)
 
@@ -44,6 +45,10 @@ class BlockReceiver {
         this.progress_handlers.push(h)
     }
 
+    registerForkHandler(h){
+        this.fork_handlers.push(h)
+    }
+
     status(){
         const start = this.start_block
         const end = this.end_block
@@ -67,6 +72,7 @@ class BlockReceiver {
     }
 
     async restart(startBlock, endBlock){
+        console.log(`Restarting from ${startBlock} to ${endBlock}`)
         this.start_block = startBlock
         this.end_block = endBlock
 
@@ -78,21 +84,24 @@ class BlockReceiver {
     }
 
     async connectDb(){
-        return new Promise((resolve, reject) => {
-            MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
-                if (err){
-                    reject(err)
-                }
-                else {
-                    resolve(client.db(this.config.mongo.dbName))
-                }
-            }).bind(this))
-        })
+        if (this.config.mongo){
+            return new Promise((resolve, reject) => {
+                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
+                    if (err){
+                        reject(err)
+                    }
+                    else {
+                        resolve(client.db(this.config.mongo.dbName))
+                    }
+                }).bind(this))
+            })
+        }
+
     }
 
     async requestBlocks(){
         try {
-            await this.connection.requestBlocks({
+            const request_args = {
                 irreversibleOnly:false,
                 start_block_num: this.start_block,
                 end_block_num: this.end_block,
@@ -100,17 +109,21 @@ class BlockReceiver {
                 fetch_block: false,
                 fetch_traces: (this.trace_handlers.length > 0),
                 fetch_deltas: (this.delta_handlers.length > 0),
-            });
+            }
+            await this.connection.requestBlocks(request_args);
         } catch (e) {
-            console.error(e);
+            console.error(`Error requesting blocks ${e.message}`);
             process.exit(1);
         }
     }
 
     async handleFork(block_num){
-        const trace_collection = this.config.mongo.traceCollection
-        const col = this.db.collection(trace_collection)
-        return col.deleteMany({block_num:{$gte:block_num}})
+        this.fork_handlers.forEach((handler) => {
+            handler(block_num)
+        })
+        // const trace_collection = this.config.mongo.traceCollection
+        // const col = this.db.collection(trace_collection)
+        // return col.deleteMany({block_num:{$gte:block_num}})
     }
 
     async receivedBlock(response, block, traces, deltas) {
@@ -139,18 +152,18 @@ class BlockReceiver {
         }
 
         if (deltas && deltas.length){
-            this.delta_handlers.map(((handler) => {
+            this.delta_handlers.forEach(((handler) => {
                 if (this.mode === 0){
                     handler.processDelta(block_num, deltas, this.connection.types)
                 }
                 else {
-                    handler.queueDelta(block_num, deltas, this.connection.types)
+                    handler.queueDelta(block_num, deltas, this.connection.abi)
                 }
             }).bind(this))
         }
 
         if (traces){
-            this.trace_handlers.map((handler) => {
+            this.trace_handlers.forEach((handler) => {
                 if (this.mode === 0){
                     handler.processTrace(block_num, traces)
                 }
@@ -162,12 +175,12 @@ class BlockReceiver {
 
         if (this.current_block === this.end_block -1){
             this.complete = true
-            this.done_handlers.map((handler) => {
+            this.done_handlers.forEach((handler) => {
                 handler()
             })
         }
 
-        this.progress_handlers.map((handler) => {
+        this.progress_handlers.forEach((handler) => {
             handler(100 * ((block_num - this.start_block) / this.end_block))
         })
 

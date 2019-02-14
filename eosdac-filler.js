@@ -52,11 +52,16 @@ class FillManager {
         });
 
         cluster.on('exit', ((worker, code, signal) => {
+            console.log(`Process exit`)
             if (signal) {
                 console.log(`FillManager : worker was killed by signal: ${signal}`);
             } else if (code !== 0) {
                 console.log(`FillManager : worker exited with error code: ${code}`);
             } else {
+                if (this.job_done){
+                    // Job success
+                    this.job_done()
+                }
                 console.log('FillManager : worker success!');
             }
 
@@ -95,7 +100,7 @@ class FillManager {
                 const info = await this.api.rpc.get_info()
                 const lib = info.last_irreversible_block_num
 
-                let chunk_size = 500000
+                let chunk_size = 10000
                 const range = lib - this.start_block
                 console.log(`Range : ${range}`)
                 if (chunk_size > (range / this.config.fillClusterSize)){
@@ -140,7 +145,8 @@ class FillManager {
 
                 // Start in serial mode from lib onwards
                 this.br = new BlockReceiver({startBlock:lib, mode:0, config:this.config})
-                this.br.registerTraceHandler(block_handler)
+                // this.br.registerTraceHandler(block_handler)
+                this.br.registerDeltaHandler(delta_handler)
                 this.br.start()
             }
             else {
@@ -158,11 +164,12 @@ class FillManager {
 
             const action_handler = new ActionHandler({queue: queue, config: this.config})
             const block_handler = new TraceHandler({queue: queue, action_handler, config: this.config})
+            const delta_handler = new DeltaHandler({queue, config:this.config})
 
 
             console.log(`Testing single block ${this.test_block}`);
             this.br = new BlockReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:1, config:this.config})
-            this.br.registerTraceHandler(block_handler)
+            // this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
             this.br.start()
         }
@@ -196,11 +203,14 @@ class FillManager {
         } else {
             const action_handler = new ActionHandler({queue: this.queue, config: this.config})
             const block_handler = new TraceHandler({queue: this.queue, action_handler, config: this.config})
+            const delta_handler = new DeltaHandler({queue: this.queue, config:this.config})
 
             this.br = new BlockReceiver({startBlock: start_block, endBlock: end_block, mode: 1, config: this.config})
-            this.br.registerTraceHandler(block_handler)
+            this.br.registerDeltaHandler(delta_handler)
+            // this.br.registerTraceHandler(block_handler)
             this.br.registerDoneHandler(() => {
                 done()
+                process.exit(0)
             })
             this.br.registerProgressHandler(((progress) => {job.progress(progress, 100)}).bind(this))
             this.br.start()
