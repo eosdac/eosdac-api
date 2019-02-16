@@ -36,6 +36,7 @@ class FillManager {
         this.br = null
         this.test_block = test
         this.job_done = null
+        this.job = null
         this.process_only = processOnly
 
         console.log(`Loading config ${config}.config.js`)
@@ -61,22 +62,27 @@ class FillManager {
             } else if (code !== 0) {
                 console.log(`FillManager : worker exited with error code: ${code}`);
             } else {
-                if (this.job_done){
+                if (this.job){
                     // Job success
-                    this.job_done()
+                    this.amq.then((amq) => {
+                        amq.ack(this.job)
+                    })
                 }
                 console.log('FillManager : worker success!');
             }
 
             if (worker.isDead()){
+                if (this.job){
+                    this.amq.then((amq) => {
+                        amq.reject(job)
+                    })
+                }
+
                 console.log(`FillManager : Worker is dead, starting a new one`)
                 cluster.fork()
 
                 if (worker.isMaster){
                     console.log('FillManager : Main thread died :(')
-                }
-                if (this.job_done){
-                    this.job_done(new Error("Error - Job died"))
                 }
             }
         }).bind(this));
@@ -214,6 +220,7 @@ class FillManager {
 
     async processBlockRange(job) {
         console.log(`processBlockRange pid : ${process.pid}`, job.content)
+        this.job = job
         //await this.amq.ack(job)
 
         const start_buffer = job.content.slice(0, 8)
