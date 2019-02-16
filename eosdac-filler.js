@@ -155,7 +155,7 @@ class FillManager {
                 this.br.start()
             }
             else {
-                //queue.process('block_range', 1, this.processBlockRange.bind(this))
+                queue.process('block_range', 1, this.processBlockRange.bind(this))
             }
 
         }
