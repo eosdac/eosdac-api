@@ -13,6 +13,9 @@ module.exports = {
         traceCollection: 'traces',
         stateCollection: 'states'
     },
+    amq: {
+        connectionString: 'amqp://user:pass@host/vhost'
+    },
     eos: {
         contracts: ['kasdactokens', 'dacelections', 'eosdacdoshhq', 'dacmultisigs'],
         chainId: "e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473",
