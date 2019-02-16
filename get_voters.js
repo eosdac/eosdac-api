@@ -37,11 +37,11 @@ MongoClient.connect(config.mongo.url, {useNewUrlParser: true}, ((err, client) =>
             }, (err) => {
                 if (err){
                     console.error(err)
-                    process.exit(0)
                 }
+                process.exit(0)
             })
 
-            process.exit(0)
+            //process.exit(0)
         })
 
     }
