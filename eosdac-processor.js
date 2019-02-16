@@ -84,33 +84,44 @@ class JobProcessor {
             textDecoder: new TextDecoder,
             array: data_raw
         });
-        const data = table_type.deserialize(data_sb);
+        try {
+            const data = table_type.deserialize(data_sb);
 
-        if (code != 'eosio'){
-            console.log(`row version ${row_version}`);
-            console.log(`code ${code}`);
-            console.log(`scope ${scope}`);
-            console.log(`table ${table}`);
-            console.log(`primary_key ${primary_key}`);
-            console.log(`payer ${payer}`);
-            // console.log(`data`)
-            console.log(data);
+            if (code != 'eosio'){
+                console.log(`row version ${row_version}`);
+                console.log(`code ${code}`);
+                console.log(`scope ${scope}`);
+                console.log(`table ${table}`);
+                console.log(`primary_key ${primary_key}`);
+                console.log(`payer ${payer}`);
+                // console.log(`data`)
+                console.log(data);
 
-            const doc = {
-                block_num, code, scope, table, primary_key, payer, data, present
-            };
+                const doc = {
+                    block_num, code, scope, table, primary_key, payer, data, present
+                };
 
-            console.log(doc)
+                console.log(doc)
 
-            this.db.then((db) => {
-                const col = db.collection('deltas')
-                col.insertOne(doc)
-            })
+                this.db.then((db) => {
+                    const col = db.collection('deltas')
+                    col.insertOne(doc)
+                })
 
+                this.amq.then((amq) => {
+                    amq.ack(job)
+                })
+            }
+        }
+        catch (e){
+            console.error(`Error deserializing ${code}:${table} : ${e.message}`)
             this.amq.then((amq) => {
                 amq.ack(job)
             })
+            return
         }
+
+
     }
 
     async start(){
