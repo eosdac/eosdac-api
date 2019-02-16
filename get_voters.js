@@ -10,7 +10,7 @@ MongoClient.connect(config.mongo.url, {useNewUrlParser: true}, ((err, client) =>
         console.error("\nFailed to connect\n", err)
     }
     else if (client){
-        console.info(`Connected to ${config.mongo.url}`)
+        console.info(`Connected to ${config.mongo.url}/${config.mongo.dbName}`)
         const db = client.db(config.mongo.dbName);
 
         const col = db.collection('deltas')
@@ -29,15 +29,19 @@ MongoClient.connect(config.mongo.url, {useNewUrlParser: true}, ((err, client) =>
                     present:{'$last':"$present"}
                 }
             },
-            {'$match': {present:true}}
+            {'$match': {present:1}}
         ], (err, results) => {
 
             results.forEach((doc) => {
                 console.log(doc)
             }, (err) => {
-                process.exit(0)
+                if (err){
+                    console.error(err)
+                    process.exit(0)
+                }
             })
 
+            process.exit(0)
         })
 
     }

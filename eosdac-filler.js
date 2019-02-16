@@ -7,8 +7,10 @@ const { TextDecoder, TextEncoder } = require('text-encoding');
 const fetch = require('node-fetch');
 
 
-var kue = require('kue')
+// const kue = require('kue')
+const RabbitSender = require('./rabbitsender')
 const cluster = require('cluster')
+const Int64BE = require('int64-buffer').Int64BE;
 
 let rpc;
 const signatureProvider = null;
@@ -40,7 +42,7 @@ class FillManager {
     }
 
     async run(){
-        let queue
+        // let queue
 
         let start_block = this.start_block
 
@@ -67,11 +69,11 @@ class FillManager {
             }
 
             if (worker.isDead()){
-                console.log(`Worker is dead, starting a new one`)
+                console.log(`FillManager : Worker is dead, starting a new one`)
                 cluster.fork()
 
                 if (worker.isMaster){
-                    console.log('Main thread died :(')
+                    console.log('FillManager : Main thread died :(')
                 }
                 if (this.job_done){
                     this.job_done(new Error("Error - Job died"))
@@ -79,42 +81,46 @@ class FillManager {
             }
         }).bind(this));
 
-        const action_handler = new ActionHandler({queue, config:this.config})
-        const block_handler = new TraceHandler({queue, action_handler, config:this.config})
-        const delta_handler = new DeltaHandler({queue, config:this.config})
+        // const action_handler = new ActionHandler({queue:this.amq, config:this.config})
+        // const block_handler = new TraceHandler({queue:this.amq, action_handler, config:this.config})
+        const delta_handler = new DeltaHandler({queue:this.amq, config:this.config})
 
         if (this.replay){
 
-            queue = kue.createQueue({
-                prefix: this.config.redisPrefix,
-                redis: this.config.redis
-            })
-
-            this.queue = queue
+            // queue = kue.createQueue({
+            //     prefix: this.config.redisPrefix,
+            //     redis: this.config.redis
+            // })
 
 
             if (cluster.isMaster){
-                kue.app.listen(3000)
+                // kue.app.listen(3000)
+                this.amq = await RabbitSender.init(this.config.amq)
 
                 console.log(`Replaying from ${this.start_block} in parallel mode`)
 
                 const info = await this.api.rpc.get_info()
                 const lib = info.last_irreversible_block_num
 
-                let chunk_size = 100000
+                let chunk_size = 10000
                 const range = lib - this.start_block
-                console.log(`Range : ${range}`)
+
                 if (chunk_size > (range / this.config.fillClusterSize)){
                     console.log('small chunks')
                     chunk_size = parseInt((range) / this.config.fillClusterSize)
                 }
+
                 let from = this.start_block;
                 let to = from + chunk_size; // to is not inclusive
+
                 let break_now = false
                 let number_jobs = 0
                 while (true){
                     console.log(`adding job for ${from} to ${to}`)
-                    queue.create('block_range', {from, to}).removeOnComplete( true ).save()
+                    let from_buffer = new Int64BE(from).toBuffer()
+                    let to_buffer = new Int64BE(to).toBuffer()
+
+                    this.amq.send('block_range', Buffer.concat([from_buffer, to_buffer]))
                     number_jobs++
 
                     if (to == lib){
@@ -131,11 +137,6 @@ class FillManager {
                     if (from > to){
                         break_now = true
                     }
-
-                    // WARNING : debug
-                    // if (to > 100000){
-                    //     break_now = true;
-                    // }
 
                     if (break_now){
                         break
@@ -155,21 +156,20 @@ class FillManager {
                 this.br.start()
             }
             else {
-                queue.process('block_range', 1, this.processBlockRange.bind(this))
+                //queue.process('block_range', 1, this.processBlockRange.bind(this))
+                this.amq = RabbitSender.init(this.config.amq)
+
+                console.log(`Listening to queue for block_range`)
+                this.amq.then((amq) => {
+                    amq.listen('block_range', this.processBlockRange.bind(this))
+                })
             }
 
         }
         else if (this.test_block){
-            queue = kue.createQueue({
-                prefix: this.config.redisPrefix,
-                redis: this.config.redis
-            })
-            kue.app.listen(3002)
-
-
-            const action_handler = new ActionHandler({queue: queue, config: this.config})
-            const block_handler = new TraceHandler({queue: queue, action_handler, config: this.config})
-            const delta_handler = new DeltaHandler({queue, config:this.config})
+            // const action_handler = new ActionHandler({queue: this.amq, config: this.config})
+            // const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config})
+            const delta_handler = new DeltaHandler({queue: this.amq, config:this.config})
 
 
             console.log(`Testing single block ${this.test_block}`);
@@ -179,15 +179,8 @@ class FillManager {
             this.br.start()
         }
         else if (this.process_only){
-            queue = kue.createQueue({
-                prefix: this.config.redisPrefix,
-                redis: this.config.redis
-            })
-
-            this.queue = queue
-
             if (cluster.isMaster){
-                kue.app.listen(3000)
+                //kue.app.listen(3000)
 
                 console.log(`Starting block_range listener only`)
 
@@ -196,7 +189,12 @@ class FillManager {
                 }
             }
             else {
-                queue.process('block_range', 1, this.processBlockRange.bind(this))
+                this.amq = RabbitSender.init(this.config.amq)
+
+                console.log(`Listening to queue for block_range ONLY`)
+                this.amq.then((amq) => {
+                    amq.listen('block_range', this.processBlockRange.bind(this))
+                })
             }
         }
         else {
@@ -214,33 +212,56 @@ class FillManager {
 
     }
 
-    async processBlockRange(job, done) {
-        const start_block = job.data.from
-        const end_block = job.data.to
+    async processBlockRange(job) {
+        console.log(`processBlockRange pid : ${process.pid}`, job.content)
+        //await this.amq.ack(job)
+
+        const start_buffer = job.content.slice(0, 8)
+        const end_buffer = job.content.slice(8)
+
+        const start_block = new Int64BE(start_buffer).toString()
+        const end_block = new Int64BE(end_buffer).toString()
 
         // used if the process dies
-        this.job_done = done
+        // this.job_done = this.amq.ack
 
         console.log(`Starting block listener ${start_block} to ${end_block}`)
 
         if (this.br) {
             console.log("Already have BlockReceiver")
             this.br.restart(start_block, end_block)
+            this.br.registerDoneHandler(() => {
+                // console.log(`BlockReceiver completed`, job)
+                this.amq.then((amq) => {
+                    amq.ack(job)
+                })
+                console.log(`Finished job ${start_block}-${end_block}`)
+            })
         } else {
-            const action_handler = new ActionHandler({queue: this.queue, config: this.config})
-            const block_handler = new TraceHandler({queue: this.queue, action_handler, config: this.config})
-            const delta_handler = new DeltaHandler({queue: this.queue, config:this.config})
+            // const action_handler = new ActionHandler({queue: this.queue, config: this.config})
+            // const block_handler = new TraceHandler({queue: this.queue, action_handler, config: this.config})
+            const delta_handler = new DeltaHandler({queue: this.amq, config:this.config})
+
 
             this.br = new BlockReceiver({startBlock: start_block, endBlock: end_block, mode: 1, config: this.config})
             this.br.registerDeltaHandler(delta_handler)
             // this.br.registerTraceHandler(block_handler)
             this.br.registerDoneHandler(() => {
-                //console.log(`BlockReceiver completed`, done)
-                done()
+                // console.log(`BlockReceiver completed`, job)
+                this.amq.then((amq) => {
+                    amq.ack(job)
+                })
                 console.log(`Finished job ${start_block}-${end_block}`)
             })
-            this.br.registerProgressHandler(((progress) => {job.progress(progress, 100)}).bind(this))
-            this.br.start()
+
+
+            // start the receiver
+            try {
+                await this.br.start()
+            }
+            catch (e){
+                console.error(`ERROR starting BlockReceiver : ${e.message}`)
+            }
         }
     }
 }

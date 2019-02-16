@@ -5,8 +5,9 @@ const {Api, JsonRpc, Serialize} = require('eosjs');
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const fetch = require('node-fetch');
 
-var elasticsearch = require('elasticsearch');
+const RabbitSender = require('./rabbitsender')
 var crypto = require('crypto');
+const Int64 = require('int64-buffer').Int64BE;
 
 class ActionHandler {
     constructor({queue, db, config}) {
@@ -268,11 +269,8 @@ class DeltaHandler {
             textEncoder: new TextEncoder(),
         });
 
-        if (this.config.elasticsearch){
-            this.elastic = new elasticsearch.Client(this.config.elasticsearch)
-        }
-
         this.connectDb();
+        this.connectAmq()
 
 
         this.payers = {}
@@ -283,6 +281,10 @@ class DeltaHandler {
 
     async connectDb() {
         this.db = await this._connectDb()
+    }
+
+    async connectAmq(){
+        this.amq = RabbitSender.init(this.config.amq)
     }
 
     async _connectDb() {
@@ -325,7 +327,7 @@ class DeltaHandler {
 
 
     async processDeltaJob(job, done) {
-        //console.log(`Processing job : ${job.id}, type : ${job.type}`)
+        console.log(`Processing job : `, job)
         const deltas = job.data.deltas;
         const abi = job.data.abi;
         const block_num = job.data.block_num;
@@ -346,17 +348,58 @@ class DeltaHandler {
 
     queueDelta(block_num, deltas, abi) {
         const data = {block_num, deltas, abi};
-        this.queue.create('block_deltas', data).removeOnComplete(true).save()
+        // console.log(`Queueing delta `, deltas)
+        // this.queue.create('block_deltas', data).removeOnComplete(true).save()
+
+        for (const delta of deltas) {
+            // console.log(delta)
+            switch (delta[0]) {
+                case 'table_delta_v0':
+                    if (delta[1].name == 'contract_row') {
+                        for (const row of delta[1].rows) {
+
+                            const sb = new Serialize.SerialBuffer({
+                                textEncoder: new TextEncoder,
+                                textDecoder: new TextDecoder,
+                                array: row.data
+                            });
+
+
+                            let row_version, code
+                            try {
+                                row_version = sb.get(); // ?
+                                code = sb.getName();
+
+                                // console.log(`code ${code}`)
+                                // console.log(`table ${table}`)
+                            }
+                            catch (e){
+                                console.error(`Error processing row.data for ${block_num} : ${e.message}`);
+                                const data_raw = null
+                            }
+
+                            if (this.interested(code)) {
+                                this.queueContractRow(block_num, row)
+                            }
+                        }
+                    }
+                    break
+            }
+        }
+    }
+
+    async queueContractRow(block_num, row){
+        this.amq.then((amq) => {
+            const block_buffer = new Int64(block_num).toBuffer()
+            // console.log(block_buffer)
+            const present_buffer = Buffer.from([row.present])
+            // console.log('sending contract_row', Buffer.from(row.data))
+            // console.log(Buffer.concat([block_buffer, present_buffer, Buffer.from(row.data)]))
+            amq.send('contract_row', Buffer.concat([block_buffer, present_buffer, Buffer.from(row.data)]))
+        })
     }
 
     async processDelta(block_num, deltas, types) {
-        // console.log(`received block ${block_num}`)
-        // const timestampFromBlockNum = async (block) => {
-        //     const block_data = await this.api.rpc.get_block(block)
-        //     return block_data.timestamp
-        // }
-        // const timestamp = await timestampFromBlockNum(block_num)
-
         for (const delta of deltas) {
             // console.log(delta)
             switch (delta[0]) {
@@ -376,11 +419,6 @@ class DeltaHandler {
                             try {
                                 row_version = sb.get(); // ?
                                 code = sb.getName();
-                                scope = sb.getName();
-                                table = sb.getName();
-                                primary_key = sb.getUint64AsNumber();
-                                payer = sb.getName();
-                                data_raw = sb.getBytes()
 
                                 // console.log(`code ${code}`)
                                 // console.log(`table ${table}`)
@@ -393,6 +431,11 @@ class DeltaHandler {
 
                             if (this.interested(code)) {
                                 // console.log(abi)
+                                scope = sb.getName();
+                                table = sb.getName();
+                                primary_key = sb.getUint64AsNumber();
+                                payer = sb.getName();
+                                data_raw = sb.getBytes()
 
                                 const table_type = await this.getTableType(code, table);
                                 const data_sb = new Serialize.SerialBuffer({

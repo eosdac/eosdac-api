@@ -5,9 +5,11 @@
   "author": "<michael@eosdac.io>",
   "license": "MIT",
   "dependencies": {
+    "amqplib": "^0.5.3",
     "commander": "^2.19.0",
     "elasticsearch": "^15.3.0",
     "eosjs": "./eosjs",
+    "int64-buffer": "^0.99.1007",
     "kue": "^0.11.5",
     "mongodb": "^3.1",
     "node-fetch": "^2.2.0",

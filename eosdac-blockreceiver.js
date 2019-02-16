@@ -60,23 +60,40 @@ class BlockReceiver {
     async start(){
         this.complete = false
 
-        this.db = await this.connectDb()
+        return new Promise((resolve, reject) => {
 
-        this.connection = new Connection({
-            socketAddress: this.config.eos.wsEndpoint,
-            receivedAbi: (() => {
-                this.requestBlocks()
-            }).bind(this),
-            receivedBlock: this.receivedBlock.bind(this),
-        });
+            this.connectDb().then((db) => {
+                this.db = db
+
+                this.registerDoneHandler(resolve)
+
+                this.connection = new Connection({
+                    socketAddress: this.config.eos.wsEndpoint,
+                    receivedAbi: (() => {
+                        this.requestBlocks()
+                    }).bind(this),
+                    receivedBlock: this.receivedBlock.bind(this),
+                })
+
+            })
+        })
+
+        // console.log(this.connection)
     }
 
     async restart(startBlock, endBlock){
         console.log(`Restarting from ${startBlock} to ${endBlock}`)
         this.start_block = startBlock
         this.end_block = endBlock
+        this.complete = false
+        this.done_handlers = []
 
-        await this.requestBlocks()
+        if (!this.connection){
+            this.start()
+        }
+        else {
+            await this.requestBlocks()
+        }
     }
 
     destroy(){
@@ -84,6 +101,7 @@ class BlockReceiver {
     }
 
     async connectDb(){
+        return
         if (this.config.mongo){
             return new Promise((resolve, reject) => {
                 MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
@@ -136,8 +154,6 @@ class BlockReceiver {
             await this.handleFork(block_num)
         }
 
-        this.complete = false
-
         this.current_block = block_num
 
         if (!(block_num % 1000) || (this.end_block - this.start_block) < 50){
@@ -173,7 +189,7 @@ class BlockReceiver {
             })
         }
 
-        if (this.current_block === this.end_block -1){
+        if (this.current_block === this.end_block -1 && !this.complete){
             this.complete = true
             this.done_handlers.forEach((handler) => {
                 handler()
