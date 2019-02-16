@@ -25,7 +25,7 @@ const BlockReceiver = require('./eosdac-blockreceiver')
 
 
 class FillManager {
-    constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false, test = 0 }) {
+    constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false, test = 0, processOnly = false }) {
         this.config = require(`./${config}.config`)
         this.config_name = config
         this.start_block = startBlock
@@ -34,6 +34,7 @@ class FillManager {
         this.br = null
         this.test_block = test
         this.job_done = null
+        this.process_only = processOnly
 
         console.log(`Loading config ${config}.config.js`)
     }
@@ -100,7 +101,7 @@ class FillManager {
                 const info = await this.api.rpc.get_info()
                 const lib = info.last_irreversible_block_num
 
-                let chunk_size = 10000
+                let chunk_size = 100000
                 const range = lib - this.start_block
                 console.log(`Range : ${range}`)
                 if (chunk_size > (range / this.config.fillClusterSize)){
@@ -110,9 +111,11 @@ class FillManager {
                 let from = this.start_block;
                 let to = from + chunk_size; // to is not inclusive
                 let break_now = false
+                let number_jobs = 0
                 while (true){
                     console.log(`adding job for ${from} to ${to}`)
                     queue.create('block_range', {from, to}).removeOnComplete( true ).save()
+                    number_jobs++
 
                     if (to == lib){
                         break_now = true
@@ -139,6 +142,8 @@ class FillManager {
                     }
                 }
 
+                console.log(`Queued ${number_jobs} jobs`)
+
                 for (let i = 0; i < this.config.fillClusterSize; i++) {
                     let worker = cluster.fork()
                 }
@@ -150,7 +155,7 @@ class FillManager {
                 this.br.start()
             }
             else {
-                queue.process('block_range', 1, this.processBlockRange.bind(this))
+                //queue.process('block_range', 1, this.processBlockRange.bind(this))
             }
 
         }
@@ -172,6 +177,27 @@ class FillManager {
             // this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
             this.br.start()
+        }
+        else if (this.process_only){
+            queue = kue.createQueue({
+                prefix: this.config.redisPrefix,
+                redis: this.config.redis
+            })
+
+            this.queue = queue
+
+            if (cluster.isMaster){
+                kue.app.listen(3000)
+
+                console.log(`Starting block_range listener only`)
+
+                for (let i = 0; i < this.config.fillClusterSize; i++) {
+                    let worker = cluster.fork()
+                }
+            }
+            else {
+                queue.process('block_range', 1, this.processBlockRange.bind(this))
+            }
         }
         else {
             if (start_block === 0){
@@ -209,8 +235,9 @@ class FillManager {
             this.br.registerDeltaHandler(delta_handler)
             // this.br.registerTraceHandler(block_handler)
             this.br.registerDoneHandler(() => {
+                //console.log(`BlockReceiver completed`, done)
                 done()
-                process.exit(0)
+                console.log(`Finished job ${start_block}-${end_block}`)
             })
             this.br.registerProgressHandler(((progress) => {job.progress(progress, 100)}).bind(this))
             this.br.start()
@@ -225,6 +252,7 @@ commander
     .option('-e, --end-block <end-block>', 'End block (exclusive)', parseInt, 0xffffffff)
     .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  'jungle')
     .option('-r, --replay', 'Force replay (ignore head block)', false)
+    .option('-p, --process-only', 'Only process queue items (do not populate)', false)
     .parse(process.argv);
 
 // const monitor = new Monitor(commander);
