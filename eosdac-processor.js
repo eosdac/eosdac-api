@@ -9,6 +9,7 @@ const cluster = require('cluster')
 const { TextDecoder, TextEncoder } = require('text-encoding');
 const {Api, JsonRpc, Serialize} = require('eosjs');
 const MongoClient = require('mongodb').MongoClient;
+const MongoLong = require('mongodb').Long;
 const {ActionHandler, TraceHandler, DeltaHandler} = require('./eosdac-handlers')
 const RabbitSender = require('./rabbitsender')
 const Int64 = require('int64-buffer').Int64BE;
@@ -74,7 +75,7 @@ class JobProcessor {
         const code = sb.getName();
         const scope = sb.getName();
         const table = sb.getName();
-        const primary_key = sb.getUint64AsNumber();
+        const primary_key = new Int64(sb.getUint8Array(8)).toString()
         const payer = sb.getName();
         const data_raw = sb.getBytes()
 
@@ -98,19 +99,28 @@ class JobProcessor {
                 console.log(data);
 
                 const doc = {
-                    block_num, code, scope, table, primary_key, payer, data, present
+                    block_num: MongoLong.fromString(block_num), code, scope, table, primary_key: MongoLong.fromString(primary_key), payer, data, present
                 };
 
                 console.log(doc)
 
                 this.db.then((db) => {
                     const col = db.collection('deltas')
-                    col.insertOne(doc)
+                    col.insertOne(doc).then(() => {
+                        console.log('Save completed')
+
+                        this.amq.then((amq) => {
+                            amq.ack(job)
+                        })
+                    }).catch((e) => {
+                        console.error('DB save failed :(', e)
+
+                        this.amq.then((amq) => {
+                            amq.reject(job)
+                        })
+                    })
                 })
 
-                this.amq.then((amq) => {
-                    amq.ack(job)
-                })
             }
         }
         catch (e){
