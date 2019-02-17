@@ -182,6 +182,10 @@ class FillManager {
             this.br = new BlockReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:1, config:this.config})
             // this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
+            this.br.registerDoneHandler(() => {
+                console.log('Test complete')
+                // process.exit(0)
+            })
             this.br.start()
         }
         else if (this.process_only){
