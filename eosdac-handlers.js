@@ -438,6 +438,11 @@ class DeltaHandler {
                                 data_raw = sb.getBytes()
 
                                 const table_type = await this.getTableType(code, table);
+                                if (!table_type){
+                                    console.log('Could not find type for ${code}:${table}')
+                                    continue
+                                }
+
                                 const data_sb = new Serialize.SerialBuffer({
                                     textEncoder: new TextEncoder,
                                     textDecoder: new TextDecoder,
