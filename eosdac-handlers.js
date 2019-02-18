@@ -370,8 +370,8 @@ class DeltaHandler {
                                 row_version = sb.get(); // ?
                                 code = sb.getName();
 
-                                console.log(`code ${code}`)
-                                console.log(`table ${table}`)
+                                // console.log(`code ${code}`)
+                                // console.log(`table ${table}`)
                             }
                             catch (e){
                                 console.error(`Error processing row.data for ${block_num} : ${e.message}`);
