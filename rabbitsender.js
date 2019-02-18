@@ -20,6 +20,7 @@ class RabbitSender {
         const channel = await conn.createChannel()
         channel.assertQueue('block_range', {durable: true})
         channel.assertQueue('contract_row', {durable: true})
+        channel.assertQueue('permission_link', {durable: true})
 
         return new RabbitSender(channel, config)
     }

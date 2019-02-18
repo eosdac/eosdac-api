@@ -356,6 +356,7 @@ class DeltaHandler {
             switch (delta[0]) {
                 case 'table_delta_v0':
                     if (delta[1].name == 'contract_row') {
+                        continue
                         for (const row of delta[1].rows) {
 
                             const sb = new Serialize.SerialBuffer({
@@ -365,13 +366,10 @@ class DeltaHandler {
                             });
 
 
-                            let row_version, code
+                            let code
                             try {
-                                row_version = sb.get(); // ?
+                                sb.get(); // ?
                                 code = sb.getName();
-
-                                // console.log(`code ${code}`)
-                                // console.log(`table ${table}`)
                             }
                             catch (e){
                                 console.error(`Error processing row.data for ${block_num} : ${e.message}`);
@@ -379,8 +377,39 @@ class DeltaHandler {
                             }
 
                             if (this.interested(code)) {
-                                this.queueContractRow(block_num, row)
+                                this.queueDeltaRow('contract_row', block_num, row)
                             }
+                        }
+                    }
+                    else if (delta[1].name == 'permission_link') {
+                        for (const row of delta[1].rows) {
+
+                            // console.log(data, delta[1].name, row.present)
+
+                            const sb = new Serialize.SerialBuffer({
+                                textEncoder: new TextEncoder,
+                                textDecoder: new TextDecoder,
+                                array: row.data
+                            });
+
+                            // console.log(row)
+
+
+                            try {
+                                const _hdr = sb.get()
+                                const account = sb.getName()
+
+                                if (this.interested(account)) {
+                                    this.queueDeltaRow('permission_link', block_num, row).then(() => {
+                                        console.log(`Submitted permission_link`)
+                                    })
+                                }
+                            }
+                            catch (e){
+                                console.error(`Error processing row.data for ${block_num} : ${e.message}`);
+                                const data_raw = null
+                            }
+
                         }
                     }
                     break
@@ -388,15 +417,18 @@ class DeltaHandler {
         }
     }
 
-    async queueContractRow(block_num, row){
-        this.amq.then((amq) => {
-            const block_buffer = new Int64(block_num).toBuffer()
-            // console.log(block_buffer)
-            const present_buffer = Buffer.from([row.present])
-            // console.log('sending contract_row', Buffer.from(row.data))
-            // console.log(Buffer.concat([block_buffer, present_buffer, Buffer.from(row.data)]))
-            amq.send('contract_row', Buffer.concat([block_buffer, present_buffer, Buffer.from(row.data)]))
+    async queueDeltaRow(name, block_num, row) {
+        return new Promise((resolve, reject) => {
+            this.amq.then((amq) => {
+                const block_buffer = new Int64(block_num).toBuffer()
+                const present_buffer = Buffer.from([row.present])
+                console.log(`Publishing ${name}`)
+                amq.send(name, Buffer.concat([block_buffer, present_buffer, Buffer.from(row.data)]))
+                    .then(resolve)
+                    .catch(reject)
+            })
         })
+
     }
 
     async processDelta(block_num, deltas, types) {
@@ -405,6 +437,7 @@ class DeltaHandler {
             switch (delta[0]) {
                 case 'table_delta_v0':
                     if (delta[1].name == 'contract_row') {
+                        continue
                         for (const row of delta[1].rows) {
                             // console.log(row)
                             const type = types.get(delta[1].name);
@@ -559,9 +592,36 @@ class DeltaHandler {
 
                             }
                         }
-                    } else if (['resource_usage', 'resource_limits_state', 'resource_limits_config'].includes(delta[1].name)) {
+                    }
+                    else if (['resource_usage', 'resource_limits_state', 'resource_limits_config'].includes(delta[1].name)) {
+                        continue
+                        for (const row of delta[1].rows) {
+                            const type = types.get(delta[1].name);
+                            const data_sb = new Serialize.SerialBuffer({
+                                textEncoder: new TextEncoder,
+                                textDecoder: new TextDecoder,
+                                array: row.data
+                            });
+                            const data = type.deserialize(data_sb);
 
-                    } else {
+                            console.log(data, delta[1].name)
+                        }
+                    }
+                    else if (['permission_link'].includes(delta[1].name)) {
+
+                        for (const row of delta[1].rows) {
+                            const type = types.get(delta[1].name);
+                            const data_sb = new Serialize.SerialBuffer({
+                                textEncoder: new TextEncoder,
+                                textDecoder: new TextDecoder,
+                                array: row.data
+                            });
+                            const data = type.deserialize(data_sb);
+
+                            console.log(data, delta[1].name, row.present)
+                        }
+                    }
+                    else {
                     }
                     break;
                 case '':

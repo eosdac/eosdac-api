@@ -27,8 +27,9 @@ const BlockReceiver = require('./eosdac-blockreceiver')
 
 
 class FillManager {
-    constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false, test = 0, processOnly = false }) {
+    constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false, test = 0, processOnly = false, mode }) {
         this.config = require(`./${config}.config`)
+        this.mode = mode
         this.config_name = config
         this.start_block = startBlock
         this.end_block = endBlock
@@ -179,7 +180,7 @@ class FillManager {
 
 
             console.log(`Testing single block ${this.test_block}`);
-            this.br = new BlockReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:1, config:this.config})
+            this.br = new BlockReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:this.mode, config:this.config})
             // this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
             this.br.registerDoneHandler(() => {
@@ -285,6 +286,7 @@ commander
     .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  'jungle')
     .option('-r, --replay', 'Force replay (ignore head block)', false)
     .option('-p, --process-only', 'Only process queue items (do not populate)', false)
+    .option('-m, --mode', 'Replay mode, either 0 = serial, or 1 = parallel', 0)
     .parse(process.argv);
 
 // const monitor = new Monitor(commander);

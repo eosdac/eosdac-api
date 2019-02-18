@@ -89,14 +89,16 @@ class JobProcessor {
             const data = table_type.deserialize(data_sb);
 
             if (code != 'eosio'){
-                console.log(`row version ${row_version}`);
-                console.log(`code ${code}`);
-                console.log(`scope ${scope}`);
-                console.log(`table ${table}`);
-                console.log(`primary_key ${primary_key}`);
-                console.log(`payer ${payer}`);
-                // console.log(`data`)
-                console.log(data);
+                // console.log(`row version ${row_version}`);
+                // console.log(`code ${code}`);
+                // console.log(`scope ${scope}`);
+                // console.log(`table ${table}`);
+                // console.log(`primary_key ${primary_key}`);
+                // console.log(`payer ${payer}`);
+                // // console.log(`data`)
+                // console.log(data);
+
+                console.log(`Storing ${code}:${table}`)
 
                 const doc = {
                     block_num: MongoLong.fromString(block_num), code, scope, table, primary_key: MongoLong.fromString(primary_key), payer, data, present
@@ -105,7 +107,7 @@ class JobProcessor {
                 console.log(doc)
 
                 this.db.then((db) => {
-                    const col = db.collection('deltas')
+                    const col = db.collection('contract_rows')
                     col.insertOne(doc).then(() => {
                         console.log('Save completed')
 
@@ -134,6 +136,47 @@ class JobProcessor {
 
     }
 
+    async processPermissionLink(job) {
+        console.log(`Process permission link`)
+
+        const sb = new Serialize.SerialBuffer({
+            textEncoder: new TextEncoder,
+            textDecoder: new TextDecoder,
+            array: new Uint8Array(job.content)
+        });
+
+        const block_num = new Int64(sb.getUint8Array(8)).toString()
+        const present = !!sb.get()
+        sb.get()
+        const account = sb.getName()
+        const code = sb.getName()
+        const message_type = sb.getName()
+        const required_permission = sb.getName()
+
+        const doc = {
+            block_num: MongoLong.fromString(block_num), account, code, message_type, required_permission, present
+        };
+
+        console.log(doc)
+
+        this.db.then((db) => {
+            const col = db.collection('permission_links')
+            col.insertOne(doc).then(() => {
+                console.log('Save completed')
+
+                this.amq.then((amq) => {
+                    amq.ack(job)
+                })
+            }).catch((e) => {
+                console.error('DB save failed :(', e)
+
+                this.amq.then((amq) => {
+                    amq.reject(job)
+                })
+            })
+        })
+    }
+
     async start(){
         this.contracts = this.config.eos.contracts;
 
@@ -148,6 +191,7 @@ class JobProcessor {
         } else {
             this.amq.then((amq) => {
                 amq.listen('contract_row', this.processContractRow.bind(this))
+                amq.listen('permission_link', this.processPermissionLink.bind(this))
             })
 
 
