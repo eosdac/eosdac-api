@@ -10,7 +10,7 @@ if (!account || account.length > 12){
     process.exit(1)
 }
 
-const config = require('./jungle.config')
+const config = require('./mainnet.config')
 
 console.log(`Getting linked auths for ${account}`)
 
@@ -26,9 +26,15 @@ MongoClient.connect(config.mongo.url, {useNewUrlParser: true}, ((err, client) =>
 
         const col = db.collection('permission_links')
 
+        const at_block = process.argv[3]
+        let query = {account:account}
+        if (at_block){
+            query.block_num = {'$lte':parseInt(at_block)}
+        }
+
 
         col.aggregate([
-            {'$match':{account:account}},
+            {'$match':query},
             {'$sort':{block_num:1}},
             {'$group':{
                     _id:{account:"$account", code:"$code", message_type:"$message_type"},
