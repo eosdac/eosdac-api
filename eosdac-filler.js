@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const fs = require('fs')
 const commander = require('commander');
 const { Api, JsonRpc } = require('eosjs');
 const { TextDecoder, TextEncoder } = require('text-encoding');
@@ -19,7 +18,7 @@ const signatureProvider = null;
 
 
 const {ActionHandler, TraceHandler, DeltaHandler} = require('./eosdac-handlers')
-const BlockReceiver = require('./eosdac-blockreceiver')
+const StateReceiver = require('../eosio-statereceiver')
 
 // var access = fs.createWriteStream('filler.log')
 // process.stdout.write = process.stderr.write = access.write.bind(access)
@@ -88,21 +87,15 @@ class FillManager {
             }
         }).bind(this));
 
-        // const action_handler = new ActionHandler({queue:this.amq, config:this.config})
-        // const block_handler = new TraceHandler({queue:this.amq, action_handler, config:this.config})
+        this.amq = RabbitSender.init(this.config.amq)
+
+        const action_handler = new ActionHandler({queue:this.amq, config:this.config})
+        const block_handler = new TraceHandler({queue:this.amq, action_handler, config:this.config})
         const delta_handler = new DeltaHandler({queue:this.amq, config:this.config})
 
         if (this.replay){
 
-            // queue = kue.createQueue({
-            //     prefix: this.config.redisPrefix,
-            //     redis: this.config.redis
-            // })
-
-
             if (cluster.isMaster){
-                // kue.app.listen(3000)
-                this.amq = await RabbitSender.init(this.config.amq)
 
                 console.log(`Replaying from ${this.start_block} in parallel mode`)
 
@@ -127,7 +120,9 @@ class FillManager {
                     let from_buffer = new Int64BE(from).toBuffer()
                     let to_buffer = new Int64BE(to).toBuffer()
 
-                    this.amq.send('block_range', Buffer.concat([from_buffer, to_buffer]))
+                    this.amq.then((amq) => {
+                        amq.send('block_range', Buffer.concat([from_buffer, to_buffer]))
+                    })
                     number_jobs++
 
                     if (to == lib){
@@ -157,8 +152,8 @@ class FillManager {
                 }
 
                 // Start in serial mode from lib onwards
-                this.br = new BlockReceiver({startBlock:lib, mode:0, config:this.config})
-                // this.br.registerTraceHandler(block_handler)
+                this.br = new StateReceiver({startBlock:lib, mode:0, config:this.config})
+                this.br.registerTraceHandler(block_handler)
                 this.br.registerDeltaHandler(delta_handler)
                 this.br.start()
             }
@@ -180,7 +175,7 @@ class FillManager {
 
 
             console.log(`Testing single block ${this.test_block}`);
-            this.br = new BlockReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:this.mode, config:this.config})
+            this.br = new StateReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:this.mode, config:this.config})
             // this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
             this.br.registerDoneHandler(() => {
@@ -215,9 +210,9 @@ class FillManager {
 
             console.log(`No replay, starting in synchronous mode`)
 
-            this.br = new BlockReceiver({startBlock:start_block, mode:0, config:this.config})
-            // this.br.registerTraceHandler(block_handler)
-            this.br.registerDeltaHandler(delta_handler)
+            this.br = new StateReceiver({startBlock:start_block, mode:1, config:this.config})
+            this.br.registerTraceHandler(block_handler)
+            // this.br.registerDeltaHandler(delta_handler)
             this.br.start()
         }
 
@@ -240,7 +235,7 @@ class FillManager {
         console.log(`Starting block listener ${start_block} to ${end_block}`)
 
         if (this.br) {
-            console.log("Already have BlockReceiver")
+            console.log("Already have StateReceiver")
             this.br.restart(start_block, end_block)
             this.br.registerDoneHandler(() => {
                 // console.log(`BlockReceiver completed`, job)
@@ -250,16 +245,16 @@ class FillManager {
                 console.log(`Finished job ${start_block}-${end_block}`)
             })
         } else {
-            // const action_handler = new ActionHandler({queue: this.queue, config: this.config})
-            // const block_handler = new TraceHandler({queue: this.queue, action_handler, config: this.config})
+            const action_handler = new ActionHandler({queue: this.queue, config: this.config})
+            const block_handler = new TraceHandler({queue: this.queue, action_handler, config: this.config})
             const delta_handler = new DeltaHandler({queue: this.amq, config:this.config})
 
 
-            this.br = new BlockReceiver({startBlock: start_block, endBlock: end_block, mode: 1, config: this.config})
-            this.br.registerDeltaHandler(delta_handler)
-            // this.br.registerTraceHandler(block_handler)
+            this.br = new StateReceiver({startBlock: start_block, endBlock: end_block, mode: 0, config: this.config})
+            // this.br.registerDeltaHandler(delta_handler)
+            this.br.registerTraceHandler(block_handler)
             this.br.registerDoneHandler(() => {
-                // console.log(`BlockReceiver completed`, job)
+                // console.log(`StateReceiver completed`, job)
                 this.amq.then((amq) => {
                     amq.ack(job)
                 })
@@ -272,7 +267,7 @@ class FillManager {
                 await this.br.start()
             }
             catch (e){
-                console.error(`ERROR starting BlockReceiver : ${e.message}`)
+                console.error(`ERROR starting StateReceiver : ${e.message}`)
             }
         }
     }

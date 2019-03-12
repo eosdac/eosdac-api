@@ -1,32 +1,21 @@
 #!/usr/bin/env node
 
-const fs = require('fs')
 const commander = require('commander');
 
-const kue = require('kue')
 const cluster = require('cluster')
 
 const { TextDecoder, TextEncoder } = require('text-encoding');
-const {Api, JsonRpc, Serialize} = require('eosjs');
+const {Serialize} = require('eosjs');
 const MongoClient = require('mongodb').MongoClient;
 const MongoLong = require('mongodb').Long;
 const {ActionHandler, TraceHandler, DeltaHandler} = require('./eosdac-handlers')
 const RabbitSender = require('./rabbitsender')
 const Int64 = require('int64-buffer').Int64BE;
 
-// var access = fs.createWriteStream('consumers.log')
-// process.stdout.write = process.stderr.write = access.write.bind(access)
-
 
 class JobProcessor {
     constructor({ config = 'jungle' }) {
         this.config = require(`./${config}.config`)
-
-
-        // this.queue = kue.createQueue({
-        //     prefix: this.config.redisPrefix,
-        //     redis: this.config.redis
-        // })
 
         this.connectAmq()
         this.connectDb()
@@ -71,12 +60,12 @@ class JobProcessor {
 
         const block_num = new Int64(sb.getUint8Array(8)).toString()
         const present = sb.get()
-        const row_version = sb.get(); // ?
-        const code = sb.getName();
-        const scope = sb.getName();
-        const table = sb.getName();
+        const row_version = sb.get() // ?
+        const code = sb.getName()
+        const scope = sb.getName()
+        const table = sb.getName()
         const primary_key = new Int64(sb.getUint8Array(8)).toString()
-        const payer = sb.getName();
+        const payer = sb.getName()
         const data_raw = sb.getBytes()
 
         const table_type = await this.delta_handler.getTableType(code, table);
@@ -136,46 +125,6 @@ class JobProcessor {
 
     }
 
-    async processPermissionLink(job) {
-        console.log(`Process permission link`)
-
-        const sb = new Serialize.SerialBuffer({
-            textEncoder: new TextEncoder,
-            textDecoder: new TextDecoder,
-            array: new Uint8Array(job.content)
-        });
-
-        const block_num = new Int64(sb.getUint8Array(8)).toString()
-        const present = !!sb.get()
-        sb.get()
-        const account = sb.getName()
-        const code = sb.getName()
-        const message_type = sb.getName()
-        const required_permission = sb.getName()
-
-        const doc = {
-            block_num: MongoLong.fromString(block_num), account, code, message_type, required_permission, present
-        };
-
-        console.log(doc)
-
-        this.db.then((db) => {
-            const col = db.collection('permission_links')
-            col.insertOne(doc).then(() => {
-                console.log('Save completed')
-
-                this.amq.then((amq) => {
-                    amq.ack(job)
-                })
-            }).catch((e) => {
-                console.error('DB save failed :(', e)
-
-                this.amq.then((amq) => {
-                    amq.reject(job)
-                })
-            })
-        })
-    }
 
     async start(){
         this.contracts = this.config.eos.contracts;
@@ -191,31 +140,7 @@ class JobProcessor {
         } else {
             this.amq.then((amq) => {
                 amq.listen('contract_row', this.processContractRow.bind(this))
-                amq.listen('permission_link', this.processPermissionLink.bind(this))
             })
-
-
-            // if (this.config.mongo){
-            //     MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
-            //         if (err){
-            //             console.error("\nFailed to connect\n", err)
-            //         }
-            //         else if (client){
-            //             this.db = client.db(this.config.mongo.dbName);
-            //         }
-            //
-            //         // this.queue.process('block_traces', 1, this.block_handler.processTraceJob.bind(this.block_handler))
-            //         // this.queue.process('action', 1, this.action_handler.processActionJob.bind(this.action_handler))
-            //         this.queue.process('block_deltas', 1, this.delta_handler.processDeltaJob.bind(this.delta_handler))
-            //
-            //     }).bind(this));
-            // }
-            // else {
-            //     // this.queue.process('block_traces', 1, this.block_handler.processTraceJob.bind(this.block_handler))
-            //     // this.queue.process('action', 1, this.action_handler.processActionJob.bind(this.action_handler))
-            //     this.queue.process('block_deltas', 1, this.delta_handler.processDeltaJob.bind(this.delta_handler))
-            // }
-
         }
     }
 

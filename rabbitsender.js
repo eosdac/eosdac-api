@@ -21,6 +21,8 @@ class RabbitSender {
         channel.assertQueue('block_range', {durable: true})
         channel.assertQueue('contract_row', {durable: true})
         channel.assertQueue('permission_link', {durable: true})
+        channel.assertQueue('trace', {durable: true})
+        channel.assertQueue('action', {durable: true})
 
         return new RabbitSender(channel, config)
     }
