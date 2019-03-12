@@ -15,8 +15,6 @@ let rpc;
 const signatureProvider = null;
 
 
-
-
 const {ActionHandler, TraceHandler, DeltaHandler} = require('./eosdac-handlers')
 const StateReceiver = require('../eosio-statereceiver')
 
@@ -73,6 +71,7 @@ class FillManager {
 
             if (worker.isDead()){
                 if (this.job){
+                    const job = this.job
                     this.amq.then((amq) => {
                         amq.reject(job)
                     })
@@ -176,7 +175,7 @@ class FillManager {
 
             console.log(`Testing single block ${this.test_block}`);
             this.br = new StateReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:this.mode, config:this.config})
-            // this.br.registerTraceHandler(block_handler)
+            this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
             this.br.registerDoneHandler(() => {
                 console.log('Test complete')
@@ -210,9 +209,9 @@ class FillManager {
 
             console.log(`No replay, starting in synchronous mode`)
 
-            this.br = new StateReceiver({startBlock:start_block, mode:1, config:this.config})
+            this.br = new StateReceiver({startBlock:start_block, mode:0, config:this.config})
             this.br.registerTraceHandler(block_handler)
-            // this.br.registerDeltaHandler(delta_handler)
+            this.br.registerDeltaHandler(delta_handler)
             this.br.start()
         }
 
@@ -234,24 +233,23 @@ class FillManager {
 
         console.log(`Starting block listener ${start_block} to ${end_block}`)
 
-        if (this.br) {
+        /*if (this.br) {
             console.log("Already have StateReceiver")
             this.br.restart(start_block, end_block)
             this.br.registerDoneHandler(() => {
-                // console.log(`BlockReceiver completed`, job)
                 this.amq.then((amq) => {
                     amq.ack(job)
                 })
-                console.log(`Finished job ${start_block}-${end_block}`)
+                console.log(`Finished job ${start_block}-${end_block}`, job)
             })
-        } else {
+        } else {*/
             const action_handler = new ActionHandler({queue: this.queue, config: this.config})
             const block_handler = new TraceHandler({queue: this.queue, action_handler, config: this.config})
             const delta_handler = new DeltaHandler({queue: this.amq, config:this.config})
 
 
-            this.br = new StateReceiver({startBlock: start_block, endBlock: end_block, mode: 0, config: this.config})
-            // this.br.registerDeltaHandler(delta_handler)
+            this.br = new StateReceiver({startBlock: start_block, endBlock: end_block, mode: 1, config: this.config})
+            this.br.registerDeltaHandler(delta_handler)
             this.br.registerTraceHandler(block_handler)
             this.br.registerDoneHandler(() => {
                 // console.log(`StateReceiver completed`, job)
@@ -269,7 +267,7 @@ class FillManager {
             catch (e){
                 console.error(`ERROR starting StateReceiver : ${e.message}`)
             }
-        }
+        //}
     }
 }
 

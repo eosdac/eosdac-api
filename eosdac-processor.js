@@ -5,7 +5,8 @@ const commander = require('commander');
 const cluster = require('cluster')
 
 const { TextDecoder, TextEncoder } = require('text-encoding');
-const {Serialize} = require('eosjs');
+const {Api, JsonRpc, Serialize} = require('eosjs');
+const fetch = require('node-fetch');
 const MongoClient = require('mongodb').MongoClient;
 const MongoLong = require('mongodb').Long;
 const {ActionHandler, TraceHandler, DeltaHandler} = require('./eosdac-handlers')
@@ -19,6 +20,15 @@ class JobProcessor {
 
         this.connectAmq()
         this.connectDb()
+
+        const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
+        this.api = new Api({
+            rpc,
+            signatureProvider: null,
+            chainId: this.config.chainId,
+            textDecoder: new TextDecoder(),
+            textEncoder: new TextEncoder(),
+        });
     }
 
 
@@ -33,6 +43,7 @@ class JobProcessor {
                     if (err) {
                         reject(err)
                     } else {
+                        console.log(`Connected to ${this.config.mongo.url}/${this.config.mongo.dbName}`)
                         resolve(client.db(this.config.mongo.dbName))
                     }
                 }).bind(this))
@@ -46,6 +57,66 @@ class JobProcessor {
         // this.action_handler = new ActionHandler({queue:this.amq, config:this.config})
         // this.block_handler = new TraceHandler({queue:this.amq, action_handler:this.action_handler, config:this.config})
         this.delta_handler = new DeltaHandler({queue:this.amq, config:this.config})
+    }
+
+    async processActionJob(job){
+        const sb = new Serialize.SerialBuffer({
+            textEncoder: new TextEncoder,
+            textDecoder: new TextDecoder,
+            array: new Uint8Array(job.content)
+        });
+
+        const block_num = new Int64(sb.getUint8Array(8)).toString()
+        const recv_sequence = new Int64(sb.getUint8Array(8)).toString()
+        const global_sequence = new Int64(sb.getUint8Array(8)).toString()
+        const account = sb.getName()
+        const name = sb.getName()
+        const data = sb.getBytes()
+
+        console.log('Process action', block_num, account, name, recv_sequence, global_sequence)
+
+        const action = {account, name, data}
+
+        let actions = [];
+        // action.data = new Uint8Array(Object.values(action.data));
+        actions.push(action);
+
+        const act = await this.api.deserializeActions(actions);
+
+        delete act[0].authorization
+
+        const doc = {
+            block_num: MongoLong.fromString(block_num),
+            action:act[0],
+            recv_sequence: MongoLong.fromString(recv_sequence),
+            global_sequence: MongoLong.fromString(global_sequence)
+        }
+
+        console.log(doc)
+
+        this.db.then((db) => {
+            const col = db.collection('actions')
+            col.insertOne(doc).then((d) => {
+                console.log('Save completed')
+
+                this.amq.then((amq) => {
+                    amq.ack(job)
+                })
+            }).catch((e) => {
+                if (e.code == 11000){ // Duplicate index
+                    this.amq.then((amq) => {
+                        amq.ack(job)
+                    })
+                }
+                else {
+                    console.error('DB save failed :(', e)
+
+                    this.amq.then((amq) => {
+                        amq.reject(job)
+                    })
+                }
+            })
+        })
     }
 
     async processContractRow(job){
@@ -138,8 +209,10 @@ class JobProcessor {
                 cluster.fork()
             }
         } else {
+            const self = this
             this.amq.then((amq) => {
-                amq.listen('contract_row', this.processContractRow.bind(this))
+                amq.listen('contract_row', self.processContractRow.bind(self))
+                amq.listen('action', self.processActionJob.bind(self))
             })
         }
     }

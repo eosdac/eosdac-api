@@ -62,7 +62,7 @@ class ActionHandler {
             if (this.db){
                 for (let action_data of act) {
                     this.db.then((db) => {
-                        const col = db.collection(this.config.mongo.traceCollection);
+                        const col = db.collection('actions');
                         action_data.recv_sequence = new MongoLong.fromString(receiver_sequence);
                         action_data.global_sequence = new MongoLong.fromString(global_sequence);
                         //let doc = {block_num, action: action_data}
@@ -114,6 +114,7 @@ class ActionHandler {
                 receiver_sequence: action.receipt[1].recv_sequence,
                 global_sequence: action.receipt[1].global_sequence
             };
+            console.log(data)
 
             const sb_action = new Serialize.SerialBuffer({
                 textEncoder: new TextEncoder,
@@ -123,16 +124,16 @@ class ActionHandler {
             sb_action.pushName(action.act.account)
             sb_action.pushName(action.act.name)
             sb_action.pushBytes(action.act.data)
-            sb_action.pushNumberAsUint64(action.receipt[1].recv_sequence)
-            sb_action.pushNumberAsUint64(action.receipt[1].global_sequence)
 
             if (this.amq) {
                 console.log(`Queueing action for ${action.act.account}::${action.act.name}`);
                 this.amq.then((amq) => {
                     const block_buffer = new Int64(block_num).toBuffer()
+                    const recv_buffer = new Int64(action.receipt[1].recv_sequence).toBuffer()
+                    const global_buffer = new Int64(action.receipt[1].global_sequence).toBuffer()
                     const action_buffer = Buffer.from(sb_action.array)
                     // console.log(`Publishing action`)
-                    amq.send('action', Buffer.concat([block_buffer, action_buffer]))
+                    amq.send('action', Buffer.concat([block_buffer, recv_buffer, global_buffer, action_buffer]))
                 })
             } else {
                 console.log(`Processing action for ${action.act.account}::${action.act.name}`);

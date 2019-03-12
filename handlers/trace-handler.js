@@ -81,7 +81,7 @@ class TraceHandler {
 
         }
 
-        this.block_insert_queue.push({"insertOne":{block_num, actions:[]}})
+        // this.block_insert_queue.push({"insertOne":{block_num, actions:[]}})
 
 
     }
