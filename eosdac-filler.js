@@ -24,16 +24,13 @@ const StateReceiver = require('../eosio-statereceiver')
 
 
 class FillManager {
-    constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false, test = 0, processOnly = false, mode }) {
+    constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false, test = 0, processOnly = false }) {
         this.config = require(`./${config}.config`)
-        this.mode = mode
-        this.config_name = config
         this.start_block = startBlock
         this.end_block = endBlock
         this.replay = replay
         this.br = null
         this.test_block = test
-        this.job_done = null
         this.job = null
         this.process_only = processOnly
 
@@ -56,9 +53,9 @@ class FillManager {
         cluster.on('exit', ((worker, code, signal) => {
             console.log(`Process exit`)
             if (signal) {
-                console.log(`FillManager : worker was killed by signal: ${signal}`);
+                console.error(`FillManager : worker was killed by signal: ${signal}`);
             } else if (code !== 0) {
-                console.log(`FillManager : worker exited with error code: ${code}`);
+                console.error(`FillManager : worker exited with error code: ${code}`);
             } else {
                 if (this.job){
                     // Job success
@@ -77,11 +74,11 @@ class FillManager {
                     })
                 }
 
-                console.log(`FillManager : Worker is dead, starting a new one`)
+                console.error(`FillManager : Worker is dead, starting a new one`)
                 cluster.fork()
 
                 if (worker.isMaster){
-                    console.log('FillManager : Main thread died :(')
+                    console.error('FillManager : Main thread died :(')
                 }
             }
         }).bind(this));
@@ -150,8 +147,8 @@ class FillManager {
                     let worker = cluster.fork()
                 }
 
-                // Start in serial mode from lib onwards
-                this.br = new StateReceiver({startBlock:lib, mode:0, config:this.config})
+                // Start from current lib
+                this.br = new StateReceiver({startBlock:lib, mode:1, config:this.config})
                 this.br.registerTraceHandler(block_handler)
                 this.br.registerDeltaHandler(delta_handler)
                 this.br.start()
@@ -174,7 +171,7 @@ class FillManager {
 
 
             console.log(`Testing single block ${this.test_block}`);
-            this.br = new StateReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:this.mode, config:this.config})
+            this.br = new StateReceiver({startBlock:this.test_block, endBlock:this.test_block+1, mode:1, config:this.config})
             this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
             this.br.registerDoneHandler(() => {
@@ -279,7 +276,6 @@ commander
     .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  'jungle')
     .option('-r, --replay', 'Force replay (ignore head block)', false)
     .option('-p, --process-only', 'Only process queue items (do not populate)', false)
-    .option('-m, --mode', 'Replay mode, either 0 = serial, or 1 = parallel', 0)
     .parse(process.argv);
 
 // const monitor = new Monitor(commander);
