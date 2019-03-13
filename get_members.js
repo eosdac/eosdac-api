@@ -15,7 +15,7 @@ MongoClient.connect(config.mongo.url, {useNewUrlParser: true}, ((err, client) =>
         // console.info(`Connected to ${config.mongo.url}/${config.mongo.dbName}`)
         const db = client.db(config.mongo.dbName);
 
-        const col = db.collection('deltas')
+        const col = db.collection('contract_rows')
 
         const res = col.aggregate([
             {'$match':{code:"eosdactokens", table:'members', block_num:{$lte:42888888}}},
