@@ -12,6 +12,7 @@ const MongoLong = require('mongodb').Long;
 const {ActionHandler, TraceHandler, DeltaHandler} = require('./eosdac-handlers')
 const RabbitSender = require('./rabbitsender')
 const Int64 = require('int64-buffer').Int64BE;
+const crypto = require('crypto')
 
 
 class JobProcessor {
@@ -77,17 +78,24 @@ class JobProcessor {
 
         const action = {account, name, data}
 
-        let actions = [];
-        // action.data = new Uint8Array(Object.values(action.data));
-        actions.push(action);
+        console.log(`Deserializing action ${account}:${name}`)
 
-        const act = await this.api.deserializeActions(actions);
+        let act
+        try {
+            act = await this.api.deserializeActions([action]);
+        }
+        catch(e) {
+            console.error(`Error deserializing action data ${account}:${name} - ${e.message}`)
+            return
+        }
+
+
 
         delete act[0].authorization
 
         const doc = {
             block_num: MongoLong.fromString(block_num),
-            action:act[0],
+            action: act[0],
             recv_sequence: MongoLong.fromString(recv_sequence),
             global_sequence: MongoLong.fromString(global_sequence)
         }
@@ -120,8 +128,6 @@ class JobProcessor {
     }
 
     async processContractRow(job){
-        console.log(`Process row`)
-
         const sb = new Serialize.SerialBuffer({
             textEncoder: new TextEncoder,
             textDecoder: new TextDecoder,
@@ -160,8 +166,18 @@ class JobProcessor {
 
                 console.log(`Storing ${code}:${table}`)
 
+                const data_hash = crypto.createHash('sha1').update(data_raw).digest('hex')
+
                 const doc = {
-                    block_num: MongoLong.fromString(block_num), code, scope, table, primary_key: MongoLong.fromString(primary_key), payer, data, present
+                    block_num: MongoLong.fromString(block_num),
+                    code,
+                    scope,
+                    table,
+                    primary_key: MongoLong.fromString(primary_key),
+                    payer,
+                    data,
+                    data_hash,
+                    present
                 };
 
                 console.log(doc)

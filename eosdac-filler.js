@@ -38,17 +38,23 @@ class FillManager {
     }
 
     async run(){
-        // let queue
-
-        let start_block = this.start_block
-
-        // If replay is set then we start from block 0 in parallel and then start a serial handler from lib onwards
-        // Otherwise we start from this.start_block in serial
-
         rpc = new JsonRpc(this.config.eos.endpoint, { fetch });
         this.api = new Api({
             rpc, signatureProvider, chainId:this.config.chainId, textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
         });
+
+        const info = await this.api.rpc.get_info()
+        const lib = info.last_irreversible_block_num
+
+        let start_block = this.start_block
+        if (start_block == -1){
+            console.log(`Starting from LIB ${lib}`)
+            start_block = lib
+        }
+
+        // If replay is set then we start from block 0 in parallel and then start a serial handler from lib onwards
+        // Otherwise we start from this.start_block in serial
+
 
         cluster.on('exit', ((worker, code, signal) => {
             console.log(`Process exit`)
@@ -95,8 +101,7 @@ class FillManager {
 
                 console.log(`Replaying from ${this.start_block} in parallel mode`)
 
-                const info = await this.api.rpc.get_info()
-                const lib = info.last_irreversible_block_num
+
 
                 let chunk_size = 10000
                 const range = lib - this.start_block
@@ -204,9 +209,9 @@ class FillManager {
                 // TODO: need to look for restart point
             }
 
-            console.log(`No replay, starting in synchronous mode`)
+            console.log(`No replay, starting at block ${start_block}`)
 
-            this.br = new StateReceiver({startBlock:start_block, mode:0, config:this.config})
+            this.br = new StateReceiver({startBlock:start_block, mode:1, config:this.config})
             this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
             this.br.start()
@@ -256,10 +261,13 @@ class FillManager {
                 console.log(`Finished job ${start_block}-${end_block}`)
             })
 
+        console.log('StateReceiver created')
+
 
             // start the receiver
             try {
-                await this.br.start()
+                this.br.start()
+                console.log('Started StateReceiver')
             }
             catch (e){
                 console.error(`ERROR starting StateReceiver : ${e.message}`)
@@ -270,7 +278,7 @@ class FillManager {
 
 commander
     .version('0.1', '-v, --version')
-    .option('-s, --start-block <start-block>', 'Start at this block', parseInt, 0)
+    .option('-s, --start-block <start-block>', 'Start at this block', parseInt, -1)
     .option('-t, --test <block>', 'Test mode, specify a single block to pull and process', parseInt, 0)
     .option('-e, --end-block <end-block>', 'End block (exclusive)', parseInt, 0xffffffff)
     .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  'jungle')

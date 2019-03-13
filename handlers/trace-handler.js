@@ -62,7 +62,7 @@ class TraceHandler {
     }
 
     async processTrace(block_num, traces) {
-        //console.log(`Process block ${block_num}`)
+        // console.log(`Process block ${block_num}`)
 
         for (const trace of traces) {
             switch (trace[0]) {

@@ -26,12 +26,6 @@ class DeltaHandler {
 
         this.connectDb();
         this.connectAmq()
-
-
-        this.payers = {}
-
-        // setInterval(() => {console.log(this.payers)}, 5000)
-
     }
 
     async connectDb() {
@@ -80,26 +74,6 @@ class DeltaHandler {
         return contract.types.get(type)
     }
 
-
-    async processDeltaJob(job, done) {
-        console.log(`Processing job : `, job)
-        const deltas = job.data.deltas;
-        const abi = job.data.abi;
-        const block_num = job.data.block_num;
-        // console.log(job.data)
-
-        try {
-            // console.log(abi)
-            const types = Serialize.getTypesFromAbi(Serialize.createInitialTypes(), abi);
-            for (const table of abi.tables)
-                this.tables.set(table.name, table.type);
-            await this.processDelta(block_num, deltas, types);
-
-            done()
-        } catch (e) {
-            done(e)
-        }
-    }
 
     queueDelta(block_num, deltas, abi) {
         const data = {block_num, deltas, abi};
@@ -156,84 +130,7 @@ class DeltaHandler {
 
     }
 
-    async processDelta(block_num, deltas, types) {
-        for (const delta of deltas) {
-            // console.log(delta)
-            switch (delta[0]) {
-                case 'table_delta_v0':
-                    if (delta[1].name == 'contract_row') {
-                        for (const row of delta[1].rows) {
-                            // console.log(row)
-                            const type = types.get(delta[1].name);
-                            const sb = new Serialize.SerialBuffer({
-                                textEncoder: new TextEncoder,
-                                textDecoder: new TextDecoder,
-                                array: new Uint8Array(Object.values(row.data))
-                            });
-
-
-                            let row_version, code, scope ,table, primary_key, payer, data_raw;
-                            try {
-                                row_version = sb.get(); // ?
-                                code = sb.getName();
-
-                                // console.log(`code ${code}`)
-                                // console.log(`table ${table}`)
-                            }
-                            catch (e){
-                                console.error(`Error processing row.data for ${block_num} : ${e.message}`);
-                                const data_raw = null
-                            }
-
-
-                            if (this.interested(code)) {
-                                // console.log(abi)
-                                scope = sb.getName();
-                                table = sb.getName();
-                                primary_key = sb.getUint64AsNumber();
-                                payer = sb.getName();
-                                data_raw = sb.getBytes()
-
-                                const table_type = await this.getTableType(code, table);
-                                if (!table_type){
-                                    console.log('Could not find type for ${code}:${table}')
-                                    continue
-                                }
-
-                                const data_sb = new Serialize.SerialBuffer({
-                                    textEncoder: new TextEncoder,
-                                    textDecoder: new TextDecoder,
-                                    array: data_raw
-                                });
-                                const data = table_type.deserialize(data_sb);
-
-                                if (code != 'eosio'){
-                                    console.log(`row version ${row_version}`);
-                                    console.log(`code ${code}`);
-                                    console.log(`scope ${scope}`);
-                                    console.log(`table ${table}`);
-                                    console.log(`primary_key ${primary_key}`);
-                                    console.log(`payer ${payer}`);
-                                    // console.log(`data`)
-                                    console.log(data);
-
-                                    const doc = {
-                                        block_num, code, scope, table, primary_key, payer, data, present: row.present
-                                    };
-
-
-                                    const col = this.db.collection('deltas');
-                                    col.insertOne(doc)
-                                }
-                            }
-
-                        }
-
-                    }
-                    break;
-            }
-        }
-    }
+    async processDelta(block_num, deltas, types) {}
 
     interested(account, name) {
         if (this.config.eos.contracts == '*' || this.config.eos.contracts.includes(account)){
