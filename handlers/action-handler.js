@@ -114,7 +114,7 @@ class ActionHandler {
                 receiver_sequence: action.receipt[1].recv_sequence,
                 global_sequence: action.receipt[1].global_sequence
             };
-            console.log(data)
+            // console.log(data)
 
             const sb_action = new Serialize.SerialBuffer({
                 textEncoder: new TextEncoder,
