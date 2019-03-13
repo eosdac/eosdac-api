@@ -132,7 +132,7 @@ class DeltaHandler {
                             }
 
                             if (this.interested(code)) {
-                                console.log('Queue delta row')
+                                // console.log('Queue delta row')
                                 this.queueDeltaRow('contract_row', block_num, row)
                             }
                         }
