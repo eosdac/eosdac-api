@@ -191,10 +191,15 @@ class JobProcessor {
                             amq.ack(job)
                         })
                     }).catch((e) => {
-                        console.error('DB save failed :(', e)
-
                         this.amq.then((amq) => {
-                            amq.reject(job)
+                            if (e.code == 11000){
+                                // duplicate index
+                                amq.ack(job)
+                            }
+                            else {
+                                console.error('DB save failed :(', e)
+                                amq.reject(job)
+                            }
                         })
                     })
                 })
