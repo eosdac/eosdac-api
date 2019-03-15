@@ -20,14 +20,14 @@ async function eosTableAtBlock(code, table, skip=0, limit=100, data_query={}, bl
 
         const pipeline = [
             {'$match': match},
-            {'$sort':{block_num:1}},
+            {'$sort':{block_num:-1}},
             {'$group':{
                     _id: {code:"$code", table:"$table", primary_key:"$primary_key"},
-                    block_num: {'$last':"$block_num"},
-                    data: {'$last':"$data"},
-                    table: {'$last':"$table"},
-                    code: {'$last':"$code"},
-                    present: {'$last':"$present"}
+                    block_num: {'$first':"$block_num"},
+                    data: {'$first':"$data"},
+                    table: {'$first':"$table"},
+                    code: {'$first':"$code"},
+                    present: {'$first':"$present"}
                 }
             },
             {'$match': {present:1}},
