@@ -52,14 +52,14 @@ async function getProposals(fastify, request) {
         throw new Error(`Limit is not a number`)
     }
 
-    const res = await eosTableAtBlock('dacproposals', 'proposals', skip, limit, data_query)
+    const res = await eosTableAtBlock({code:'dacproposals', table:'proposals', skip, limit, data_query})
 
     const return_val = []
 
     for (let r=0;r<res.results.length;r++){
         const prop_data = res.results[r].data
         const vote_query = {proposal_id:prop_data.key}
-        const votes = await eosTableAtBlock('dacproposals', 'propvotes', 0, 100, vote_query)
+        const votes = await eosTableAtBlock({code:'dacproposals', table:'propvotes', data_query:vote_query})
 
         const votes_data = votes.results.map((val) => {return val.data})
 

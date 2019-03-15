@@ -2,7 +2,7 @@
 const connectMongo = require('./connections/mongo')
 const {loadConfig} = require('./functions')
 
-async function eosTableAtBlock(code, table, skip=0, limit=100, data_query={}, block_num=-1){
+async function eosTableAtBlock({code, table, skip=0, limit=100, data_query={}, block_num=-1}){
     return new Promise(async (resolve, reject) => {
         const config = loadConfig()
 
