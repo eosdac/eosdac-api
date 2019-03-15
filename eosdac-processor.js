@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-const commander = require('commander');
-
 const cluster = require('cluster')
 
 const { TextDecoder, TextEncoder } = require('text-encoding');
@@ -13,11 +11,12 @@ const {ActionHandler, TraceHandler, DeltaHandler} = require('./eosdac-handlers')
 const RabbitSender = require('./rabbitsender')
 const Int64 = require('int64-buffer').Int64BE;
 const crypto = require('crypto')
+const {loadConfig} = require('./functions')
 
 
 class JobProcessor {
-    constructor({ config = 'jungle' }) {
-        this.config = require(`./${config}.config`)
+    constructor({}) {
+        this.config = loadConfig()
 
         this.connectAmq()
         this.connectDb()
@@ -244,10 +243,5 @@ class JobProcessor {
 }
 
 
-commander
-    .version('0.1', '-v, --version')
-    .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  'jungle')
-    .parse(process.argv);
-
-const processor = new JobProcessor(commander);
+const processor = new JobProcessor();
 processor.start()

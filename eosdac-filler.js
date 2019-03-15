@@ -4,6 +4,7 @@ const commander = require('commander');
 const { Api, JsonRpc } = require('eosjs');
 const { TextDecoder, TextEncoder } = require('text-encoding');
 const fetch = require('node-fetch');
+const {loadConfig, getRestartBlock} = require('./functions')
 
 
 // const kue = require('kue')
@@ -24,8 +25,8 @@ const StateReceiver = require('../eosio-statereceiver')
 
 
 class FillManager {
-    constructor({ startBlock = 0, endBlock = 0xffffffff, config = 'jungle', irreversibleOnly = false, replay = false, test = 0, processOnly = false }) {
-        this.config = require(`./${config}.config`)
+    constructor({ startBlock = 0, endBlock = 0xffffffff, config = '', irreversibleOnly = false, replay = false, test = 0, processOnly = false }) {
+        this.config = loadConfig()
         this.start_block = startBlock
         this.end_block = endBlock
         this.replay = replay
@@ -49,7 +50,7 @@ class FillManager {
         let start_block = this.start_block
         if (start_block == -1){
             console.log(`Starting from LIB ${lib}`)
-            start_block = lib
+            start_block = await getRestartBlock()
         }
 
         // If replay is set then we start from block 0 in parallel and then start a serial handler from lib onwards
@@ -281,13 +282,10 @@ commander
     .option('-s, --start-block <start-block>', 'Start at this block', parseInt, -1)
     .option('-t, --test <block>', 'Test mode, specify a single block to pull and process', parseInt, 0)
     .option('-e, --end-block <end-block>', 'End block (exclusive)', parseInt, 0xffffffff)
-    .option('-c, --config <config>', 'Config prefix, will load <config>.config.js from the current directory',  'jungle')
     .option('-r, --replay', 'Force replay (ignore head block)', false)
     .option('-p, --process-only', 'Only process queue items (do not populate)', false)
     .parse(process.argv);
 
-// const monitor = new Monitor(commander);
-// const fill = new FillAPI(commander);
 
 const fm = new FillManager(commander)
 fm.run()
