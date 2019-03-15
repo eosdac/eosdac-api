@@ -15,7 +15,7 @@ const {loadConfig} = require('./functions')
 
 
 class JobProcessor {
-    constructor({}) {
+    constructor() {
         this.config = loadConfig()
 
         this.connectAmq()
