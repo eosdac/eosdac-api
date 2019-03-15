@@ -31,6 +31,7 @@ async function eosTableAtBlock(code, table, skip=0, limit=100, data_query={}, bl
                 }
             },
             {'$match': {present:1}},
+            { '$sort' : {block_num:-1} },
             // { '$group': { _id: null, count: { '$sum':1 }, results: { '$push': '$$ROOT' }}}
             {'$facet': {
                 results: [{ '$skip': skip }, { '$limit': limit }],
