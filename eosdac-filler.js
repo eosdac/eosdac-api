@@ -49,8 +49,8 @@ class FillManager {
 
         let start_block = this.start_block
         if (start_block == -1){
-            console.log(`Starting from LIB ${lib}`)
             start_block = await getRestartBlock()
+            console.log(`Starting from block ${start_block}, LIB is ${lib}`)
         }
 
         // If replay is set then we start from block 0 in parallel and then start a serial handler from lib onwards
