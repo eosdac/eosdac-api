@@ -1,7 +1,6 @@
 
-const MongoClient = require('mongodb').MongoClient
-
 const {getProfileSchema} = require('../schemas')
+const { NotFound } = require('http-errors')
 
 const connectMongo = require('../connections/mongo')
 
@@ -25,7 +24,7 @@ async function getProfile(fastify, request) {
         return act.action.data.profile
     }
     else {
-        throw new Error('Account profile not found')
+        return null
     }
 }
 
@@ -35,7 +34,13 @@ module.exports = function (fastify, opts, next) {
         schema: getProfileSchema.GET
     }, async (request, reply) => {
         reply.header('Access-Control-Allow-Origin', '*')
-        reply.send(await getProfile(fastify, request));
+        const profile = await getProfile(fastify, request)
+        if (profile){
+            reply.send(profile);
+        }
+        else {
+            throw new NotFound('Account profile not found')
+        }
     });
     next()
 };
