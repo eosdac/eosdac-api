@@ -85,6 +85,9 @@ class JobProcessor {
         }
         catch(e) {
             console.error(`Error deserializing action data ${account}:${name} - ${e.message}`)
+            this.amq.then((amq) => {
+                amq.ack(job)
+            })
             return
         }
 
