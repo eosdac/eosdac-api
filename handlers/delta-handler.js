@@ -77,7 +77,6 @@ class DeltaHandler {
 
     queueDelta(block_num, deltas, abi) {
         const data = {block_num, deltas, abi};
-        // console.log(`Queueing delta `, deltas)
         // this.queue.create('block_deltas', data).removeOnComplete(true).save()
 
         for (const delta of deltas) {
@@ -107,6 +106,7 @@ class DeltaHandler {
 
                             if (this.interested(code)) {
                                 // console.log('Queue delta row')
+                                console.log(`Queueing delta ${code}`)
                                 this.queueDeltaRow('contract_row', block_num, row)
                             }
                         }
