@@ -82,6 +82,7 @@ module.exports = function (fastify, opts, next) {
     fastify.get('/get_proposals', {
         schema: getProposalsSchema.GET
     }, async (request, reply) => {
+        reply.header('Access-Control-Allow-Origin', '*')
         reply.send(await getProposals(fastify, request));
     });
     next()
