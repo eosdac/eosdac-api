@@ -19,8 +19,6 @@ async function getProfile(fastify, request) {
 
     const res = await collection.find({"action.account":"dacelections", "action.name":"stprofileuns", "action.data.cand":account}).sort({block_num:-1}).limit(1)
 
-    console.log("number of actions", res.count())
-
     if (await res.count()){
         const act = await res.next()
 
