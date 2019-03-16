@@ -15,7 +15,7 @@ async function tokenTimeline(fastify, request) {
         const collection = db.collection('contract_rows')
         const account = request.query.account
 
-        collection.find({'code':'kasdactokens', 'scope':account}, async (err, res) => {
+        collection.find({'code':'kasdactokens', 'scope':account}, {sort:{block_num:1}}, async (err, res) => {
             // console.log("action", res.action.data)
             if (err){
                 reject(err)
@@ -27,7 +27,6 @@ async function tokenTimeline(fastify, request) {
                 }
                 else {
                     res.forEach((row) => {
-                        console.log(row)
                         timeline.push({block_num: row.block_num, balance: row.data.balance})
                     }, () => {
                         resolve(timeline)
