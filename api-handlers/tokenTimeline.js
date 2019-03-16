@@ -14,8 +14,10 @@ async function tokenTimeline(fastify, request) {
         const db = mongo.db(config.mongo.dbName)
         const collection = db.collection('contract_rows')
         const account = request.query.account
+        const contract = request.query.contract || 'eosdactokens'
+        const symbol = request.query.contract || 'EOSDAC'
 
-        collection.find({'code':'kasdactokens', 'scope':account}, {sort:{block_num:1}}, async (err, res) => {
+        collection.find({'code':contract, 'scope':account}, {sort:{block_num:1}}, async (err, res) => {
             // console.log("action", res.action.data)
             if (err){
                 reject(err)

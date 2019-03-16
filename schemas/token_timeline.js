@@ -8,8 +8,16 @@ const tokenTimelineSchema = {
             "account": {
                 description: 'Account to fetch',
                 type: 'string'
+            },
+            "contract": {
+                description: 'Contract',
+                type: 'string'
+            },
+            "symbol": {
+                description: 'Token Symbol',
+                type: 'string'
             }
         },
-        required: []
+        required: ['account', 'contract']
     }
 };
