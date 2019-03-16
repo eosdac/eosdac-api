@@ -21,7 +21,7 @@ async function tokenSnapshot(fastify, request) {
         const col = db.collection('contract_rows')
 
         const res = col.aggregate([
-            {'$match':{code:contract, table:'members', block_num:{$lte:42888888}}},
+            {'$match':{code:contract, table:'members', block_num:{$lte:block_num}}},
             {'$sort':{block_num:1}},
             {'$group':{
                     _id:{code:"$code", table:"$table", primary_key:"$primary_key"},
@@ -35,11 +35,17 @@ async function tokenSnapshot(fastify, request) {
             {'$match': {present:1}}
         ], (err, results) => {
 
+            if (err){
+                reject(err)
+                console.error(err)
+                return
+            }
+
             results.forEach((doc) => {
                 // console.log(doc.data.sender)
                 const member = doc.data.sender
 
-                members[member] = {terms:doc.data.agreedtermsversion, balance:null}
+                members[member] = {terms:doc.data.agreedtermsversion, balance:null, block_num:doc.block_num}
             }, (err) => {
                 if (err){
                     console.error(err)
@@ -62,6 +68,13 @@ async function tokenSnapshot(fastify, request) {
                 },
                 {'$match': {present:1}}
             ], {allowDiskUse:true}, async (err, results) => {
+
+                if (err){
+                    reject(err)
+                    console.error(err)
+                    return
+                }
+
                 // console.log(await results.count())
                 results.forEach((row) => {
                     // console.log(row)
