@@ -25,7 +25,7 @@ module.exports = {
             env: {
                 'CONFIG': 'jungle',
                 'SERVER_PORT': 8383,
-                'SERVER_ADDRESS': '0.0.0.0'
+                'SERVER_ADDR': '0.0.0.0'
             }
         },
 
@@ -56,7 +56,7 @@ module.exports = {
             env: {
                 'CONFIG': 'mainnet',
                 'SERVER_PORT': 8382,
-                'SERVER_ADDRESS': '0.0.0.0'
+                'SERVER_ADDR': '0.0.0.0'
             }
         }
     ]
