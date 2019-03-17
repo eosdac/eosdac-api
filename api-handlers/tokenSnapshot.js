@@ -16,14 +16,17 @@ async function tokenSnapshot(fastify, request) {
         const collection = db.collection('contract_rows')
         const contract = request.query.contract || 'eosdactokens'
         const symbol = request.query.contract || 'EOSDAC'
-        const block_num = request.query.block_num || '999999999'
+        const block_num = request.query.block_num || null
         const sort_col = request.query.sort || 'account'
 
         console.log(`Generating snapshot for ${symbol}@${contract} on block ${block_num}`)
 
         const col = db.collection('contract_rows')
 
-        const match = {code:contract, table:'members', block_num:{$lte:MongoLong.fromString(block_num)}}
+        const match = {code:contract, table:'members'}
+        if (block_num){
+            match.block_num = {$lte:MongoLong.fromString(block_num)}
+        }
 
         const res = col.aggregate([
             {'$match':match},
@@ -59,8 +62,13 @@ async function tokenSnapshot(fastify, request) {
 
             const members = {}
 
+            const account_match = {code:contract, table:'accounts'}
+            if (block_num){
+                account_match.block_num = {$lte:MongoLong.fromString(block_num)}
+            }
+
             col.aggregate([
-                {'$match':{code:contract, table:'accounts', block_num:{$lte:MongoLong.fromString(block_num)}}},
+                {'$match':account_match},
                 {'$sort':{block_num:1}},
                 {'$group':{
                         _id:{code:"$code", table:"$table", scope:"$scope"},
