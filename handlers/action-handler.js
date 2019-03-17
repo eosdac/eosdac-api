@@ -8,6 +8,8 @@ const fetch = require('node-fetch');
 const RabbitSender = require('../rabbitsender')
 const Int64 = require('int64-buffer').Int64BE;
 
+const { hexToUint8Array } = require('eosjs/dist/eosjs-serialize')
+
 class ActionHandler {
     constructor({queue, db, config}) {
         this.queue = queue;
@@ -50,7 +52,7 @@ class ActionHandler {
         }
     }
 
-    async processAction({block_num, action, receiver, receiver_sequence, global_sequence}) {
+    async processAction({block_num, trx_id, action, receiver, receiver_sequence, global_sequence}) {
 
         try {
             let actions = [];
@@ -102,13 +104,14 @@ class ActionHandler {
         }
     }
 
-    async queueAction(block_num, action) {
+    async queueAction(block_num, action, trx_id) {
         // console.log(action)
         if (this.interested(action.act.account, action.act.name) && action.receipt[1].receiver == action.act.account) {
             // console.log("Queue Action", action.act.account)
             // console.log(action.act.account)
             let data = {
                 block_num,
+                trx_id,
                 action: action.act,
                 receiver: action.receipt[1].receiver,
                 receiver_sequence: action.receipt[1].recv_sequence,
@@ -121,6 +124,9 @@ class ActionHandler {
                 textDecoder: new TextDecoder
             })
 
+            const trx_id_arr = hexToUint8Array(trx_id)
+            // console.log(trx_id_arr.length)
+
             sb_action.pushName(action.act.account)
             sb_action.pushName(action.act.name)
             sb_action.pushBytes(action.act.data)
@@ -129,14 +135,15 @@ class ActionHandler {
                 console.log(`Queueing action for ${action.act.account}::${action.act.name}`);
                 this.amq.then((amq) => {
                     const block_buffer = new Int64(block_num).toBuffer()
+                    const trx_id_buffer = Buffer.from(trx_id_arr)
                     const recv_buffer = new Int64(action.receipt[1].recv_sequence).toBuffer()
                     const global_buffer = new Int64(action.receipt[1].global_sequence).toBuffer()
                     const action_buffer = Buffer.from(sb_action.array)
                     // console.log(`Publishing action`)
-                    amq.send('action', Buffer.concat([block_buffer, recv_buffer, global_buffer, action_buffer]))
+                    amq.send('action', Buffer.concat([block_buffer, trx_id_buffer, recv_buffer, global_buffer, action_buffer]))
                 })
             } else {
-                console.log(`Processing action for ${action.act.account}::${action.act.name}`);
+                console.log(`Processing action for ${action.act.account}::${action.act.name} in ${trx_id}`);
                 this.processAction(data)
             }
         }

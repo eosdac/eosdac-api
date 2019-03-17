@@ -68,11 +68,12 @@ class TraceHandler {
             switch (trace[0]) {
                 case 'transaction_trace_v0':
                     const trx = trace[1];
+                    // console.log(trx)
                     for (let action of trx.action_traces) {
                         //console.log(action)
                         switch (action[0]) {
                             case 'action_trace_v0':
-                                this.action_handler.queueAction(block_num, action[1]);
+                                this.action_handler.queueAction(block_num, action[1], trx.id);
                                 break;
                         }
                     }
