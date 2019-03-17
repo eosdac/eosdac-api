@@ -1,6 +1,7 @@
 
 const {tokenSnapshotSchema} = require('../schemas')
 
+const MongoLong = require('mongodb').Long;
 const connectMongo = require('../connections/mongo')
 
 const {loadConfig} = require('../functions')
@@ -15,13 +16,17 @@ async function tokenSnapshot(fastify, request) {
         const collection = db.collection('contract_rows')
         const contract = request.query.contract || 'eosdactokens'
         const symbol = request.query.contract || 'EOSDAC'
-        const block_num = request.query.block_num || 0xffffffff
+        const block_num = request.query.block_num || '999999999'
+        const sort_col = request.query.sort || 'account'
 
+        console.log(`Generating snapshot for ${symbol}@${contract} on block ${block_num}`)
 
         const col = db.collection('contract_rows')
 
+        const match = {code:contract, table:'members', block_num:{$lte:MongoLong.fromString(block_num)}}
+
         const res = col.aggregate([
-            {'$match':{code:contract, table:'members', block_num:{$lte:block_num}}},
+            {'$match':match},
             {'$sort':{block_num:1}},
             {'$group':{
                     _id:{code:"$code", table:"$table", primary_key:"$primary_key"},
@@ -55,7 +60,7 @@ async function tokenSnapshot(fastify, request) {
             const members = {}
 
             col.aggregate([
-                {'$match':{code:contract, table:'accounts', block_num:{$lte:42888888}}},
+                {'$match':{code:contract, table:'accounts', block_num:{$lte:MongoLong.fromString(block_num)}}},
                 {'$sort':{block_num:1}},
                 {'$group':{
                         _id:{code:"$code", table:"$table", scope:"$scope"},
@@ -100,7 +105,26 @@ async function tokenSnapshot(fastify, request) {
 
                     }
 
-                    resolve(output)
+                    let sorter
+                    const balance_sorter = (a,b) => {
+                        const [bala, syma] = a.balance.split(' ')
+                        const [balb, symb] = b.balance.split(' ')
+                        return (parseFloat(bala) > parseFloat(balb))?-1:1
+                    }
+                    const account_sorter = (a,b) => (a[sort_col]<b[sort_col])?-1:1
+                    switch (sort_col){
+                        case 'balance':
+                            sorter = balance_sorter
+                            break
+                        case 'account':
+                        default:
+                            sorter = account_sorter
+                            break
+                    }
+
+                    const sorted = output.sort(sorter)
+
+                    resolve(sorted)
                 })
             })
 
