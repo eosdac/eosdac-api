@@ -13,10 +13,12 @@ async function eosTableAtBlock({code, table, skip=0, limit=100, data_query={}, b
         const col = db.collection('contract_rows')
 
         let match = {code:code, table:table}
-        for (let col in data_query){
-            match['data.' + col] = data_query[col]
-        }
+        let second_match = {present:1}
         // console.log(match)
+
+        for (let col in data_query){
+            second_match['data.' + col] = data_query[col]
+        }
 
         const pipeline = [
             {'$match': match},
@@ -30,7 +32,7 @@ async function eosTableAtBlock({code, table, skip=0, limit=100, data_query={}, b
                     present: {'$first':"$present"}
                 }
             },
-            {'$match': {present:1}},
+            {'$match': second_match},
             { '$sort' : {block_num:-1} },
             // { '$group': { _id: null, count: { '$sum':1 }, results: { '$push': '$$ROOT' }}}
             {'$facet': {
