@@ -113,6 +113,9 @@ class FillManager {
                 }
 
                 let from = this.start_block;
+                if (from == -1){
+                    from = 0
+                }
                 let to = from + chunk_size; // to is not inclusive
 
                 let break_now = false
