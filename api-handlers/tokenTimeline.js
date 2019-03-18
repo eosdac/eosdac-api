@@ -1,6 +1,7 @@
 
 const {tokenTimelineSchema} = require('../schemas')
 
+const MongoLong = require('mongodb').Long;
 const connectMongo = require('../connections/mongo')
 
 const {loadConfig} = require('../functions')
@@ -16,8 +17,27 @@ async function tokenTimeline(fastify, request) {
         const account = request.query.account
         const contract = request.query.contract || 'eosdactokens'
         const symbol = request.query.symbol || 'EOSDAC'
+        const start_block = request.query.start_block || null
+        const end_block = request.query.end_block || null
 
-        collection.find({'code':contract, 'scope':account, 'table':'accounts'}, {sort:{block_num:1}}, async (err, res) => {
+        const query = {'code':contract, 'scope':account, 'table':'accounts'}
+        if (start_block){
+            if (!('block_num' in query)){
+                query.block_num = {}
+            }
+            query.block_num['$gte'] = MongoLong.fromString(start_block)
+        }
+        if (end_block){
+            if (!('block_num' in query)){
+                query.block_num = {}
+            }
+            query.block_num['$lte'] = MongoLong.fromString(end_block)
+        }
+
+        console.log(query)
+
+
+        collection.find(query, {sort:{block_num:1}}, async (err, res) => {
             // console.log("action", res.action.data)
             if (err){
                 reject(err)

@@ -16,6 +16,14 @@ const tokenTimelineSchema = {
             "symbol": {
                 description: 'Token Symbol',
                 type: 'string'
+            },
+            "start_block": {
+                description: 'Start block (inclusive)',
+                type: 'integer'
+            },
+            "end_block": {
+                description: 'End block (inclusive)',
+                type: 'integer'
             }
         },
         required: ['account', 'contract']
