@@ -105,6 +105,7 @@ class ActionHandler {
     }
 
     async queueAction(block_num, action, trx_id) {
+        // console.log(`Receive queue ${trx_id} for block ${block_num}`)
         // console.log(action)
         if (this.interested(action.act.account, action.act.name) && action.receipt[1].receiver == action.act.account) {
             // console.log("Queue Action", action.act.account)
@@ -125,14 +126,13 @@ class ActionHandler {
             })
 
             const trx_id_arr = hexToUint8Array(trx_id)
-            // console.log(trx_id_arr.length)
 
             sb_action.pushName(action.act.account)
             sb_action.pushName(action.act.name)
             sb_action.pushBytes(action.act.data)
 
             if (this.amq) {
-                console.log(`Queueing action for ${action.act.account}::${action.act.name}`);
+                // console.log(`Queueing action for ${action.act.account}::${action.act.name}`);
                 this.amq.then((amq) => {
                     const block_buffer = new Int64(block_num).toBuffer()
                     const trx_id_buffer = Buffer.from(trx_id_arr)
@@ -151,9 +151,9 @@ class ActionHandler {
 
         if (action.inline_traces.length) {
             for (let itc of action.inline_traces) {
-                //console.log("inline trace\n", itc);
+                // console.log("inline trace\n", itc);
                 if (itc[0] == 'action_trace_v0') {
-                    this.queueAction(block_num, itc[1]);
+                    this.queueAction(block_num, itc[1], trx_id);
                 }
             }
         }
