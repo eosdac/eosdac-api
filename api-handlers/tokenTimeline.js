@@ -34,7 +34,6 @@ async function tokenTimeline(fastify, request) {
             query.block_num['$lte'] = MongoLong.fromString(end_block)
         }
 
-        console.log(query)
 
 
         collection.find(query, {sort:{block_num:1}}, async (err, res) => {
