@@ -4,6 +4,7 @@ const cluster = require('cluster')
 
 const { TextDecoder, TextEncoder } = require('text-encoding');
 const {Api, JsonRpc, Serialize} = require('eosjs');
+const {DeltaHandler} = require('./eosdac-handlers')
 const fetch = require('node-fetch');
 const MongoClient = require('mongodb').MongoClient;
 const MongoLong = require('mongodb').Long;
@@ -51,6 +52,7 @@ class JobProcessor {
 
     async connectAmq(){
         this.amq = RabbitSender.init(this.config.amq)
+
     }
 
     async processActionJob(job){
@@ -222,6 +224,8 @@ class JobProcessor {
 
         this.connectAmq()
         this.connectDb()
+
+        this.delta_handler = new DeltaHandler({config:this.config, queue:this.amq})
 
         if (cluster.isMaster) {
             console.log(`Starting processor with ${this.config.clusterSize} threads...`)
