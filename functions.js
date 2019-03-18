@@ -7,6 +7,8 @@ function loadConfig(){
     }
     const config = require(`./${config_name}.config`)
 
+    config.name - config_name
+
     return config
 }
 
