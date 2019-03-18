@@ -80,8 +80,7 @@ class ActionHandler {
                     amq.send('action', Buffer.concat([block_buffer, trx_id_buffer, recv_buffer, global_buffer, action_buffer]))
                 })
             } else {
-                console.log(`Processing action for ${action.act.account}::${action.act.name} in ${trx_id}`);
-                this.processAction(data)
+                console.error(`No queue when processing action for ${action.act.account}::${action.act.name} in ${trx_id}`);
             }
         }
 
