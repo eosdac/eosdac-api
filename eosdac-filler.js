@@ -282,7 +282,7 @@ class FillManager {
 
 commander
     .version('0.1', '-v, --version')
-    .option('-s, --start-block <start-block>', 'Start at this block', parseInt, -1)
+    .option('-s, --start-block <start-block>', 'Start at this block', -1)
     .option('-t, --test <block>', 'Test mode, specify a single block to pull and process', parseInt, 0)
     .option('-e, --end-block <end-block>', 'End block (exclusive)', parseInt, 0xffffffff)
     .option('-r, --replay', 'Force replay (ignore head block)', false)
