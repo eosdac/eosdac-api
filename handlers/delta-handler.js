@@ -98,16 +98,27 @@ class DeltaHandler {
                             try {
                                 sb.get(); // ?
                                 code = sb.getName();
+
+                                if (this.interested(code)) {
+                                    // console.log('Queue delta row')
+                                    console.log(`Queueing delta ${code}`)
+                                    this.queueDeltaRow('contract_row', block_num, row)
+                                }
+                                else {
+                                    const scope = sb.getName()
+                                    const table = sb.getName()
+
+                                    if (table == 'accounts' && this.interested(scope)){
+                                        console.log(`Found interesting token balance change ${code}:${scope}:${table}`)
+
+                                        this.queueDeltaRow('contract_row', block_num, row)
+                                    }
+
+                                }
                             }
                             catch (e){
                                 console.error(`Error processing row.data for ${block_num} : ${e.message}`);
                                 const data_raw = null
-                            }
-
-                            if (this.interested(code)) {
-                                // console.log('Queue delta row')
-                                console.log(`Queueing delta ${code}`)
-                                this.queueDeltaRow('contract_row', block_num, row)
                             }
                         }
                     }
