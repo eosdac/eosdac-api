@@ -17,7 +17,7 @@ async function tokenTimeline(fastify, request) {
         const contract = request.query.contract || 'eosdactokens'
         const symbol = request.query.contract || 'EOSDAC'
 
-        collection.find({'code':contract, 'scope':account}, {sort:{block_num:1}}, async (err, res) => {
+        collection.find({'code':contract, 'scope':account, 'table':'accounts'}, {sort:{block_num:1}}, async (err, res) => {
             // console.log("action", res.action.data)
             if (err){
                 reject(err)
