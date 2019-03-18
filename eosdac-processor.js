@@ -12,6 +12,7 @@ const RabbitSender = require('./rabbitsender')
 const Int64 = require('int64-buffer').Int64BE;
 const crypto = require('crypto')
 const {loadConfig} = require('./functions')
+const { arrayToHex } = require('eosjs/dist/eosjs-serialize')
 
 
 class JobProcessor {
@@ -67,6 +68,8 @@ class JobProcessor {
         });
 
         const block_num = new Int64(sb.getUint8Array(8)).toString()
+        const trx_id_arr = sb.getUint8Array(32)
+        const trx_id = arrayToHex(trx_id_arr)
         const recv_sequence = new Int64(sb.getUint8Array(8)).toString()
         const global_sequence = new Int64(sb.getUint8Array(8)).toString()
         const account = sb.getName()
@@ -97,6 +100,7 @@ class JobProcessor {
 
         const doc = {
             block_num: MongoLong.fromString(block_num),
+            trx_id,
             action: act[0],
             recv_sequence: MongoLong.fromString(recv_sequence),
             global_sequence: MongoLong.fromString(global_sequence)
