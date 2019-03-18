@@ -35,7 +35,7 @@ class FillManager {
         this.job = null
         this.process_only = processOnly
 
-        console.log(`Loading config ${config}.config.js`)
+        console.log(`Loading config ${this.config.name}.config.js`)
     }
 
     async run(){
