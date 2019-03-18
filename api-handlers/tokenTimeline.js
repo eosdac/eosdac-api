@@ -15,7 +15,7 @@ async function tokenTimeline(fastify, request) {
         const collection = db.collection('contract_rows')
         const account = request.query.account
         const contract = request.query.contract || 'eosdactokens'
-        const symbol = request.query.contract || 'EOSDAC'
+        const symbol = request.query.symbol || 'EOSDAC'
 
         collection.find({'code':contract, 'scope':account, 'table':'accounts'}, {sort:{block_num:1}}, async (err, res) => {
             // console.log("action", res.action.data)
@@ -29,7 +29,10 @@ async function tokenTimeline(fastify, request) {
                 }
                 else {
                     res.forEach((row) => {
-                        timeline.push({block_num: row.block_num, balance: row.data.balance})
+                        const [bal, sym] = row.data.balance.split(' ')
+                        if (symbol === sym){
+                            timeline.push({block_num: row.block_num, balance: row.data.balance})
+                        }
                     }, () => {
                         resolve(timeline)
                     })
