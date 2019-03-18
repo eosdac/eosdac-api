@@ -146,13 +146,14 @@ class JobProcessor {
         const payer = sb.getName()
         const data_raw = sb.getBytes()
 
-        const table_type = await this.delta_handler.getTableType(code, table);
-        const data_sb = new Serialize.SerialBuffer({
-            textEncoder: new TextEncoder,
-            textDecoder: new TextDecoder,
-            array: data_raw
-        });
         try {
+            const table_type = await this.delta_handler.getTableType(code, table);
+            const data_sb = new Serialize.SerialBuffer({
+                textEncoder: new TextEncoder,
+                textDecoder: new TextDecoder,
+                array: data_raw
+            });
+
             const data = table_type.deserialize(data_sb);
 
             if (code != 'eosio'){
