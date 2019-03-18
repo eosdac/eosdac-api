@@ -7,7 +7,6 @@ const {Api, JsonRpc, Serialize} = require('eosjs');
 const fetch = require('node-fetch');
 const MongoClient = require('mongodb').MongoClient;
 const MongoLong = require('mongodb').Long;
-const {ActionHandler, TraceHandler, DeltaHandler} = require('./eosdac-handlers')
 const RabbitSender = require('./rabbitsender')
 const Int64 = require('int64-buffer').Int64BE;
 const crypto = require('crypto')
@@ -19,8 +18,6 @@ class JobProcessor {
     constructor() {
         this.config = loadConfig()
 
-        this.connectAmq()
-        this.connectDb()
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
         this.api = new Api({
@@ -54,10 +51,6 @@ class JobProcessor {
 
     async connectAmq(){
         this.amq = RabbitSender.init(this.config.amq)
-
-        // this.action_handler = new ActionHandler({queue:this.amq, config:this.config})
-        // this.block_handler = new TraceHandler({queue:this.amq, action_handler:this.action_handler, config:this.config})
-        this.delta_handler = new DeltaHandler({queue:this.amq, config:this.config})
     }
 
     async processActionJob(job){
@@ -227,6 +220,8 @@ class JobProcessor {
     async start(){
         this.contracts = this.config.eos.contracts;
 
+        this.connectAmq()
+        this.connectDb()
 
         if (cluster.isMaster) {
             console.log(`Starting processor with ${this.config.clusterSize} threads...`)

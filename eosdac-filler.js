@@ -57,38 +57,7 @@ class FillManager {
         // Otherwise we start from this.start_block in serial
 
 
-        cluster.on('exit', ((worker, code, signal) => {
-            console.log(`Process exit`)
-            if (signal) {
-                console.error(`FillManager : worker was killed by signal: ${signal}`);
-            } else if (code !== 0) {
-                console.error(`FillManager : worker exited with error code: ${code}`);
-            } else {
-                if (this.job){
-                    // Job success
-                    this.amq.then((amq) => {
-                        amq.ack(this.job)
-                    })
-                }
-                console.log('FillManager : worker success!');
-            }
-
-            if (worker.isDead()){
-                if (this.job){
-                    const job = this.job
-                    this.amq.then((amq) => {
-                        amq.reject(job)
-                    })
-                }
-
-                console.error(`FillManager : Worker is dead, starting a new one`)
-                cluster.fork()
-
-                if (worker.isMaster){
-                    console.error('FillManager : Main thread died :(')
-                }
-            }
-        }).bind(this));
+        cluster.on('exit', this.workerExit.bind(this));
 
         this.amq = RabbitSender.init(this.config.amq)
 
@@ -223,6 +192,40 @@ class FillManager {
 
     }
 
+    workerExit(worker, code, signal) {
+        console.log(`Process exit`)
+        if (signal) {
+            console.error(`FillManager : worker was killed by signal: ${signal}`);
+        } else if (code !== 0) {
+            console.error(`FillManager : worker exited with error code: ${code}`);
+        } else {
+            if (this.job){
+                // Job success
+                this.amq.then((amq) => {
+                    amq.ack(this.job)
+                })
+            }
+            console.log('FillManager : worker success!');
+        }
+
+        if (worker.isDead()){
+            if (this.job){
+                const job = this.job
+                this.amq.then((amq) => {
+                    amq.reject(job)
+                })
+            }
+
+            console.error(`FillManager : Worker is dead, starting a new one`)
+            cluster.fork()
+
+            if (worker.isMaster){
+                console.error('FillManager : Main thread died :(')
+            }
+        }
+
+    }
+
     async processBlockRange(job) {
         console.log(`processBlockRange pid : ${process.pid}`, job.content)
         this.job = job
@@ -249,8 +252,8 @@ class FillManager {
                 console.log(`Finished job ${start_block}-${end_block}`, job)
             })
         } else {*/
-            const action_handler = new ActionHandler({queue: this.queue, config: this.config})
-            const block_handler = new TraceHandler({queue: this.queue, action_handler, config: this.config})
+            const action_handler = new ActionHandler({queue: this.amq, config: this.config})
+            const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config})
             const delta_handler = new DeltaHandler({queue: this.amq, config:this.config})
 
 
