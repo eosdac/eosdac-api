@@ -11,9 +11,9 @@ class TraceHandler {
         this.config = config;
         this.block_insert_queue = [];
 
-        setInterval(this.flushQueue.bind(this), 10000);
+        // setInterval(this.flushQueue.bind(this), 10000);
 
-        this.connectDb()
+        // this.connectDb()
         this.connectAmq()
     }
 
@@ -21,26 +21,26 @@ class TraceHandler {
         this.amq = RabbitSender.init(this.config.amq)
     }
 
-    async connectDb() {
-        this.db = await this._connectDb()
-    }
-
-    async _connectDb() {
-        if (this.config.mongo){
-            return new Promise((resolve, reject) => {
-                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
-                    if (err) {
-                        reject(err)
-                    } else {
-                        const db = client.db(this.config.mongo.dbName);
-                        // const col_traces = db.collection(this.config.mongo.traceCollection)
-                        // col_traces.createIndex({block_num:-1})
-                        resolve(db)
-                    }
-                }).bind(this))
-            })
-        }
-    }
+    // async connectDb() {
+    //     // this.db = await this._connectDb()
+    // }
+    //
+    // async _connectDb() {
+    //     if (this.config.mongo){
+    //         return new Promise((resolve, reject) => {
+    //             MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
+    //                 if (err) {
+    //                     reject(err)
+    //                 } else {
+    //                     const db = client.db(this.config.mongo.dbName);
+    //                     // const col_traces = db.collection(this.config.mongo.traceCollection)
+    //                     // col_traces.createIndex({block_num:-1})
+    //                     resolve(db)
+    //                 }
+    //             }).bind(this))
+    //         })
+    //     }
+    // }
 
     async queueTrace(block_num, traces) {
         return this.processTrace(block_num, traces)
@@ -87,12 +87,12 @@ class TraceHandler {
 
     }
 
-    async flushQueue(){
-        if (this.block_insert_queue.length){
-            const trace_col = this.db.collection('traces');
-            trace_col.bulkWrite(this.block_insert_queue, {ordered :false}).catch((e) => {})
-        }
-    }
+    // async flushQueue(){
+    //     if (this.block_insert_queue.length){
+    //         const trace_col = this.db.collection('traces');
+    //         trace_col.bulkWrite(this.block_insert_queue, {ordered :false}).catch((e) => {})
+    //     }
+    // }
 }
 
 
