@@ -184,7 +184,7 @@ class FillManager {
 
             console.log(`No replay, starting at block ${start_block}`)
 
-            this.br = new StateReceiver({startBlock:start_block, mode:1, config:this.config})
+            this.br = new StateReceiver({startBlock:start_block, mode:0, config:this.config})
             this.br.registerTraceHandler(block_handler)
             this.br.registerDeltaHandler(delta_handler)
             this.br.start()
