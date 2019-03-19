@@ -41,11 +41,16 @@ class ActionHandler {
         }
     }
 
+    async processAction(block_num, action, trx_id){
+        return this.queueAction(block_num, action, trx_id)
+    }
+
     async queueAction(block_num, action, trx_id) {
         // console.log(`Receive queue ${trx_id} for block ${block_num}`)
         // console.log(action)
+
         if (this.interested(action.act.account, action.act.name) && action.receipt[1].receiver == action.act.account) {
-            // console.log("Queue Action", action.act.account)
+            console.log("Queue Action", action.act.account)
             // console.log(action.act.account)
             let data = {
                 block_num,
