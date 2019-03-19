@@ -21,3 +21,5 @@ const tokenSnapshotSchema = {
         required: ['contract']
     }
 };
+
+module.exports = {GET:tokenSnapshotSchema}

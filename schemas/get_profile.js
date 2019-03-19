@@ -11,5 +11,23 @@ const getProfileSchema = {
             }
         },
         required: []
+    },
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                "results": {
+                    type: "array",
+                    items: {
+                        type: 'string'
+                    }
+                },
+                "count": {
+                    type: "integer"
+                }
+            }
+        }
     }
 };
+
+module.exports = {GET:getProfileSchema}

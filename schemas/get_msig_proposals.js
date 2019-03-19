@@ -21,3 +21,5 @@ const getMsigProposalsSchema = {
         required: []
     }
 };
+
+module.exports = {GET:getMsigProposalsSchema}

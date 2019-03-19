@@ -29,3 +29,5 @@ const tokenTimelineSchema = {
         required: ['account', 'contract']
     }
 };
+
+module.exports = {GET:tokenTimelineSchema}

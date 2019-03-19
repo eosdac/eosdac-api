@@ -21,3 +21,5 @@ const getProposalsSchema = {
         required: []
     }
 };
+
+module.exports = {GET:getProposalsSchema}
