@@ -68,7 +68,8 @@ module.exports = function (fastify, opts, next) {
         schema: tokenTimelineSchema.GET
     }, async (request, reply) => {
         reply.header('Access-Control-Allow-Origin', '*')
-        reply.send(await tokenTimeline(fastify, request));
+        const res = await tokenTimeline(fastify, request)
+        reply.send({results:res, count:res.length});
     });
     next()
 };
