@@ -2,7 +2,7 @@
 const connectMongo = require('./connections/mongo')
 const {loadConfig} = require('./functions')
 
-async function eosTableAtBlock({code, table, skip=0, limit=100, data_query={}, block_num=-1}){
+async function eosTableAtBlock({code, table, scope='', skip=0, limit=100, data_query={}, block_num=-1}){
     return new Promise(async (resolve, reject) => {
         const config = loadConfig()
 
@@ -13,6 +13,9 @@ async function eosTableAtBlock({code, table, skip=0, limit=100, data_query={}, b
         const col = db.collection('contract_rows')
 
         let match = {code:code, table:table}
+        if (scope){
+            match.scope = scope
+        }
         let second_match = {present:1}
         // console.log(match)
 
