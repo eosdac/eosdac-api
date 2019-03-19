@@ -29,8 +29,6 @@ async function getMsigProposals(fastify, request) {
         try {
             const res = await collection.find(query).skip(parseInt(skip)).limit(parseInt(limit))
 
-            console.log(res)
-
             const proposals = []
             if (await res.count() == 0){
                 resolve(proposals)
