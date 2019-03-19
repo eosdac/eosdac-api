@@ -29,14 +29,15 @@ async function getMsigProposals(fastify, request) {
         try {
             const res = await collection.find(query).skip(parseInt(skip)).limit(parseInt(limit))
 
-            const proposals = []
+            const proposals = {results:[], count:0}
             if (await res.count() == 0){
                 resolve(proposals)
             }
             else {
                 res.forEach((msig) => {
-                    proposals.push(msig)
+                    proposals.results.push(msig)
                 }, () => {
+                    proposals.count = proposals.results.length
                     resolve(proposals)
                 })
             }
