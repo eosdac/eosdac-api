@@ -17,20 +17,40 @@ async function getProfile(fastify, request) {
     const db = mongo.db(config.mongo.dbName)
     const collection = db.collection('actions')
 
-    const res = await collection.find({"action.account":"dacelections", "action.name":"stprofileuns", "action.data.cand":{$in:accounts}}).sort({block_num:-1}).limit(1)
+    const query = {"action.account":"dacelections", "action.name":"stprofileuns", "action.data.cand":{$in:accounts}}
 
-    if (await res.count()){
-        let act
-        const results = []
-        while (act = await res.next()){
-            results.push(act)
+    const pipeline = [
+        {$match:query},
+        {'$sort':{block_num:-1}},
+        {'$group':{
+                _id: {cand:"$action.data.cand"},
+                block_num: {'$first':"$block_num"},
+                profile: {'$first':"$action.data.profile"},
+                account: {'$first':"$action.data.cand"}
+            }
+        },
+        { '$sort' : {block_num:-1} },
+        {'$facet': {
+                results: [{ '$skip': 0 }, { '$limit': 100000 }],
+                count: [{ '$count': 'count' }]
+            }}
+
+    ]
+
+    const res2 = await collection.aggregate(pipeline)
+
+    const result = await res2.next()
+    result.results = result.results.map((row) => {
+        // console.log(row.profile)
+        if (typeof row.profile === 'string'){
+            row.profile = JSON.parse(row.profile)
         }
+        delete row._id
 
-        return {results, count:results.length}
-    }
-    else {
-        return {results:[], count:0}
-    }
+        return row
+    })
+
+    return result
 }
 
 
