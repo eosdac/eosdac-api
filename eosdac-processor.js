@@ -56,6 +56,7 @@ class JobProcessor {
     }
 
     async processedActionJob(job, doc){
+        console.log(`Processed action job, notifying watchers`)
         this.amq.then((amq) => {
             amq.ack(job)
         })
