@@ -33,6 +33,7 @@ async function getMsigProposals(fastify, request) {
             }
             else {
                 res.forEach((msig) => {
+                    delete msig._id
                     proposals.results.push(msig)
                 }, () => {
                     proposals.count = proposals.results.length
