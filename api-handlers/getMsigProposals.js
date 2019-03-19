@@ -19,27 +19,34 @@ async function getMsigProposals(fastify, request) {
         const collection = db.collection('multisigs')
 
         const status = request.query.status || 0
+        const skip = request.query.skip || 0
+        const limit = request.query.limit || 20
 
         const query = {status:status}
 
-        collection.find(query, (err, res) => {
-            // console.log("action", res.action.data)
-            if (err){
-                reject(err)
+
+
+        try {
+            const res = await collection.find(query).skip(parseInt(skip)).limit(parseInt(limit))
+
+            console.log(res)
+
+            const proposals = []
+            if (await res.count() == 0){
+                resolve(proposals)
             }
-            else if (res) {
-                // resolve(res.action.data)
-                const proposals = []
+            else {
                 res.forEach((msig) => {
                     proposals.push(msig)
                 }, () => {
                     resolve(proposals)
                 })
             }
-            else {
-                resolve(null)
-            }
-        })
+        }
+        catch (e){
+            reject(e)
+        }
+
     })
 
 
