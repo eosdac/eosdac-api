@@ -157,7 +157,7 @@ class MultisigProposalsHandler {
 
         }
 
-        const output = {proposer, proposal_name, title:metadata.title, description:metadata.description, threshold:0, requested_approvals:[], provided_approvals:[]}
+        const output = {block_num, proposer, proposal_name, title:metadata.title, description:metadata.description, threshold:0, requested_approvals:[], provided_approvals:[]}
 
         // console.log(`${block_num}:${proposer}:${proposal_name}`, metadata)
 
@@ -219,6 +219,8 @@ class MultisigProposalsHandler {
                     output.status = MultisigProposalsHandler.STATUS_EXPIRED
                     break
             }
+
+            output.block_num = ca.block_num
         }
         else {
             output.status = MultisigProposalsHandler.STATUS_OPEN
