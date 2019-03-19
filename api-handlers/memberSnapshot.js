@@ -1,5 +1,5 @@
 
-const {tokenSnapshotSchema} = require('../schemas')
+const {memberSnapshotSchema} = require('../schemas')
 
 const MongoLong = require('mongodb').Long;
 const connectMongo = require('../connections/mongo')
@@ -7,7 +7,7 @@ const connectMongo = require('../connections/mongo')
 const {loadConfig} = require('../functions')
 
 
-async function tokenSnapshot(fastify, request) {
+async function memberSnapshot(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
         const config = loadConfig()
@@ -142,11 +142,11 @@ async function tokenSnapshot(fastify, request) {
 
 
 module.exports = function (fastify, opts, next) {
-    fastify.get('/token_snapshot', {
-        schema: tokenSnapshotSchema.GET
+    fastify.get('/member_snapshot', {
+        schema: memberSnapshotSchema.GET
     }, async (request, reply) => {
         reply.header('Access-Control-Allow-Origin', '*')
-        reply.send(await tokenSnapshot(fastify, request));
+        reply.send(await memberSnapshot(fastify, request));
     });
     next()
 };

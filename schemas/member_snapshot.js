@@ -1,6 +1,6 @@
-const tokenSnapshotSchema = {
-    description: 'Token Snapshot',
-    summary: 'Get snapshot of token holders at a specific block',
+const memberSnapshotSchema = {
+    description: 'Member Snapshot',
+    summary: 'Get snapshot of DAC members at a specific block',
     tags: ['v1'],
     querystring: {
         type: 'object',
@@ -22,4 +22,4 @@ const tokenSnapshotSchema = {
     }
 };
 
-module.exports = {GET:tokenSnapshotSchema}
+module.exports = {GET:memberSnapshotSchema}
