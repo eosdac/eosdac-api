@@ -16,6 +16,10 @@ async function eosTableAtBlock({code, table, scope='', skip=0, limit=100, data_q
         if (scope){
             match.scope = scope
         }
+        if (block_num > -1){
+            match.block_num = {$lte:block_num}
+        }
+
         let second_match = {present:1}
         // console.log(match)
 
@@ -64,7 +68,7 @@ async function eosTableAtBlock({code, table, scope='', skip=0, limit=100, data_q
                 // console.log('COUNT', doc.count)
                 doc.count = (doc.count.length)?doc.count[0].count:0;
                 resolve(doc)
-                // console.log("DOC", doc)
+                // console.log("DOC", doc.results)
                 // ret_data.push({block_num:doc.block_num, data:doc.data})
             }, () => {})
         }

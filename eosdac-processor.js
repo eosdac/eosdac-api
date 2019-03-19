@@ -13,6 +13,7 @@ const Int64 = require('int64-buffer').Int64BE;
 const crypto = require('crypto')
 const {loadConfig} = require('./functions')
 const { arrayToHex } = require('eosjs/dist/eosjs-serialize')
+const watchers = require('./watchers')
 
 
 class JobProcessor {
@@ -52,7 +53,16 @@ class JobProcessor {
 
     async connectAmq(){
         this.amq = RabbitSender.init(this.config.amq)
+    }
 
+    async processedActionJob(job, doc){
+        this.amq.then((amq) => {
+            amq.ack(job)
+        })
+
+        watchers.forEach((watcher) => {
+            watcher.action(doc)
+        })
     }
 
     async processActionJob(job){
@@ -103,14 +113,16 @@ class JobProcessor {
 
         console.log(doc)
 
+        const self = this
+
         this.db.then((db) => {
             const col = db.collection('actions')
             col.insertOne(doc).then((d) => {
                 console.log('Save completed')
 
-                this.amq.then((amq) => {
-                    amq.ack(job)
-                })
+                self.processedActionJob(job, doc)
+
+
             }).catch((e) => {
                 if (e.code == 11000){ // Duplicate index
                     this.amq.then((amq) => {
