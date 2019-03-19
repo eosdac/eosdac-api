@@ -251,6 +251,7 @@ class MultisigProposalsHandler {
 
     async action(doc){
         if (doc.action.account == 'dacmultisigs'){
+            console.log('Reacting to msig action')
             this.recalcMsigs(doc)
         }
     }
