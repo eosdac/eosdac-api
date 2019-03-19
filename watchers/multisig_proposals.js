@@ -143,8 +143,18 @@ class MultisigProposalsHandler {
             metadata = JSON.parse(doc.action.data.metadata)
         }
         catch (e){
-            metadata = {title:'', description:''}
-            console.log(doc.action.data.metadata, e.message)
+            try {
+                const dJSON = require('dirty-json')
+                metadata = dJSON.parse(doc.action.data.metadata)
+                console.log(`Used dirty-json to parse ${doc.action.data.metadata}`)
+            }
+            catch (e){
+                metadata = {title:'', description:''}
+                console.error(doc.action.data.metadata, e.message)
+            }
+
+
+
         }
 
         const output = {proposer, proposal_name, title:metadata.title, description:metadata.description, threshold:0, requested_approvals:[], provided_approvals:[]}
@@ -213,6 +223,24 @@ class MultisigProposalsHandler {
         else {
             output.status = MultisigProposalsHandler.STATUS_OPEN
         }
+
+        // Get the latest provided approvals
+        let end_block = 0
+        if (ca){
+            end_block = ca.block_num
+        }
+        const query_provided = {code:'eosiomsigold', scope:proposer, table:'approvals', data_query}
+        if (end_block){
+            query_provided.block_num = end_block
+        }
+
+        const provided = await eosTableAtBlock(query_provided)
+        if (provided.count){
+            // console.log(provided.results[0].data.provided_approvals)
+            output.provided_approvals = provided.results[0].data.provided_approvals
+        }
+
+
 
         console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`)
         return await coll.insertOne(output)

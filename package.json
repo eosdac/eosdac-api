@@ -7,6 +7,7 @@
   "dependencies": {
     "amqplib": "^0.5.3",
     "commander": "^2.19.0",
+    "dirty-json": "^0.7.0",
     "elasticsearch": "^15.3.0",
     "eosjs": "./eosjs",
     "fastify": "^2.0.1",
