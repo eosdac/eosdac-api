@@ -1,4 +1,4 @@
-
+const MongoLong = require('mongodb').Long;
 const connectMongo = require('./connections/mongo')
 const {loadConfig} = require('./functions')
 
@@ -17,7 +17,7 @@ async function eosTableAtBlock({code, table, scope='', skip=0, limit=100, data_q
             match.scope = scope
         }
         if (block_num > -1){
-            match.block_num = {$lte:block_num}
+            match.block_num = {$lte:MongoLong.fromString(block_num)}
         }
 
         let second_match = {present:1}
