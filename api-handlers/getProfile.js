@@ -9,6 +9,7 @@ const {loadConfig} = require('../functions')
 
 async function getProfile(fastify, request) {
     const account = request.query.account
+    const accounts = account.split(',')
 
     const config = loadConfig()
     const mongo = await connectMongo(config)
@@ -16,15 +17,19 @@ async function getProfile(fastify, request) {
     const db = mongo.db(config.mongo.dbName)
     const collection = db.collection('actions')
 
-    const res = await collection.find({"action.account":"dacelections", "action.name":"stprofileuns", "action.data.cand":account}).sort({block_num:-1}).limit(1)
+    const res = await collection.find({"action.account":"dacelections", "action.name":"stprofileuns", "action.data.cand":{$in:accounts}}).sort({block_num:-1}).limit(1)
 
     if (await res.count()){
-        const act = await res.next()
+        let act
+        const results = []
+        while (act = await res.next()){
+            results.push(act)
+        }
 
-        return act.action.data.profile
+        return {results, count:results.length}
     }
     else {
-        return null
+        return {results:[], count:0}
     }
 }
 
