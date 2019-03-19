@@ -138,26 +138,31 @@ class MultisigProposalsHandler {
         const block_num = doc.block_num
         const proposer = doc.action.data.proposer
         const proposal_name = doc.action.data.proposal_name
-        let metadata = ''
-        try {
-            metadata = JSON.parse(doc.action.data.metadata)
-        }
-        catch (e){
+
+        const output = {block_num, proposer, proposal_name, threshold:0, requested_approvals:[], provided_approvals:[]}
+
+        if (doc.action.data.metadata){
+            let metadata = ''
             try {
-                const dJSON = require('dirty-json')
-                metadata = dJSON.parse(doc.action.data.metadata)
-                console.log(`Used dirty-json to parse ${doc.action.data.metadata}`)
+                metadata = JSON.parse(doc.action.data.metadata)
             }
             catch (e){
-                metadata = {title:'', description:''}
-                console.error(doc.action.data.metadata, e.message)
+                try {
+                    const dJSON = require('dirty-json')
+                    metadata = dJSON.parse(doc.action.data.metadata)
+                    console.log(`Used dirty-json to parse ${doc.action.data.metadata}`)
+                }
+                catch (e){
+                    metadata = {title:'', description:''}
+                    console.error('Failed to parse metadata', doc.action.data.metadata, e.message)
+                }
             }
 
-
-
+            output.title = metadata.title
+            output.description = metadata.description
         }
 
-        const output = {block_num, proposer, proposal_name, title:metadata.title, description:metadata.description, threshold:0, requested_approvals:[], provided_approvals:[]}
+
 
         // console.log(`${block_num}:${proposer}:${proposal_name}`, metadata)
 
@@ -245,7 +250,7 @@ class MultisigProposalsHandler {
 
 
         console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`)
-        return await coll.insertOne(output)
+        return await coll.updateOne({proposer, proposal_name, trxid:output.trxid}, {$set:output}, {upsert:true})
 
     }
 
