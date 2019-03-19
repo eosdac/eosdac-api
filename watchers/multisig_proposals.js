@@ -263,8 +263,8 @@ class MultisigProposalsHandler {
 }
 
 
-MultisigProposalsHandler.STATUS_OPEN = 0
-MultisigProposalsHandler.STATUS_CANCELLED = 1
+MultisigProposalsHandler.STATUS_CANCELLED = 0
+MultisigProposalsHandler.STATUS_OPEN = 1
 MultisigProposalsHandler.STATUS_EXECUTED = 2
 MultisigProposalsHandler.STATUS_EXPIRED = 3
 
