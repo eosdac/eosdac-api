@@ -37,9 +37,9 @@ async function getProfile(fastify, request) {
 
     ]
 
-    const res2 = await collection.aggregate(pipeline)
+    const res = await collection.aggregate(pipeline)
 
-    const result = await res2.next()
+    const result = await res.next()
     result.results = result.results.map((row) => {
         // console.log(row.profile)
         if (typeof row.profile === 'string'){
