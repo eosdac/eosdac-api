@@ -132,7 +132,7 @@ async function memberSnapshot(fastify, request) {
 
                     const sorted = output.sort(sorter)
 
-                    resolve(sorted)
+                    resolve({results:sorted, count:sorted.length})
                 })
             })
 
