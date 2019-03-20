@@ -25,13 +25,13 @@ async function tokenTimeline(fastify, request) {
             if (!('block_num' in query)){
                 query.block_num = {}
             }
-            query.block_num['$gte'] = MongoLong.fromString(start_block)
+            query.block_num['$gte'] = new MongoLong(start_block)
         }
         if (end_block){
             if (!('block_num' in query)){
                 query.block_num = {}
             }
-            query.block_num['$lte'] = MongoLong.fromString(end_block)
+            query.block_num['$lte'] = new MongoLong(end_block)
         }
 
 
