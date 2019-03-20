@@ -7,15 +7,21 @@ const tokenTimelineSchema = {
         properties: {
             "account": {
                 description: 'Account to fetch',
-                type: 'string'
+                type: 'string',
+                minLength: 1,
+                maxLength: 12
             },
             "contract": {
                 description: 'Contract',
-                type: 'string'
+                type: 'string',
+                minLength: 1,
+                maxLength: 12
             },
             "symbol": {
                 description: 'Token Symbol',
-                type: 'string'
+                type: 'string',
+                minLength: 1,
+                maxLength: 7
             },
             "start_block": {
                 description: 'Start block (inclusive)',
