@@ -90,7 +90,7 @@ class MultisigProposalsHandler {
         const self = this
         const thresholds = []
 
-        if (!trx.actions){
+        if (!trx || !trx.actions){
             console.error(`Bad transaction`, trx)
             return 0
         }
@@ -169,7 +169,7 @@ class MultisigProposalsHandler {
 
 
 
-        // console.log(`${block_num}:${proposer}:${proposal_name}`, metadata)
+        console.log(`parsed ${block_num}:${proposer}:${proposal_name}`)
 
         const data_query = {
             proposal_name
@@ -181,7 +181,6 @@ class MultisigProposalsHandler {
         const res_proposals = await eosTableAtBlock({code:'eosiomsigold', scope:proposer, table:'proposal', block_num:block_num+1, data_query})
         const res_approvals = await eosTableAtBlock({code:'eosiomsigold', scope:proposer, table:'approvals', block_num:block_num+1, data_query})
 
-        console.log(`Found ${res_proposals.results.length} results`)
         for (let r=0;r<res_proposals.results.length;r++){
             const proposal = res_proposals.results[r]
 
@@ -191,7 +190,6 @@ class MultisigProposalsHandler {
 
             // get the trxid stored in the dacmultisigs table
             const res_data = await eosTableAtBlock({code:'dacmultisigs', scope:proposer, table:'proposals', block_num:block_num+1, data_query:local_data_query})
-            // console.log(await res_data.results[0].data.transactionid)
             output.trxid = res_data.results[0].data.transactionid
         }
 
@@ -246,11 +244,16 @@ class MultisigProposalsHandler {
         if (end_block){
             query_provided.block_num = end_block
         }
+        console.log('Querying approvals', query_provided)
 
         const provided = await eosTableAtBlock(query_provided)
         if (provided.count){
-            // console.log(provided.results[0].data.provided_approvals)
+            console.log('Provided approvals', provided.results[0].data.provided_approvals)
             output.provided_approvals = provided.results[0].data.provided_approvals
+        }
+        else {
+            console.log('Resetting provided_approvals')
+            output.provided_approvals = []
         }
 
 
