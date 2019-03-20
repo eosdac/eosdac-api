@@ -25,6 +25,7 @@ async function getMsigProposals(fastify, request) {
         const query = {status:parseInt(status)}
 
         try {
+            const count = await collection.find(query).sort({block_num:-1}).count()
             const res = await collection.find(query).sort({block_num:-1}).skip(parseInt(skip)).limit(parseInt(limit))
 
             const proposals = {results:[], count:0}
@@ -35,8 +36,8 @@ async function getMsigProposals(fastify, request) {
                 res.forEach((msig) => {
                     delete msig._id
                     proposals.results.push(msig)
-                }, () => {
-                    proposals.count = proposals.results.length
+                }, async () => {
+                    proposals.count = count
                     resolve(proposals)
                 })
             }
