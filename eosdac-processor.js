@@ -52,7 +52,13 @@ class JobProcessor {
     }
 
     async connectAmq(){
+        console.log(`Connecting to AMQ`)
+        RabbitSender.closeHandlers = [(() => {
+            console.log('close handler')
+            this.start()
+        }).bind(this)]
         this.amq = RabbitSender.init(this.config.amq)
+
     }
 
     async processedActionJob(job, doc){
@@ -129,6 +135,7 @@ class JobProcessor {
                     this.amq.then((amq) => {
                         amq.ack(job)
                     })
+                    self.processedActionJob(job, doc)
                 }
                 else {
                     console.error('DB save failed :(', e)

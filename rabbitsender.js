@@ -8,14 +8,6 @@ class RabbitSender {
 
     static async init (config) {
         const conn = await Amqp.connect(config.connectionString)
-        conn.on('error', function (err) {
-            if (err.message !== 'Connection closing') {
-                console.error('[AMQP] conn error', err.message)
-            }
-        })
-        conn.on('close', function () {
-            console.error('[AMQP] closing')
-        })
 
         const channel = await conn.createChannel()
         channel.assertQueue('block_range', {durable: true})
@@ -24,7 +16,24 @@ class RabbitSender {
         channel.assertQueue('trace', {durable: true})
         channel.assertQueue('action', {durable: true})
 
-        return new RabbitSender(channel, config)
+        console.log(`Connected to ${config.connectionString}`)
+
+        const rs = new RabbitSender(channel, config)
+
+        conn.on('error', function (err) {
+            if (err.message !== 'Connection closing') {
+                console.error('[AMQP] conn error', err.message)
+            }
+        })
+        conn.on('close', (function () {
+            console.error('[AMQP] closing')
+
+            RabbitSender.closeHandlers.forEach((h) => {
+                h()
+            })
+        }).bind(rs))
+
+        return rs
     }
 
     async send (queue_name, msg) {
