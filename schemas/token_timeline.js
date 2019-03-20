@@ -27,6 +27,32 @@ const tokenTimelineSchema = {
             }
         },
         required: ['account', 'contract']
+    },
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                "results": {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        properties: {
+                            "block_num": {
+                                description: "The block number",
+                                type: "string"
+                            },
+                            "balance": {
+                                description: "Balance at the block",
+                                type: "string"
+                            }
+                        }
+                    }
+                },
+                "count": {
+                    type: "integer"
+                }
+            }
+        }
     }
 };
 

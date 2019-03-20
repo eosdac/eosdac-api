@@ -19,6 +19,36 @@ const memberSnapshotSchema = {
             }
         },
         required: ['contract']
+    },
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                "results": {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        properties: {
+                            "account": {
+                                description: "The EOS account name",
+                                type: "string"
+                            },
+                            "balance": {
+                                description: "Balance at time of snapshot",
+                                type: "string"
+                            },
+                            "terms": {
+                                description: "Version of the terms agreed to",
+                                type: "integer"
+                            }
+                        }
+                    }
+                },
+                "count": {
+                    type: "integer"
+                }
+            }
+        }
     }
 };
 
