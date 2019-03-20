@@ -19,7 +19,60 @@ const getProfileSchema = {
                 "results": {
                     type: "array",
                     items: {
-                        type: 'string'
+                        type: "object",
+                        properties: {
+                            "account": {
+                                description: "",
+                                type: "string",
+                                minLength: 1,
+                                maxLength: 12
+                            },
+                            "block_num": {
+                                description: "",
+                                type: "integer"
+                            },
+                            "profile": {
+                                description: "",
+                                type: "object",
+                                properties: {
+                                    "description": {
+                                        type: "string"
+                                    },
+                                    "email": {
+                                        type: "string"
+                                    },
+                                    "familyName": {
+                                        type: "string"
+                                    },
+                                    "gender": {
+                                        type: "string"
+                                    },
+                                    "givenName": {
+                                        type: "string"
+                                    },
+                                    "image": {
+                                        type: "string"
+                                    },
+                                    "sameAs": {
+                                        type: "array",
+                                        items: {
+                                            type: "object",
+                                            properties: {
+                                                "link": {
+                                                    type: "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "timezone": {
+                                        type: "string"
+                                    },
+                                    "url": {
+                                        type: "string"
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 "count": {
