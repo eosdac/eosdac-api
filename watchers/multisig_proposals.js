@@ -90,6 +90,11 @@ class MultisigProposalsHandler {
         const self = this
         const thresholds = []
 
+        if (!trx.actions){
+            console.error(`Bad transaction`, trx)
+            return 0
+        }
+
         return new Promise(async (resolve, reject) => {
             for (let a=0;a<trx.actions.length;a++){
                 const act = trx.actions[a]
@@ -176,6 +181,7 @@ class MultisigProposalsHandler {
         const res_proposals = await eosTableAtBlock({code:'eosiomsigold', scope:proposer, table:'proposal', block_num:block_num+1, data_query})
         const res_approvals = await eosTableAtBlock({code:'eosiomsigold', scope:proposer, table:'approvals', block_num:block_num+1, data_query})
 
+        console.log(`Found ${res_proposals.results.length} results`)
         for (let r=0;r<res_proposals.results.length;r++){
             const proposal = res_proposals.results[r]
 
@@ -249,7 +255,7 @@ class MultisigProposalsHandler {
 
 
 
-        console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`)
+        console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, output)
         return await coll.updateOne({proposer, proposal_name, trxid:output.trxid}, {$set:output}, {upsert:true})
 
     }
