@@ -178,20 +178,27 @@ class MultisigProposalsHandler {
             proposalname:proposal_name
         }
 
-        const res_proposals = await eosTableAtBlock({code:'eosiomsigold', scope:proposer, table:'proposal', block_num:block_num+1, data_query})
-        const res_approvals = await eosTableAtBlock({code:'eosiomsigold', scope:proposer, table:'approvals', block_num:block_num+1, data_query})
-
-        for (let r=0;r<res_proposals.results.length;r++){
-            const proposal = res_proposals.results[r]
-
-            // console.log(proposal.block_num, proposal.data.proposal_name, proposal.data.packed_transaction)
-            const trx = await this.api.deserializeTransactionWithActions(proposal.data.packed_transaction)
-            output.trx = trx
-
-            // get the trxid stored in the dacmultisigs table
-            const res_data = await eosTableAtBlock({code:'dacmultisigs', scope:proposer, table:'proposals', block_num:block_num+1, data_query:local_data_query})
-            output.trxid = res_data.results[0].data.transactionid
+        let check_block = block_num + 1
+        if (['cancelled', 'executed'].includes(doc.action.name) ){
+            check_block = block_num - 1
         }
+
+        const res_proposals = await eosTableAtBlock({code:'eosiomsigold', scope:proposer, table:'proposal', block_num:check_block, data_query})
+        const res_approvals = await eosTableAtBlock({code:'eosiomsigold', scope:proposer, table:'approvals', block_num:check_block, data_query})
+
+        const proposal = res_proposals.results[0]
+        if (!proposal){
+            console.error(`Error getting proposal`)
+            return
+        }
+        // console.log(proposal.block_num, proposal.data.proposal_name, proposal.data.packed_transaction)
+        const trx = await this.api.deserializeTransactionWithActions(proposal.data.packed_transaction)
+        output.trx = trx
+
+        // get the trxid stored in the dacmultisigs table
+        const res_data = await eosTableAtBlock({code:'dacmultisigs', scope:proposer, table:'proposals', block_num:check_block, data_query:local_data_query})
+        output.trxid = res_data.results[0].data.transactionid
+
 
         if (res_approvals.count){
             output.requested_approvals = res_approvals.results[0].data.requested_approvals
