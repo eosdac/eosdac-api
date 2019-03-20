@@ -6,7 +6,7 @@ const getProfileSchema = {
         type: 'object',
         properties: {
             "account": {
-                description: 'Account to fetch',
+                description: 'Account to fetch, you can supply multiple accounts by separating them with a comma',
                 type: 'string'
             }
         },
