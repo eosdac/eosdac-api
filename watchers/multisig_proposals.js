@@ -201,6 +201,7 @@ class MultisigProposalsHandler {
         // We have the transaction data, now get approvals
         // Get threshold
         output.threshold = await this.getTrxThreshold(output.trx)
+        output.expiration = new Date(output.trx.expiration)
 
 
         // console.log(proposer, proposal_name, output)
