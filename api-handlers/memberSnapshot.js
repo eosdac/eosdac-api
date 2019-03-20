@@ -25,7 +25,7 @@ async function memberSnapshot(fastify, request) {
 
         const match = {code:contract, table:'members'}
         if (block_num){
-            match.block_num = {$lte:MongoLong.fromString(block_num)}
+            match.block_num = {$lte:new MongoLong(block_num)}
         }
 
         const res = col.aggregate([
