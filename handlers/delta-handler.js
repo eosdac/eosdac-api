@@ -141,7 +141,9 @@ class DeltaHandler {
 
     }
 
-    async processDelta(block_num, deltas, types) {}
+    async processDelta(block_num, deltas, abi) {
+        return this.queueDelta(block_num, deltas, abi)
+    }
 
     interested(account, name) {
         if (this.config.eos.contracts == '*' || this.config.eos.contracts.includes(account)){
