@@ -38,7 +38,11 @@ class JobProcessor {
 
     async _connectDb() {
         if (this.config.mongo){
-            return new Promise((resolve, reject) => {
+            return new Promise(async (resolve, reject) => {
+                if (this.db){
+                    resolve(await this.db)
+                    return
+                }
                 MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
                     if (err) {
                         reject(err)
@@ -132,9 +136,6 @@ class JobProcessor {
 
             }).catch((e) => {
                 if (e.code == 11000){ // Duplicate index
-                    this.amq.then((amq) => {
-                        amq.ack(job)
-                    })
                     self.processedActionJob(job, doc)
                 }
                 else {
