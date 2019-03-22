@@ -17,7 +17,9 @@ async function getProfile(fastify, request) {
     const db = mongo.db(config.mongo.dbName)
     const collection = db.collection('actions')
 
-    const query = {"action.account":"dacelections", "action.name":"stprofileuns", "action.data.cand":{$in:accounts}}
+    const cust_contract = config.eos.custodianContract || 'daccustodian'
+
+    const query = {"action.account":cust_contract, "action.name":"stprofileuns", "action.data.cand":{$in:accounts}}
 
     const pipeline = [
         {$match:query},
