@@ -21,7 +21,12 @@ async function votesTimeline(fastify, request) {
 
         const accounts = account.split(',')
 
-        const query = {'code':cust_contract, 'scope':cust_contract, 'table':'custodians', 'data.cust_name':{$in:accounts}}
+        const query = {
+            'code':cust_contract,
+            'scope':cust_contract,
+            'table':'candidates',
+            'data.candidate_name': {$in:accounts}
+        }
         if (start_block){
             if (!('block_num' in query)){
                 query.block_num = {}
@@ -34,6 +39,8 @@ async function votesTimeline(fastify, request) {
             }
             query.block_num['$lte'] = new MongoLong(end_block)
         }
+
+        // console.log(query)
 
 
 
@@ -49,7 +56,7 @@ async function votesTimeline(fastify, request) {
                 }
                 else {
                     res.forEach((row) => {
-                        timeline.push({block_num: row.block_num, custodian:row.data.cust_name, votes: row.data.total_votes})
+                        timeline.push({block_num: row.block_num, candidate:row.data.candidate_name, votes: row.data.total_votes})
                     }, () => {
                         resolve(timeline)
                     })
