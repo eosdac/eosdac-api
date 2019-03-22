@@ -32,7 +32,7 @@ const balanceTimelineSchema = {
                 type: 'integer'
             }
         },
-        required: ['account', 'contract']
+        required: ['account', 'contract', 'symbol']
     },
     response: {
         200: {
