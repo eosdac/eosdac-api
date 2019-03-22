@@ -33,7 +33,7 @@ async function getProfile(fastify, request) {
         },
         { '$sort' : {block_num:-1} },
         {'$facet': {
-                results: [{ '$skip': 0 }, { '$limit': 100000 }],
+                results: [ { $match: {} } ],
                 count: [{ '$count': 'count' }]
             }}
 
