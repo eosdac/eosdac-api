@@ -49,7 +49,11 @@ async function getProfile(fastify, request) {
 
         return row
     })
-    result.count = result.count[0].count
+
+    if (result.count.length){
+        result.count = result.count[0].count
+    }
+
 
     return result
 }
