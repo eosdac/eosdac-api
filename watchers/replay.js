@@ -1,6 +1,5 @@
-
-const workers = require('./index')
+const workers = require('./index');
 
 workers.forEach((w) => {
     w.replay()
-})
+});

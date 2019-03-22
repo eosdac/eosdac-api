@@ -52,4 +52,4 @@ const memberSnapshotSchema = {
     }
 };
 
-module.exports = {GET:memberSnapshotSchema}
+module.exports = {GET: memberSnapshotSchema};

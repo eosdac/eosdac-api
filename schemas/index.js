@@ -1,5 +1,3 @@
-
-
 module.exports = {
     getProposalsSchema: require('./get_proposals'),
     getMsigProposalsSchema: require('./get_msig_proposals'),

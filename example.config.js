@@ -24,4 +24,4 @@ module.exports = {
         msigContract: 'eosio.msig',
         custodianContract: 'daccustodian'
     }
-}
+};

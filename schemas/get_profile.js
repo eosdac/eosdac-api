@@ -83,4 +83,4 @@ const getProfileSchema = {
     }
 };
 
-module.exports = {GET:getProfileSchema}
+module.exports = {GET: getProfileSchema};

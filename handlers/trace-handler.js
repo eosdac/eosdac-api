@@ -1,8 +1,3 @@
-const MongoClient = require('mongodb').MongoClient;
-
-const RabbitSender = require('../rabbitsender')
-const Int64 = require('int64-buffer').Int64BE;
-
 
 class TraceHandler {
     constructor({queue, action_handler, config}) {
@@ -41,4 +36,4 @@ class TraceHandler {
 }
 
 
-module.exports = TraceHandler
+module.exports = TraceHandler;

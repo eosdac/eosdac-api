@@ -22,4 +22,4 @@ const getMsigProposalsSchema = {
     }
 };
 
-module.exports = {GET:getMsigProposalsSchema}
+module.exports = {GET: getMsigProposalsSchema};

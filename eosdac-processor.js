@@ -1,24 +1,24 @@
 #!/usr/bin/env node
 
-const cluster = require('cluster')
+const cluster = require('cluster');
 
-const { TextDecoder, TextEncoder } = require('text-encoding');
+const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc, Serialize} = require('eosjs');
-const {DeltaHandler} = require('./eosdac-handlers')
+const {DeltaHandler} = require('./eosdac-handlers');
 const fetch = require('node-fetch');
 const MongoClient = require('mongodb').MongoClient;
 const MongoLong = require('mongodb').Long;
-const RabbitSender = require('./rabbitsender')
+const RabbitSender = require('./rabbitsender');
 const Int64 = require('int64-buffer').Int64BE;
-const crypto = require('crypto')
-const {loadConfig} = require('./functions')
-const { arrayToHex } = require('eosjs/dist/eosjs-serialize')
-const watchers = require('./watchers')
+const crypto = require('crypto');
+const {loadConfig} = require('./functions');
+const {arrayToHex} = require('eosjs/dist/eosjs-serialize');
+const watchers = require('./watchers');
 
 
 class JobProcessor {
     constructor() {
-        this.config = loadConfig()
+        this.config = loadConfig();
 
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
@@ -37,17 +37,17 @@ class JobProcessor {
     }
 
     async _connectDb() {
-        if (this.config.mongo){
+        if (this.config.mongo) {
             return new Promise(async (resolve, reject) => {
-                if (this.db){
-                    resolve(await this.db)
+                if (this.db) {
+                    resolve(await this.db);
                     return
                 }
                 MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
                     if (err) {
                         reject(err)
                     } else {
-                        console.log(`Connected to ${this.config.mongo.url}/${this.config.mongo.dbName}`)
+                        console.log(`Connected to ${this.config.mongo.url}/${this.config.mongo.dbName}`);
                         resolve(client.db(this.config.mongo.dbName))
                     }
                 }).bind(this))
@@ -55,64 +55,62 @@ class JobProcessor {
         }
     }
 
-    async connectAmq(){
-        console.log(`Connecting to AMQ`)
+    async connectAmq() {
+        console.log(`Connecting to AMQ`);
         RabbitSender.closeHandlers = [(() => {
-            console.log('close handler')
+            console.log('close handler');
             this.start()
-        }).bind(this)]
+        }).bind(this)];
         this.amq = RabbitSender.init(this.config.amq)
 
     }
 
-    async processedActionJob(job, doc){
-        console.log(`Processed action job, notifying watchers`)
+    async processedActionJob(job, doc) {
+        console.log(`Processed action job, notifying watchers`);
         this.amq.then((amq) => {
             amq.ack(job)
-        })
+        });
 
         watchers.forEach((watcher) => {
             watcher.action(doc)
         })
     }
 
-    async processActionJob(job){
+    async processActionJob(job) {
         const sb = new Serialize.SerialBuffer({
             textEncoder: new TextEncoder,
             textDecoder: new TextDecoder,
             array: new Uint8Array(job.content)
         });
 
-        const block_num = new Int64(sb.getUint8Array(8)).toString()
-        const trx_id_arr = sb.getUint8Array(32)
-        const trx_id = arrayToHex(trx_id_arr)
-        const recv_sequence = new Int64(sb.getUint8Array(8)).toString()
-        const global_sequence = new Int64(sb.getUint8Array(8)).toString()
-        const account = sb.getName()
-        const name = sb.getName()
-        const data = sb.getBytes()
+        const block_num = new Int64(sb.getUint8Array(8)).toString();
+        const trx_id_arr = sb.getUint8Array(32);
+        const trx_id = arrayToHex(trx_id_arr);
+        const recv_sequence = new Int64(sb.getUint8Array(8)).toString();
+        const global_sequence = new Int64(sb.getUint8Array(8)).toString();
+        const account = sb.getName();
+        const name = sb.getName();
+        const data = sb.getBytes();
 
-        console.log('Process action', block_num, account, name, recv_sequence, global_sequence)
+        console.log('Process action', block_num, account, name, recv_sequence, global_sequence);
 
-        const action = {account, name, data}
+        const action = {account, name, data};
 
-        console.log(`Deserializing action ${account}:${name}`)
+        console.log(`Deserializing action ${account}:${name}`);
 
-        let act
+        let act;
         try {
             act = await this.api.deserializeActions([action]);
-        }
-        catch(e) {
-            console.error(`Error deserializing action data ${account}:${name} - ${e.message}`)
+        } catch (e) {
+            console.error(`Error deserializing action data ${account}:${name} - ${e.message}`);
             this.amq.then((amq) => {
                 amq.ack(job)
-            })
+            });
             return
         }
 
 
-
-        delete act[0].authorization
+        delete act[0].authorization;
 
         const doc = {
             block_num: MongoLong.fromString(block_num),
@@ -120,26 +118,25 @@ class JobProcessor {
             action: act[0],
             recv_sequence: MongoLong.fromString(recv_sequence),
             global_sequence: MongoLong.fromString(global_sequence)
-        }
+        };
 
-        console.log(doc)
+        console.log(doc);
 
-        const self = this
+        const self = this;
 
         this.db.then((db) => {
-            const col = db.collection('actions')
-            col.insertOne(doc).then((d) => {
-                console.log('Save completed')
+            const col = db.collection('actions');
+            col.insertOne(doc).then(() => {
+                console.log('Save completed');
 
                 self.processedActionJob(job, doc)
 
 
             }).catch((e) => {
-                if (e.code == 11000){ // Duplicate index
+                if (e.code === 11000) { // Duplicate index
                     self.processedActionJob(job, doc)
-                }
-                else {
-                    console.error('DB save failed :(', e)
+                } else {
+                    console.error('DB save failed :(', e);
 
                     this.amq.then((amq) => {
                         amq.reject(job)
@@ -149,7 +146,7 @@ class JobProcessor {
         })
     }
 
-    async processContractRow(job){
+    async processContractRow(job) {
         const sb = new Serialize.SerialBuffer({
             textEncoder: new TextEncoder,
             textDecoder: new TextDecoder,
@@ -157,15 +154,15 @@ class JobProcessor {
         });
 
 
-        const block_num = new Int64(sb.getUint8Array(8)).toString()
-        const present = sb.get()
-        const row_version = sb.get() // ?
-        const code = sb.getName()
-        const scope = sb.getName()
-        const table = sb.getName()
-        const primary_key = new Int64(sb.getUint8Array(8)).toString()
-        const payer = sb.getName()
-        const data_raw = sb.getBytes()
+        const block_num = new Int64(sb.getUint8Array(8)).toString();
+        const present = sb.get();
+        sb.get(); // version
+        const code = sb.getName();
+        const scope = sb.getName();
+        const table = sb.getName();
+        const primary_key = new Int64(sb.getUint8Array(8)).toString();
+        const payer = sb.getName();
+        const data_raw = sb.getBytes();
 
         try {
             const table_type = await this.delta_handler.getTableType(code, table);
@@ -177,7 +174,7 @@ class JobProcessor {
 
             const data = table_type.deserialize(data_sb);
 
-            if (code != 'eosio'){
+            if (code !== 'eosio') {
                 // console.log(`row version ${row_version}`);
                 // console.log(`code ${code}`);
                 // console.log(`scope ${scope}`);
@@ -187,9 +184,9 @@ class JobProcessor {
                 // // console.log(`data`)
                 // console.log(data);
 
-                console.log(`Storing ${code}:${table}`)
+                console.log(`Storing ${code}:${table}`);
 
-                const data_hash = crypto.createHash('sha1').update(data_raw).digest('hex')
+                const data_hash = crypto.createHash('sha1').update(data_raw).digest('hex');
 
                 const doc = {
                     block_num: MongoLong.fromString(block_num),
@@ -203,24 +200,23 @@ class JobProcessor {
                     present
                 };
 
-                console.log(doc)
+                console.log(doc);
 
                 this.db.then((db) => {
-                    const col = db.collection('contract_rows')
+                    const col = db.collection('contract_rows');
                     col.insertOne(doc).then(() => {
-                        console.log('Save completed')
+                        console.log('Save completed');
 
                         this.amq.then((amq) => {
                             amq.ack(job)
                         })
                     }).catch((e) => {
                         this.amq.then((amq) => {
-                            if (e.code == 11000){
+                            if (e.code === 11000) {
                                 // duplicate index
                                 amq.ack(job)
-                            }
-                            else {
-                                console.error('DB save failed :(', e)
+                            } else {
+                                console.error('DB save failed :(', e);
                                 amq.reject(job)
                             }
                         })
@@ -228,48 +224,47 @@ class JobProcessor {
                 })
 
             }
-        }
-        catch (e){
-            console.error(`Error deserializing ${code}:${table} : ${e.message}`)
+        } catch (e) {
+            console.error(`Error deserializing ${code}:${table} : ${e.message}`);
             this.amq.then((amq) => {
                 amq.ack(job)
-            })
-            return
+            });
+
         }
 
 
     }
 
 
-    async start(){
+    async start() {
         this.contracts = this.config.eos.contracts;
 
-        this.connectAmq()
-        this.connectDb()
+        this.connectAmq();
+        this.connectDb();
 
-        this.delta_handler = new DeltaHandler({config:this.config, queue:this.amq})
+        this.delta_handler = new DeltaHandler({config: this.config, queue: this.amq});
 
         if (cluster.isMaster) {
-            console.log(`Starting processor with ${this.config.clusterSize} threads...`)
+            console.log(`Starting processor with ${this.config.clusterSize} threads...`);
             // kue.app.listen(3001)
 
             for (let i = 0; i < this.config.clusterSize; i++) {
                 cluster.fork()
             }
         } else {
-            const self = this
+            const self = this;
             this.amq.then((amq) => {
-                amq.listen('contract_row', self.processContractRow.bind(self))
+                amq.listen('contract_row', self.processContractRow.bind(self));
                 amq.listen('action', self.processActionJob.bind(self))
             })
         }
     }
 
     interested(account) {
-        return (this.config.eos.contracts == '*' || this.config.eos.contracts.includes(account))
+        return (this.config.eos.contracts === '*' || this.config.eos.contracts.includes(account))
     }
 }
 
 
 const processor = new JobProcessor();
-processor.start()
+processor.start();

@@ -1,71 +1,68 @@
-const {Serialize} = require("eosjs");
-
-const MongoClient = require('mongodb').MongoClient
-const { Connection } = require("./connection")
+const {Connection} = require("./connection");
 
 
 class BlockReceiver {
     /* mode 0 = serial, 1 = parallel */
-    constructor({ startBlock = 0, endBlock = 0xffffffff, config, mode = 0 }){
-        this.trace_handlers = []
-        this.delta_handlers = []
-        this.done_handlers = []
-        this.progress_handlers = []
-        this.fork_handlers = []
+    constructor({startBlock = 0, endBlock = 0xffffffff, config, mode = 0}) {
+        this.trace_handlers = [];
+        this.delta_handlers = [];
+        this.done_handlers = [];
+        this.progress_handlers = [];
+        this.fork_handlers = [];
 
         // console.log(config)
 
-        this.config = config
-        this.mode = mode
+        this.config = config;
+        this.mode = mode;
 
-        this.start_block = startBlock
-        this.end_block = endBlock
-        this.current_block = -1
-        this.complete = true
+        this.start_block = startBlock;
+        this.end_block = endBlock;
+        this.current_block = -1;
+        this.complete = true;
 
-        const mode_str = (mode==0)?'serial':'parallel';
+        const mode_str = (mode === 0) ? 'serial' : 'parallel';
 
         console.log(`Created BlockReceiver, Start : ${startBlock}, End : ${endBlock}, Mode : ${mode_str}`);
 
     }
 
-    registerDoneHandler(h){
+    registerDoneHandler(h) {
         this.done_handlers.push(h)
     }
 
-    registerTraceHandler(h){
+    registerTraceHandler(h) {
         this.trace_handlers.push(h)
     }
 
-    registerDeltaHandler(h){
+    registerDeltaHandler(h) {
         this.delta_handlers.push(h)
     }
 
-    registerProgressHandler(h){
+    registerProgressHandler(h) {
         this.progress_handlers.push(h)
     }
 
-    registerForkHandler(h){
+    registerForkHandler(h) {
         this.fork_handlers.push(h)
     }
 
-    status(){
-        const start = this.start_block
-        const end = this.end_block
-        const current = this.current_block
+    status() {
+        const start = this.start_block;
+        const end = this.end_block;
+        const current = this.current_block;
 
         return {start, end, current}
     }
 
-    async start(){
-        this.complete = false
+    async start() {
+        this.complete = false;
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
 
             this.connectDb().then((db) => {
-                this.db = db
+                this.db = db;
 
-                this.registerDoneHandler(resolve)
+                this.registerDoneHandler(resolve);
 
                 this.connection = new Connection({
                     socketAddress: this.config.eos.wsEndpoint,
@@ -81,53 +78,35 @@ class BlockReceiver {
         // console.log(this.connection)
     }
 
-    async restart(startBlock, endBlock){
-        console.log(`Restarting from ${startBlock} to ${endBlock}`)
-        this.start_block = startBlock
-        this.end_block = endBlock
-        this.complete = false
-        this.done_handlers = []
+    async restart(startBlock, endBlock) {
+        console.log(`Restarting from ${startBlock} to ${endBlock}`);
+        this.start_block = startBlock;
+        this.end_block = endBlock;
+        this.complete = false;
+        this.done_handlers = [];
 
-        if (!this.connection){
+        if (!this.connection) {
             this.start()
-        }
-        else {
+        } else {
             await this.requestBlocks()
         }
     }
 
-    destroy(){
+    destroy() {
         console.log(`Destroying (TODO)`)
     }
 
-    async connectDb(){
-        return
-        if (this.config.mongo){
-            return new Promise((resolve, reject) => {
-                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
-                    if (err){
-                        reject(err)
-                    }
-                    else {
-                        resolve(client.db(this.config.mongo.dbName))
-                    }
-                }).bind(this))
-            })
-        }
-
-    }
-
-    async requestBlocks(){
+    async requestBlocks() {
         try {
             const request_args = {
-                irreversibleOnly:false,
+                irreversibleOnly: false,
                 start_block_num: this.start_block,
                 end_block_num: this.end_block,
-                have_positions:[],
+                have_positions: [],
                 fetch_block: false,
                 fetch_traces: (this.trace_handlers.length > 0),
                 fetch_deltas: (this.delta_handlers.length > 0),
-            }
+            };
             await this.connection.requestBlocks(request_args);
         } catch (e) {
             console.error(`Error requesting blocks ${e.message}`);
@@ -135,7 +114,7 @@ class BlockReceiver {
         }
     }
 
-    async handleFork(block_num){
+    async handleFork(block_num) {
         this.fork_handlers.forEach((handler) => {
             handler(block_num)
         })
@@ -149,16 +128,16 @@ class BlockReceiver {
             return;
         let block_num = response.this_block.block_num;
 
-        if ( this.mode === 0 && block_num <= this.current_block ){
-            console.log(`Detected fork in serial mode: current:${block_num} <= head:${this.current_block}`)
+        if (this.mode === 0 && block_num <= this.current_block) {
+            console.log(`Detected fork in serial mode: current:${block_num} <= head:${this.current_block}`);
             await this.handleFork(block_num)
         }
 
-        this.current_block = block_num
+        this.current_block = block_num;
 
-        if (!(block_num % 1000) || (this.end_block - this.start_block) < 50){
+        if (!(block_num % 1000) || (this.end_block - this.start_block) < 50) {
             console.info(`BlockReceiver : received block ${block_num}`);
-            let {start, end, current} = this.status()
+            let {start, end, current} = this.status();
             console.info(`Start: ${start}, End: ${end}, Current: ${current}`)
 
             // this.connection.requestStatus()
@@ -167,30 +146,28 @@ class BlockReceiver {
             // })
         }
 
-        if (deltas && deltas.length){
+        if (deltas && deltas.length) {
             this.delta_handlers.forEach(((handler) => {
-                if (this.mode === 0){
+                if (this.mode === 0) {
                     handler.processDelta(block_num, deltas, this.connection.types)
-                }
-                else {
+                } else {
                     handler.queueDelta(block_num, deltas, this.connection.abi)
                 }
             }).bind(this))
         }
 
-        if (traces){
+        if (traces) {
             this.trace_handlers.forEach((handler) => {
-                if (this.mode === 0){
+                if (this.mode === 0) {
                     handler.processTrace(block_num, traces)
-                }
-                else {
+                } else {
                     handler.queueTrace(block_num, traces)
                 }
             })
         }
 
-        if (this.current_block === this.end_block -1 && !this.complete){
-            this.complete = true
+        if (this.current_block === this.end_block - 1 && !this.complete) {
+            this.complete = true;
             this.done_handlers.forEach((handler) => {
                 handler()
             })
@@ -207,4 +184,4 @@ class BlockReceiver {
 }
 
 
-module.exports = BlockReceiver
+module.exports = BlockReceiver;

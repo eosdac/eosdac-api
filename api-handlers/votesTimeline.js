@@ -1,40 +1,39 @@
-
-const {votesTimelineSchema} = require('../schemas')
+const {votesTimelineSchema} = require('../schemas');
 
 const MongoLong = require('mongodb').Long;
-const connectMongo = require('../connections/mongo')
+const connectMongo = require('../connections/mongo');
 
-const {loadConfig} = require('../functions')
+const {loadConfig} = require('../functions');
 
 
 async function votesTimeline(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
-        const config = loadConfig()
-        const mongo = await connectMongo(config)
-        const db = mongo.db(config.mongo.dbName)
-        const collection = db.collection('contract_rows')
-        const account = request.query.account
-        const start_block = request.query.start_block || null
-        const end_block = request.query.end_block || null
-        const cust_contract = config.eos.custodianContract || 'daccustodian'
+        const config = loadConfig();
+        const mongo = await connectMongo(config);
+        const db = mongo.db(config.mongo.dbName);
+        const collection = db.collection('contract_rows');
+        const account = request.query.account;
+        const start_block = request.query.start_block || null;
+        const end_block = request.query.end_block || null;
+        const cust_contract = config.eos.custodianContract || 'daccustodian';
 
-        const accounts = account.split(',')
+        const accounts = account.split(',');
 
         const query = {
-            'code':cust_contract,
-            'scope':cust_contract,
-            'table':'candidates',
-            'data.candidate_name': {$in:accounts}
-        }
-        if (start_block){
-            if (!('block_num' in query)){
+            'code': cust_contract,
+            'scope': cust_contract,
+            'table': 'candidates',
+            'data.candidate_name': {$in: accounts}
+        };
+        if (start_block) {
+            if (!('block_num' in query)) {
                 query.block_num = {}
             }
             query.block_num['$gte'] = new MongoLong(start_block)
         }
-        if (end_block){
-            if (!('block_num' in query)){
+        if (end_block) {
+            if (!('block_num' in query)) {
                 query.block_num = {}
             }
             query.block_num['$lte'] = new MongoLong(end_block)
@@ -43,20 +42,21 @@ async function votesTimeline(fastify, request) {
         // console.log(query)
 
 
-
-        collection.find(query, {sort:{block_num:1}}, async (err, res) => {
+        collection.find(query, {sort: {block_num: 1}}, async (err, res) => {
             // console.log("action", res.action.data)
-            if (err){
+            if (err) {
                 reject(err)
-            }
-            else if (res) {
-                const timeline = []
-                if (!await res.count()){
+            } else if (res) {
+                const timeline = [];
+                if (!await res.count()) {
                     resolve(timeline)
-                }
-                else {
+                } else {
                     res.forEach((row) => {
-                        timeline.push({block_num: row.block_num, candidate:row.data.candidate_name, votes: row.data.total_votes})
+                        timeline.push({
+                            block_num: row.block_num,
+                            candidate: row.data.candidate_name,
+                            votes: row.data.total_votes
+                        })
                     }, () => {
                         resolve(timeline)
                     })
@@ -72,9 +72,9 @@ module.exports = function (fastify, opts, next) {
     fastify.get('/votes_timeline', {
         schema: votesTimelineSchema.GET
     }, async (request, reply) => {
-        reply.header('Access-Control-Allow-Origin', '*')
-        const res = await votesTimeline(fastify, request)
-        reply.send({results:res, count:res.length});
+        reply.header('Access-Control-Allow-Origin', '*');
+        const res = await votesTimeline(fastify, request);
+        reply.send({results: res, count: res.length});
     });
     next()
 };

@@ -52,4 +52,4 @@ const votesTimelineSchema = {
     }
 };
 
-module.exports = {GET:votesTimelineSchema}
+module.exports = {GET: votesTimelineSchema};

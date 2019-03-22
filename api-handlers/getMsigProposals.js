@@ -1,11 +1,8 @@
+const {getMsigProposalsSchema} = require('../schemas');
 
-const MongoClient = require('mongodb').MongoClient
+const connectMongo = require('../connections/mongo');
 
-const {getMsigProposalsSchema} = require('../schemas')
-
-const connectMongo = require('../connections/mongo')
-
-const {loadConfig} = require('../functions')
+const {loadConfig} = require('../functions');
 
 
 async function getMsigProposals(fastify, request) {
@@ -13,36 +10,34 @@ async function getMsigProposals(fastify, request) {
 
 
     return new Promise(async (resolve, reject) => {
-        const config = loadConfig()
-        const mongo = await connectMongo(config)
-        const db = mongo.db(config.mongo.dbName)
-        const collection = db.collection('multisigs')
+        const config = loadConfig();
+        const mongo = await connectMongo(config);
+        const db = mongo.db(config.mongo.dbName);
+        const collection = db.collection('multisigs');
 
-        const status = request.query.status || 0
-        const skip = request.query.skip || 0
-        const limit = request.query.limit || 20
+        const status = request.query.status || 0;
+        const skip = request.query.skip || 0;
+        const limit = request.query.limit || 20;
 
-        const query = {status:parseInt(status)}
+        const query = {status: parseInt(status)};
 
         try {
-            const count = await collection.find(query).sort({block_num:-1}).count()
-            const res = await collection.find(query).sort({block_num:-1}).skip(parseInt(skip)).limit(parseInt(limit))
+            const count = await collection.find(query).sort({block_num: -1}).count();
+            const res = await collection.find(query).sort({block_num: -1}).skip(parseInt(skip)).limit(parseInt(limit));
 
-            const proposals = {results:[], count:0}
-            if (await res.count() == 0){
+            const proposals = {results: [], count: 0};
+            if (await res.count() === 0) {
                 resolve(proposals)
-            }
-            else {
+            } else {
                 res.forEach((msig) => {
-                    delete msig._id
+                    delete msig._id;
                     proposals.results.push(msig)
                 }, async () => {
-                    proposals.count = count
+                    proposals.count = count;
                     resolve(proposals)
                 })
             }
-        }
-        catch (e){
+        } catch (e) {
             reject(e)
         }
 
@@ -56,7 +51,7 @@ module.exports = function (fastify, opts, next) {
     fastify.get('/get_msig_proposals', {
         schema: getMsigProposalsSchema.GET
     }, async (request, reply) => {
-        reply.header('Access-Control-Allow-Origin', '*')
+        reply.header('Access-Control-Allow-Origin', '*');
         reply.send(await getMsigProposals(fastify, request));
     });
     next()

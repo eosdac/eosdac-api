@@ -1,11 +1,9 @@
-const WebSocket = require('ws');
-const { JsonRpc, RpcError, JsSignatureProvider, Serialize } = require('eosjs');
-const { TextDecoder, TextEncoder } = require('text-encoding');
-const fetch = require('node-fetch');
+const {Serialize} = require('eosjs');
+const {TextDecoder, TextEncoder} = require('text-encoding');
 const zlib = require('zlib');
 
 class Connection {
-    constructor({ socketAddress, receivedAbi, receivedBlock }) {
+    constructor({socketAddress, receivedAbi, receivedBlock}) {
         this.receivedAbi = receivedAbi;
         this.receivedBlock = receivedBlock;
 
@@ -15,20 +13,20 @@ class Connection {
         this.blocksQueue = [];
         this.inProcessBlocks = false;
 
-        this.ws = new WebSocket(socketAddress, { perMessageDeflate: false });
+        this.ws = new WebSocket(socketAddress, {perMessageDeflate: false});
         this.ws.on('message', data => this.onMessage(data));
     }
 
     serialize(type, value) {
-        const buffer = new Serialize.SerialBuffer({ textEncoder: new TextEncoder, textDecoder: new TextDecoder });
+        const buffer = new Serialize.SerialBuffer({textEncoder: new TextEncoder, textDecoder: new TextDecoder});
         Serialize.getType(this.types, type).serialize(buffer, value);
         return buffer.asUint8Array();
     }
 
     deserialize(type, array) {
-        const buffer = new Serialize.SerialBuffer({ textEncoder: new TextEncoder, textDecoder: new TextDecoder, array });
-        let result = Serialize.getType(this.types, type).deserialize(buffer, new Serialize.SerializerState({ bytesAsUint8Array: true }));
-        if (buffer.readPos != array.length)
+        const buffer = new Serialize.SerialBuffer({textEncoder: new TextEncoder, textDecoder: new TextDecoder, array});
+        let result = Serialize.getType(this.types, type).deserialize(buffer, new Serialize.SerializerState({bytesAsUint8Array: true}));
+        if (buffer.readPos !== array.length)
             throw new Error('oops: ' + type); // todo: remove check
         // {
         //     console.log(result.actions[0].authorization[0].actor);
@@ -46,7 +44,7 @@ class Connection {
                     packed_trx = this.deserialize('transaction', packed_trx);
                 else if (pt.compression === 1)
                     packed_trx = this.deserialize('transaction', zlib.unzipSync(packed_trx));
-                return { ...pt, packed_trx };
+                return {...pt, packed_trx};
             }
             if (k === 'packed_trx' && v instanceof Uint8Array)
                 return this.deserialize('transaction', v);
@@ -112,7 +110,7 @@ class Connection {
         this.inProcessBlocks = true;
         while (this.blocksQueue.length) {
             let response = this.blocksQueue.shift();
-            this.send(['get_blocks_ack_request_v0', { num_messages: 1 }]);
+            this.send(['get_blocks_ack_request_v0', {num_messages: 1}]);
             let block, traces = [], deltas = [];
             if (response.block && response.block.length)
                 block = this.deserialize('signed_block', response.block);
@@ -141,10 +139,10 @@ class Connection {
 
     dumpDelta(delta, extra) {
         this.forEachRow(delta, (present, data) => {
-            console.log(this.toJsonUnpackTransaction({ ...extra, present, data }));
+            console.log(this.toJsonUnpackTransaction({...extra, present, data}));
         });
     }
 } // Connection
 
 
-module.exports = {Connection}
+module.exports = {Connection};

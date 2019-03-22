@@ -1,55 +1,51 @@
-
-const {balanceTimelineSchema} = require('../schemas')
+const {balanceTimelineSchema} = require('../schemas');
 
 const MongoLong = require('mongodb').Long;
-const connectMongo = require('../connections/mongo')
+const connectMongo = require('../connections/mongo');
 
-const {loadConfig} = require('../functions')
+const {loadConfig} = require('../functions');
 
 
 async function balanceTimeline(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
-        const config = loadConfig()
-        const mongo = await connectMongo(config)
-        const db = mongo.db(config.mongo.dbName)
-        const collection = db.collection('contract_rows')
-        const account = request.query.account
-        const contract = request.query.contract || 'eosdactokens'
-        const symbol = request.query.symbol || 'EOSDAC'
-        const start_block = request.query.start_block || null
-        const end_block = request.query.end_block || null
+        const config = loadConfig();
+        const mongo = await connectMongo(config);
+        const db = mongo.db(config.mongo.dbName);
+        const collection = db.collection('contract_rows');
+        const account = request.query.account;
+        const contract = request.query.contract || 'eosdactokens';
+        const symbol = request.query.symbol || 'EOSDAC';
+        const start_block = request.query.start_block || null;
+        const end_block = request.query.end_block || null;
 
-        const query = {'code':contract, 'scope':account, 'table':'accounts'}
-        if (start_block){
-            if (!('block_num' in query)){
+        const query = {'code': contract, 'scope': account, 'table': 'accounts'};
+        if (start_block) {
+            if (!('block_num' in query)) {
                 query.block_num = {}
             }
             query.block_num['$gte'] = new MongoLong(start_block)
         }
-        if (end_block){
-            if (!('block_num' in query)){
+        if (end_block) {
+            if (!('block_num' in query)) {
                 query.block_num = {}
             }
             query.block_num['$lte'] = new MongoLong(end_block)
         }
 
 
-
-        collection.find(query, {sort:{block_num:1}}, async (err, res) => {
+        collection.find(query, {sort: {block_num: 1}}, async (err, res) => {
             // console.log("action", res.action.data)
-            if (err){
+            if (err) {
                 reject(err)
-            }
-            else if (res) {
-                const timeline = []
-                if (!await res.count()){
+            } else if (res) {
+                const timeline = [];
+                if (!await res.count()) {
                     resolve(timeline)
-                }
-                else {
+                } else {
                     res.forEach((row) => {
-                        const [bal, sym] = row.data.balance.split(' ')
-                        if (symbol === sym){
+                        const [bal, sym] = row.data.balance.split(' ');
+                        if (symbol === sym) {
                             timeline.push({block_num: row.block_num, balance: row.data.balance})
                         }
                     }, () => {
@@ -67,9 +63,9 @@ module.exports = function (fastify, opts, next) {
     fastify.get('/balance_timeline', {
         schema: balanceTimelineSchema.GET
     }, async (request, reply) => {
-        reply.header('Access-Control-Allow-Origin', '*')
-        const res = await balanceTimeline(fastify, request)
-        reply.send({results:res, count:res.length});
+        reply.header('Access-Control-Allow-Origin', '*');
+        const res = await balanceTimeline(fastify, request);
+        reply.send({results: res, count: res.length});
     });
     next()
 };

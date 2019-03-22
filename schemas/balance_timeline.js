@@ -62,4 +62,4 @@ const balanceTimelineSchema = {
     }
 };
 
-module.exports = {GET:balanceTimelineSchema}
+module.exports = {GET: balanceTimelineSchema};

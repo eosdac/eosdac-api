@@ -1,58 +1,59 @@
 #!/usr/bin/env node
 
 
-const MongoClient = require('mongodb').MongoClient
+const MongoClient = require('mongodb').MongoClient;
 
 
-const account = process.argv[2]
-if (!account || account.length > 12){
-    console.error(`Please supply a valid account name`)
+const account = process.argv[2];
+if (!account || account.length > 12) {
+    console.error(`Please supply a valid account name`);
     process.exit(1)
 }
 
-const config = require('./mainnet.config')
+const config = require('./mainnet.config');
 
-console.log(`Getting linked auths for ${account}`)
+console.log(`Getting linked auths for ${account}`);
 
-let permissions = {}
+let permissions = {};
 
 MongoClient.connect(config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
     if (err) {
-        console.error("\nFailed to connect\n", err)
+        console.error("\nFailed to connect\n", err);
         process.exit(0)
     } else if (client) {
-        console.info(`Connected to ${config.mongo.url}/${config.mongo.dbName}`)
+        console.info(`Connected to ${config.mongo.url}/${config.mongo.dbName}`);
         const db = client.db(config.mongo.dbName);
 
-        const col = db.collection('permission_links')
+        const col = db.collection('permission_links');
 
-        const at_block = process.argv[3]
-        let query = {account:account}
-        if (at_block){
-            query.block_num = {'$lte':parseInt(at_block)}
+        const at_block = process.argv[3];
+        let query = {account: account};
+        if (at_block) {
+            query.block_num = {'$lte': parseInt(at_block)}
         }
 
 
         col.aggregate([
-            {'$match':query},
-            {'$sort':{block_num:1}},
-            {'$group':{
-                    _id:{account:"$account", code:"$code", message_type:"$message_type"},
-                    block_num:{'$last':"$block_num"},
-                    account:{'$last':"$account"},
-                    code:{'$last':"$code"},
-                    message_type:{'$last':"$message_type"},
-                    required_permission:{'$last':"$required_permission"},
-                    present:{'$last':"$present"}
+            {'$match': query},
+            {'$sort': {block_num: 1}},
+            {
+                '$group': {
+                    _id: {account: "$account", code: "$code", message_type: "$message_type"},
+                    block_num: {'$last': "$block_num"},
+                    account: {'$last': "$account"},
+                    code: {'$last': "$code"},
+                    message_type: {'$last': "$message_type"},
+                    required_permission: {'$last': "$required_permission"},
+                    present: {'$last': "$present"}
                 }
             },
-            {'$match': {present:true}}
-        ], {allowDiskUse:true}, (err, results) => {
+            {'$match': {present: true}}
+        ], {allowDiskUse: true}, (err, results) => {
 
             results.forEach((row) => {
                 // console.log(row)
 
-                if (typeof permissions[row.required_permission] == 'undefined'){
+                if (typeof permissions[row.required_permission] == 'undefined') {
                     permissions[row.required_permission] = []
                 }
                 permissions[row.required_permission].push({
@@ -62,13 +63,13 @@ MongoClient.connect(config.mongo.url, {useNewUrlParser: true}, ((err, client) =>
                 })
 
             }, () => {
-                console.log(permissions)
+                console.log(permissions);
 
                 process.exit(0)
             })
 
         })
     }
-}))
+}));
 
 

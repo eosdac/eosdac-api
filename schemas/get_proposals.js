@@ -111,4 +111,4 @@ const getProposalsSchema = {
     }
 };
 
-module.exports = {GET:getProposalsSchema}
+module.exports = {GET: getProposalsSchema};
