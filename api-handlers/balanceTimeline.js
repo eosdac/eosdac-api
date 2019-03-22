@@ -1,5 +1,5 @@
 
-const {tokenTimelineSchema} = require('../schemas')
+const {balanceTimelineSchema} = require('../schemas')
 
 const MongoLong = require('mongodb').Long;
 const connectMongo = require('../connections/mongo')
@@ -7,7 +7,7 @@ const connectMongo = require('../connections/mongo')
 const {loadConfig} = require('../functions')
 
 
-async function tokenTimeline(fastify, request) {
+async function balanceTimeline(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
         const config = loadConfig()
@@ -64,11 +64,11 @@ async function tokenTimeline(fastify, request) {
 
 
 module.exports = function (fastify, opts, next) {
-    fastify.get('/token_timeline', {
-        schema: tokenTimelineSchema.GET
+    fastify.get('/balance_timeline', {
+        schema: balanceTimelineSchema.GET
     }, async (request, reply) => {
         reply.header('Access-Control-Allow-Origin', '*')
-        const res = await tokenTimeline(fastify, request)
+        const res = await balanceTimeline(fastify, request)
         reply.send({results:res, count:res.length});
     });
     next()

@@ -1,5 +1,5 @@
-const tokenTimelineSchema = {
-    description: 'Token Timeline',
+const balanceTimelineSchema = {
+    description: 'Balance Timeline',
     summary: 'Get timeline of token balance changes',
     tags: ['v1'],
     querystring: {
@@ -62,4 +62,4 @@ const tokenTimelineSchema = {
     }
 };
 
-module.exports = {GET:tokenTimelineSchema}
+module.exports = {GET:balanceTimelineSchema}
