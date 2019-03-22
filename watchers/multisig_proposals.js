@@ -16,6 +16,8 @@ class MultisigProposalsHandler {
         this.config = loadConfig()
         this.db = connectMongo(config)
 
+        this.msig_contract = config.eos.msigContract || 'eosio.msig'
+
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
         this.api = new Api({
             rpc,
@@ -183,8 +185,8 @@ class MultisigProposalsHandler {
             check_block = block_num - 1
         }
 
-        const res_proposals = await eosTableAtBlock({code:'eosiomsigold', scope:proposer, table:'proposal', block_num:check_block, data_query})
-        const res_approvals = await eosTableAtBlock({code:'eosiomsigold', scope:proposer, table:'approvals', block_num:check_block, data_query})
+        const res_proposals = await eosTableAtBlock({code:this.msig_contract, scope:proposer, table:'proposal', block_num:check_block, data_query})
+        const res_approvals = await eosTableAtBlock({code:this.msig_contract, scope:proposer, table:'approvals', block_num:check_block, data_query})
 
         const proposal = res_proposals.results[0]
         if (!proposal){
@@ -248,7 +250,7 @@ class MultisigProposalsHandler {
         if (ca){
             end_block = ca.block_num
         }
-        const query_provided = {code:'eosiomsigold', scope:proposer, table:'approvals', data_query}
+        const query_provided = {code:this.msig_contract, scope:proposer, table:'approvals', data_query}
         if (end_block){
             query_provided.block_num = end_block
         }
