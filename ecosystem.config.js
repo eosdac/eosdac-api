@@ -25,7 +25,8 @@ module.exports = {
             env: {
                 'CONFIG': 'jungle',
                 'SERVER_PORT': 8383,
-                'SERVER_ADDR': '0.0.0.0'
+                'SERVER_ADDR': '0.0.0.0',
+                'HOST_NAME': 'api-jungle.eosdac.io'
             }
         },
 
@@ -56,7 +57,8 @@ module.exports = {
             env: {
                 'CONFIG': 'mainnet',
                 'SERVER_PORT': 8382,
-                'SERVER_ADDR': '0.0.0.0'
+                'SERVER_ADDR': '0.0.0.0',
+                'HOST_NAME': 'api.eosdac.io'
             }
         }
     ]
