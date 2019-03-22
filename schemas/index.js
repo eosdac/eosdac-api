@@ -6,4 +6,5 @@ module.exports = {
     getProfileSchema: require('./get_profile'),
     balanceTimelineSchema: require('./balance_timeline'),
     memberSnapshotSchema: require('./member_snapshot'),
+    votesTimelineSchema: require('./votes_timeline'),
 };
