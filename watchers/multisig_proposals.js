@@ -17,6 +17,10 @@ class MultisigProposalsHandler {
         this.db = connectMongo(config);
 
         this.msig_contract = config.eos.msigContract || 'eosio.msig';
+        this.auth_account = config.eos.authContract || 'dacauthority';
+        this.custodian_contract = config.eos.custodianContract || 'daccustodian';
+
+        this.dac_config = null;
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
         this.api = new Api({
@@ -28,24 +32,38 @@ class MultisigProposalsHandler {
         });
     }
 
+    async thresholdFromName(name){
+        return new Promise(async (resolve, reject) => {
+            if (!this.dac_config){
+                const table_rows_req = {code:this.custodian_contract, scope:this.custodian_contract, table:'config'};
+                const dac_config = await this.api.rpc.get_table_rows(table_rows_req);
+                this.dac_config = dac_config.rows[0];
+            }
+
+
+            switch (name) {
+                case 'low':
+                    resolve(this.dac_config.auth_threshold_low);
+                    break;
+                case 'med':
+                    resolve(this.dac_config.auth_threshold_med);
+                    break;
+                case 'high':
+                case 'active':
+                    resolve(this.dac_config.auth_threshold_high);
+                    break;
+                default:
+                    reject(`Unknown permission name "${name}"`);
+            }
+        });
+    }
+
     async permissionToThreshold(perm) {
         return new Promise(async (resolve) => {
-            const auth_account = 'dacauthority';
             const self = this;
 
-            if (perm.actor === auth_account) {
-                switch (perm.permission) {
-                    case 'low':
-                        resolve(7);
-                        break;
-                    case 'med':
-                        resolve(9);
-                        break;
-                    case 'high':
-                    case 'active':
-                        resolve(10);
-                        break
-                }
+            if (perm.actor === this.auth_account) {
+                resolve(await this.thresholdFromName(perm.permission))
             } else {
                 // get the account and follow the tree down
                 const acct = await this.api.rpc.get_account(perm.actor);
