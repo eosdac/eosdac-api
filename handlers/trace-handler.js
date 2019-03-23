@@ -6,12 +6,11 @@ class TraceHandler {
         this.config = config;
     }
 
-    async queueTrace(block_num, traces) {
-        return this.processTrace(block_num, traces)
-
+    async queueTrace(block_num, traces, block_timestamp) {
+        return this.processTrace(block_num, traces, block_timestamp)
     }
 
-    async processTrace(block_num, traces) {
+    async processTrace(block_num, traces, block_timestamp) {
         // console.log(`Process block ${block_num}`)
 
         for (const trace of traces) {
@@ -23,7 +22,7 @@ class TraceHandler {
                         //console.log(action)
                         switch (action[0]) {
                             case 'action_trace_v0':
-                                this.action_handler.queueAction(block_num, action[1], trx.id);
+                                this.action_handler.queueAction(block_num, action[1], trx.id, block_timestamp);
                                 break;
                         }
                     }

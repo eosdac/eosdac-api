@@ -84,6 +84,8 @@ class JobProcessor {
         });
 
         const block_num = new Int64(sb.getUint8Array(8)).toString();
+        const block_timestamp_int = sb.getUint32();
+        const block_timestamp = new Date(block_timestamp_int);
         const trx_id_arr = sb.getUint8Array(32);
         const trx_id = arrayToHex(trx_id_arr);
         const recv_sequence = new Int64(sb.getUint8Array(8)).toString();
@@ -114,6 +116,7 @@ class JobProcessor {
 
         const doc = {
             block_num: MongoLong.fromString(block_num),
+            block_timestamp,
             trx_id,
             action: act[0],
             recv_sequence: MongoLong.fromString(recv_sequence),
@@ -156,6 +159,8 @@ class JobProcessor {
 
         const block_num = new Int64(sb.getUint8Array(8)).toString();
         const present = sb.get();
+        const block_timestamp_int = sb.getUint32();
+        const block_timestamp = new Date(block_timestamp_int);
         sb.get(); // version
         const code = sb.getName();
         const scope = sb.getName();
@@ -190,6 +195,7 @@ class JobProcessor {
 
                 const doc = {
                     block_num: MongoLong.fromString(block_num),
+                    block_timestamp,
                     code,
                     scope,
                     table,

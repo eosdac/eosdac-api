@@ -39,11 +39,17 @@ class ActionHandler {
         }
     }
 
-    async processAction(block_num, action, trx_id) {
-        return this.queueAction(block_num, action, trx_id)
+    int32ToBuffer (num) {
+        const arr = Buffer.alloc(4);
+        arr.writeUInt32BE(num, 0);
+        return arr;
     }
 
-    async queueAction(block_num, action, trx_id) {
+    async processAction(block_num, action, trx_id, block_timestamp) {
+        return this.queueAction(block_num, action, trx_id, block_timestamp)
+    }
+
+    async queueAction(block_num, action, trx_id, block_timestamp) {
         // console.log(`Receive queue ${trx_id} for block ${block_num}`)
         // console.log(action)
 
@@ -75,12 +81,13 @@ class ActionHandler {
                 // console.log(`Queueing action for ${action.act.account}::${action.act.name}`);
                 this.amq.then((amq) => {
                     const block_buffer = new Int64(block_num).toBuffer();
+                    const timestamp_buffer = this.int32ToBuffer(block_timestamp.getTime() / 1000);
                     const trx_id_buffer = Buffer.from(trx_id_arr);
                     const recv_buffer = new Int64(action.receipt[1].recv_sequence).toBuffer();
                     const global_buffer = new Int64(action.receipt[1].global_sequence).toBuffer();
                     const action_buffer = Buffer.from(sb_action.array);
                     // console.log(`Publishing action`)
-                    amq.send('action', Buffer.concat([block_buffer, trx_id_buffer, recv_buffer, global_buffer, action_buffer]))
+                    amq.send('action', Buffer.concat([block_buffer, timestamp_buffer, trx_id_buffer, recv_buffer, global_buffer, action_buffer]))
                 })
             } else {
                 console.error(`No queue when processing action for ${action.act.account}::${action.act.name} in ${trx_id}`);
@@ -92,7 +99,7 @@ class ActionHandler {
             for (let itc of action.inline_traces) {
                 // console.log("inline trace\n", itc);
                 if (itc[0] === 'action_trace_v0') {
-                    this.queueAction(block_num, itc[1], trx_id);
+                    this.queueAction(block_num, itc[1], trx_id, block_timestamp);
                 }
             }
         }

@@ -74,7 +74,7 @@ class DeltaHandler {
     }
 
 
-    queueDelta(block_num, deltas, abi) {
+    queueDelta(block_num, deltas, abi, block_timestamp) {
         // const data = {block_num, deltas, abi};
         // this.queue.create('block_deltas', data).removeOnComplete(true).save()
 
@@ -101,7 +101,7 @@ class DeltaHandler {
                                 if (this.interested(code)) {
                                     // console.log('Queue delta row')
                                     console.log(`Queueing delta ${code}`);
-                                    this.queueDeltaRow('contract_row', block_num, row)
+                                    this.queueDeltaRow('contract_row', block_num, row, block_timestamp)
                                 } else {
                                     const scope = sb.getName();
                                     const table = sb.getName();
@@ -109,7 +109,7 @@ class DeltaHandler {
                                     if (table === 'accounts' && this.interested(scope)) {
                                         console.log(`Found interesting token balance change ${code}:${scope}:${table}`);
 
-                                        this.queueDeltaRow('contract_row', block_num, row)
+                                        this.queueDeltaRow('contract_row', block_num, row, block_timestamp)
                                     }
 
                                 }
@@ -123,13 +123,21 @@ class DeltaHandler {
         }
     }
 
-    async queueDeltaRow(name, block_num, row) {
+    int32ToBuffer (num) {
+        const arr = Buffer.alloc(4);
+        arr.writeUInt32BE(num, 0);
+        return arr;
+    }
+
+    async queueDeltaRow(name, block_num, row, block_timestamp) {
         return new Promise((resolve, reject) => {
             this.amq.then((amq) => {
+                // console.log('ts', timestamp);
+                const timestamp_buffer = this.int32ToBuffer(block_timestamp.getTime() / 1000);
                 const block_buffer = new Int64(block_num).toBuffer();
                 const present_buffer = Buffer.from([row.present]);
                 // console.log(`Publishing ${name}`)
-                amq.send(name, Buffer.concat([block_buffer, present_buffer, Buffer.from(row.data)]))
+                amq.send(name, Buffer.concat([block_buffer, present_buffer, timestamp_buffer, Buffer.from(row.data)]))
                     .then(resolve)
                     .catch(reject)
             })
@@ -137,8 +145,8 @@ class DeltaHandler {
 
     }
 
-    async processDelta(block_num, deltas, abi) {
-        return this.queueDelta(block_num, deltas, abi)
+    async processDelta(block_num, deltas, abi, block_timestamp) {
+        return this.queueDelta(block_num, deltas, abi, block_timestamp)
     }
 
     interested(account, name) {
