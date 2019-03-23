@@ -132,8 +132,9 @@ class DeltaHandler {
     async queueDeltaRow(name, block_num, row, block_timestamp) {
         return new Promise((resolve, reject) => {
             this.amq.then((amq) => {
-                // console.log('ts', timestamp);
-                const timestamp_buffer = this.int32ToBuffer(block_timestamp.getTime() / 1000);
+                const ts = Math.floor(block_timestamp.getTime() / 1000);
+                // console.log('ts', ts);
+                const timestamp_buffer = this.int32ToBuffer(ts);
                 const block_buffer = new Int64(block_num).toBuffer();
                 const present_buffer = Buffer.from([row.present]);
                 // console.log(`Publishing ${name}`)
