@@ -21,7 +21,7 @@ async function memberSnapshot(fastify, request) {
 
         const col = db.collection('contract_rows');
 
-        const match = {code: contract, table: 'members'};
+        const match = {code: contract, scope:contract, table: 'members'};
         if (block_num) {
             match.block_num = {$lte: new MongoLong(block_num)}
         }
