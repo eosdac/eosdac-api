@@ -13,7 +13,7 @@ async function memberSnapshot(fastify, request) {
         const mongo = await connectMongo(config);
         const db = mongo.db(config.mongo.dbName);
         const contract = request.query.contract || 'eosdactokens';
-        const symbol = request.query.contract || 'EOSDAC';
+        const symbol = request.query.symbol || 'EOSDAC';
         const block_num = request.query.block_num || null;
         const sort_col = request.query.sort || 'account';
 
