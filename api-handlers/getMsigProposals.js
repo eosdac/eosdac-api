@@ -26,15 +26,27 @@ async function getMsigProposals(fastify, request) {
             const res = await collection.find(query).sort({block_num: -1}).skip(parseInt(skip)).limit(parseInt(limit));
 
             const proposals = {results: [], count: 0};
+            let update_expired = false;
+            const now = new Date();
+
             if (await res.count() === 0) {
                 resolve(proposals)
             } else {
                 res.forEach((msig) => {
-                    delete msig._id;
-                    proposals.results.push(msig)
+                    if (status == 1 && msig.expiration <= now){ // new
+                        update_expired = true;
+                    }
+                    else {
+                        delete msig._id;
+                        proposals.results.push(msig)
+                    }
                 }, async () => {
                     proposals.count = count;
                     resolve(proposals)
+
+                    if (update_expired){
+                        collection.updateMany({status:1, expiration: {$lt:now}}, {$set:{status:3}})
+                    }
                 })
             }
         } catch (e) {
