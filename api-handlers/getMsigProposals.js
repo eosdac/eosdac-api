@@ -18,13 +18,8 @@ async function getMsigProposals(fastify, request) {
         const status = request.query.status || 0;
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
-        const include_expired = (request.query.expired);
 
         const query = {status: parseInt(status)};
-
-        if (!include_expired){
-            // query.expiration = {$gt:new Date()}
-        }
 
         try {
             const count = await collection.find(query).sort({block_num: -1}).count();
