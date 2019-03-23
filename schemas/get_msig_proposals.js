@@ -16,6 +16,10 @@ const getMsigProposalsSchema = {
             "skip": {
                 description: 'Skip number of results',
                 type: 'integer'
+            },
+            "expired": {
+                description: 'Include expired transactions',
+                type: 'integer'
             }
         },
         required: []
