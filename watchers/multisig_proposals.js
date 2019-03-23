@@ -118,7 +118,7 @@ class MultisigProposalsHandler {
 
             console.log('Removing existing entries');
             await collection.deleteMany({});
-            console.log(await collection.find({}).count());
+            // console.log(await collection.find({}).count());
 
             const res = collection_actions.find({
                 'action.account': 'dacmultisigs',
@@ -137,7 +137,7 @@ class MultisigProposalsHandler {
     }
 
     async recalcMsigs(doc) {
-        // console.log('Recalc', doc)
+        //console.log('Recalc', doc)
         const mongo = await this.db;
         const db = mongo.db(this.config.mongo.dbName);
         const coll = db.collection('multisigs');
@@ -153,7 +153,8 @@ class MultisigProposalsHandler {
             proposal_name,
             threshold: 0,
             requested_approvals: [],
-            provided_approvals: []
+            provided_approvals: [],
+            status: MultisigProposalsHandler.STATUS_OPEN
         };
 
         if (doc.action.data.metadata) {
@@ -262,9 +263,13 @@ class MultisigProposalsHandler {
             }
 
             output.block_num = ca.block_num
-        } else {
-            output.status = MultisigProposalsHandler.STATUS_OPEN
         }
+
+
+        if (output.expiration < new Date() && output.status === MultisigProposalsHandler.STATUS_OPEN){
+            output.status = MultisigProposalsHandler.STATUS_EXPIRED;
+        }
+
 
         // Get the latest provided approvals
         let end_block = 0;
