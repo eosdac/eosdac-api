@@ -23,7 +23,7 @@ async function getMsigProposals(fastify, request) {
         const query = {status: parseInt(status)};
 
         if (!include_expired){
-            query.expiration = {$gt:new Date()}
+            // query.expiration = {$gt:new Date()}
         }
 
         try {
