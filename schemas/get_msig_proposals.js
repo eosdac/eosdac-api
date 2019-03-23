@@ -6,7 +6,7 @@ const getMsigProposalsSchema = {
         type: 'object',
         properties: {
             "status": {
-                description: 'Filter by current status',
+                description: 'Filter by current status (=0cancelled, 1=open, 2=executed, 3=expired)',
                 type: 'integer',
                 enum: [0,1,2,3]
             },
