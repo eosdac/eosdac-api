@@ -156,18 +156,20 @@ class MultisigProposalsHandler {
     }
 
     async recalcMsigs(doc) {
-        //console.log('Recalc', doc)
+        console.log('Recalc', doc)
         const mongo = await this.db;
         const db = mongo.db(this.config.mongo.dbName);
         const coll = db.collection('multisigs');
         const coll_actions = db.collection('actions');
 
         const block_num = doc.block_num;
+        const block_timestamp = doc.block_timestamp;
         const proposer = doc.action.data.proposer;
         const proposal_name = doc.action.data.proposal_name;
 
         const output = {
             block_num,
+            block_timestamp,
             proposer,
             proposal_name,
             threshold: 0,
