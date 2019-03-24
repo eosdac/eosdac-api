@@ -141,7 +141,7 @@ class MultisigProposalsHandler {
 
             const res = collection_actions.find({
                 'action.account': 'dacmultisigs',
-                'action.name': 'proposed'
+                'action.name': 'approved'
             }).sort({block_num: 1});
             let doc;
             let count = 0;
@@ -157,10 +157,24 @@ class MultisigProposalsHandler {
 
     async recalcMsigs(doc) {
         // console.log('Recalc', doc)
+
         const mongo = await this.db;
         const db = mongo.db(this.config.mongo.dbName);
         const coll = db.collection('multisigs');
         const coll_actions = db.collection('actions');
+
+        if (doc.action.name !== 'proposed'){
+            // find the original proposed
+            const doc_proposed = await coll_actions.findOne({
+                'action.account': 'dacmultisigs',
+                'action.name': 'proposed',
+                'action.data.proposal_name': doc.action.data.proposal_name,
+                'action.data.proposer': doc.action.data.proposer,
+                'block_num': {$lt:doc.block_num}
+            });
+
+            return await this.recalcMsigs(doc_proposed);
+        }
 
         const block_num = doc.block_num;
         const block_timestamp = doc.block_timestamp;
