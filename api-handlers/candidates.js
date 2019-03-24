@@ -27,7 +27,16 @@ async function getCandidates(fastify, request) {
 
         const custodian_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'custodians', limit:100};
         const custodian_res = await api.rpc.get_table_rows(custodian_query);
-        const candidate_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'candidates', limit, skip};
+
+        const candidate_data_query = {is_active:1};
+        const candidate_query = {
+            code:config.eos.custodianContract,
+            scope:config.eos.custodianContract,
+            table:'candidates',
+            data_query:candidate_data_query,
+            limit,
+            skip
+        };
         // use eosTableAtBlock so we have proper pagination
         const candidate_res = await eosTableAtBlock(candidate_query);
         const custodians_map = new Map();
@@ -41,11 +50,15 @@ async function getCandidates(fastify, request) {
 
         if (candidate_res.results.length){
             const candidates = candidate_res.results;
+            // console.log(candidates)
 
             const enhanced = candidates.map((row) => {
                 // console.log(cand)
                 const cand = row.data;
                 cand.is_custodian = custodians_map.has(cand.candidate_name);
+                if (cand.custodian_end_time_stamp == "1970-01-01T00:00:00.000"){
+                    cand.custodian_end_time_stamp = null;
+                }
 
                 return cand;
             });

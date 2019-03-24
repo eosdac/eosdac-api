@@ -29,7 +29,7 @@ const candidatesSchema = {
                                     type: "string"
                                 },
                                 "custodian_end_time_stamp" : {
-                                    type: "string"
+                                    type: ["string", "null"]
                                 },
                                 "is_active" : {
                                     type: "boolean"
