@@ -141,7 +141,7 @@ class MultisigProposalsHandler {
 
             const res = collection_actions.find({
                 'action.account': 'dacmultisigs',
-                'action.name': 'approved'
+                'action.name': 'proposed'
             }).sort({block_num: 1});
             let doc;
             let count = 0;
