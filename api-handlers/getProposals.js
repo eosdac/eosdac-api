@@ -77,6 +77,17 @@ module.exports = function (fastify, opts, next) {
         schema: getProposalsSchema.GET
     }, async (request, reply) => {
         reply.header('Access-Control-Allow-Origin', '*');
+        const qsa = [];
+        for (let name in request.query){
+            qsa.push(name + '=' + request.query[name]);
+        }
+        const qs = qsa.join('&');
+        reply.redirect(301, `/v1/eosdac/proposals?${qs}`);
+    });
+    fastify.get('/proposals', {
+        schema: getProposalsSchema.GET
+    }, async (request, reply) => {
+        reply.header('Access-Control-Allow-Origin', '*');
         reply.send(await getProposals(fastify, request));
     });
     next()

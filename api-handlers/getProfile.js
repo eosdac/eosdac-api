@@ -68,6 +68,12 @@ module.exports = function (fastify, opts, next) {
         schema: getProfileSchema.GET
     }, async (request, reply) => {
         reply.header('Access-Control-Allow-Origin', '*');
+        reply.redirect(301, `/v1/eosdac/profile?account=${request.query.account}`);
+    });
+    fastify.get('/profile', {
+        schema: getProfileSchema.GET
+    }, async (request, reply) => {
+        reply.header('Access-Control-Allow-Origin', '*');
         const profile = await getProfile(fastify, request);
         if (profile) {
             reply.send(profile);
