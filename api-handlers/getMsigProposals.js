@@ -33,7 +33,7 @@ async function getMsigProposals(fastify, request) {
                 resolve(proposals)
             } else {
                 res.forEach((msig) => {
-                    if (status == 1 && msig.expiration <= now){ // new
+                    if (status == 1 && msig.expiration <= now){ // open and expired
                         update_expired = true;
                     }
                     else {
