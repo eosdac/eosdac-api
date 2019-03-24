@@ -44,7 +44,7 @@ const candidatesSchema = {
                                     type: "string"
                                 },
                                 "total_votes" : {
-                                    type: "string"
+                                    type: "integer"
                                 }
                             }
                         }
