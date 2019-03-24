@@ -16,45 +16,45 @@ const candidatesSchema = {
         },
         required: []
     },
-        response: {
-            200: {
-                type: "object",
-                properties: {
-                    "results": {
-                        type: "array",
-                        items: {
-                            type: "object",
-                            properties: {
-                                "candidate_name" : {
-                                    type: "string"
-                                },
-                                "custodian_end_time_stamp" : {
-                                    type: ["string", "null"]
-                                },
-                                "is_active" : {
-                                    type: "boolean"
-                                },
-                                "is_custodian" : {
-                                    type: "boolean"
-                                },
-                                "locked_tokens" : {
-                                    type: "string"
-                                },
-                                "requestedpay" : {
-                                    type: "string"
-                                },
-                                "total_votes" : {
-                                    type: "integer"
-                                }
+    response: {
+        200: {
+            type: "object",
+            properties: {
+                "results": {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        properties: {
+                            "candidate_name": {
+                                type: "string"
+                            },
+                            "custodian_end_time_stamp": {
+                                type: ["string", "null"]
+                            },
+                            "is_active": {
+                                type: "boolean"
+                            },
+                            "is_custodian": {
+                                type: "boolean"
+                            },
+                            "locked_tokens": {
+                                type: "string"
+                            },
+                            "requestedpay": {
+                                type: "string"
+                            },
+                            "total_votes": {
+                                type: "integer"
                             }
                         }
-                    },
-                    "count": {
-                        type: "integer"
                     }
+                },
+                "count": {
+                    type: "integer"
                 }
             }
         }
+    }
 };
 
 module.exports = {GET: candidatesSchema};
