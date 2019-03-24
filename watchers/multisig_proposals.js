@@ -33,7 +33,7 @@ class MultisigProposalsHandler {
     }
 
     async thresholdFromName(name){
-        console.log(`Getting threshold ${name}`)
+        // console.log(`Getting threshold ${name}`)
         return new Promise(async (resolve, reject) => {
             if (!this.dac_config){
                 const table_rows_req = {code:this.custodian_contract, scope:this.custodian_contract, table:'config'};
