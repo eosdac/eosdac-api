@@ -22,9 +22,12 @@ async function getCandidates(fastify, request) {
             textEncoder: new TextEncoder(),
         });
 
+        const limit = request.query.limit || 20;
+        const skip = request.query.skip || 0;
+
         const custodian_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'custodians', limit:100};
         const custodian_res = await api.rpc.get_table_rows(custodian_query);
-        const candidate_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'candidates', limit:20};
+        const candidate_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'candidates', limit, skip};
         // use eosTableAtBlock so we have proper pagination
         const candidate_res = await eosTableAtBlock(candidate_query);
         const custodians_map = new Map();
