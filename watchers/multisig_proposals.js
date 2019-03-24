@@ -33,6 +33,7 @@ class MultisigProposalsHandler {
     }
 
     async thresholdFromName(name){
+        console.log(`Getting threshold ${name}`)
         return new Promise(async (resolve, reject) => {
             if (!this.dac_config){
                 const table_rows_req = {code:this.custodian_contract, scope:this.custodian_contract, table:'config'};
@@ -40,13 +41,12 @@ class MultisigProposalsHandler {
                 this.dac_config = dac_config.rows[0];
             }
 
-
             switch (name) {
                 case 'low':
                     resolve(this.dac_config.auth_threshold_low);
                     break;
                 case 'med':
-                    resolve(this.dac_config.auth_threshold_med);
+                    resolve(this.dac_config.auth_threshold_mid);
                     break;
                 case 'high':
                 case 'active':
@@ -72,6 +72,7 @@ class MultisigProposalsHandler {
 
                 for (let p = 0; p < acct.permissions.length; p++) {
                     const act_perm = acct.permissions[p];
+                    // console.log(act_perm);
 
                     if (act_perm.perm_name === perm.permission) {
                         // console.log(act_perm, act_perm.required_auth.accounts)
@@ -85,7 +86,6 @@ class MultisigProposalsHandler {
                             const perm = act_perm.required_auth.accounts[a];
                             // console.log('getting permission', perm)
                             const p = await self.permissionToThreshold(perm.permission);
-                            // console.log('got perm')
                             thresholds.push(p)
                         }
 
@@ -122,6 +122,7 @@ class MultisigProposalsHandler {
 
                     thresholds.push(await self.permissionToThreshold(perm))
                 }
+                // console.log(thresholds);
 
                 resolve(Math.max(...thresholds))
             }
@@ -298,14 +299,14 @@ class MultisigProposalsHandler {
         if (end_block) {
             query_provided.block_num = end_block
         }
-        console.log('Querying approvals', query_provided);
+        // console.log('Querying approvals', query_provided);
 
         const provided = await eosTableAtBlock(query_provided);
         if (provided.count) {
-            console.log('Provided approvals', provided.results[0].data.provided_approvals);
+            // console.log('Provided approvals', provided.results[0].data.provided_approvals);
             output.provided_approvals = provided.results[0].data.provided_approvals
         } else {
-            console.log('Resetting provided_approvals');
+            // console.log('Resetting provided_approvals');
             output.provided_approvals = []
         }
 
