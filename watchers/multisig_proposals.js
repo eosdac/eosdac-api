@@ -295,7 +295,7 @@ class MultisigProposalsHandler {
         // Get the latest provided approvals
         let end_block = 0;
         if (ca) {
-            end_block = ca.block_num
+            end_block = ca.block_num - 1
         }
         const query_provided = {code: this.msig_contract, scope: proposer, table: 'approvals', data_query};
         if (end_block) {
@@ -313,7 +313,7 @@ class MultisigProposalsHandler {
         }
 
 
-        console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, output);
+        // console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, output);
         return await coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
 
     }
