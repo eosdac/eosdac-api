@@ -6,4 +6,5 @@ module.exports = {
     memberSnapshotSchema: require('./member_snapshot'),
     votesTimelineSchema: require('./votes_timeline'),
     dacConfigSchema: require('./dac_config'),
+    candidatesSchema: require('./candidates'),
 };
