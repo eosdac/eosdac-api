@@ -27,8 +27,9 @@ async function getMsigProposals(fastify, request) {
             const proposals = {results: [], count: 0};
             let update_expired = false;
             const now = new Date();
+            const count = await res.count()
 
-            if (await res.count() === 0) {
+            if (count === 0) {
                 resolve(proposals)
             } else {
                 res.forEach((msig) => {
@@ -40,7 +41,7 @@ async function getMsigProposals(fastify, request) {
                         proposals.results.push(msig)
                     }
                 }, async () => {
-                    proposals.count = await res.count();
+                    proposals.count = count;
                     resolve(proposals)
 
                     if (update_expired){
