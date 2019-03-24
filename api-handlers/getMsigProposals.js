@@ -22,7 +22,6 @@ async function getMsigProposals(fastify, request) {
         const query = {status};
 
         try {
-            const count = await collection.find(query).sort({block_num: -1}).count();
             const res = await collection.find(query).sort({block_num: -1}).skip(parseInt(skip)).limit(parseInt(limit));
 
             const proposals = {results: [], count: 0};
@@ -41,7 +40,7 @@ async function getMsigProposals(fastify, request) {
                         proposals.results.push(msig)
                     }
                 }, async () => {
-                    proposals.count = count;
+                    proposals.count = await res.count();
                     resolve(proposals)
 
                     if (update_expired){
