@@ -51,6 +51,20 @@ const dacConfigSchema = {
                 },
                 "vote_quorum_percent": {
                     type: "integer"
+                },
+                "accounts": {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        properties: {
+                            "name": {
+                                type: "string"
+                            },
+                            "type": {
+                                type: "integer"
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -23,11 +23,17 @@ async function getDacConfig(fastify, request) {
             textEncoder: new TextEncoder(),
         });
 
-        const table_rows_req = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'config'};
+        const table_rows_req = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'config', limit:1};
         const dac_config = await api.rpc.get_table_rows(table_rows_req);
 
         if (dac_config.rows.length){
-            resolve(dac_config.rows[0]);
+            const config = dac_config.rows[0];
+
+            const dac_accounts_req = {code:'dacdirectory', scope:'dacdirectory', lower_bound:'eosdac', table:'accounts', limit:1};
+            const dac_accounts = await api.rpc.get_table_rows(dac_accounts_req);
+            config.accounts = dac_accounts.rows[0].accounts;
+
+            resolve(config);
         }
         else {
             reject('DAC config not found');
