@@ -5,5 +5,5 @@ module.exports = {
     balanceTimelineSchema: require('./balance_timeline'),
     memberSnapshotSchema: require('./member_snapshot'),
     votesTimelineSchema: require('./votes_timeline'),
-    getDacConfigSchema: require('./get_dac_config'),
+    dacConfigSchema: require('./dac_config'),
 };

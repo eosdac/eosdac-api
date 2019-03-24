@@ -1,4 +1,4 @@
-const getDacConfigSchema = {
+const dacConfigSchema = {
     description: 'Fetch DAC config',
     summary: 'Fetch current DAC configuration',
     tags: ['v1'],
@@ -57,4 +57,4 @@ const getDacConfigSchema = {
     }
 };
 
-module.exports = {GET: getDacConfigSchema};
+module.exports = {GET: dacConfigSchema};
