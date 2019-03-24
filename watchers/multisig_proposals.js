@@ -312,6 +312,14 @@ class MultisigProposalsHandler {
             output.provided_approvals = []
         }
 
+        // remove provided approvals from requested approvals
+        const provided_actors = output.provided_approvals.map((pro) => {
+            return pro.actor;
+        });
+        output.requested_approvals = output.requested_approvals.filter((req) => {
+            return !provided_actors.includes(req.actor);
+        });
+
 
         // console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, output);
         return await coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
