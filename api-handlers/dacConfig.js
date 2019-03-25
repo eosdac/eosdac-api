@@ -33,6 +33,7 @@ async function getDacConfig(fastify, request) {
             const dac_accounts = await api.rpc.get_table_rows(dac_accounts_req);
             if (dac_accounts.rows.length){
                 config.accounts = dac_accounts.rows[0].accounts;
+                config.symbol = dac_accounts.rows[0].symbol;
             }
 
             resolve(config);

@@ -65,6 +65,9 @@ const dacConfigSchema = {
                             }
                         }
                     }
+                },
+                "symbol": {
+                    type: "string"
                 }
             }
         }
