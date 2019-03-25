@@ -60,17 +60,6 @@ async function getMsigProposals(fastify, request) {
 
 
 module.exports = function (fastify, opts, next) {
-    fastify.get('/get_msig_proposals', {
-        schema: getMsigProposalsSchema.GET
-    }, async (request, reply) => {
-        reply.header('Access-Control-Allow-Origin', '*');
-        const qsa = [];
-        for (let name in request.query){
-            qsa.push(name + '=' + request.query[name]);
-        }
-        const qs = qsa.join('&');
-        reply.redirect(301, `/v1/eosdac/msig_proposals?${qs}`);
-    });
     fastify.get('/msig_proposals', {
         schema: getMsigProposalsSchema.GET
     }, async (request, reply) => {
