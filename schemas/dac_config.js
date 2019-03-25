@@ -44,7 +44,7 @@ const dacConfigSchema = {
                     type: "string"
                 },
                 "should_pay_via_service_provider": {
-                    type: "integer"
+                    type: "boolean"
                 },
                 "tokenholder": {
                     type: "string"
