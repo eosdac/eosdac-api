@@ -43,6 +43,7 @@ async function getProfile(fastify, request) {
 
     const res = await collection.aggregate(pipeline);
 
+    const found_accounts = [];
     const result = await res.next();
     result.results = result.results.map((row) => {
         // console.log(row.profile)
@@ -51,11 +52,34 @@ async function getProfile(fastify, request) {
         }
         delete row._id;
 
+        found_accounts.push(row.account);
+
         return row
     });
 
+    const missing_accounts = [];
+    accounts.forEach((account_name) => {
+        if (!found_accounts.includes(account_name)){
+            missing_accounts.push(account_name);
+        }
+    });
+
+    accounts.forEach((account) => {
+        if (missing_accounts.includes(account)){
+            result.results.push({
+                account,
+                block_num: 0,
+                profile: {
+                    image: ''
+                }
+            });
+        }
+    });
+
+    // console.log(missing_accounts)
+
     if (result.count.length) {
-        result.count = result.count[0].count
+        result.count = result.results.length
     }
 
 
