@@ -5,6 +5,18 @@ const connectMongo = require('../connections/mongo');
 
 const {loadConfig} = require('../functions');
 
+const null_profile = {
+    description: "",
+    email: "",
+    familyName: "",
+    gender: "",
+    givenName: "",
+    image: "",
+    sameAs: [],
+    timezone: "0",
+    url: ""
+};
+
 
 async function getProfile(fastify, request) {
     const account = request.query.account;
@@ -69,9 +81,7 @@ async function getProfile(fastify, request) {
             result.results.push({
                 account,
                 block_num: 0,
-                profile: {
-                    image: ''
-                }
+                profile: null_profile
             });
         }
     });
