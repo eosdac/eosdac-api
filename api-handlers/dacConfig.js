@@ -31,7 +31,9 @@ async function getDacConfig(fastify, request) {
 
             const dac_accounts_req = {code:'dacdirectory', scope:'dacdirectory', lower_bound:'eosdac', table:'accounts', limit:1};
             const dac_accounts = await api.rpc.get_table_rows(dac_accounts_req);
-            config.accounts = dac_accounts.rows[0].accounts;
+            if (dac_accounts.rows.length){
+                config.accounts = dac_accounts.rows[0].accounts;
+            }
 
             resolve(config);
         }
