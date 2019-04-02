@@ -9,7 +9,7 @@
     "commander": "^2.19.0",
     "dirty-json": "^0.7.0",
     "elasticsearch": "^15.3.0",
-    "eosjs": "./eosjs",
+    "eosjs": "^20.0.0",
     "fastify": "^2.0.1",
     "fastify-autoload": "^0.6.0",
     "fastify-oas": "^2.0.0-rc.4",
