@@ -8,19 +8,7 @@ Change to the correct directory
 
 `cd eosdac-filler/`
 
-This requires the development branch of eosjs
-
-`git submodule update --init --recursive`
-
-`cd eosjs`
-
 *You will need node version 10*
-
-`npm i`
-
-Install the dependencies for the filler
-
-`cd ..`
 
 `npm i`
 
