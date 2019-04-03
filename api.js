@@ -1,5 +1,6 @@
 const openApi = require('./open-api');
 
+const {loadConfig} = require('./functions');
 const autoload = require('fastify-autoload');
 const path = require('path');
 const oas = require('fastify-oas');
@@ -13,6 +14,11 @@ fastify.register(autoload, {
     options: {
         prefix: '/v1/eosdac'
     }
+});
+const config = loadConfig();
+const mongo_url = `${config.mongo.url}/${config.mongo.dbName}`;
+fastify.register(require('fastify-mongodb'), {
+    url: mongo_url
 });
 
 

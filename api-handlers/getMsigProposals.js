@@ -11,8 +11,7 @@ async function getMsigProposals(fastify, request) {
 
     return new Promise(async (resolve, reject) => {
         const config = loadConfig();
-        const mongo = await connectMongo(config);
-        const db = mongo.db(config.mongo.dbName);
+        const db = fastify.mongo.db;
         const collection = db.collection('multisigs');
 
         const status = request.query.status || 0;

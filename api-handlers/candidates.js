@@ -30,6 +30,7 @@ async function getCandidates(fastify, request) {
 
         const candidate_data_query = {is_active:1};
         const candidate_query = {
+            db:fastify.mongo.db,
             code:config.eos.custodianContract,
             scope:config.eos.custodianContract,
             table:'candidates',

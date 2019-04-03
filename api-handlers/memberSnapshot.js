@@ -10,8 +10,7 @@ async function memberSnapshot(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
         const config = loadConfig();
-        const mongo = await connectMongo(config);
-        const db = mongo.db(config.mongo.dbName);
+        const db = fastify.mongo.db;
         const contract = request.query.contract || 'eosdactokens';
         const symbol = request.query.symbol || 'EOSDAC';
         const block_num = request.query.block_num || null;

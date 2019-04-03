@@ -10,8 +10,7 @@ async function balanceTimeline(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
         const config = loadConfig();
-        const mongo = await connectMongo(config);
-        const db = mongo.db(config.mongo.dbName);
+        const db = fastify.mongo.db;
         const collection = db.collection('contract_rows');
         const account = request.query.account;
         const contract = request.query.contract || 'eosdactokens';

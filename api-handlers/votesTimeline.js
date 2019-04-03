@@ -10,8 +10,7 @@ async function votesTimeline(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
         const config = loadConfig();
-        const mongo = await connectMongo(config);
-        const db = mongo.db(config.mongo.dbName);
+        const db = fastify.mongo.db;
         const collection = db.collection('contract_rows');
         const account = request.query.account;
         const start_block = request.query.start_block || null;

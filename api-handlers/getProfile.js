@@ -23,9 +23,8 @@ async function getProfile(fastify, request) {
     const accounts = account.split(',');
 
     const config = loadConfig();
-    const mongo = await connectMongo(config);
 
-    const db = mongo.db(config.mongo.dbName);
+    const db = fastify.mongo.db;
     const collection = db.collection('actions');
 
     const cust_contract = config.eos.custodianContract || 'daccustodian';

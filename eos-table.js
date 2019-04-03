@@ -2,13 +2,9 @@ const MongoLong = require('mongodb').Long;
 const connectMongo = require('./connections/mongo');
 const {loadConfig} = require('./functions');
 
-async function eosTableAtBlock({code, table, scope = '', skip = 0, limit = 100, data_query = {}, block_num = -1}) {
+async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 100, data_query = {}, block_num = -1}) {
     return new Promise(async (resolve, reject) => {
         const config = loadConfig();
-
-        const mongo = await connectMongo(config);
-
-        const db = mongo.db(config.mongo.dbName);
 
         const col = db.collection('contract_rows');
 
