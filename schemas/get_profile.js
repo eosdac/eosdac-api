@@ -10,7 +10,7 @@ const getProfileSchema = {
                 type: 'string'
             }
         },
-        required: []
+        required: ['account']
     },
     response: {
         200: {
