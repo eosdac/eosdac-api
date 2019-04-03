@@ -227,6 +227,7 @@ class MultisigProposalsHandler {
         }
 
         const res_proposals = await eosTableAtBlock({
+            db:fastify.mongo.db,
             code: this.msig_contract,
             scope: proposer,
             table: 'proposal',
@@ -234,6 +235,7 @@ class MultisigProposalsHandler {
             data_query
         });
         const res_approvals = await eosTableAtBlock({
+            db:fastify.mongo.db,
             code: this.msig_contract,
             scope: proposer,
             table: 'approvals',
@@ -251,6 +253,7 @@ class MultisigProposalsHandler {
 
         // get the trxid stored in the dacmultisigs table
         const res_data = await eosTableAtBlock({
+            db:fastify.mongo.db,
             code: 'dacmultisigs',
             scope: proposer,
             table: 'proposals',
@@ -311,7 +314,7 @@ class MultisigProposalsHandler {
         if (ca) {
             end_block = ca.block_num - 1
         }
-        const query_provided = {code: this.msig_contract, scope: proposer, table: 'approvals', data_query};
+        const query_provided = {db:fastify.mongo.db, code: this.msig_contract, scope: proposer, table: 'approvals', data_query};
         if (end_block) {
             query_provided.block_num = end_block
         }
