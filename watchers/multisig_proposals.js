@@ -109,12 +109,12 @@ class MultisigProposalsHandler {
         const self = this;
         const thresholds = [];
 
-        if (!trx || !trx.actions) {
-            console.error(`Bad transaction`, trx);
-            return 0
-        }
+        return new Promise(async (resolve, reject) => {
+            if (!trx || !trx.actions) {
+                console.error(`Bad transaction`, trx);
+                reject(new Error('Bad transaction'));
+            }
 
-        return new Promise(async (resolve) => {
             for (let a = 0; a < trx.actions.length; a++) {
                 const act = trx.actions[a];
 
