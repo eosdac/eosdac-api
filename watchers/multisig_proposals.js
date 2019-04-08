@@ -151,8 +151,7 @@ class MultisigProposalsHandler {
                 count++
             }
 
-            console.log(`Imported ${count} documents`);
-            process.exit(0)
+            console.log(`Imported ${count} multisig documents`);
         })
     }
 
