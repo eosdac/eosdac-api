@@ -19,6 +19,7 @@ class MultisigProposalsHandler {
         this.msig_contract = config.eos.msigContract || 'eosio.msig';
         this.auth_account = config.eos.authContract || 'dacauthority';
         this.custodian_contract = config.eos.custodianContract || 'daccustodian';
+        this.dac_multisig_contract = config.eos.dacMsigContract || 'dacmultisigs';
 
         this.dac_config = null;
 
@@ -140,7 +141,7 @@ class MultisigProposalsHandler {
             // console.log(await collection.find({}).count());
 
             const res = collection_actions.find({
-                'action.account': 'dacmultisigs',
+                'action.account': this.dac_multisig_contract,
                 'action.name': 'proposed'
             }).sort({block_num: 1});
             let doc;
@@ -166,7 +167,7 @@ class MultisigProposalsHandler {
         if (doc.action.name !== 'proposed'){
             // find the original proposed
             const doc_proposed = await coll_actions.findOne({
-                'action.account': 'dacmultisigs',
+                'action.account': this.dac_multisig_contract,
                 'action.name': 'proposed',
                 'action.data.proposal_name': doc.action.data.proposal_name,
                 'action.data.proposer': doc.action.data.proposer,
@@ -254,7 +255,7 @@ class MultisigProposalsHandler {
         // get the trxid stored in the dacmultisigs table
         const res_data = await eosTableAtBlock({
             db:fastify.mongo.db,
-            code: 'dacmultisigs',
+            code: this.dac_multisig_contract,
             scope: proposer,
             table: 'proposals',
             block_num: check_block,
@@ -279,7 +280,7 @@ class MultisigProposalsHandler {
         // Get the current state by getting cancel/exec/clean transactions
         const closing_query = {
             'block_num': {$gt: block_num},
-            'action.account': 'dacmultisigs',
+            'action.account': this.dac_multisig_contract,
             'action.name': {$in: ['cancelled', 'executed', 'clean']},
             'action.data.proposal_name': proposal_name,
             'action.data.proposer': proposer
@@ -344,7 +345,7 @@ class MultisigProposalsHandler {
     }
 
     async action(doc) {
-        if (doc.action.account === 'dacmultisigs') {
+        if (doc.action.account === this.dac_multisig_contract) {
             console.log('Reacting to msig action');
             this.recalcMsigs(doc)
         }

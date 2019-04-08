@@ -23,6 +23,7 @@ module.exports = {
         wsEndpoint: 'ws://jungle2.eosdac.io:8080',
         authContract: 'dacauthority',
         msigContract: 'eosio.msig',
-        custodianContract: 'daccustodian'
+        custodianContract: 'daccustodian',
+        dacMsigContract: 'dacmultisigs'
     }
 };
