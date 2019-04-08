@@ -24,6 +24,7 @@ module.exports = {
         authContract: 'dacauthority',
         msigContract: 'eosio.msig',
         custodianContract: 'daccustodian',
-        dacMsigContract: 'dacmultisigs'
+        dacMsigContract: 'dacmultisigs',
+        proposalsContract: 'dacproposals'
     }
 };
