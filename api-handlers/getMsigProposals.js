@@ -25,30 +25,30 @@ async function getMsigProposals(fastify, request) {
             const proposals = {results: [], count: 0};
             let update_expired = false;
             const now = new Date();
-            const count = await res.count()
+            const count = await res.count();
 
             if (count === 0) {
-                resolve(proposals)
+                resolve(proposals);
             } else {
                 res.forEach((msig) => {
-                    if (status == 1 && msig.expiration <= now){ // open and expired
+                    if (status === 1 && msig.expiration <= now){ // open and expired
                         update_expired = true;
                     }
                     else {
                         delete msig._id;
-                        proposals.results.push(msig)
+                        proposals.results.push(msig);
                     }
                 }, async () => {
                     proposals.count = count;
-                    resolve(proposals)
+                    resolve(proposals);
 
                     if (update_expired){
-                        collection.updateMany({status:1, expiration: {$lt:now}}, {$set:{status:3}})
+                        collection.updateMany({status:1, expiration: {$lt:now}}, {$set:{status:3}});
                     }
                 })
             }
         } catch (e) {
-            reject(e)
+            reject(e);
         }
 
     })
