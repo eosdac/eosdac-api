@@ -7,5 +7,5 @@ module.exports = {
     votesTimelineSchema: require('./votes_timeline'),
     dacConfigSchema: require('./dac_config'),
     candidatesSchema: require('./candidates'),
-    memberSchema: require('./member'),
+    // memberSchema: require('./member'),
 };
