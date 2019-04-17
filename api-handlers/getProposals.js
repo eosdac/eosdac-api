@@ -1,74 +1,41 @@
 const {getProposalsSchema} = require('../schemas');
 
-const connectMongo = require('../connections/mongo');
-
-const {loadConfig} = require('../functions');
-
-async function getProposalData(block_num) {
-
-    return new Promise(async (resolve, reject) => {
-        const config = loadConfig();
-        const mongo = await connectMongo(config);
-        const db = fastify.mongo.db;
-        const collection = db.collection('actions');
-
-
-        collection.findOne({block_num, 'action.account': 'dacproposals', 'action.name': 'createprop'}, (err, res) => {
-            // console.log("action", res.action.data)
-            if (err) {
-                reject(err)
-            } else if (res && res.action) {
-                resolve(res.action.data)
-            } else {
-                resolve(null)
-            }
-        })
-    })
-
-}
 
 async function getProposals(fastify, request) {
-    // console.log(request)
-    const eosTableAtBlock = require('../eos-table');
 
-    const data_query = {};
+    return new Promise(async (resolve, reject) => {
+        const db = fastify.mongo.db;
+        const collection = db.collection('workerproposals');
 
-    if (typeof request.query.state !== 'undefined') {
-        data_query.state = parseInt(request.query.state)
-    }
+        const status = request.query.status || 0;
+        const skip = request.query.skip || 0;
+        const limit = request.query.limit || 20;
+        const proposals = {results: [], count: 0};
 
-    const skip = parseInt(request.query.skip) || 0;
-    const limit = parseInt(request.query.limit) || 100;
+        const query = {status};
+        try {
+            const res = await collection.find(query).sort({block_num: -1}).skip(skip).limit(limit);
+            const count = await res.count();
 
-    if (isNaN(skip)) {
-        throw new Error(`Skip is not a number`)
-    }
-    if (isNaN(limit)) {
-        throw new Error(`Limit is not a number`)
-    }
+            if (count === 0){
+                resolve(proposals);
+            }
+            else {
+                res.forEach((prop) => {
+                    proposals.results.push(prop);
+                }, () => {
+                    proposals.count = count;
 
-    const res = await eosTableAtBlock({db:fastify.mongo.db, code: 'dacproposals', table: 'proposals', skip, limit, data_query});
+                    resolve(proposals);
+                });
+            }
+        }
+        catch (e){
+            reject(e);
+        }
 
-    const return_val = [];
+    });
 
-    for (let r = 0; r < res.results.length; r++) {
-        const prop_data = res.results[r].data;
-        const vote_query = {proposal_id: prop_data.key};
-        const votes = await eosTableAtBlock({db:fastify.mongo.db, code: 'dacproposals', table: 'propvotes', data_query: vote_query});
-
-        prop_data.votes = votes.results.map((val) => {
-            return val.data
-        });
-
-        const action_data = await getProposalData(res.results[r].block_num);
-
-        prop_data.title = action_data.title;
-        prop_data.summary = action_data.summary;
-
-        return_val.push(prop_data)
-    }
-
-    return {results: return_val, count: res.count}
 }
 
 
