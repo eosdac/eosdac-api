@@ -22,6 +22,7 @@ async function getProposals(fastify, request) {
             }
             else {
                 res.forEach((prop) => {
+                    delete prop._id;
                     proposals.results.push(prop);
                 }, () => {
                     proposals.count = count;
