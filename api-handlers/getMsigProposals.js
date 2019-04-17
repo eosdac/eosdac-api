@@ -10,7 +10,6 @@ async function getMsigProposals(fastify, request) {
 
 
     return new Promise(async (resolve, reject) => {
-        const config = loadConfig();
         const db = fastify.mongo.db;
         const collection = db.collection('multisigs');
 
