@@ -9,6 +9,10 @@ const getProposalsSchema = {
                 description: 'Filter by current status',
                 type: 'integer'
             },
+            "arbitrator": {
+                description: 'Filter by arbitrator',
+                type: 'string'
+            },
             "limit": {
                 description: 'Limit result count',
                 type: 'integer'
