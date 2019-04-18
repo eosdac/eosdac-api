@@ -227,7 +227,7 @@ class MultisigProposalsHandler {
         }
 
         const res_proposals = await eosTableAtBlock({
-            db: mongo.db,
+            db,
             code: this.msig_contract,
             scope: proposer,
             table: 'proposal',
@@ -235,7 +235,7 @@ class MultisigProposalsHandler {
             data_query
         });
         const res_approvals = await eosTableAtBlock({
-            db: mongo.db,
+            db,
             code: this.msig_contract,
             scope: proposer,
             table: 'approvals',
@@ -253,7 +253,7 @@ class MultisigProposalsHandler {
 
         // get the trxid stored in the dacmultisigs table
         const res_data = await eosTableAtBlock({
-            db: mongo.db,
+            db,
             code: this.dac_multisig_contract,
             scope: proposer,
             table: 'proposals',
