@@ -1,12 +1,6 @@
 module.exports = {
-    redisPrefix: 'q',
     fillClusterSize: 4,
     clusterSize: 10,
-    redis: {
-        port: 6379,
-        host: '127.0.0.1',
-        auth: 'sooper-secret'
-    },
     mongo: {
         url: 'mongodb://localhost:27017',
         dbName: 'eosdac',
