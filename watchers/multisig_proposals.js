@@ -314,7 +314,7 @@ class MultisigProposalsHandler {
         if (ca) {
             end_block = ca.block_num - 1
         }
-        const query_provided = {db: mongo.db, code: this.msig_contract, scope: proposer, table: 'approvals', data_query};
+        const query_provided = {db: db, code: this.msig_contract, scope: proposer, table: 'approvals', data_query};
         if (end_block) {
             query_provided.block_num = end_block
         }
