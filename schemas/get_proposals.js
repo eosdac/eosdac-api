@@ -13,6 +13,10 @@ const getProposalsSchema = {
                 description: 'Filter by arbitrator',
                 type: 'string'
             },
+            "proposer": {
+                description: 'Filter by proposer',
+                type: 'string'
+            },
             "limit": {
                 description: 'Limit result count',
                 type: 'integer'

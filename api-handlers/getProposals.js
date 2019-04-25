@@ -11,11 +11,15 @@ async function getProposals(fastify, request) {
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
         const arbitrator = request.query.arbitrator || null;
+        const proposer = request.query.proposer || null;
         const proposals = {results: [], count: 0};
 
         const query = {status};
         if (arbitrator){
             query.arbitrator = arbitrator;
+        }
+        if (proposer){
+            query.proposer = proposer;
         }
         try {
             const res = await collection.find(query).sort({block_num: -1}).skip(skip).limit(limit);
