@@ -20,7 +20,7 @@ module.exports = {
         },
         {
             name: 'eosdac-api-jungle',
-            script: "./api.js",
+            script: "./eosdac-api.js",
             autorestart: true,
             env: {
                 'CONFIG': 'jungle',
@@ -52,7 +52,7 @@ module.exports = {
         },
         {
             name: 'eosdac-api-mainnet',
-            script: "./api.js",
+            script: "./eosdac-api.js",
             autorestart: true,
             env: {
                 'CONFIG': 'mainnet',
