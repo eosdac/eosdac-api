@@ -16,7 +16,7 @@ let rpc;
 const signatureProvider = null;
 
 
-const {ActionHandler, TraceHandler, DeltaHandler} = require('./eosdac-handlers');
+const {ActionHandler, TraceHandler, DeltaHandler} = require('./handlers');
 const StateReceiver = require('../eosio-statereceiver');
 
 // var access = fs.createWriteStream('filler.log')

@@ -4,7 +4,7 @@ const cluster = require('cluster');
 
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc, Serialize} = require('eosjs');
-const {DeltaHandler} = require('./eosdac-handlers');
+const {DeltaHandler} = require('./handlers');
 const fetch = require('node-fetch');
 const MongoClient = require('mongodb').MongoClient;
 const MongoLong = require('mongodb').Long;
