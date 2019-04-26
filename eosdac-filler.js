@@ -180,7 +180,7 @@ class FillManager {
                 })
             }
         } else {
-            if (start_block === 0 && this.config.eos.dacGenesisBlock) {
+            if (start_block <= 1 && this.config.eos.dacGenesisBlock) {
                 // TODO: need to look for restart point
                 start_block = parseInt(this.config.eos.dacGenesisBlock);
                 if (isNaN(start_block)){
