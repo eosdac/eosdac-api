@@ -180,8 +180,12 @@ class FillManager {
                 })
             }
         } else {
-            if (start_block === 0) {
+            if (start_block === 0 && this.config.eos.dacGenesisBlock) {
                 // TODO: need to look for restart point
+                start_block = parseInt(this.config.eos.dacGenesisBlock);
+                if (isNaN(start_block)){
+                    throw new Error(`Invalid eos.dacGenesisBlock value "${this.config.eos.dacGenesisBlock}"`);
+                }
             }
 
             console.log(`No replay, starting at block ${start_block}`);

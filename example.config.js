@@ -19,6 +19,7 @@ module.exports = {
         msigContract: 'eosio.msig',
         custodianContract: 'daccustodian',
         dacMsigContract: 'dacmultisigs',
-        proposalsContract: 'dacproposals'
+        proposalsContract: 'dacproposals',
+        dacGenesisBlock: 12345  // the first block that includes any dac contract actions including the initial setcode
     }
 };
