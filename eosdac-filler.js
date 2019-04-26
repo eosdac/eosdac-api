@@ -83,8 +83,8 @@ class FillManager {
                     chunk_size = parseInt((range) / this.config.fillClusterSize)
                 }
 
-                let from = this.start_block;
-                if (from === -1) {
+                let from = parseInt(this.start_block);
+                if (isNaN(from) || from === -1) {
                     from = 0
                 }
                 let to = from + chunk_size; // to is not inclusive
