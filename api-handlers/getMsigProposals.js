@@ -1,6 +1,8 @@
 const {getMsigProposalsSchema} = require('../schemas');
 
-const connectMongo = require('../connections/mongo');
+const {TextDecoder, TextEncoder} = require('text-encoding');
+const {Api, JsonRpc} = require('eosjs');
+const fetch = require('node-fetch');
 
 const {loadConfig} = require('../functions');
 
@@ -10,6 +12,27 @@ async function getMsigProposals(fastify, request) {
 
 
     return new Promise(async (resolve, reject) => {
+
+        // Get current custodians
+        const config = loadConfig();
+
+        const rpc = new JsonRpc(config.eos.endpoint, {fetch});
+        const api = new Api({
+            rpc,
+            signatureProvider: null,
+            chainId: config.chainId,
+            textDecoder: new TextDecoder(),
+            textEncoder: new TextEncoder(),
+        });
+        const custodian_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'custodians', limit:100};
+        const custodian_res = await api.rpc.get_table_rows(custodian_query);
+        const custodians = custodian_res.rows.map((row) => {
+            return row.cust_name;
+        });
+        console.log(custodians);
+
+
+
         const db = fastify.mongo.db;
         const collection = db.collection('multisigs');
 
@@ -36,6 +59,12 @@ async function getMsigProposals(fastify, request) {
                     }
                     else {
                         delete msig._id;
+
+                        if (msig.status === 1){ // open
+                            msig.requested_approvals = msig.requested_approvals.filter((req) => custodians.includes(req.actor));
+                            msig.provided_approvals = msig.provided_approvals.filter((pro) => custodians.includes(pro.actor));
+                        }
+
                         proposals.results.push(msig);
                     }
                 }, async () => {
