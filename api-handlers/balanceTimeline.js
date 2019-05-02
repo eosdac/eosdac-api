@@ -47,7 +47,14 @@ async function balanceTimeline(fastify, request) {
                         if (symbol === sym) {
                             timeline.push({block_num: row.block_num, balance: row.data.balance})
                         }
-                    }, () => {
+                    }, async () => {
+                        const info = await fastify.eos.rpc.get_info();
+                        const lib = info.last_irreversible_block_num;
+
+                        const timeline_last = timeline[timeline.length-1];
+                        timeline_last.block_num = lib;
+                        timeline.push(timeline_last);
+
                         resolve(timeline)
                     })
                 }
