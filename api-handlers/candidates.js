@@ -25,21 +25,13 @@ async function getCandidates(fastify, request) {
         const limit = request.query.limit || 20;
         const skip = request.query.skip || 0;
 
+        const candidate_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'candidates', limit:100, key_type:'i64', index_position:3, reverse:true};
+        const candidate_res = await api.rpc.get_table_rows(candidate_query);
+
+
         const custodian_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'custodians', limit:100};
         const custodian_res = await api.rpc.get_table_rows(custodian_query);
 
-        const candidate_data_query = {is_active:1};
-        const candidate_query = {
-            db:fastify.mongo.db,
-            code:config.eos.custodianContract,
-            scope:config.eos.custodianContract,
-            table:'candidates',
-            data_query:candidate_data_query,
-            limit,
-            skip
-        };
-        // use eosTableAtBlock so we have proper pagination
-        const candidate_res = await eosTableAtBlock(candidate_query);
         const custodians_map = new Map();
 
         if (custodian_res.rows.length){
@@ -49,13 +41,11 @@ async function getCandidates(fastify, request) {
         }
 
 
-        if (candidate_res.results.length){
-            const candidates = candidate_res.results;
+        if (candidate_res.rows.length){
+            const candidates = candidate_res.rows;
             // console.log(candidates)
 
-            const enhanced = candidates.map((row) => {
-                // console.log(cand)
-                const cand = row.data;
+            const enhanced = candidates.filter(a => a.is_active).map((cand) => {
                 cand.is_custodian = custodians_map.has(cand.candidate_name);
                 if (cand.custodian_end_time_stamp == "1970-01-01T00:00:00.000"){
                     cand.custodian_end_time_stamp = null;
@@ -63,15 +53,9 @@ async function getCandidates(fastify, request) {
 
                 return cand;
             });
-            enhanced.sort((a, b) => {
-                const a_votes = parseInt(a.total_votes);
-                const b_votes = parseInt(b.total_votes);
-                if (a_votes === b_votes){
-                    return (a.candidate_name > b.candidate_name)?1:-1;
-                }
-                return (a_votes < b_votes)?1:-1;
-            });
-            resolve({results:enhanced, count:candidate_res.count});
+            const count = enhanced.length;
+
+            resolve({results:enhanced.slice(skip, skip+limit), count});
         }
         else {
             reject('No candidates found');
