@@ -25,14 +25,16 @@ async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 1
 
         const pipeline = [
             {'$match': match},
-            {'$sort': {block_num: -1}},
+            {'$sort': {block_num: -1, present:-1}},
             {
                 '$group': {
-                    _id: {code: "$code", table: "$table", primary_key: "$primary_key"},
+                    _id: {code: "$code", table: "$table", scope: "$scope", primary_key: "$primary_key"},
                     block_num: {'$first': "$block_num"},
                     data: {'$first': "$data"},
                     table: {'$first': "$table"},
                     code: {'$first': "$code"},
+                    scope: {'$first': "$scope"},
+                    primary_key: {'$first': "$primary_key"},
                     present: {'$first': "$present"}
                 }
             },
@@ -55,6 +57,7 @@ async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 1
             }
 
             results.forEach((doc) => {
+                // console.log(doc);
                 doc.results = doc.results.map((result) => {
                     delete result._id;
                     delete result.present;
@@ -72,7 +75,7 @@ async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 1
 
 
         try {
-            col.aggregate(pipeline, filter);
+            col.aggregate(pipeline, {allowDiskUse: true}, filter);
         } catch (e) {
             console.error(e)
         }
