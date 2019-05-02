@@ -21,6 +21,8 @@ fastify.register(require('fastify-mongodb'), {
     url: mongo_url
 });
 
+fastify.register(require('./fastify-eos'), config);
+
 
 fastify.ready().then(async () => {
     console.log(`Started API server with config ${process.env.CONFIG} on ${process.env.SERVER_ADDR || '127.0.0.1'}:${process.env.SERVER_PORT}`);
