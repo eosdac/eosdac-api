@@ -2,6 +2,7 @@ const {balanceTimelineSchema} = require('../schemas');
 
 const MongoLong = require('mongodb').Long;
 const connectMongo = require('../connections/mongo');
+const extend = require('util')._extend;
 
 const {loadConfig} = require('../functions');
 
@@ -51,8 +52,7 @@ async function balanceTimeline(fastify, request) {
                         const info = await fastify.eos.rpc.get_info();
                         const lib = info.last_irreversible_block_num;
 
-                        const timeline_last = timeline[timeline.length-1];
-                        timeline_last.block_num = lib;
+                        const timeline_last = {block_num:lib, balance:timeline[timeline.length-1].balance};
                         timeline.push(timeline_last);
 
                         resolve(timeline)
