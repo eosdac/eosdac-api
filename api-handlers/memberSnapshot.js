@@ -144,7 +144,6 @@ module.exports = function (fastify, opts, next) {
     fastify.get('/member_snapshot', {
         schema: memberSnapshotSchema.GET
     }, async (request, reply) => {
-        reply.header('Access-Control-Allow-Origin', '*');
         reply.send(await memberSnapshot(fastify, request));
     });
     next()

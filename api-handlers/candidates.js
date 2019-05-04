@@ -71,7 +71,6 @@ module.exports = function (fastify, opts, next) {
     fastify.get('/candidates', {
         schema: candidatesSchema.GET
     }, async (request, reply) => {
-        reply.header('Access-Control-Allow-Origin', '*');
         reply.send(await getCandidates(fastify, request));
     });
     next()

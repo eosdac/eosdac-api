@@ -71,7 +71,6 @@ module.exports = function (fastify, opts, next) {
     fastify.get('/votes_timeline', {
         schema: votesTimelineSchema.GET
     }, async (request, reply) => {
-        reply.header('Access-Control-Allow-Origin', '*');
         const res = await votesTimeline(fastify, request);
         reply.send({results: res, count: res.length});
     });

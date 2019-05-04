@@ -100,7 +100,6 @@ module.exports = function (fastify, opts, next) {
     fastify.get('/profile', {
         schema: getProfileSchema.GET
     }, async (request, reply) => {
-        reply.header('Access-Control-Allow-Origin', '*');
         const profile = await getProfile(fastify, request);
         if (profile) {
             reply.send(profile);

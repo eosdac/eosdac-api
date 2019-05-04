@@ -69,7 +69,6 @@ module.exports = function (fastify, opts, next) {
     fastify.get('/balance_timeline', {
         schema: balanceTimelineSchema.GET
     }, async (request, reply) => {
-        reply.header('Access-Control-Allow-Origin', '*');
         const res = await balanceTimeline(fastify, request);
         reply.send({results: res, count: res.length});
     });
