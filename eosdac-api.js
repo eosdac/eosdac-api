@@ -1,27 +1,34 @@
 const openApi = require('./open-api');
-
 const {loadConfig} = require('./functions');
-const autoload = require('fastify-autoload');
 const path = require('path');
-const oas = require('fastify-oas');
+
+const config = loadConfig();
+
 const fastify = require('fastify')({
     ignoreTrailingSlash: true,
     trustProxy: true
 });
-fastify.register(oas, openApi.options);
-fastify.register(autoload, {
+
+fastify.register(require('fastify-oas'), openApi.options);
+
+fastify.register(require('fastify-autoload'), {
     dir: path.join(__dirname, 'api-handlers'),
     options: {
         prefix: '/v1/eosdac'
     }
 });
-const config = loadConfig();
+
 const mongo_url = `${config.mongo.url}/${config.mongo.dbName}`;
 fastify.register(require('fastify-mongodb'), {
     url: mongo_url
 });
 
 fastify.register(require('./fastify-eos'), config);
+
+fastify.register(require('fastify-cors'), {
+    allowedHeaders: 'Content-Type,X-DAC-Name',
+    origin: '*'
+});
 
 
 fastify.ready().then(async () => {
