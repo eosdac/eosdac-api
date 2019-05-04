@@ -16,7 +16,9 @@ async function getMsigProposals(fastify, request) {
 
         const api = fastify.eos.api;
 
-        const custodian_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'custodians', limit:100};
+        const custodian_contract = config.eos.custodianContract || 'daccustodian';
+
+        const custodian_query = {code:custodian_contract, scope:custodian_contract, table:'custodians', limit:100};
         const custodian_res = await api.rpc.get_table_rows(custodian_query);
         const custodians = custodian_res.rows.map((row) => {
             return row.cust_name;
