@@ -20,6 +20,7 @@ module.exports = {
         custodianContract: 'daccustodian',
         dacMsigContract: 'dacmultisigs',
         proposalsContract: 'dacproposals',
-        dacGenesisBlock: 12345  // the first block that includes any dac contract actions including the initial setcode
+        dacGenesisBlock: 12345,  // the first block that includes any dac contract actions including the initial setcode
+        dacDirectoryContract: 'dacdirectory'
     }
 };
