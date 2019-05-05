@@ -5,6 +5,7 @@ const {TextDecoder, TextEncoder} = require('text-encoding');
 const fetch = require('node-fetch');
 
 const RabbitSender = require('../rabbitsender');
+const InterestedContracts = require('../interested-contracts');
 const Int64 = require('int64-buffer').Int64BE;
 
 
@@ -24,11 +25,14 @@ class DeltaHandler {
         });
 
         this.connectDb();
-        this.connectAmq()
+        this.connectAmq();
+
     }
 
     async connectDb() {
-        this.db = await this._connectDb()
+        this.db = await this._connectDb();
+        this.interested_contracts = new InterestedContracts({config: this.config, db:this.db});
+        await this.interested_contracts.reload();
     }
 
     async connectAmq() {
@@ -74,7 +78,7 @@ class DeltaHandler {
     }
 
 
-    queueDelta(block_num, deltas, abi, block_timestamp) {
+    async queueDelta(block_num, deltas, abi, block_timestamp) {
         // const data = {block_num, deltas, abi};
         // this.queue.create('block_deltas', data).removeOnComplete(true).save()
 
@@ -95,13 +99,45 @@ class DeltaHandler {
 
                             let code;
                             try {
+                                // console.log(`row`, row);
                                 sb.get(); // ?
                                 code = sb.getName();
 
-                                if (this.interested(code)) {
+                                if (code === this.config.eos.dacDirectoryContract){
+                                    console.log(`Found dac directory delta change`);
+
+                                    const scope = sb.getName();
+                                    const table = sb.getName();
+
+                                    if (scope === this.config.eos.dacDirectoryContract && table === 'dacs'){
+                                        const primary_key = sb.getUint8Array(8);
+                                        const payer = sb.getName();
+                                        const data_raw = sb.getBytes();
+
+                                        const table_type = await this.getTableType(code, table);
+                                        const data_sb = new Serialize.SerialBuffer({
+                                            textEncoder: new TextEncoder,
+                                            textDecoder: new TextDecoder,
+                                            array: data_raw
+                                        });
+
+                                        const data = table_type.deserialize(data_sb);
+                                        // console.log(`dacdirectory delta`, data);
+
+                                        data.accounts.forEach((account) => {
+                                            if (row.present){
+                                                this.interested_contracts.add(account.value, data.dac_name);
+                                            }
+                                            else {
+                                                // this.removeInterested(account.value, data.dac_name);
+                                            }
+                                        });
+                                    }
+                                }
+                                else if (this.interested(code)) {
                                     // console.log('Queue delta row')
                                     console.log(`Queueing delta ${code}`);
-                                    this.queueDeltaRow('contract_row', block_num, row, block_timestamp)
+                                    await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
                                 } else {
                                     const scope = sb.getName();
                                     const table = sb.getName();
@@ -109,12 +145,12 @@ class DeltaHandler {
                                     if (table === 'accounts' && this.interested(scope)) {
                                         console.log(`Found interesting token balance change ${code}:${scope}:${table}`);
 
-                                        this.queueDeltaRow('contract_row', block_num, row, block_timestamp)
+                                        await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
                                     }
 
                                 }
                             } catch (e) {
-                                console.error(`Error processing row.data for ${block_num} : ${e.message}`);
+                                console.error(`Error processing row.data for ${block_num} : ${e.message}`, e);
                             }
                         }
                     }
@@ -150,10 +186,9 @@ class DeltaHandler {
         return this.queueDelta(block_num, deltas, abi, block_timestamp)
     }
 
+
     interested(account, name) {
-        return this.config.eos.contracts === '*' || this.config.eos.contracts.includes(account);
-
-
+        return this.interested_contracts.has(account);
     }
 }
 

@@ -5,6 +5,7 @@ const {TextDecoder, TextEncoder} = require('text-encoding');
 const fetch = require('node-fetch');
 
 const Int64 = require('int64-buffer').Int64BE;
+const InterestedContracts = require('../interested-contracts');
 
 const {hexToUint8Array} = require('eosjs/dist/eosjs-serialize');
 
@@ -12,6 +13,7 @@ class ActionHandler {
     constructor({queue, db, config}) {
         this.amq = queue;
         this.config = config;
+        this.connectDb();
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
         this.api = new Api({
@@ -22,19 +24,26 @@ class ActionHandler {
             textEncoder: new TextEncoder(),
         });
 
-        this.parseInterestedConfig()
+        // this.parseInterestedConfig()
     }
 
-    async _connectDb() {
+    async connectDb() {
+        this.db = await this._connectDb();
+        this.interested_contracts = new InterestedContracts({config: this.config, db:this.db});
+        await this.interested_contracts.reload();
+    }
+
+    _connectDb() {
         if (this.config.mongo) {
             return new Promise((resolve, reject) => {
                 MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
                     if (err) {
                         reject(err)
                     } else {
-                        resolve(client.db(this.config.mongo.dbName))
+                        const db = client.db(this.config.mongo.dbName);
+                        resolve(db);
                     }
-                }).bind(this))
+                }).bind(this));
             })
         }
     }
@@ -105,37 +114,12 @@ class ActionHandler {
         }
     }
 
-    parseInterestedConfig() {
-        this.interested_data = {
-            contracts: [],
-            actions: [],
-            contract_actions: []
-        };
-        this.config.eos.contracts.forEach((contract_str) => {
-            if (contract_str.indexOf(':') === -1) {
-                this.interested_data.contracts.push(contract_str)
-            } else {
-                let [c, a] = contract_str.split(':');
-                if (a === '*') {
-                    this.interested_data.contracts.push(c)
-                } else if (c === '*') {
-                    this.interested_data.actions.push(a)
-                } else {
-                    this.interested_data.contract_actions.push([c, a])
-                }
-            }
-        })
-    }
-
     interested(account, name) {
         if (name === 'onblock') {
             return false
         }
-        return this.interested_data.contracts.includes(account) ||
-            this.interested_data.actions.includes(name) ||
-            (this.interested_data.contract_actions[0] === account && this.interested_data.contract_actions[1] === name);
 
-
+        return this.interested_contracts.has(account);
     }
 }
 
