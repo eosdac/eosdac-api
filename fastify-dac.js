@@ -3,6 +3,9 @@ const {loadConfig} = require('./functions');
 
 module.exports = fp((fastify, options, next) => {
     fastify.decorate('dac_name_cache', new Map());
+    fastify.decorate('dac_cache_get', function(dac_name){
+        return this.dac_name_cache.get(dac_name);
+    });
     fastify.decorateRequest('dac', function () {
         return this.headers['x-dac-name'] || 'eosdac';
     });
@@ -10,7 +13,7 @@ module.exports = fp((fastify, options, next) => {
         const global_config = loadConfig();
 
         const dac_name = this.dac();
-        const dac_config_cache = fastify.dac_name_cache.get(dac_name);
+        const dac_config_cache = fastify.dac_cache_get(dac_name);
         if (dac_config_cache){
             return dac_config_cache;
         }
