@@ -7,11 +7,6 @@ class TraceHandler {
     }
 
     async queueTrace(block_num, traces, block_timestamp) {
-        return this.processTrace(block_num, traces, block_timestamp)
-    }
-
-    async processTrace(block_num, traces, block_timestamp) {
-        // console.log(`Process block ${block_num}`)
 
         for (const trace of traces) {
             switch (trace[0]) {
@@ -30,6 +25,11 @@ class TraceHandler {
             }
 
         }
+    }
+
+    async processTrace(block_num, traces, block_timestamp) {
+        // console.log(`Process block ${block_num}`)
+        return this.queueTrace(block_num, traces, block_timestamp);
     }
 
 }
