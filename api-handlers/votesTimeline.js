@@ -1,21 +1,17 @@
 const {votesTimelineSchema} = require('../schemas');
 
 const MongoLong = require('mongodb').Long;
-const connectMongo = require('../connections/mongo');
-
-const {loadConfig} = require('../functions');
-
 
 async function votesTimeline(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
-        const config = loadConfig();
+        const dac_config = await request.dac_config();
         const db = fastify.mongo.db;
         const collection = db.collection('contract_rows');
         const account = request.query.account;
         const start_block = request.query.start_block || null;
         const end_block = request.query.end_block || null;
-        const cust_contract = config.eos.custodianContract || 'daccustodian';
+        const cust_contract = dac_config.accounts.get(2);
 
         const accounts = account.split(',');
 

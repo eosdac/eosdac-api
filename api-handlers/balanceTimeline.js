@@ -1,21 +1,16 @@
 const {balanceTimelineSchema} = require('../schemas');
 
 const MongoLong = require('mongodb').Long;
-const connectMongo = require('../connections/mongo');
-const extend = require('util')._extend;
-
-const {loadConfig} = require('../functions');
-
 
 async function balanceTimeline(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
-        const config = loadConfig();
+        const dac_config = await request.dac_config();
         const db = fastify.mongo.db;
         const collection = db.collection('contract_rows');
         const account = request.query.account;
-        const contract = request.query.contract || 'eosdactokens';
-        const symbol = request.query.symbol || 'EOSDAC';
+        const contract = request.query.contract || dac_config.accounts.get(4);
+        const symbol = request.query.symbol || dac_config.symbol.split(',')[1];
         const start_block = request.query.start_block || null;
         const end_block = request.query.end_block || null;
 

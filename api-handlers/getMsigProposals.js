@@ -1,31 +1,23 @@
 const {getMsigProposalsSchema} = require('../schemas');
 
 
-const {loadConfig} = require('../functions');
-
-
 async function getMsigProposals(fastify, request) {
     // console.log(request)
 
-    // console.log('fastify.eos', fastify.eos);
 
     return new Promise(async (resolve, reject) => {
-
-        // Get current custodians
-        const config = loadConfig();
+        const dac_config = await request.dac_config();
 
         const api = fastify.eos.api;
-
-        const custodian_contract = config.eos.custodianContract || 'daccustodian';
-
-        const custodian_query = {code:custodian_contract, scope:custodian_contract, table:'custodians', limit:100};
-        const custodian_res = await api.rpc.get_table_rows(custodian_query);
-        const custodians = custodian_res.rows.map((row) => {
-            return row.cust_name;
-        });
-
         const db = fastify.mongo.db;
         const collection = db.collection('multisigs');
+
+        const custodian_contract = dac_config.accounts.get(2);
+
+        // Get current custodians
+        const custodian_query = {code:custodian_contract, scope:custodian_contract, table:'custodians', limit:100};
+        const custodian_res = await api.rpc.get_table_rows(custodian_query);
+        const custodians = custodian_res.rows.map((row) => row.cust_name);
 
         const status = request.query.status || 0;
         const skip = request.query.skip || 0;

@@ -5,7 +5,6 @@ const {Api, JsonRpc} = require('eosjs');
 const fetch = require('node-fetch');
 
 const {loadConfig} = require('../functions');
-const eosTableAtBlock = require('../eos-table');
 
 
 async function getCandidates(fastify, request) {
@@ -22,14 +21,17 @@ async function getCandidates(fastify, request) {
             textEncoder: new TextEncoder(),
         });
 
+        const dac_config = await request.dac_config();
+        const cust_contract = dac_config.accounts.get(2);
+
         const limit = request.query.limit || 20;
         const skip = request.query.skip || 0;
 
-        const candidate_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'candidates', limit:100, key_type:'i64', index_position:3, reverse:true};
+        const candidate_query = {code:cust_contract, scope:cust_contract, table:'candidates', limit:100, key_type:'i64', index_position:3, reverse:true};
         const candidate_res = await api.rpc.get_table_rows(candidate_query);
 
 
-        const custodian_query = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'custodians', limit:100};
+        const custodian_query = {code:cust_contract, scope:cust_contract, table:'custodians', limit:100};
         const custodian_res = await api.rpc.get_table_rows(custodian_query);
 
         const custodians_map = new Map();

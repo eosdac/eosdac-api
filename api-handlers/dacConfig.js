@@ -23,25 +23,51 @@ async function getDacConfig(fastify, request) {
             textEncoder: new TextEncoder(),
         });
 
-        const table_rows_req = {code:config.eos.custodianContract, scope:config.eos.custodianContract, table:'config', limit:1};
-        const dac_config = await api.rpc.get_table_rows(table_rows_req);
+        const dac_config_original = await request.dac_config();
+        // const dac_config = await request.dac_config();
+        const dac_config = {
+            dac_name: dac_config_original.dac_name,
+            owner: dac_config_original.owner,
+            symbol: dac_config_original.symbol,
+            title: dac_config_original.title,
+        };
+        // console.log('dac_config', dac_config);
+        dac_config.config = {};
+        const cust_contract = dac_config_original.accounts.get(2);
+        const token_contract = dac_config_original.accounts.get(4);
 
-        if (dac_config.rows.length){
-            const config = dac_config.rows[0];
+        const cust_req = {code:cust_contract, scope:cust_contract, table:'config', limit:1};
+        const cust_res = await api.rpc.get_table_rows(cust_req);
 
-            const dac_accounts_req = {code:'dacdirectory', scope:'dacdirectory', lower_bound:'eosdac', table:'dacs', limit:1};
-            const dac_accounts = await api.rpc.get_table_rows(dac_accounts_req);
-            if (dac_accounts.rows.length){
-                config.accounts = dac_accounts.rows[0].accounts;
-                config.symbol = dac_accounts.rows[0].symbol;
-            }
-
-            resolve(config);
+        if (cust_res.rows.length){
+            dac_config.config.custodian = cust_res.rows[0];
         }
         else {
             reject('DAC config not found');
         }
 
+
+
+        const token_req = {code: token_contract, scope: token_contract, table: 'config', limit: 1};
+        const token_res = await api.rpc.get_table_rows(token_req);
+
+        if (token_res.rows.length){
+            dac_config.config.token = token_res.rows[0];
+        }
+        else {
+            reject('DAC token config not found');
+        }
+
+
+        // convert from map to something fastify can understand
+        const refs = new Map(dac_config_original.refs);
+        const accounts = new Map(dac_config_original.accounts);
+
+        dac_config.accounts = Array.from(accounts, ([key, value]) => {return {key, value}});
+        dac_config.refs =  Array.from(refs, ([key, value]) => {return {key, value}});
+        // console.log(dac_config);
+
+        resolve(dac_config);
     })
 
 

@@ -1,17 +1,14 @@
 const {memberSnapshotSchema} = require('../schemas');
 
 const MongoLong = require('mongodb').Long;
-const connectMongo = require('../connections/mongo');
-
-const {loadConfig} = require('../functions');
-
 
 async function memberSnapshot(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
-        const config = loadConfig();
         const db = fastify.mongo.db;
-        const contract = request.query.contract || 'eosdactokens';
+        const dac_config = await request.dac_config();
+
+        const contract = request.query.contract || dac_config.accounts.get(4);
         const symbol = request.query.symbol || 'EOSDAC';
         const block_num = request.query.block_num || null;
         const sort_col = request.query.sort || 'account';

@@ -1,10 +1,6 @@
 const {getProfileSchema} = require('../schemas');
 const {NotFound} = require('http-errors');
 
-const connectMongo = require('../connections/mongo');
-
-const {loadConfig} = require('../functions');
-
 const null_profile = {
     description: "",
     email: "",
@@ -22,12 +18,12 @@ async function getProfile(fastify, request) {
     const account = request.query.account;
     const accounts = account.split(',');
 
-    const config = loadConfig();
+    const dac_config = await request.dac_config();
 
     const db = fastify.mongo.db;
     const collection = db.collection('actions');
 
-    const cust_contract = config.eos.custodianContract || 'daccustodian';
+    const cust_contract = dac_config.accounts.get(2);
 
     const query = {"action.account": cust_contract, "action.name": "stprofileuns", "action.data.cand": {$in: accounts}};
 
