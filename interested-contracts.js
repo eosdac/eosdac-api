@@ -4,6 +4,7 @@ class InterestedContracts {
         this.interested_queue = new Map;
         this.config = config;
         this.db = db;
+        this.interested_timeout = null;
     }
 
     add(account, dac_name) {
