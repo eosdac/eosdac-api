@@ -64,6 +64,20 @@ class ActionHandler {
 
         if (this.interested(action.act.account, action.act.name) && action.receipt[1].receiver === action.act.account) {
             console.log("Queue Action", action.act.account);
+            if (action.act.name == 'setabi'){
+                const sb_abi = new Serialize.SerialBuffer({
+                    textEncoder: new TextEncoder,
+                    textDecoder: new TextDecoder,
+                    array: action.act.data
+                });
+
+                const act_name = sb_abi.getName();
+
+                if (!this.interested(act_name, '')){
+                    return;
+                }
+
+            }
             // console.log(action.act.account)
             // let data = {
             //     block_num,
@@ -118,8 +132,9 @@ class ActionHandler {
         if (name === 'onblock') {
             return false
         }
+        const is_setabi = (account == 'eosio' && name == 'setabi');
 
-        return this.interested_contracts.has(account);
+        return (is_setabi || this.interested_contracts.has(account));
     }
 }
 
