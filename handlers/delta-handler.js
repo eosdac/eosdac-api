@@ -30,9 +30,9 @@ class DeltaHandler {
     }
 
     async connectDb() {
-        this.db = await this._connectDb();
         this.interested_contracts = new InterestedContracts({config: this.config, db:this.db});
         await this.interested_contracts.reload();
+        this.db = await this._connectDb();
     }
 
     async connectAmq() {
