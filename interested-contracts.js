@@ -1,10 +1,26 @@
 
+const {Api, JsonRpc, Serialize} = require('eosjs');
+const {TextDecoder, TextEncoder} = require('text-encoding');
+const fetch = require('node-fetch');
+
 class InterestedContracts {
     constructor({config, db}){
         this.interested_queue = new Map;
         this.config = config;
         this.db = db;
         this.interested_timeout = null;
+
+        const rpc = new JsonRpc(config.eos.endpoint, {fetch});
+        const api = new Api({
+            rpc,
+            signatureProvider: null,
+            chainId: config.chainId,
+            textDecoder: new TextDecoder(),
+            textEncoder: new TextEncoder(),
+        });
+
+        this.api = api;
+        this.rpc = rpc;
     }
 
     add(account, dac_name) {
@@ -14,32 +30,20 @@ class InterestedContracts {
             this.interested_queue.set(dac_name, new Set);
         }
         this.interested_queue.get(dac_name).add(account);
-
-        if (!this.interested_timeout){
-            this.interested_timeout = setTimeout(this.save.bind(this), 5000);
-        }
-    }
-
-    async save() {
-        const db = await this.db;
-        const coll = db.collection('interested_contracts');
-
-        this.interested_queue.forEach((accounts, dac_name) => {
-            coll.updateOne({dac_name:dac_name}, {$addToSet: {accounts:{$each:Array.from(accounts)}}}, {upsert:true});
-        });
-
-        this.interested_queue = new Set
     }
 
     async reload() {
         this.interested_contracts = new Set();
-        const coll = this.db.collection('interested_contracts');
-        const res = await coll.find({});
-        res.forEach((row) => {
-            // console.log(row.accounts);
+        const res = await this.rpc.get_table_rows({
+            code: this.config.eos.dacDirectoryContract,
+            scope: this.config.eos.dacDirectoryContract,
+            table: 'dacs'
+        });
+
+        res.rows.forEach((row) => {
             row.accounts.forEach((acnt) => {
                 // console.log(`Adding ${acnt} to set`);
-                this.interested_contracts.add(acnt);
+                this.interested_contracts.add(acnt.value);
             });
         });
     }
