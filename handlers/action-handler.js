@@ -64,7 +64,7 @@ class ActionHandler {
 
         if (await this.interested(action.act.account, action.act.name) && action.receipt[1].receiver === action.act.account) {
             console.log("Queue Action", action.act.account);
-            if (action.act.name == 'setabi'){
+            if (action.act.name === 'setabi'){
                 const sb_abi = new Serialize.SerialBuffer({
                     textEncoder: new TextEncoder,
                     textDecoder: new TextDecoder,
