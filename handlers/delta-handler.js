@@ -5,14 +5,14 @@ const {TextDecoder, TextEncoder} = require('text-encoding');
 const fetch = require('node-fetch');
 
 const RabbitSender = require('../rabbitsender');
-const InterestedContracts = require('../interested-contracts');
 const Int64 = require('int64-buffer').Int64BE;
 
 
 class DeltaHandler {
-    constructor({queue, config}) {
+    constructor({queue, config, interested_contracts}) {
         this.queue = queue;
         this.config = config;
+        this.interested_contracts = interested_contracts;
         this.tables = new Map;
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
@@ -30,8 +30,6 @@ class DeltaHandler {
     }
 
     async connectDb() {
-        this.interested_contracts = new InterestedContracts({config: this.config, db:this.db});
-        await this.interested_contracts.reload();
         this.db = await this._connectDb();
     }
 
@@ -42,13 +40,13 @@ class DeltaHandler {
     async _connectDb() {
         if (this.config.mongo) {
             return new Promise((resolve, reject) => {
-                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
+                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, (err, client) => {
                     if (err) {
                         reject(err)
                     } else {
                         resolve(client.db(this.config.mongo.dbName))
                     }
-                }).bind(this))
+                })
             })
         }
     }
@@ -110,28 +108,7 @@ class DeltaHandler {
                                     const table = sb.getName();
 
                                     if (scope === this.config.eos.dacDirectoryContract && table === 'dacs'){
-                                        const primary_key = sb.getUint8Array(8);
-                                        const payer = sb.getName();
-                                        const data_raw = sb.getBytes();
-
-                                        const table_type = await this.getTableType(code, table);
-                                        const data_sb = new Serialize.SerialBuffer({
-                                            textEncoder: new TextEncoder,
-                                            textDecoder: new TextDecoder,
-                                            array: data_raw
-                                        });
-
-                                        const data = table_type.deserialize(data_sb);
-                                        // console.log(`dacdirectory delta`, data);
-
-                                        data.accounts.forEach((account) => {
-                                            if (row.present){
-                                                this.interested_contracts.add(account.value, data.dac_name);
-                                            }
-                                            else {
-                                                // this.removeInterested(account.value, data.dac_name);
-                                            }
-                                        });
+                                        this.interested_contracts.reload();
                                     }
                                 }
                                 else if (this.interested(code)) {

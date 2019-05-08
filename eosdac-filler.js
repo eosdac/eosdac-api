@@ -11,6 +11,7 @@ const {loadConfig, getRestartBlock} = require('./functions');
 const RabbitSender = require('./rabbitsender');
 const cluster = require('cluster');
 const Int64BE = require('int64-buffer').Int64BE;
+const InterestedContracts = require('./interested-contracts');
 
 let rpc;
 const signatureProvider = null;
@@ -64,9 +65,12 @@ class FillManager {
 
         this.amq = RabbitSender.init(this.config.amq);
 
-        const action_handler = new ActionHandler({queue: this.amq, config: this.config});
+        const interested_contracts = new InterestedContracts({config: this.config, db:this.db});
+        await interested_contracts.reload();
+
+        const action_handler = new ActionHandler({queue: this.amq, config: this.config, interested_contracts});
         const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config});
-        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config});
+        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, interested_contracts});
 
         if (this.replay) {
 
@@ -257,9 +261,13 @@ class FillManager {
                 console.log(`Finished job ${start_block}-${end_block}`, job)
             })
         } else {*/
-        const action_handler = new ActionHandler({queue: this.amq, config: this.config});
+
+        const interested_contracts = new InterestedContracts({config: this.config, db:this.db});
+        await interested_contracts.reload();
+
+        const action_handler = new ActionHandler({queue: this.amq, config: this.config, interested_contracts});
         const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config});
-        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config});
+        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, interested_contracts});
 
 
         this.br = new StateReceiver({startBlock: start_block, endBlock: end_block, mode: 1, config: this.config});

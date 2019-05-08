@@ -5,14 +5,14 @@ const {TextDecoder, TextEncoder} = require('text-encoding');
 const fetch = require('node-fetch');
 
 const Int64 = require('int64-buffer').Int64BE;
-const InterestedContracts = require('../interested-contracts');
 
 const {hexToUint8Array} = require('eosjs/dist/eosjs-serialize');
 
 class ActionHandler {
-    constructor({queue, db, config}) {
+    constructor({queue, db, config, interested_contracts}) {
         this.amq = queue;
         this.config = config;
+        this.interested_contracts = interested_contracts;
         this.connectDb();
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
@@ -29,8 +29,6 @@ class ActionHandler {
 
     async connectDb() {
         this.db = await this._connectDb();
-        this.interested_contracts = new InterestedContracts({config: this.config, db:this.db});
-        await this.interested_contracts.reload();
     }
 
     _connectDb() {
@@ -62,7 +60,7 @@ class ActionHandler {
         // console.log(`Receive queue ${trx_id} for block ${block_num}`)
         // console.log(action)
 
-        if (await this.interested(action.act.account, action.act.name) && action.receipt[1].receiver === action.act.account) {
+        if (this.interested(action.act.account, action.act.name) && action.receipt[1].receiver === action.act.account) {
             console.log("Queue Action", action.act.account);
             if (action.act.name === 'setabi'){
                 const sb_abi = new Serialize.SerialBuffer({
@@ -73,7 +71,7 @@ class ActionHandler {
 
                 const act_name = sb_abi.getName();
 
-                if (!(await this.interested(act_name, ''))){
+                if (!this.interested(act_name, '')){
                     return;
                 }
 
@@ -128,18 +126,13 @@ class ActionHandler {
         }
     }
 
-    async interested(account, name) {
+    interested(account, name) {
         if (name === 'onblock') {
             return false
         }
 
         if (account === 'eosio' && name === 'setabi'){
             return true;
-        }
-
-        if (!this.interested_contracts){
-            this.interested_contracts = new InterestedContracts({config: this.config, db:this.db});
-            await this.interested_contracts.reload();
         }
 
         return this.interested_contracts.has(account);
