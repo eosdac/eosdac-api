@@ -132,9 +132,12 @@ class ActionHandler {
         if (name === 'onblock') {
             return false
         }
-        const is_setabi = (account == 'eosio' && name == 'setabi');
 
-        return (is_setabi || this.interested_contracts.has(account));
+        if (account === 'eosio' && name === 'setabi'){
+            return true;
+        }
+
+        return this.interested_contracts.has(account);
     }
 }
 
