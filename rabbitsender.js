@@ -1,6 +1,7 @@
 const Amqp = require('amqplib');
 
 class RabbitSender {
+
     constructor(channel, config) {
         this.channel = channel;
         this.config = config
@@ -28,9 +29,12 @@ class RabbitSender {
         conn.on('close', (function () {
             console.error('[AMQP] closing');
 
-            RabbitSender.closeHandlers.forEach((h) => {
-                h()
-            })
+            if (RabbitSender.closeHandlers && RabbitSender.closeHandlers.length){
+                RabbitSender.closeHandlers.forEach((h) => {
+                    h();
+                });
+            }
+
         }).bind(rs));
 
         return rs
@@ -58,5 +62,6 @@ class RabbitSender {
         return this.channel.reject(job, true)
     }
 }
+RabbitSender.closeHandlers = [];
 
 module.exports = RabbitSender;
