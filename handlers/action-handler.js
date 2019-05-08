@@ -62,7 +62,7 @@ class ActionHandler {
         // console.log(`Receive queue ${trx_id} for block ${block_num}`)
         // console.log(action)
 
-        if (this.interested(action.act.account, action.act.name) && action.receipt[1].receiver === action.act.account) {
+        if (await this.interested(action.act.account, action.act.name) && action.receipt[1].receiver === action.act.account) {
             console.log("Queue Action", action.act.account);
             if (action.act.name == 'setabi'){
                 const sb_abi = new Serialize.SerialBuffer({
@@ -73,7 +73,7 @@ class ActionHandler {
 
                 const act_name = sb_abi.getName();
 
-                if (!this.interested(act_name, '')){
+                if (!(await this.interested(act_name, ''))){
                     return;
                 }
 
@@ -128,13 +128,18 @@ class ActionHandler {
         }
     }
 
-    interested(account, name) {
+    async interested(account, name) {
         if (name === 'onblock') {
             return false
         }
 
         if (account === 'eosio' && name === 'setabi'){
             return true;
+        }
+
+        if (!this.interested_contracts){
+            this.interested_contracts = new InterestedContracts({config: this.config, db:this.db});
+            await this.interested_contracts.reload();
         }
 
         return this.interested_contracts.has(account);
