@@ -36,14 +36,14 @@ class ActionHandler {
     _connectDb() {
         if (this.config.mongo) {
             return new Promise((resolve, reject) => {
-                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
+                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, (err, client) => {
                     if (err) {
                         reject(err)
                     } else {
                         const db = client.db(this.config.mongo.dbName);
                         resolve(db);
                     }
-                }).bind(this));
+                });
             })
         }
     }
