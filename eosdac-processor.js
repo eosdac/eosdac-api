@@ -270,10 +270,6 @@ class JobProcessor {
             })
         }
     }
-
-    interested(account) {
-        return (this.config.eos.contracts === '*' || this.config.eos.contracts.includes(account))
-    }
 }
 
 
