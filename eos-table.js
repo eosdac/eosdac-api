@@ -69,7 +69,6 @@ async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 1
                 resolve(doc)
                 // console.log("DOC", doc.results)
                 // ret_data.push({block_num:doc.block_num, data:doc.data})
-            }, () => {
             })
         };
 
