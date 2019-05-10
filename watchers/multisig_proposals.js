@@ -369,7 +369,10 @@ class MultisigProposalsHandler {
     async action(doc) {
         if (doc.action.account === this.dac_multisig_contract) {
             console.log('Reacting to msig action');
-            this.recalcMsigs(doc)
+            // delay to wait for the state to update
+            setTimeout((() => {
+                this.recalcMsigs(doc);
+            }), 600)
         }
     }
 }
