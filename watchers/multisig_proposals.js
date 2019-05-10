@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 
 const config = loadConfig();
 
-const eosTableAtBlock = require('../eos-table');
+const {eosTableAtBlock} = require('../eos-table');
 
 
 class MultisigProposalsHandler {

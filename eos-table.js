@@ -81,4 +81,4 @@ async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 1
     })
 }
 
-module.exports = eosTableAtBlock;
+module.exports = {eosTableAtBlock};
