@@ -8,4 +8,5 @@ module.exports = {
     dacConfigSchema: require('./dac_config'),
     candidatesSchema: require('./candidates'),
     memberSchema: require('./member'),
+    memberCountsSchema: require('./member_counts'),
 };
