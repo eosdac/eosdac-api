@@ -148,7 +148,7 @@ class MultisigProposalsHandler {
             let count = 0;
             while (doc = await res.next()) {
                 await this.recalcMsigs(doc);
-                count++
+                count++;
             }
 
             console.log(`Imported ${count} multisig documents`);
