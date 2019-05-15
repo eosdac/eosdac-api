@@ -1,5 +1,6 @@
 const fp = require('fastify-plugin');
 const {loadConfig} = require('./functions');
+const tokenInfo = require('./tokens.json');
 
 module.exports = fp((fastify, options, next) => {
     fastify.decorate('dac_name_cache', new Map());
@@ -44,6 +45,16 @@ module.exports = fp((fastify, options, next) => {
             return null;
         }
         //return this.headers['x-dac-name'] || 'eosdac';
+    });
+
+
+    fastify.decorate('tokens', function () {
+        console.log('get tokens', tokenInfo);
+        const token_map = new Map;
+        tokenInfo.forEach((ti) => {
+            token_map.set(`${ti.account}:${ti.symbol}`, ti);
+        });
+        return token_map;
     });
 
     next();
