@@ -31,10 +31,6 @@ const tokensOwnedSchema = {
                                 description: "Token Symbol",
                                 type: "string"
                             },
-                            "balance": {
-                                description: "Token Balance",
-                                type: "string"
-                            },
                             "name": {
                                 description: "Token Name",
                                 type: "string"

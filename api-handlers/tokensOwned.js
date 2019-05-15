@@ -42,7 +42,6 @@ async function tokensOwned(fastify, request) {
                             const token_data = {
                                 contract: value.code,
                                 symbol: `${precision},${sym}`,
-                                balance: bal,
                                 logo: 'https://raw.githubusercontent.com/eoscafe/eos-airdrops/master/logos/placeholder.png',
                                 logo_lg: 'https://raw.githubusercontent.com/eoscafe/eos-airdrops/master/logos/placeholder-lg.png',
                                 name: sym
