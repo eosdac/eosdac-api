@@ -49,7 +49,6 @@ module.exports = fp((fastify, options, next) => {
 
 
     fastify.decorate('tokens', function () {
-        console.log('get tokens', tokenInfo);
         const token_map = new Map;
         tokenInfo.forEach((ti) => {
             token_map.set(`${ti.account}:${ti.symbol}`, ti);
