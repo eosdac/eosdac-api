@@ -375,6 +375,8 @@ class MultisigProposalsHandler {
             }), 600)
         }
     }
+
+    async delta(doc){}
 }
 
 
