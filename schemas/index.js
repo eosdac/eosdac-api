@@ -9,4 +9,5 @@ module.exports = {
     candidatesSchema: require('./candidates'),
     memberSchema: require('./member'),
     memberCountsSchema: require('./member_counts'),
+    tokensOwnedSchema: require('./tokens_owned'),
 };
