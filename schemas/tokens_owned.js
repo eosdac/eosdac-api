@@ -31,6 +31,10 @@ const tokensOwnedSchema = {
                                 description: "Token Symbol",
                                 type: "string"
                             },
+                            "precision": {
+                                description: "Token Precision",
+                                type: "integer"
+                            },
                             "name": {
                                 description: "Token Name",
                                 type: "string"
