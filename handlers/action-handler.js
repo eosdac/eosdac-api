@@ -95,7 +95,7 @@ class ActionHandler {
         }
 
 
-        if (action.inline_traces.length) {
+        if (action.inline_traces && action.inline_traces.length) {
             for (let itc of action.inline_traces) {
                 // console.log("inline trace\n", itc);
                 if (itc[0] === 'action_trace_v0') {
