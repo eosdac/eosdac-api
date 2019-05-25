@@ -260,6 +260,10 @@ class MultisigProposalsHandler {
             block_num: check_block,
             data_query: local_data_query
         });
+        if (!res_data.results.length){
+            console.error(`Could not find proposal in table`);
+            return;
+        }
         output.trxid = res_data.results[0].data.transactionid;
 
 
