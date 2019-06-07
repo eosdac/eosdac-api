@@ -1,4 +1,5 @@
 const {getProposalsSchema} = require('../schemas');
+const MongoLong = require('mongodb').Long;
 
 
 async function getProposals(fastify, request) {
@@ -7,6 +8,7 @@ async function getProposals(fastify, request) {
         const db = fastify.mongo.db;
         const collection = db.collection('workerproposals');
 
+        const id = request.query.id || 0;
         const status = request.query.status || 0;
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
@@ -22,21 +24,29 @@ async function getProposals(fastify, request) {
             query.proposer = proposer;
         }
         try {
-            const res = await collection.find(query).sort({block_num: -1}).skip(skip).limit(limit);
-            const count = await res.count();
-
-            if (count === 0){
-                resolve(proposals);
-            }
-            else {
-                res.forEach((prop) => {
-                    delete prop._id;
-                    proposals.results.push(prop);
-                }, () => {
-                    proposals.count = count;
-
-                    resolve(proposals);
+            if (id) {
+                const id_res = await collection.findOne({
+                    id: MongoLong.fromString(id)
                 });
+
+                delete id_res._id;
+                resolve({results: [id_res], count: 1});
+            } else {
+                const res = await collection.find(query).sort({block_num: -1}).skip(skip).limit(limit);
+                const count = await res.count();
+
+                if (count === 0) {
+                    resolve(proposals);
+                } else {
+                    res.forEach((prop) => {
+                        delete prop._id;
+                        proposals.results.push(prop);
+                    }, () => {
+                        proposals.count = count;
+
+                        resolve(proposals);
+                    });
+                }
             }
         }
         catch (e){
