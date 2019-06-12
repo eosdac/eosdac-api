@@ -9,10 +9,10 @@ const Int64 = require('int64-buffer').Int64BE;
 const {hexToUint8Array} = require('eosjs/dist/eosjs-serialize');
 
 class ActionHandler {
-    constructor({queue, db, config, interested_contracts}) {
+    constructor({queue, db, config, dac_directory}) {
         this.amq = queue;
         this.config = config;
-        this.interested_contracts = interested_contracts;
+        this.dac_directory = dac_directory;
         this.connectDb();
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
@@ -135,7 +135,7 @@ class ActionHandler {
             return true;
         }
 
-        return this.interested_contracts.has(account);
+        return this.dac_directory.has(account);
     }
 }
 

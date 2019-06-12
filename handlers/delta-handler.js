@@ -9,10 +9,10 @@ const Int64 = require('int64-buffer').Int64BE;
 
 
 class DeltaHandler {
-    constructor({queue, config, interested_contracts}) {
+    constructor({queue, config, dac_directory}) {
         this.queue = queue;
         this.config = config;
-        this.interested_contracts = interested_contracts;
+        this.dac_directory = dac_directory;
         this.tables = new Map;
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
@@ -108,7 +108,7 @@ class DeltaHandler {
                                     const table = sb.getName();
 
                                     if (scope === this.config.eos.dacDirectoryContract && table === 'dacs'){
-                                        this.interested_contracts.reload();
+                                        this.dac_directory.reload();
                                     }
                                 }
                                 else if (this.interested(code)) {
@@ -165,7 +165,7 @@ class DeltaHandler {
 
 
     interested(account, name) {
-        return this.interested_contracts.has(account);
+        return this.dac_directory.has(account);
     }
 }
 
