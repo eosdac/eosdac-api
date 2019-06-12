@@ -8,12 +8,13 @@ const fetch = require('node-fetch');
 const config = loadConfig();
 
 const {eosTableAtBlock} = require('../eos-table');
+const DacDirectory = require('../dac-directory');
 
 
 class MultisigProposalsHandler {
 
     constructor() {
-        this.config = loadConfig();
+        this.config = config;
         this.db = connectMongo(config);
 
         this.msig_contract = config.eos.msigContract || 'eosio.msig';
@@ -33,25 +34,26 @@ class MultisigProposalsHandler {
         });
     }
 
-    async thresholdFromName(name){
-        // console.log(`Getting threshold ${name}`)
+    async thresholdFromName(name, dac_id){
+        // console.log(`Getting threshold ${name} for ${dac_id}`);
         return new Promise(async (resolve, reject) => {
-            if (!this.dac_config){
-                const table_rows_req = {code:this.custodian_contract, scope:this.custodian_contract, table:'config'};
-                const dac_config = await this.api.rpc.get_table_rows(table_rows_req);
-                this.dac_config = dac_config.rows[0];
-            }
+                const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
+                const scope = (dac_id === 'eos.dac')?custodian_contract:dac_id;
+
+                const table_rows_req = {code:custodian_contract, scope, table:'config'};
+                const dac_config_res = await this.api.rpc.get_table_rows(table_rows_req);
+                const dac_config = dac_config_res.rows[0];
 
             switch (name) {
                 case 'low':
-                    resolve(this.dac_config.auth_threshold_low);
+                    resolve(dac_config.auth_threshold_low);
                     break;
                 case 'med':
-                    resolve(this.dac_config.auth_threshold_mid);
+                    resolve(dac_config.auth_threshold_mid);
                     break;
                 case 'high':
                 case 'active':
-                    resolve(this.dac_config.auth_threshold_high);
+                    resolve(dac_config.auth_threshold_high);
                     break;
                 default:
                     reject(`Unknown permission name "${name}"`);
@@ -59,12 +61,13 @@ class MultisigProposalsHandler {
         });
     }
 
-    async permissionToThreshold(perm) {
+    async permissionToThreshold(perm, dac_id) {
         return new Promise(async (resolve) => {
             const self = this;
+            const auth_account = this.dac_directory._auth_accounts.get(dac_id);
 
-            if (perm.actor === this.auth_account) {
-                resolve(await this.thresholdFromName(perm.permission))
+            if (perm.actor === auth_account) {
+                resolve(await this.thresholdFromName(perm.permission, dac_id))
             } else {
                 // get the account and follow the tree down
                 const acct = await this.api.rpc.get_account(perm.actor);
@@ -86,7 +89,7 @@ class MultisigProposalsHandler {
                         for (let a = 0; a < act_perm.required_auth.accounts.length; a++) {
                             const perm = act_perm.required_auth.accounts[a];
                             // console.log('getting permission', perm)
-                            const p = await self.permissionToThreshold(perm.permission);
+                            const p = await self.permissionToThreshold(perm.permission, dac_id);
                             thresholds.push(p)
                         }
 
@@ -105,15 +108,14 @@ class MultisigProposalsHandler {
 
     }
 
-    async getTrxThreshold(trx) {
-        const self = this;
-        const thresholds = [];
-
+    async getTrxThreshold(trx, dac_id) {
         return new Promise(async (resolve, reject) => {
             if (!trx || !trx.actions) {
                 console.error(`Bad transaction`, trx);
                 reject(new Error('Bad transaction'));
             }
+
+            const thresholds = [];
 
             for (let a = 0; a < trx.actions.length; a++) {
                 const act = trx.actions[a];
@@ -121,37 +123,12 @@ class MultisigProposalsHandler {
                 for (let p = 0; p < act.authorization.length; p++) {
                     const perm = act.authorization[p];
 
-                    thresholds.push(await self.permissionToThreshold(perm))
+                    thresholds.push(await this.permissionToThreshold(perm, dac_id));
                 }
-                // console.log(thresholds);
-
-                resolve(Math.max(...thresholds))
-            }
-        })
-    }
-
-    async replay() {
-        this.db.then(async (mongo) => {
-            const db = mongo.db(this.config.mongo.dbName);
-            const collection = db.collection('multisigs');
-            const collection_actions = db.collection('actions');
-
-            console.log('Removing existing entries');
-            await collection.deleteMany({});
-            // console.log(await collection.find({}).count());
-
-            const res = collection_actions.find({
-                'action.account': this.dac_multisig_contract,
-                'action.name': 'proposed'
-            }).sort({block_num: 1});
-            let doc;
-            let count = 0;
-            while (doc = await res.next()) {
-                await this.recalcMsigs(doc);
-                count++;
             }
 
-            console.log(`Imported ${count} multisig documents`);
+            // console.log(thresholds);
+            resolve(Math.max(...thresholds));
         })
     }
 
@@ -163,29 +140,38 @@ class MultisigProposalsHandler {
         const coll = db.collection('multisigs');
         const coll_actions = db.collection('actions');
 
-        if (doc.action.name !== 'proposed'){
+        const dac_directory = this.dac_directory;
+        const msig_contracts = Array.from(dac_directory.msig_contracts().values());
+
+        if (!['proposed', 'proposede'].includes(doc.action.name)){
             // find the original proposed
             const doc_proposed = await coll_actions.findOne({
-                'action.account': this.dac_multisig_contract,
-                'action.name': 'proposed',
+                'action.account': {$in:msig_contracts},
+                'action.name': {$in:['proposed', 'proposede']},
                 'action.data.proposal_name': doc.action.data.proposal_name,
                 'action.data.proposer': doc.action.data.proposer,
                 'block_num': {$lt:doc.block_num}
             });
 
-            return await this.recalcMsigs(doc_proposed);
+            return this.recalcMsigs(doc_proposed);
         }
 
         const block_num = doc.block_num;
         const block_timestamp = doc.block_timestamp;
         const proposer = doc.action.data.proposer;
         const proposal_name = doc.action.data.proposal_name;
+        let dac_id = doc.action.data.dac_id;
+
+        if (!dac_id){
+            dac_id = doc.action.data.dac_id = 'eos.dac';
+        }
 
         const output = {
             block_num,
             block_timestamp,
             proposer,
             proposal_name,
+            dac_id,
             threshold: 0,
             requested_approvals: [],
             provided_approvals: [],
@@ -212,17 +198,13 @@ class MultisigProposalsHandler {
         }
 
 
-        console.log(`parsed ${block_num}:${proposer}:${proposal_name}`);
+        console.log(`parsed ${block_num}:${proposer}:${proposal_name}:${dac_id}`);
 
         const data_query = {
             proposal_name
         };
-        const local_data_query = {
-            proposalname: proposal_name
-        };
-
         let check_block = block_num + 1;
-        if (['cancelled', 'executed'].includes(doc.action.name)) {
+        if (['cancelled', 'executed', 'cancellede', 'executede'].includes(doc.action.name)) {
             check_block = block_num - 1
         }
 
@@ -245,24 +227,39 @@ class MultisigProposalsHandler {
 
         const proposal = res_proposals.results[0];
         if (!proposal) {
-            console.error(`Error getting proposal`);
+            console.error(`Error getting proposal ${proposal_name} from state`, data_query);
             return
         }
         // console.log(proposal.block_num, proposal.data.proposal_name, proposal.data.packed_transaction)
         output.trx = await this.api.deserializeTransactionWithActions(proposal.data.packed_transaction);
 
         // get the trxid stored in the dacmultisigs table
-        const res_data = await eosTableAtBlock({
+        const local_data_query = {
+            proposalname: proposal_name
+        };
+        let res_data = await eosTableAtBlock({
             db,
-            code: this.dac_multisig_contract,
+            code: {$in:msig_contracts},
             scope: proposer,
             table: 'proposals',
             block_num: check_block,
             data_query: local_data_query
         });
         if (!res_data.results.length){
-            console.error(`Could not find proposal in table`);
-            return;
+            // new format where dac id is the scope
+            res_data = await eosTableAtBlock({
+                db,
+                code: {$in:msig_contracts},
+                scope: dac_id,
+                table: 'proposals',
+                block_num: check_block,
+                data_query: local_data_query
+            });
+
+            if (!res_data.results.length) {
+                console.error(`Could not find proposal in table`);
+                return;
+            }
         }
         output.trxid = res_data.results[0].data.transactionid;
 
@@ -274,7 +271,7 @@ class MultisigProposalsHandler {
 
         // We have the transaction data, now get approvals
         // Get threshold
-        output.threshold = await this.getTrxThreshold(output.trx);
+        output.threshold = await this.getTrxThreshold(output.trx, dac_id);
         output.expiration = new Date(output.trx.expiration);
 
 
@@ -283,8 +280,8 @@ class MultisigProposalsHandler {
         // Get the current state by getting cancel/exec/clean transactions
         const closing_query = {
             'block_num': {$gt: block_num},
-            'action.account': this.dac_multisig_contract,
-            'action.name': {$in: ['cancelled', 'executed', 'clean']},
+            'action.account': {$in:msig_contracts},
+            'action.name': {$in: ['cancelled', 'executed', 'clean', 'cancellede', 'executede', 'cleane']},
             'action.data.proposal_name': proposal_name,
             'action.data.proposer': proposer
         };
@@ -294,12 +291,15 @@ class MultisigProposalsHandler {
         if (ca) {
             switch (ca.action.name) {
                 case 'cancelled':
+                case 'cancellede':
                     output.status = MultisigProposalsHandler.STATUS_CANCELLED;
                     break;
                 case 'executed':
+                case 'executede':
                     output.status = MultisigProposalsHandler.STATUS_EXECUTED;
                     break;
                 case 'clean':
+                case 'cleane':
                     output.status = MultisigProposalsHandler.STATUS_EXPIRED;
                     break
             }
@@ -321,10 +321,15 @@ class MultisigProposalsHandler {
         // Get current custodians
         let custodians = [];
         if (end_block){
-            // if the msig has ended then get the
+            // if the msig has ended then get the custodians at the time it ended
+            const custodian_contract = this.dac_directory._auth_accounts.get(dac_id);
+            let scope = dac_id;
+            if (dac_id == 'eos.dac'){
+                scope = custodian_contract;
+            }
             const custodian_query = {
                 db,
-                code: config.eos.custodianContract,
+                code: custodian_contract,
                 scope: config.eos.custodianContract,
                 table: 'custodians',
                 block_num: end_block,
@@ -370,8 +375,11 @@ class MultisigProposalsHandler {
 
     }
 
-    async action(doc) {
+    async action({doc, dac_directory, db}) {
         if (doc.action.account === this.dac_multisig_contract) {
+            this.db = db;
+            this.dac_directory = dac_directory;
+
             console.log('Reacting to msig action');
             // delay to wait for the state to update
             setTimeout((() => {
@@ -381,6 +389,35 @@ class MultisigProposalsHandler {
     }
 
     async delta(doc){}
+
+    async replay() {
+        this.db.then(async (mongo) => {
+            const db = mongo.db(this.config.mongo.dbName);
+            const collection = db.collection('multisigs');
+            const collection_actions = db.collection('actions');
+
+            this.dac_directory = new DacDirectory({config: this.config, db});
+            await this.dac_directory.reload();
+
+            console.log('Removing existing entries');
+            await collection.deleteMany({});
+            // console.log(await collection.find({}).count());
+
+            const res = collection_actions.find({
+                'action.account': {$in: Array.from(this.dac_directory.msig_contracts().values())},
+                'action.name': {$in:['proposed', 'proposede']}
+            }).sort({block_num: 1});
+            let doc;
+            let count = 0;
+            while (doc = await res.next()) {
+                console.log(doc.action.data.proposal_name);
+                this.recalcMsigs(doc);
+                count++;
+            }
+
+            console.log(`Imported ${count} multisig documents`);
+        })
+    }
 }
 
 
