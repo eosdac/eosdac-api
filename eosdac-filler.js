@@ -65,12 +65,12 @@ class FillManager {
 
         this.amq = RabbitSender.init(this.config.amq);
 
-        const interested_contracts = new DacDirectory({config: this.config, db:this.db});
-        await interested_contracts.reload();
+        const dac_directory = new DacDirectory({config: this.config, db:this.db});
+        await dac_directory.reload();
 
-        const action_handler = new ActionHandler({queue: this.amq, config: this.config, interested_contracts});
+        const action_handler = new ActionHandler({queue: this.amq, config: this.config, dac_directory});
         const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config});
-        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, interested_contracts});
+        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, dac_directory});
 
         if (this.replay) {
 
@@ -262,7 +262,7 @@ class FillManager {
             })
         } else {*/
 
-        const interested_contracts = new DacDirectory({config: this.config, db:this.db});
+        const dac_directory = new DacDirectory({config: this.config, db:this.db});
         await dac_directory.reload();
 
         const action_handler = new ActionHandler({queue: this.amq, config: this.config, dac_directory});
