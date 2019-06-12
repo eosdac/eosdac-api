@@ -6,16 +6,18 @@ async function getMsigProposals(fastify, request) {
 
 
     return new Promise(async (resolve, reject) => {
-        const dac_config = await request.dac_config();
+        const dac_directory = await request.dac_directory();
+        const dac_id = request.dac();
 
         const api = fastify.eos.api;
         const db = fastify.mongo.db;
         const collection = db.collection('multisigs');
 
-        const custodian_contract = dac_config.accounts.get(2);
+        const custodian_contract = dac_directory._custodian_contracts.get(dac_id);
+        const scope = (dac_id == 'eos.dac')?custodian_contract:dac_id;
 
         // Get current custodians
-        const custodian_query = {code:custodian_contract, scope:custodian_contract, table:'custodians', limit:100};
+        const custodian_query = {code:custodian_contract, scope, table:'custodians', limit:100};
         const custodian_res = await api.rpc.get_table_rows(custodian_query);
         const custodians = custodian_res.rows.map((row) => row.cust_name);
 
