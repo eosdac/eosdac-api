@@ -263,9 +263,8 @@ class MultisigProposalsHandler {
         }
         output.trxid = res_data.results[0].data.transactionid;
 
-
         if (res_approvals.count) {
-            output.requested_approvals = res_approvals.results[0].data.requested_approvals
+            output.requested_approvals = res_approvals.results[0].data.requested_approvals;
         }
 
 
@@ -322,7 +321,7 @@ class MultisigProposalsHandler {
         let custodians = [];
         if (end_block){
             // if the msig has ended then get the custodians at the time it ended
-            const custodian_contract = this.dac_directory._auth_accounts.get(dac_id);
+            const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
             let scope = dac_id;
             if (dac_id == 'eos.dac'){
                 scope = custodian_contract;
@@ -330,7 +329,7 @@ class MultisigProposalsHandler {
             const custodian_query = {
                 db,
                 code: custodian_contract,
-                scope: config.eos.custodianContract,
+                scope,
                 table: 'custodians',
                 block_num: end_block,
                 limit:100
@@ -363,6 +362,7 @@ class MultisigProposalsHandler {
         }
 
         // remove provided approvals from requested approvals
+        console.log('requested', output.requested_approvals);
         const provided_actors = output.provided_approvals.map((pro) => pro.actor);
         output.requested_approvals = output.requested_approvals.filter((req) => !provided_actors.includes(req.actor));
         // only include custodians (if the msig is current then they are modified in the api)
