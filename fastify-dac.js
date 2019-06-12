@@ -1,6 +1,7 @@
 const fp = require('fastify-plugin');
 const {loadConfig} = require('./functions');
 const tokenInfo = require('./tokens.json');
+const DacDirectory = require('./dac-directory');
 
 module.exports = fp((fastify, options, next) => {
     fastify.decorate('dac_name_cache', new Map());
@@ -9,6 +10,13 @@ module.exports = fp((fastify, options, next) => {
     });
     fastify.decorateRequest('dac', function () {
         return this.headers['x-dac-name'] || 'eos.dac';
+    });
+    fastify.decorateRequest('dac_directory', async function () {
+        const config = loadConfig();
+        const dac_directory = new DacDirectory({config, db:fastify.db});
+        await dac_directory.reload();
+
+        return dac_directory;
     });
     fastify.decorateRequest('dac_config', async function () {
         const global_config = loadConfig();
