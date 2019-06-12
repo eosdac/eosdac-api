@@ -25,7 +25,7 @@ async function getMsigProposals(fastify, request) {
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
 
-        const query = {status};
+        const query = {status, dac_id};
 
         try {
             const res = await collection.find(query).sort({block_num: -1}).skip(parseInt(skip)).limit(parseInt(limit));
