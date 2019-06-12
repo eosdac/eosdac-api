@@ -119,12 +119,18 @@ class DeltaHandler {
                                     const scope = sb.getName();
                                     const table = sb.getName();
 
+                                    const msig_contract = this.config.eos.msigContract || 'eosio.msig';
+
                                     if (table === 'accounts' && this.interested(scope)) {
                                         console.log(`Found interesting token balance change ${code}:${scope}:${table}`);
 
                                         await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
                                     }
+                                    else if (code == msig_contract && ['proposal', 'approvals', 'approvals2'].includes(table)){
+                                        console.log(`Queueing msig ${code}:${scope}:${table}`);
 
+                                        await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
+                                    }
                                 }
                             } catch (e) {
                                 console.error(`Error processing row.data for ${block_num} : ${e.message}`, e);
