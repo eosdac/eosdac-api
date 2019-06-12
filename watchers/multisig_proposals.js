@@ -410,7 +410,6 @@ class MultisigProposalsHandler {
             let doc;
             let count = 0;
             while (doc = await res.next()) {
-                console.log(doc.action.data.proposal_name);
                 this.recalcMsigs(doc);
                 count++;
             }
