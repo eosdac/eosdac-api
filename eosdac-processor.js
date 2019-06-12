@@ -68,12 +68,12 @@ class JobProcessor {
     async processedActionJob(job, doc) {
         console.log(`Processed action job, notifying watchers`);
         this.amq.then((amq) => {
-            amq.ack(job)
+            amq.ack(job);
         });
 
         watchers.forEach((watcher) => {
-            watcher.action(doc)
-        })
+            watcher.action({doc, dac_directory:this.dac_directory, db:this.db});
+        });
     }
 
     async processActionJob(job) {
@@ -251,9 +251,12 @@ class JobProcessor {
         this.contracts = this.config.eos.contracts;
 
         this.connectAmq();
-        this.connectDb();
+        await this.connectDb();
 
         this.delta_handler = new DeltaHandler({config: this.config, queue: this.amq});
+
+        this.dac_directory = new InterestedContracts({config: this.config, db:this.db});
+        await this.dac_directory.reload();
 
         if (cluster.isMaster) {
             console.log(`Starting processor with ${this.config.clusterSize} threads...`);
