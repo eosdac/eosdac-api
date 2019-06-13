@@ -14,6 +14,7 @@ const crypto = require('crypto');
 const {loadConfig} = require('./functions');
 const {arrayToHex} = require('eosjs/dist/eosjs-serialize');
 const watchers = require('./watchers');
+const DacDirectory = require('./dac-directory');
 
 
 class JobProcessor {
@@ -255,7 +256,7 @@ class JobProcessor {
 
         this.delta_handler = new DeltaHandler({config: this.config, queue: this.amq});
 
-        this.dac_directory = new InterestedContracts({config: this.config, db:this.db});
+        this.dac_directory = new DacDirectory({config: this.config, db:this.db});
         await this.dac_directory.reload();
 
         if (cluster.isMaster) {
