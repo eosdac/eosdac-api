@@ -6,8 +6,8 @@ const getProposalsSchema = {
         type: 'object',
         properties: {
             "status": {
-                description: 'Filter by current status',
-                type: 'integer'
+                description: 'Filter by status, for multiple separate with a comma',
+                type: 'string'
             },
             "arbitrator": {
                 description: 'Filter by arbitrator',

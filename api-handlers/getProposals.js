@@ -10,14 +10,14 @@ async function getProposals(fastify, request) {
         const dac_id = request.dac();
 
         const id = request.query.id || 0;
-        const status = request.query.status || 0;
+        const status = (request.query.status || '').split(',').map(parseInt);
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
         const arbitrator = request.query.arbitrator || null;
         const proposer = request.query.proposer || null;
         const proposals = {results: [], count: 0};
 
-        const query = {status, dac_id};
+        const query = {status:{$in:status}, dac_id};
         if (arbitrator){
             query.arbitrator = arbitrator;
         }
