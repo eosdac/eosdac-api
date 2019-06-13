@@ -7,6 +7,7 @@ async function proposalsInbox(fastify, request) {
     return new Promise(async (resolve, reject) => {
         const db = fastify.mongo.db;
         const collection = db.collection('workerproposals');
+        const dac_id = request.dac();
 
         const account = request.query.account;
         const skip = request.query.skip || 0;
@@ -15,9 +16,7 @@ async function proposalsInbox(fastify, request) {
         const query = {$or:[
                 {status: 0, approve_voted: {$ne:account}},
                 {status: 2, finalize_voted: {$ne:account}}
-            ]};
-
-        console.log(query);
+            ], dac_id};
 
         const proposals = {results:[], count:0};
 

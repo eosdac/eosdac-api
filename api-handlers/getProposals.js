@@ -7,6 +7,7 @@ async function getProposals(fastify, request) {
     return new Promise(async (resolve, reject) => {
         const db = fastify.mongo.db;
         const collection = db.collection('workerproposals');
+        const dac_id = request.dac();
 
         const id = request.query.id || 0;
         const status = request.query.status || 0;
@@ -16,7 +17,7 @@ async function getProposals(fastify, request) {
         const proposer = request.query.proposer || null;
         const proposals = {results: [], count: 0};
 
-        const query = {status};
+        const query = {status, dac_id};
         if (arbitrator){
             query.arbitrator = arbitrator;
         }

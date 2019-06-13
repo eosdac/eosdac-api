@@ -13,6 +13,7 @@ class InterestedContracts {
         this._auth_accounts = new Map();
         this._msig_contracts = new Map();
         this._custodian_contracts = new Map();
+        this._proposals_contracts = new Map();
 
         this.rpc = new JsonRpc(config.eos.endpoint, {fetch});
         this.api = new Api({
@@ -38,6 +39,7 @@ class InterestedContracts {
         this._msig_contracts = new Map();
         this._custodian_contracts = new Map();
         this._auth_accounts = new Map();
+        this._proposals_contracts = new Map();
 
         const res = await this.rpc.get_table_rows({
             code: this.config.eos.dacDirectoryContract,
@@ -59,6 +61,10 @@ class InterestedContracts {
                 else if (acnt.key === 0){ // auth
                     this._auth_accounts.set(row.dac_name, acnt.value);
                 }
+                else if (acnt.key === 6){ // proposals
+                    this._proposals_contracts.set(row.dac_name, acnt.value);
+                }
+
             });
         });
     }
@@ -73,6 +79,10 @@ class InterestedContracts {
 
     msig_contracts() {
         return this._msig_contracts;
+    }
+
+    proposals_contracts() {
+        return this._proposals_contracts;
     }
 
     has(value) {
