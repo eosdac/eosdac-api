@@ -135,8 +135,8 @@ class MultisigProposalsHandler {
     async recalcMsigs(doc) {
         // console.log('Recalc', doc)
 
-        const mongo = await this.db;
-        const db = mongo.db(this.config.mongo.dbName);
+        const db = await this.db;
+        // const db = mongo.db(this.config.mongo.dbName);
         const coll = db.collection('multisigs');
         const coll_actions = db.collection('actions');
 
