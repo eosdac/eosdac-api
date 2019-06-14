@@ -132,10 +132,9 @@ class MultisigProposalsHandler {
         })
     }
 
-    async recalcMsigs(doc) {
+    async recalcMsigs(doc, db) {
         // console.log('Recalc', doc)
 
-        const db = await this.db;
         // const db = mongo.db(this.config.mongo.dbName);
         const coll = db.collection('multisigs');
         const coll_actions = db.collection('actions');
@@ -383,7 +382,7 @@ class MultisigProposalsHandler {
             console.log('Reacting to msig action');
             // delay to wait for the state to update
             setTimeout((() => {
-                this.recalcMsigs(doc);
+                this.recalcMsigs(doc, db);
             }), 600)
         }
     }
@@ -410,7 +409,7 @@ class MultisigProposalsHandler {
             let doc;
             let count = 0;
             while (doc = await res.next()) {
-                this.recalcMsigs(doc);
+                this.recalcMsigs(doc, db);
                 count++;
             }
 
