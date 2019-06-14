@@ -149,7 +149,7 @@ class FillManager {
         } else if (this.test_block) {
             // const action_handler = new ActionHandler({queue: this.amq, config: this.config})
             // const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config})
-            const delta_handler = new DeltaHandler({queue: this.amq, config: this.config});
+            // const delta_handler = new DeltaHandler({queue: this.amq, config: this.config});
 
 
             console.log(`Testing single block ${this.test_block}`);
