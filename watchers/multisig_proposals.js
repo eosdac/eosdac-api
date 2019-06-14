@@ -380,13 +380,13 @@ class MultisigProposalsHandler {
         const msig_contracts = Array.from(dac_directory.msig_contracts().values());
 
         if (msig_contracts.includes(doc.action.account)) {
-            this.db = db;
+            this.db = await db;
             this.dac_directory = dac_directory;
 
             console.log('Reacting to msig action');
             // delay to wait for the state to update
             setTimeout((() => {
-                this.recalcMsigs(doc, db);
+                this.recalcMsigs(doc, this.db);
             }), 600)
         }
     }
