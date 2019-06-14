@@ -165,6 +165,8 @@ class MultisigProposalsHandler {
             dac_id = doc.action.data.dac_id = 'eos.dac';
         }
 
+        console.log(`Recalc proposal ${proposer}:${proposal_name} on DAC ${dac_id}`);
+
         const output = {
             block_num,
             block_timestamp,
@@ -375,7 +377,9 @@ class MultisigProposalsHandler {
     }
 
     async action({doc, dac_directory, db}) {
-        if (doc.action.account === this.dac_multisig_contract) {
+        const msig_contracts = Array.from(dac_directory.msig_contracts().values());
+
+        if (msig_contracts.includes(doc.action.account)) {
             this.db = db;
             this.dac_directory = dac_directory;
 
