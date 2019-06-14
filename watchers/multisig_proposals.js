@@ -263,6 +263,12 @@ class MultisigProposalsHandler {
             });
 
             if (!res_data.results.length) {
+                if (!retry){
+                    setTimeout(() => {
+                        this.recalcMsigs(doc, db, true);
+                    }, 5000);
+                }
+
                 console.error(`Could not find proposal in table`);
                 return;
             }
