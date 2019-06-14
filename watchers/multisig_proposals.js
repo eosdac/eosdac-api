@@ -132,7 +132,7 @@ class MultisigProposalsHandler {
         })
     }
 
-    async recalcMsigs(doc, db) {
+    async recalcMsigs(doc, db, retry=false) {
         // console.log('Recalc', doc)
 
         // const db = mongo.db(this.config.mongo.dbName);
@@ -152,7 +152,7 @@ class MultisigProposalsHandler {
                 'block_num': {$lt:doc.block_num}
             });
 
-            return this.recalcMsigs(doc_proposed);
+            return this.recalcMsigs(doc_proposed, db);
         }
 
         const block_num = doc.block_num;
@@ -195,7 +195,7 @@ class MultisigProposalsHandler {
             }
 
             output.title = metadata.title;
-            output.description = metadata.description
+            output.description = metadata.description;
         }
 
 
@@ -228,8 +228,13 @@ class MultisigProposalsHandler {
 
         const proposal = res_proposals.results[0];
         if (!proposal) {
+            if (!retry){
+                setTimeout(() => {
+                    this.recalcMsigs(doc, db, true);
+                }, 5000);
+            }
             console.error(`Error getting proposal ${proposal_name} from state`, data_query);
-            return
+            return;
         }
         // console.log(proposal.block_num, proposal.data.proposal_name, proposal.data.packed_transaction)
         output.trx = await this.api.deserializeTransactionWithActions(proposal.data.packed_transaction);
@@ -324,7 +329,7 @@ class MultisigProposalsHandler {
             // if the msig has ended then get the custodians at the time it ended
             const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
             let scope = dac_id;
-            if (dac_id == 'eos.dac'){
+            if (dac_id === 'eos.dac'){
                 scope = custodian_contract;
             }
             const custodian_query = {
@@ -387,7 +392,7 @@ class MultisigProposalsHandler {
             // delay to wait for the state to update
             setTimeout((() => {
                 this.recalcMsigs(doc, this.db);
-            }), 600)
+            }), 1000)
         }
     }
 
@@ -412,11 +417,13 @@ class MultisigProposalsHandler {
             }).sort({block_num: 1});
             let doc;
             let count = 0;
+            const recalcs = [];
             while (doc = await res.next()) {
-                this.recalcMsigs(doc, db);
+                recalcs.push(this.recalcMsigs(doc, db));
                 count++;
             }
 
+            await Promise.all(recalcs);
             console.log(`Imported ${count} multisig documents`);
         })
     }
