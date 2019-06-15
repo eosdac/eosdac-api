@@ -56,6 +56,9 @@ async function getMsigProposals(fastify, request) {
                             msig.requested_approvals = msig.requested_approvals.filter((req) => custodians.includes(req.actor));
                             msig.provided_approvals = msig.provided_approvals.filter((pro) => custodians.includes(pro.actor));
                         }
+                        if (status === 3) { // expired
+                            msig.status = 3;
+                        }
 
                         proposals.results.push(msig);
 
