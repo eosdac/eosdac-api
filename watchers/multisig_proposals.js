@@ -420,7 +420,7 @@ class MultisigProposalsHandler {
             const res = collection_actions.find({
                 'action.account': {$in: Array.from(this.dac_directory.msig_contracts().values())},
                 'action.name': {$in:['proposed', 'proposede']}
-            }).sort({block_num: 1});
+            }).sort({block_num: -1}).limit(1000);
             let doc;
             let count = 0;
             const recalcs = [];
