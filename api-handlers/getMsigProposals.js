@@ -26,7 +26,10 @@ async function getMsigProposals(fastify, request) {
 
         const now = new Date();
 
-        const query = {status, dac_id, expiration:{$gt:now}};
+        const query = {status, dac_id};
+        if (status === 1){ // open
+            query.expiration = {$gt:now};
+        }
         if (status === 3){ // expired
             delete query.status;
             query.expiration = {$lt:now};
