@@ -18,31 +18,35 @@ async function getMsigProposals(fastify, request) {
 
         // Get current custodians
         const custodian_query = {code:custodian_contract, scope, table:'custodians', limit:100};
-        const custodian_res = await api.rpc.get_table_rows(custodian_query);
-        const custodians = custodian_res.rows.map((row) => row.cust_name);
+        const custodian_res = api.rpc.get_table_rows(custodian_query);
 
         const status = request.query.status || 0;
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
 
-        const query = {status, dac_id};
+        const now = new Date();
+
+        const query = {status, dac_id, expiration:{$gt:now}};
+        if (status === 3){ // expired
+            delete query.status;
+            query.expiration = {$lt:now};
+        }
 
         try {
-            const res = await collection.find(query).sort({block_num: -1}).skip(parseInt(skip)).limit(parseInt(limit));
+            const res = collection.find(query).sort({block_num: -1}).skip(parseInt(skip)).limit(parseInt(limit));
 
-            const proposals = {results: [], count: 0};
-            let update_expired = false;
-            const now = new Date();
-            const count = await res.count();
+            Promise.all([custodian_res, res]).then(async (responses) => {
+                let [custodian_res, res] = responses;
 
-            if (count === 0) {
-                resolve(proposals);
-            } else {
-                res.forEach((msig) => {
-                    if (status === 1 && msig.expiration <= now){ // open and expired
-                        update_expired = true;
-                    }
-                    else {
+                const custodians = custodian_res.rows.map((row) => row.cust_name);
+                const count = await res.count();
+
+                const proposals = {results: [], count: count};
+
+                if (count === 0) {
+                    resolve(proposals);
+                } else {
+                    res.forEach((msig) => {
                         delete msig._id;
 
                         if (msig.status === 1){ // open
@@ -51,16 +55,13 @@ async function getMsigProposals(fastify, request) {
                         }
 
                         proposals.results.push(msig);
-                    }
-                }, async () => {
-                    proposals.count = count;
-                    resolve(proposals);
 
-                    if (update_expired){
-                        collection.updateMany({status:1, expiration: {$lt:now}}, {$set:{status:3}});
-                    }
-                })
-            }
+                    }, async () => {
+                        resolve(proposals);
+                    })
+                }
+            });
+
         } catch (e) {
             reject(e);
         }
