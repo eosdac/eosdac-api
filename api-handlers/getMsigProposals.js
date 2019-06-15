@@ -31,7 +31,7 @@ async function getMsigProposals(fastify, request) {
             query.expiration = {$gt:now};
         }
         if (status === 3){ // expired
-            delete query.status;
+            query.status = {$ne:0};
             query.expiration = {$lt:now};
         }
 
