@@ -41,7 +41,7 @@ async function getMsigProposals(fastify, request) {
             Promise.all([custodian_res, res]).then(async (responses) => {
                 let [custodian_res, res] = responses;
 
-                const custodians = custodian_res.rows.map((row) => row.cust_name);
+                const current_custodians = custodian_res.rows.map((row) => row.cust_name);
                 const count = await res.count();
 
                 const proposals = {results: [], count: count};
@@ -51,11 +51,19 @@ async function getMsigProposals(fastify, request) {
                 } else {
                     res.forEach((msig) => {
                         delete msig._id;
+                        let custodians;
 
-                        if (msig.status === 1){ // open
-                            msig.requested_approvals = msig.requested_approvals.filter((req) => custodians.includes(req.actor));
-                            msig.provided_approvals = msig.provided_approvals.filter((pro) => custodians.includes(pro.actor));
+                        if (status === 1){
+                            // current custodians
+                            custodians = current_custodians;
                         }
+                        else {
+                            custodians = msig.custodians;
+                        }
+
+                        msig.requested_approvals = msig.requested_approvals.filter((req) => custodians.includes(req.actor));
+                        msig.provided_approvals = msig.provided_approvals.filter((pro) => custodians.includes(pro.actor));
+
                         if (status === 3) { // expired
                             msig.status = 3;
                         }

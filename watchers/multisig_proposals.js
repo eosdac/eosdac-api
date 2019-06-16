@@ -331,25 +331,29 @@ class MultisigProposalsHandler {
 
         // Get current custodians
         let custodians = [];
-        if (end_block){
-            // if the msig has ended then get the custodians at the time it ended
-            const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
-            let scope = dac_id;
-            if (dac_id === 'eos.dac'){
-                scope = custodian_contract;
-            }
-            const custodian_query = {
-                db,
-                code: custodian_contract,
-                scope,
-                table: 'custodians',
-                block_num: end_block,
-                limit:100
-            };
-            const custodian_res = await eosTableAtBlock(custodian_query);
-
-            custodians = custodian_res.results.map((row) => row.data.cust_name);
+        // if the msig has ended then get the custodians at the time it ended
+        const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
+        let scope = dac_id;
+        if (dac_id === 'eos.dac'){
+            scope = {$in:[custodian_contract, dac_id]};
         }
+        const custodian_query = {
+            db,
+            code: custodian_contract,
+            scope,
+            table: 'custodians',
+            limit:100
+        };
+
+        if (end_block){
+            custodian_query.block_num = end_block;
+        }
+
+        const custodian_res = await eosTableAtBlock(custodian_query);
+
+        custodians = custodian_res.results.map((row) => row.data.cust_name);
+
+        output.custodians = custodians;
 
 
         // Get the latest provided approvals
@@ -368,19 +372,15 @@ class MultisigProposalsHandler {
             output.provided_approvals = []
         }
 
-        // only include custodians (if the msig is current then they are modified in the api)
-        if (end_block){
-            output.provided_approvals = output.provided_approvals.filter((approval) => custodians.includes(approval.actor));
-        }
+        // only include custodians
+        // output.provided_approvals = output.provided_approvals.filter((approval) => custodians.includes(approval.actor));
 
         // remove provided approvals from requested approvals
         console.log('requested', output.requested_approvals);
         const provided_actors = output.provided_approvals.map((pro) => pro.actor);
         output.requested_approvals = output.requested_approvals.filter((req) => !provided_actors.includes(req.actor));
         // only include custodians (if the msig is current then they are modified in the api)
-        if (end_block){
-            output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
-        }
+        // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
         // console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, output);
         return await coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
