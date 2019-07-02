@@ -59,7 +59,7 @@ async function memberSnapshot(fastify, request) {
 
             const account_match = {code: contract, table: 'accounts'};
             if (block_num) {
-                account_match.block_num = {$lte: MongoLong.fromString(block_num)}
+                account_match.block_num = {$lte: new MongoLong(block_num)}
             }
 
             col.aggregate([
