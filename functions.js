@@ -16,7 +16,7 @@ function loadConfig() {
 async function getRestartBlock() {
     const config = loadConfig();
     const mongo = await connectMongo(config);
-    console.log(`Getting restart block from ${config.mongo.dbName}`);
+    //
     const coll_actions = mongo.db(config.mongo.dbName).collection('actions');
     const coll_contract_rows = mongo.db(config.mongo.dbName).collection('contract_rows');
 
@@ -35,7 +35,9 @@ async function getRestartBlock() {
 
     const block = Math.min(actions_block, contract_rows_block);
 
-    console.log(`Got restart block ${block}`);
+    if (block > 1){
+        console.log(`Getting restart block from ${config.mongo.dbName}, ${block}`);
+    }
 
     return block
 }

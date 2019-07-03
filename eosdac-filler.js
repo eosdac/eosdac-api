@@ -54,7 +54,6 @@ class FillManager {
         let start_block = this.start_block;
         if (start_block === -1) {
             start_block = await getRestartBlock();
-            console.log(`Starting from block ${start_block}, LIB is ${lib}`)
         }
 
         // If replay is set then we start from block 0 in parallel and then start a serial handler from lib onwards
@@ -173,7 +172,7 @@ class FillManager {
                 console.log(`Starting block_range listener only`);
 
                 for (let i = 0; i < this.config.fillClusterSize; i++) {
-                    cluster.fork()
+                    cluster.fork();
                 }
             } else {
                 this.amq = RabbitSender.init(this.config.amq);
@@ -191,7 +190,7 @@ class FillManager {
                 }
             }
 
-            console.log(`No replay, starting at block ${start_block}`);
+            console.log(`No replay, starting from block ${start_block}, LIB is ${lib}`);
 
             this.br = new StateReceiver({startBlock: start_block, mode: 0, config: this.config});
             this.br.registerTraceHandler(block_handler);
