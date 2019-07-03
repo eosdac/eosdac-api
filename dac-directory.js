@@ -23,6 +23,10 @@ class InterestedContracts {
             textDecoder: new TextDecoder(),
             textEncoder: new TextEncoder(),
         });
+
+        if (!this.config.eos.dacDirectoryContract){
+            throw new Error('You must specify eos.dacDirectoryContract in config');
+        }
     }
 
     add(account, dac_name) {
