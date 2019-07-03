@@ -51,6 +51,10 @@ class InterestedContracts {
             table: 'dacs'
         });
 
+        if (res.rows.length === 0){
+            throw new Error(`DAC not found in directory`);
+        }
+
         res.rows.forEach((row) => {
             row.accounts.forEach((acnt) => {
                 // console.log(`Adding ${acnt} to set`);
