@@ -76,9 +76,11 @@ class DeltaHandler {
     }
 
 
-    async queueDelta(block_num, deltas, abi, block_timestamp) {
+    async queueDelta(block_num, deltas, types, block_timestamp) {
         // const data = {block_num, deltas, abi};
         // this.queue.create('block_deltas', data).removeOnComplete(true).save()
+
+        console.log(`Queue delta for ${block_num}`);
 
         for (const delta of deltas) {
             // console.log(delta)
@@ -126,7 +128,7 @@ class DeltaHandler {
 
                                         await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
                                     }
-                                    else if (code == msig_contract && ['proposal', 'approvals', 'approvals2'].includes(table)){
+                                    else if (code === msig_contract && ['proposal', 'approvals', 'approvals2'].includes(table)){
                                         console.log(`Queueing msig ${code}:${scope}:${table}`);
 
                                         await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
@@ -136,6 +138,46 @@ class DeltaHandler {
                                 console.error(`Error processing row.data for ${block_num} : ${e.message}`, e);
                             }
                         }
+                    }
+                    else if (delta[1].name === 'generated_transaction') {
+                        // console.log(`Found generated transaction`);
+                        for (const row of delta[1].rows) {
+                            const type = types.get(delta[1].name);
+                            const data_sb = new Serialize.SerialBuffer({
+                                textEncoder: new TextEncoder,
+                                textDecoder: new TextDecoder,
+                                array: row.data
+                            });
+                            const data = type.deserialize(data_sb, new Serialize.SerializerState({ bytesAsUint8Array: true }));
+                            if (data[1].sender === this.config.eos.msigContract){
+                                // Deferred transaction from msig execute, check if it is one of ours
+
+                                const packed = new Uint8Array(Object.values(data[1].packed_trx));
+                                const type_trx = types.get('transaction');
+                                const sb_trx = new Serialize.SerialBuffer({
+                                    textEncoder: new TextEncoder,
+                                    textDecoder: new TextDecoder,
+                                    array: packed
+                                });
+                                const data_trx = type_trx.deserialize(sb_trx, new Serialize.SerializerState({ bytesAsUint8Array: true }));
+
+                                action_loop:
+                                for (let a=0;a<data_trx.actions.length;a++){
+                                    const act = data_trx.actions[a];
+                                    for (let z=0;z<act.authorization.length;z++){
+                                        const auth = act.authorization[z];
+                                        if (this.interested(auth.actor)){
+                                            console.log(`Queuing deferred transaction from msig (actor : ${auth.actor})`);
+                                            await this.queueDeltaRow('generated_transaction', block_num, row, block_timestamp);
+                                            break action_loop;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        console.log(`Not interested in ${delta[1].name}`);
                     }
                     break
             }
@@ -170,7 +212,7 @@ class DeltaHandler {
     }
 
 
-    interested(account, name) {
+    interested(account) {
         return this.dac_directory.has(account);
     }
 }
