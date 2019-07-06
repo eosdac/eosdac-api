@@ -308,6 +308,10 @@ class MultisigProposalsHandler {
                 case 'executed':
                 case 'executede':
                     output.status = MultisigProposalsHandler.STATUS_EXECUTED;
+
+                    // add executor to the data
+                    output.executer = ca.action.data.executer;
+                    output.executed_trxid = ca.trx_id;
                     break;
                 case 'clean':
                 case 'cleane':
