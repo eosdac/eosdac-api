@@ -18,9 +18,6 @@ class MultisigProposalsHandler {
         this.db = connectMongo(config);
 
         this.msig_contract = config.eos.msigContract || 'eosio.msig';
-        this.auth_account = config.eos.authContract || 'dacauthority';
-        this.custodian_contract = config.eos.custodianContract || 'daccustodian';
-        this.dac_multisig_contract = config.eos.dacMsigContract || 'dacmultisigs';
 
         this.dac_config = null;
 
@@ -37,12 +34,17 @@ class MultisigProposalsHandler {
     async thresholdFromName(name, dac_id){
         // console.log(`Getting threshold ${name} for ${dac_id}`);
         return new Promise(async (resolve, reject) => {
-                const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
-                const scope = (dac_id === 'eos.dac')?custodian_contract:dac_id;
+            const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
+            const scope = dac_id;
+            const table_rows_req = {code:custodian_contract, scope, table:'config2'};
+            const dac_config_res = await this.api.rpc.get_table_rows(table_rows_req);
+            const dac_config = dac_config_res.rows[0];
 
-                const table_rows_req = {code:custodian_contract, scope, table:'config'};
-                const dac_config_res = await this.api.rpc.get_table_rows(table_rows_req);
-                const dac_config = dac_config_res.rows[0];
+            if (!dac_config){
+                console.log(`DAC config not found`, table_rows_req, dac_id);
+                reject(`Could not find dac config for ${dac_id} "${name}"`);
+                return;
+            }
 
             switch (name) {
                 case 'low':
