@@ -7,17 +7,23 @@ async function memberSnapshot(fastify, request) {
     return new Promise(async (resolve, reject) => {
         const db = fastify.mongo.db;
         const dac_config = await request.dac_config();
+        const dac_id = request.dac();
 
         const contract = request.query.contract || dac_config.accounts.get(4);
         const symbol = request.query.symbol || 'EOSDAC';
         const block_num = request.query.block_num || null;
         const sort_col = request.query.sort || 'account';
 
-        console.log(`Generating snapshot for ${symbol}@${contract} on block ${block_num}`);
+        console.log(`Generating snapshot for ${symbol}@${contract} on block ${block_num} with dac_id ${dac_id}`);
 
         const col = db.collection('contract_rows');
 
-        const match = {code: contract, scope:contract, table: 'members'};
+        const match = {code: contract, scope: dac_id, table: 'members'};
+
+        if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
+            match.scope = {$in: [dac_id, contract]};
+        }
+
         if (block_num) {
             match.block_num = {$lte: new MongoLong(block_num)}
         }
@@ -100,13 +106,12 @@ async function memberSnapshot(fastify, request) {
 
                         // console.log(members[account].terms)
                         if (members[account].balance !== null) {
-                            let [bal, cur] = members[account].balance.split(' ');
-                            if (parseFloat(bal) >= 1) {
-                                console.log(`${account},${bal} ${cur}`);
-                                output.push({account, balance: bal + ' ' + cur, terms: members[account].terms})
+                            let [bal, sym] = members[account].balance.split(' ');
+                            if (parseFloat(bal) >= 1 && sym === symbol) {
+                                console.log(`${account},${bal} ${sym}`);
+                                output.push({account, balance: bal + ' ' + sym, terms: members[account].terms})
                             }
                         }
-
                     }
 
                     let sorter;
