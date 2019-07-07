@@ -80,7 +80,7 @@ class DeltaHandler {
         // const data = {block_num, deltas, abi};
         // this.queue.create('block_deltas', data).removeOnComplete(true).save()
 
-        console.log(`Queue delta for ${block_num}`);
+        // console.log(`Queue delta for ${block_num}`);
 
         for (const delta of deltas) {
             // console.log(delta)
@@ -175,9 +175,6 @@ class DeltaHandler {
                                 }
                             }
                         }
-                    }
-                    else {
-                        console.log(`Not interested in ${delta[1].name}`);
                     }
                     break
             }
