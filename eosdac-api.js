@@ -25,6 +25,7 @@ fastify.register(require('fastify-mongodb'), {
 
 fastify.register(require('./fastify-eos'), config);
 fastify.register(require('./fastify-dac'), {});
+fastify.register(require('./fastify-config'), config);
 
 fastify.register(require('fastify-cors'), {
     allowedHeaders: 'Content-Type,X-DAC-Name',
