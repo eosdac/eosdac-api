@@ -14,7 +14,7 @@ async function getMsigProposals(fastify, request) {
         const collection = db.collection('multisigs');
 
         const custodian_contract = dac_directory._custodian_contracts.get(dac_id);
-        const scope = (dac_id == 'eos.dac')?custodian_contract:dac_id;
+        const scope = dac_id;
 
         // Get current custodians
         const custodian_query = {code:custodian_contract, scope, table:'custodians', limit:100};
