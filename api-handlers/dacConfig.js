@@ -23,20 +23,18 @@ async function getDacConfig(fastify, request) {
             textEncoder: new TextEncoder(),
         });
 
+        const dac_id = request.dac();
         const dac_config_original = await request.dac_config();
-        // const dac_config = await request.dac_config();
         const dac_config = {
             dac_name: dac_config_original.dac_name,
             owner: dac_config_original.owner,
             symbol: dac_config_original.symbol,
             title: dac_config_original.title,
         };
-        // console.log('dac_config', dac_config);
         dac_config.config = {};
         const cust_contract = dac_config_original.accounts.get(2);
-        const token_contract = dac_config_original.accounts.get(4);
 
-        const cust_req = {code:cust_contract, scope:cust_contract, table:'config', limit:1};
+        const cust_req = {code:cust_contract, scope:dac_id, table:'config2', limit:1};
         const cust_res = await api.rpc.get_table_rows(cust_req);
 
         if (cust_res.rows.length){
@@ -45,19 +43,6 @@ async function getDacConfig(fastify, request) {
         else {
             reject('DAC config not found');
         }
-
-
-
-        const token_req = {code: token_contract, scope: token_contract, table: 'config', limit: 1};
-        const token_res = await api.rpc.get_table_rows(token_req);
-
-        if (token_res.rows.length){
-            dac_config.config.token = token_res.rows[0];
-        }
-        else {
-            reject('DAC token config not found');
-        }
-
 
         // convert from map to something fastify can understand
         const refs = new Map(dac_config_original.refs);
@@ -68,9 +53,7 @@ async function getDacConfig(fastify, request) {
         // console.log(dac_config);
 
         resolve(dac_config);
-    })
-
-
+    });
 }
 
 
