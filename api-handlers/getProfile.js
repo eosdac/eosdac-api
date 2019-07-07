@@ -24,8 +24,15 @@ async function getProfile(fastify, request) {
     const collection = db.collection('actions');
 
     const cust_contract = dac_config.accounts.get(2);
+    const dac_id = request.dac();
 
-    const query = {"action.account": cust_contract, "action.name": "stprofileuns", "action.data.cand": {$in: accounts}};
+    const query = {"action.account": cust_contract, "action.name": "stprofileuns", "action.data.dac_id":dac_id, "action.data.cand": {$in: accounts}};
+
+    if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
+        console.log(`Got legacy dac ${dac_id}`);
+        query['action.data.dac_id'] = {$in: [dac_id, null]};
+        query['action.name'] = {$in: ['stprofileuns', 'stprofile']};
+    }
 
     const pipeline = [
         {$match: query},
@@ -55,7 +62,7 @@ async function getProfile(fastify, request) {
     result.results = result.results.map((row) => {
         // console.log(row.profile)
         if (typeof row.profile === 'string') {
-            row.profile = JSON.parse(row.profile)
+            row.profile = JSON.parse(row.profile);
         }
         delete row._id;
 
