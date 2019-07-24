@@ -10,6 +10,8 @@ const config = loadConfig();
 const {eosTableAtBlock} = require('../eos-table');
 const DacDirectory = require('../dac-directory');
 
+const MsigTypes = require('../msig-types');
+
 
 class MultisigProposalsHandler {
 
@@ -108,6 +110,75 @@ class MultisigProposalsHandler {
             }
         })
 
+    }
+
+    async getTrxType(trx, dac_id){
+
+        return new Promise(async (resolve, reject) => {
+            let type = MsigTypes.TYPE_UNKNOWN;
+            if (!trx || !trx.actions) {
+                console.error(`Bad transaction`, trx);
+                reject(new Error('Bad transaction'));
+            }
+
+            for (let a = 0; a < trx.actions.length; a++) {
+                const act = trx.actions[a];
+
+                switch (act.name){
+                    case  'transfer':
+                        type = MsigTypes.TYPE_TRANSFER;
+                        break;
+                    case  'newaccount':
+                        type = MsigTypes.TYPE_NEWACCOUNT;
+                        break;
+                    case  'setcode':
+                        type = MsigTypes.TYPE_CODE;
+                        break;
+                    case  'updateauth':
+                    case  'linkauth':
+                    case  'unlinkauth':
+                        type = MsigTypes.TYPE_DAC_OPS;
+                        break;
+                    case 'newmemterms':
+                    case 'newmemtermse':
+                        type = MsigTypes.TYPE_TERMS;
+                        break;
+                    case 'updateconfig':
+                    case 'updateconfige':
+                        type = MsigTypes.TYPE_CONFIG;
+                        break;
+                    case 'firecust':
+                    case 'firecand':
+                    case 'firecuste':
+                    case 'firecande':
+                        type = MsigTypes.TYPE_CUSTODIAN;
+                        break;
+                }
+
+                switch (act.account){
+                    case 'decentiummmm':
+                    case 'decentiumorg':
+                    case 'eosio.forum':
+                        type = MsigTypes.TYPE_COMMS;
+                        break;
+                    case this.dac_directory._custodian_contracts.get(dac_id):
+                        if (type === MsigTypes.TYPE_UNKNOWN){
+                            type = MsigTypes.TYPE_DAC_OPS;
+                        }
+                        break;
+                }
+
+                if (type !== MsigTypes.TYPE_UNKNOWN){
+                    break;
+                }
+            }
+
+            if (type === MsigTypes.TYPE_UNKNOWN){
+                console.log(`Getting type from `, trx);
+            }
+
+            resolve(type);
+        });
     }
 
     async getTrxThreshold(trx, dac_id) {
@@ -285,6 +356,7 @@ class MultisigProposalsHandler {
         // We have the transaction data, now get approvals
         // Get threshold
         output.threshold = await this.getTrxThreshold(output.trx, dac_id);
+        output.type = await this.getTrxType(output.trx, dac_id);
         output.expiration = new Date(output.trx.expiration);
 
 
@@ -388,7 +460,7 @@ class MultisigProposalsHandler {
         // only include custodians (if the msig is current then they are modified in the api)
         // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
-        // console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, output);
+        console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, output);
         return await coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
 
     }

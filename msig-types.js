@@ -1,0 +1,11 @@
+module.exports = {
+    TYPE_TRANSFER: 1,
+    TYPE_NEWACCOUNT: 2,
+    TYPE_CONFIG: 3,
+    TYPE_COMMS: 4,
+    TYPE_CODE: 5,
+    TYPE_CUSTODIAN: 6,
+    TYPE_DAC_OPS: 7,
+    TYPE_TERMS: 8,
+    TYPE_UNKNOWN: 99
+};
