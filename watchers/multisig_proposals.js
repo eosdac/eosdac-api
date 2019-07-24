@@ -4,6 +4,7 @@ const {loadConfig} = require('../functions');
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc} = require('eosjs');
 const fetch = require('node-fetch');
+const zlib = require('zlib');
 
 const config = loadConfig();
 
@@ -310,7 +311,13 @@ class MultisigProposalsHandler {
             return;
         }
         // console.log(proposal.block_num, proposal.data.proposal_name, proposal.data.packed_transaction)
-        output.trx = await this.api.deserializeTransactionWithActions(proposal.data.packed_transaction);
+        try {
+            output.trx = await this.api.deserializeTransactionWithActions(proposal.data.packed_transaction);
+        }
+        catch (e){
+            console.error(`Could not deserialise transaction for ${proposal.data.proposal_name}`);
+            return;
+        }
 
         // get the trxid stored in the dacmultisigs table
         const local_data_query = {
