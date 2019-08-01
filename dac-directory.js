@@ -3,12 +3,13 @@ const {Api, JsonRpc} = require('eosjs');
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const fetch = require('node-fetch');
 
-class InterestedContracts {
+class DacDirectory {
     constructor({config, db}){
         this.interested_queue = new Map;
         this.config = config;
         this.db = db;
-        this.interested_timeout = null;
+        this.mode = config.eos.dacDirectoryMode || 'all';
+        this.dac_id = config.eos.dacDirectoryDacId || '';
         this.interested_contracts = new Set();
         this._auth_accounts = new Map();
         this._msig_contracts = new Map();
@@ -24,8 +25,11 @@ class InterestedContracts {
             textEncoder: new TextEncoder(),
         });
 
-        if (!this.config.eos.dacDirectoryContract){
+        if (!this.config.eos.dacDirectoryContract && config.mode !== 'single'){
             throw new Error('You must specify eos.dacDirectoryContract in config');
+        }
+        else if (this.mode === 'single' && !this.dac_id){
+            throw new Error('If you specify eos.dacDirectoryMode "single" then you must also supply eos.dacDirectoryDacId');
         }
     }
 
@@ -45,11 +49,21 @@ class InterestedContracts {
         this._auth_accounts = new Map();
         this._proposals_contracts = new Map();
 
-        const res = await this.rpc.get_table_rows({
+        const query_data = {
             code: this.config.eos.dacDirectoryContract,
             scope: this.config.eos.dacDirectoryContract,
-            table: 'dacs'
-        });
+            table: 'dacs',
+            limit: 1000
+        };
+
+        if (this.mode === 'single'){
+            query_data.lower_bound = this.dac_id;
+            query_data.upper_bound = this.dac_id;
+            query_data.limit = 1;
+        }
+
+
+        const res = await this.rpc.get_table_rows(query_data);
 
         if (res.rows.length === 0){
             throw new Error(`DAC not found in directory`);
@@ -75,6 +89,7 @@ class InterestedContracts {
 
             });
         });
+
     }
 
     auth_accounts() {
@@ -98,4 +113,4 @@ class InterestedContracts {
     }
 }
 
-module.exports = InterestedContracts;
+module.exports = DacDirectory;
