@@ -152,6 +152,16 @@ class JobProcessor {
         })
     }
 
+    async processTransactionRow(job){
+        const sb = new Serialize.SerialBuffer({
+            textEncoder: new TextEncoder,
+            textDecoder: new TextDecoder,
+            array: new Uint8Array(job.content)
+        });
+
+
+    }
+
     async processContractRow(job) {
         const sb = new Serialize.SerialBuffer({
             textEncoder: new TextEncoder,
@@ -249,8 +259,6 @@ class JobProcessor {
 
 
     async start() {
-        this.contracts = this.config.eos.contracts;
-
         this.connectAmq();
         await this.connectDb();
 
@@ -270,6 +278,7 @@ class JobProcessor {
             const self = this;
             this.amq.then((amq) => {
                 amq.listen('contract_row', self.processContractRow.bind(self));
+                amq.listen('generated_transaction', self.processTransactionRow.bind(self));
                 amq.listen('action', self.processActionJob.bind(self))
             })
         }
