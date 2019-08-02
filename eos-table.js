@@ -4,6 +4,7 @@ const {loadConfig} = require('./functions');
 
 async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 100, data_query = {}, block_num = -1, exclude_scope = false}) {
     return new Promise(async (resolve, reject) => {
+        const col = db.collection('contract_rows');
 
         const pipeline_id = {code: "$code", table: "$table", primary_key: "$primary_key"};
 
