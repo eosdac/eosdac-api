@@ -103,6 +103,9 @@ async function memberSnapshot(fastify, request) {
 
         // Get candidates and add stake
         const candidates_match = {db, code: custodian_contract, scope: dac_id, table: 'candidates', limit:1000};
+        if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
+            candidates_match.scope = {$in: [dac_id, custodian_contract]};
+        }
         if (block_num) {
             candidates_match.block_num = {$lte: new MongoLong(block_num)}
         }
@@ -112,7 +115,13 @@ async function memberSnapshot(fastify, request) {
             if (members.has(custodian.data.candidate_name)){
                 const member_data = members.get(custodian.data.candidate_name);
                 const stake = custodian.data.locked_tokens.split(' ');
-                member_data.balance[0] = (parseFloat(member_data.balance[0]) + parseFloat(stake[0])).toFixed(precision);
+                if (!member_data.balance){
+                    member_data.balance = stake;
+                }
+                else {
+                    member_data.balance[0] = (parseFloat(member_data.balance[0]) + parseFloat(stake[0])).toFixed(precision);
+                }
+
                 members.set(custodian.data.candidate_name, member_data);
             }
         });
