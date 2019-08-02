@@ -2,15 +2,17 @@ const MongoLong = require('mongodb').Long;
 const connectMongo = require('./connections/mongo');
 const {loadConfig} = require('./functions');
 
-async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 100, data_query = {}, block_num = -1}) {
+async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 100, data_query = {}, block_num = -1, exclude_scope = false}) {
     return new Promise(async (resolve, reject) => {
-        const config = loadConfig();
 
-        const col = db.collection('contract_rows');
+        const pipeline_id = {code: "$code", table: "$table", primary_key: "$primary_key"};
 
         let match = {code, table};
         if (scope) {
-            match.scope = scope
+            match.scope = scope;
+        }
+        if (!exclude_scope){
+            pipeline_id.scope = "$scope";
         }
         if (block_num > -1) {
             match.block_num = {$lte: MongoLong.fromString(block_num + '')}
@@ -28,7 +30,7 @@ async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 1
             {'$sort': {block_num: -1, present:-1}},
             {
                 '$group': {
-                    _id: {code: "$code", table: "$table", scope: "$scope", primary_key: "$primary_key"},
+                    _id: pipeline_id,
                     block_num: {'$first': "$block_num"},
                     data: {'$first': "$data"},
                     table: {'$first': "$table"},
