@@ -8,7 +8,7 @@ async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 1
 
         const col = db.collection('contract_rows');
 
-        let match = {code: code, table: table};
+        let match = {code, table};
         if (scope) {
             match.scope = scope
         }
