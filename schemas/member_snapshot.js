@@ -18,7 +18,7 @@ const memberSnapshotSchema = {
                 type: 'integer'
             }
         },
-        required: ['contract']
+        required: []
     },
     response: {
         200: {
