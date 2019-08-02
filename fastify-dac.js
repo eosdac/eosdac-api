@@ -9,7 +9,8 @@ module.exports = fp((fastify, options, next) => {
         return this.dac_name_cache.get(dac_name);
     });
     fastify.decorateRequest('dac', function () {
-        return this.headers['x-dac-name'] || 'eos.dac';
+        const config = loadConfig();
+        return this.headers['x-dac-name'] || config.eos.legacyDacs[0];
     });
     fastify.decorateRequest('dac_directory', async function () {
         const config = loadConfig();
@@ -39,11 +40,16 @@ module.exports = fp((fastify, options, next) => {
                 const row = res.rows[0];
                 if (row.dac_name === dac_name){
                     const account_map = new Map();
-                    row.accounts = row.accounts.forEach((acnt) => {
+                    row.accounts.forEach((acnt) => {
                         account_map.set(acnt.key, acnt.value);
                     });
-                    // console.log(account_map);
                     row.accounts = account_map;
+
+                    const ref_map = new Map();
+                    row.refs.forEach((ref) => {
+                        ref_map.set(ref.key, ref.value);
+                    });
+                    row.refs = ref_map;
                     fastify.dac_name_cache.set(dac_name, row);
 
                     return row;
