@@ -75,16 +75,16 @@ class DacDirectory {
                 this.interested_contracts.add(acnt.value);
 
                 if (acnt.key === 3){ // multisig
-                    this._msig_contracts.set(row.dac_name, acnt.value);
+                    this._msig_contracts.set(row.dac_id, acnt.value);
                 }
                 else if (acnt.key === 2){ // custodian
-                    this._custodian_contracts.set(row.dac_name, acnt.value);
+                    this._custodian_contracts.set(row.dac_id, acnt.value);
                 }
                 else if (acnt.key === 0){ // auth
-                    this._auth_accounts.set(row.dac_name, acnt.value);
+                    this._auth_accounts.set(row.dac_id, acnt.value);
                 }
                 else if (acnt.key === 6){ // proposals
-                    this._proposals_contracts.set(row.dac_name, acnt.value);
+                    this._proposals_contracts.set(row.dac_id, acnt.value);
                 }
 
             });

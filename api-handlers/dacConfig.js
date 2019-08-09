@@ -26,7 +26,7 @@ async function getDacConfig(fastify, request) {
         const dac_id = request.dac();
         const dac_config_original = await request.dac_config();
         const dac_config = {
-            dac_name: dac_config_original.dac_name,
+            dac_id: dac_config_original.dac_id,
             owner: dac_config_original.owner,
             symbol: dac_config_original.symbol,
             title: dac_config_original.title,
