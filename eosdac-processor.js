@@ -129,8 +129,6 @@ class JobProcessor {
             global_sequence: MongoLong.fromString(global_sequence)
         };
 
-        this.logger.info(doc);
-
         const self = this;
 
         this.db.then((db) => {
