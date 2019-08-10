@@ -281,7 +281,7 @@ class JobProcessor {
             const self = this;
             this.amq.then((amq) => {
                 amq.listen('contract_row', self.processContractRow.bind(self));
-                amq.listen('generated_transaction', self.processTransactionRow.bind(self));
+                // amq.listen('generated_transaction', self.processTransactionRow.bind(self));
                 amq.listen('action', self.processActionJob.bind(self))
             })
         }
