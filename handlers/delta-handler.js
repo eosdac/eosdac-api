@@ -140,7 +140,7 @@ class DeltaHandler {
                             }
                         }
                     }
-                    else if (delta[1].name === 'generated_transaction') {
+                    /*else if (delta[1].name === 'generated_transaction') {
                         // this.logger.info(`Found generated transaction`);
                         for (const row of delta[1].rows) {
                             const type = types.get(delta[1].name);
@@ -176,7 +176,7 @@ class DeltaHandler {
                                 }
                             }
                         }
-                    }
+                    }*/
                     break
             }
         }
