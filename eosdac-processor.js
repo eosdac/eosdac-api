@@ -100,7 +100,7 @@ class JobProcessor {
         const name = sb.getName();
         const data = sb.getBytes();
 
-        this.logger.info('Process action ${block_num} ${account} ${name} ${recv_sequence} ${global_sequence}');
+        this.logger.info(`Process action ${block_num} ${account} ${name} ${recv_sequence} ${global_sequence}`);
 
         const action = {account, name, data};
 
