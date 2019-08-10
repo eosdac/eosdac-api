@@ -38,7 +38,7 @@ class FillManager {
 
         console.log(`Loading config ${this.config.name}.config.js`);
 
-        this.logger = require('./connections/logger')('eosdac-filler', config.logger);
+        this.logger = require('./connections/logger')('eosdac-filler', this.config.logger);
     }
 
     async run() {
