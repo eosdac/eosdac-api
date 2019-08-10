@@ -46,8 +46,6 @@ class DacDirectory {
     }
 
     async reload() {
-        this.logger.info(`Reloading directory`);
-
         this.interested_contracts = new Set();
         this._msig_contracts = new Map();
         this._custodian_contracts = new Map();
