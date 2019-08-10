@@ -97,6 +97,7 @@ class eosTableIter {
         this.primary_key = primary_key;
         this.current_set = [];
         this.current_pos = 0;
+        this.chunk_size = 500;
         this.has_more = false;
         this.unique_index = new Set;
     }
@@ -109,7 +110,7 @@ class eosTableIter {
                 return new Promise((resolve, reject) => {
                     if (!this.current_set.length || ((this.current_pos >= this.current_set.length) && this.has_more)){
                         // fastify.log.info('Fetching table data...', {code:this.code, scope:this.scope, table:this.table});
-                        const req = {code:this.code, scope:this.scope, table:this.table, limit:20};
+                        const req = {code:this.code, scope:this.scope, table:this.table, limit:this.chunk_size};
                         if (this.current_set.length){
                             req.lower_bound = this.current_set[this.current_set.length-this.greed_factor][this.primary_key];
                         }
