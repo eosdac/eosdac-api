@@ -110,7 +110,7 @@ class JobProcessor {
         try {
             act = await this.api.deserializeActions([action]);
         } catch (e) {
-            this.logger.error(`Error deserializing action data ${account}:${name} - ${e.message}`);
+            this.logger.error(`Error deserializing action data ${account}:${name} - ${e.message}`, {e});
             this.amq.then((amq) => {
                 amq.ack(job)
             });
@@ -136,7 +136,7 @@ class JobProcessor {
         this.db.then((db) => {
             const col = db.collection('actions');
             col.insertOne(doc).then(() => {
-                this.logger.info('Save completed');
+                this.logger.info('Action save completed');
 
                 self.processedActionJob(job, doc)
 
@@ -145,7 +145,7 @@ class JobProcessor {
                 if (e.code === 11000) { // Duplicate index
                     self.processedActionJob(job, doc)
                 } else {
-                    this.logger.error('DB save failed :(', e);
+                    this.logger.error('DB save failed :(', {e});
 
                     this.amq.then((amq) => {
                         amq.reject(job)
@@ -230,7 +230,7 @@ class JobProcessor {
                 this.db.then((db) => {
                     const col = db.collection('contract_rows');
                     col.insertOne(doc).then(() => {
-                        this.logger.info('Save completed');
+                        this.logger.info('Contract row save completed');
 
                         this.amq.then((amq) => {
                             amq.ack(job)
@@ -241,7 +241,7 @@ class JobProcessor {
                                 // duplicate index
                                 amq.ack(job)
                             } else {
-                                this.logger.error('DB save failed :(', e);
+                                this.logger.error('Contract rowDB save failed :(', {e});
                                 amq.reject(job)
                             }
                         })
@@ -250,7 +250,7 @@ class JobProcessor {
 
             }
         } catch (e) {
-            this.logger.error(`Error deserializing ${code}:${table} : ${e.message}`, e);
+            this.logger.error(`Error deserializing ${code}:${table} : ${e.message}`, {e});
             this.amq.then((amq) => {
                 amq.ack(job)
             });
