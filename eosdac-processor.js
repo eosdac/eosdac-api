@@ -131,10 +131,19 @@ class JobProcessor {
 
         const self = this;
 
+        let dac_id = '';
+        if (act[0].data.dac_id){
+            dac_id = act[0].data.dac_id;
+        }
+
         this.db.then((db) => {
             const col = db.collection('actions');
             col.insertOne(doc).then(() => {
-                this.logger.info('Action save completed', {action:doc.action, block_num});
+                const action_log_meta = {action:doc.action, block_num};
+                if (dac_id){
+                    action_log_meta.dac_id = dac_id;
+                }
+                this.logger.info('Action save completed', action_log_meta);
 
                 self.processedActionJob(job, doc)
 
