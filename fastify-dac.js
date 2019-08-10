@@ -25,6 +25,7 @@ module.exports = fp((fastify, options, next) => {
         const dac_name = this.dac();
         const dac_config_cache = fastify.dac_cache_get(dac_name);
         if (dac_config_cache){
+            fastify.log.info(`Returning cached dac info`);
             return dac_config_cache;
         }
         else {
@@ -35,10 +36,11 @@ module.exports = fp((fastify, options, next) => {
                 lower_bound: dac_name,
                 upper_bound: dac_name
             });
+
             // console.log(res);
             if (res.rows.length){
                 const row = res.rows[0];
-                if (row.dac_name === dac_name){
+                if (row.dac_id === dac_name){
                     const account_map = new Map();
                     row.accounts.forEach((acnt) => {
                         account_map.set(acnt.key, acnt.value);
@@ -56,6 +58,7 @@ module.exports = fp((fastify, options, next) => {
                 }
             }
 
+            fastify.log.warn(`Could not find dac with ID ${dac_name}`);
             return null;
         }
         //return this.headers['x-dac-name'] || 'eosdac';

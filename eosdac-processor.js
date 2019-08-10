@@ -23,7 +23,6 @@ class JobProcessor {
     constructor() {
         this.config = loadConfig();
 
-
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
         this.api = new Api({
             rpc,
@@ -32,6 +31,8 @@ class JobProcessor {
             textDecoder: new TextDecoder(),
             textEncoder: new TextEncoder(),
         });
+
+        this.logger = require('./connections/logger')('eosdac-processor', this.config.logger);
     }
 
 
@@ -50,7 +51,7 @@ class JobProcessor {
                     if (err) {
                         reject(err)
                     } else {
-                        console.log(`Connected to ${this.config.mongo.url}/${this.config.mongo.dbName}`);
+                        this.logger.info(`Connected to ${this.config.mongo.url}/${this.config.mongo.dbName}`);
                         resolve(client.db(this.config.mongo.dbName))
                     }
                 }).bind(this))
@@ -59,9 +60,9 @@ class JobProcessor {
     }
 
     async connectAmq() {
-        console.log(`Connecting to AMQ`);
+        this.logger.info(`Connecting to AMQ`);
         RabbitSender.closeHandlers = [(() => {
-            console.log('close handler');
+            this.logger.info('close handler');
             this.start()
         }).bind(this)];
         this.amq = RabbitSender.init(this.config.amq)
@@ -69,7 +70,7 @@ class JobProcessor {
     }
 
     async processedActionJob(job, doc) {
-        console.log(`Processed action job, notifying watchers`);
+        this.logger.info(`Processed action job, notifying watchers`);
         this.amq.then((amq) => {
             amq.ack(job);
         });
@@ -99,17 +100,17 @@ class JobProcessor {
         const name = sb.getName();
         const data = sb.getBytes();
 
-        console.log('Process action', block_num, account, name, recv_sequence, global_sequence);
+        this.logger.info('Process action ${block_num} ${account} ${name} ${recv_sequence} ${global_sequence}');
 
         const action = {account, name, data};
 
-        console.log(`Deserializing action ${account}:${name}`);
+        this.logger.info(`Deserializing action ${account}:${name}`);
 
         let act;
         try {
             act = await this.api.deserializeActions([action]);
         } catch (e) {
-            console.error(`Error deserializing action data ${account}:${name} - ${e.message}`);
+            this.logger.error(`Error deserializing action data ${account}:${name} - ${e.message}`);
             this.amq.then((amq) => {
                 amq.ack(job)
             });
@@ -128,14 +129,14 @@ class JobProcessor {
             global_sequence: MongoLong.fromString(global_sequence)
         };
 
-        console.log(doc);
+        this.logger.info(doc);
 
         const self = this;
 
         this.db.then((db) => {
             const col = db.collection('actions');
             col.insertOne(doc).then(() => {
-                console.log('Save completed');
+                this.logger.info('Save completed');
 
                 self.processedActionJob(job, doc)
 
@@ -144,7 +145,7 @@ class JobProcessor {
                 if (e.code === 11000) { // Duplicate index
                     self.processedActionJob(job, doc)
                 } else {
-                    console.error('DB save failed :(', e);
+                    this.logger.error('DB save failed :(', e);
 
                     this.amq.then((amq) => {
                         amq.reject(job)
@@ -198,16 +199,16 @@ class JobProcessor {
             const data = table_type.deserialize(data_sb);
 
             if (code !== 'eosio') {
-                // console.log(`row version ${row_version}`);
-                // console.log(`code ${code}`);
-                // console.log(`scope ${scope}`);
-                // console.log(`table ${table}`);
-                // console.log(`primary_key ${primary_key}`);
-                // console.log(`payer ${payer}`);
-                // // console.log(`data`)
-                // console.log(data);
+                // this.logger.info(`row version ${row_version}`);
+                // this.logger.info(`code ${code}`);
+                // this.logger.info(`scope ${scope}`);
+                // this.logger.info(`table ${table}`);
+                // this.logger.info(`primary_key ${primary_key}`);
+                // this.logger.info(`payer ${payer}`);
+                // // this.logger.info(`data`)
+                // this.logger.info(data);
 
-                console.log(`Storing ${code}:${table}:${block_timestamp_int}`);
+                this.logger.info(`Storing ${code}:${table}:${block_timestamp_int}`);
 
                 const data_hash = crypto.createHash('sha1').update(data_raw).digest('hex');
 
@@ -224,12 +225,12 @@ class JobProcessor {
                     present
                 };
 
-                console.log(doc);
+                this.logger.info(doc);
 
                 this.db.then((db) => {
                     const col = db.collection('contract_rows');
                     col.insertOne(doc).then(() => {
-                        console.log('Save completed');
+                        this.logger.info('Save completed');
 
                         this.amq.then((amq) => {
                             amq.ack(job)
@@ -240,7 +241,7 @@ class JobProcessor {
                                 // duplicate index
                                 amq.ack(job)
                             } else {
-                                console.error('DB save failed :(', e);
+                                this.logger.error('DB save failed :(', e);
                                 amq.reject(job)
                             }
                         })
@@ -249,7 +250,7 @@ class JobProcessor {
 
             }
         } catch (e) {
-            console.error(`Error deserializing ${code}:${table} : ${e.message}`);
+            this.logger.error(`Error deserializing ${code}:${table} : ${e.message}`, e);
             this.amq.then((amq) => {
                 amq.ack(job)
             });
@@ -270,7 +271,7 @@ class JobProcessor {
         await this.dac_directory.reload();
 
         if (cluster.isMaster) {
-            console.log(`Starting processor with ${this.config.clusterSize} threads...`);
+            this.logger.info(`Starting processor with ${this.config.clusterSize} threads...`);
             // kue.app.listen(3001)
 
             for (let i = 0; i < this.config.clusterSize; i++) {

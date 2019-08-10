@@ -6,10 +6,12 @@ const {loadConfig} = require('./functions');
 const path = require('path');
 
 const config = loadConfig();
+const logger = require('./connections/logger')('eosdac-api', config.logger);
 
 const fastify = require('fastify')({
     ignoreTrailingSlash: true,
-    trustProxy: true
+    trustProxy: true,
+    logger
 });
 
 fastify.register(require('fastify-oas'), openApi.options);

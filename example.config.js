@@ -20,5 +20,12 @@ module.exports = {
         legacyDacs: ['eos.dac'],
         dacDirectoryMode: 'all',
         dacDirectoryDacId: ''
+    },
+    logger: {
+        level: "info",
+        environment: "jungle",
+        datadog: {
+            apiKey: ""
+        }
     }
 };

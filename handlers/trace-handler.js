@@ -1,9 +1,10 @@
 
 class TraceHandler {
-    constructor({queue, action_handler, config}) {
+    constructor({queue, action_handler, config, logger}) {
         this.amq = queue;
         this.action_handler = action_handler;
         this.config = config;
+        this.logger = logger;
     }
 
     async queueTrace(block_num, traces, block_timestamp) {

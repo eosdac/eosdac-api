@@ -8,6 +8,7 @@ async function memberSnapshot(fastify, request) {
     return new Promise(async (resolve, reject) => {
         const db = fastify.mongo.db;
         const dac_config = await request.dac_config();
+        console.log(dac_config);
         // const dac_id = 'eosdac';
         const dac_id = request.dac();
 
@@ -18,9 +19,7 @@ async function memberSnapshot(fastify, request) {
         const block_num = request.query.block_num || null;
         const sort_col = request.query.sort || 'account';
 
-        console.log(`Generating snapshot for ${symbol}@${contract} on block ${block_num} with dac_id ${dac_id}`);
-
-
+        fastify.log.info(`Generating snapshot for ${symbol}@${contract} on block ${block_num} with dac_id ${dac_id}`, {dac_id});
 
         // Get all members and add to a Map
         const limit = 500;
@@ -45,7 +44,7 @@ async function memberSnapshot(fastify, request) {
             members_res.results.forEach((member) => {
                 members.set(member.data.sender, {terms: member.data.agreedtermsversion, balance: null, block_num: member.block_num});
             });
-            console.log(members_res.count);
+            fastify.log.info(`Members results length ${members_res.count}`, {dac_id});
 
             if (members_res.count < limit + members_match.skip){
                 has_more = false;
@@ -55,7 +54,7 @@ async function memberSnapshot(fastify, request) {
             }
 
             members_match.skip += limit;
-            console.log(`Skip to member ${members_match.skip}`);
+            fastify.log.info(`Skip to member ${members_match.skip}`, {dac_id});
         }
 
         // console.log(members.keys());
@@ -84,7 +83,7 @@ async function memberSnapshot(fastify, request) {
                 // balances.set(member.data.sender, {terms: member.data.agreedtermsversion, balance: null, block_num: member.block_num});
             });
 
-            console.log(`${balances_res.count} balances found`);
+            fastify.log.info(`${balances_res.count} balances found`, {dac_id});
             if (balances_res.count < limit + balances_match.skip){
                 has_more = false;
             }
@@ -93,7 +92,7 @@ async function memberSnapshot(fastify, request) {
             }
 
             balances_match.skip += limit;
-            console.log(`Skip to balance ${balances_match.skip}`);
+            fastify.log.info(`Skip to balance ${balances_match.skip}`, {dac_id});
         }
 
         // console.log(members);

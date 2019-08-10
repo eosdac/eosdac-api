@@ -29,7 +29,7 @@ async function getProfile(fastify, request) {
     const query = {"action.account": cust_contract, "action.name": "stprofileuns", "action.data.dac_id":dac_id, "action.data.cand": {$in: accounts}};
 
     if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
-        console.log(`Got legacy dac ${dac_id}`);
+        fastify.log.info(`Got legacy dac ${dac_id}`, {dac_id});
         query['action.data.dac_id'] = {$in: [dac_id, null]};
         query['action.name'] = {$in: ['stprofileuns', 'stprofile']};
     }

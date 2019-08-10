@@ -7,6 +7,7 @@ async function getMsigProposals(fastify, request) {
 
     return new Promise(async (resolve, reject) => {
         const dac_directory = await request.dac_directory();
+        console.log(dac_directory._custodian_contracts);
         const dac_id = request.dac();
 
         const api = fastify.eos.api;
@@ -17,6 +18,7 @@ async function getMsigProposals(fastify, request) {
         const scope = dac_id;
 
         // Get current custodians
+        fastify.log.info(`Getting custodians for ${custodian_contract}:${scope}`);
         const custodian_query = {code:custodian_contract, scope, table:'custodians', limit:100};
         const custodian_res = api.rpc.get_table_rows(custodian_query);
 

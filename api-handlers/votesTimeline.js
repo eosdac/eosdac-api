@@ -24,7 +24,7 @@ async function votesTimeline(fastify, request) {
         };
 
         if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
-            console.log(`Got legacy dac ${dac_id}`);
+            fastify.log.info(`Got legacy dac ${dac_id}`, {dac_id});
             query['scope'] = {$in: [dac_id, cust_contract]};
         }
 
