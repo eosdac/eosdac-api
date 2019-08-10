@@ -136,7 +136,7 @@ class JobProcessor {
         this.db.then((db) => {
             const col = db.collection('actions');
             col.insertOne(doc).then(() => {
-                this.logger.info('Action save completed');
+                this.logger.info('Action save completed', {action:doc.action, block_num});
 
                 self.processedActionJob(job, doc)
 
@@ -225,12 +225,10 @@ class JobProcessor {
                     present
                 };
 
-                this.logger.info(doc);
-
                 this.db.then((db) => {
                     const col = db.collection('contract_rows');
                     col.insertOne(doc).then(() => {
-                        this.logger.info('Contract row save completed');
+                        this.logger.info('Contract row save completed', {dac_id:scope, code, scope, table, block_num});
 
                         this.amq.then((amq) => {
                             amq.ack(job)
