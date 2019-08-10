@@ -94,7 +94,6 @@ class DacDirectory {
     }
 
     add_account(acnt, dac_id){
-        console.log(dac_id, acnt);
         // console.log(`Adding ${acnt} to set`);
         this.interested_contracts.add(acnt.value);
 
