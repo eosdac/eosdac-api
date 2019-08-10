@@ -32,10 +32,12 @@ class MultisigProposalsHandler {
             textDecoder: new TextDecoder(),
             textEncoder: new TextEncoder(),
         });
+
+        this.logger = require('./connections/logger')('watcher-multisig', config.logger);
     }
 
     async thresholdFromName(name, dac_id){
-        // console.log(`Getting threshold ${name} for ${dac_id}`);
+        // this.logger.info(`Getting threshold ${name} for ${dac_id}`);
         return new Promise(async (resolve, reject) => {
             const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
             const scope = dac_id;
@@ -44,7 +46,7 @@ class MultisigProposalsHandler {
             const dac_config = dac_config_res.rows[0];
 
             if (!dac_config){
-                console.log(`DAC config not found`, table_rows_req, dac_id);
+                this.logger.info(`DAC config not found`, {table_rows_req, dac_id});
                 reject(`Could not find dac config for ${dac_id} "${name}"`);
                 return;
             }
@@ -76,15 +78,15 @@ class MultisigProposalsHandler {
             } else {
                 // get the account and follow the tree down
                 const acct = await this.api.rpc.get_account(perm.actor);
-                // console.log(acct)
+                // this.logger.info(acct)
                 const thresholds = [];
 
                 for (let p = 0; p < acct.permissions.length; p++) {
                     const act_perm = acct.permissions[p];
-                    // console.log(act_perm);
+                    // this.logger.info(act_perm);
 
                     if (act_perm.perm_name === perm.permission) {
-                        // console.log(act_perm, act_perm.required_auth.accounts)
+                        // this.logger.info(act_perm, act_perm.required_auth.accounts)
 
                         if (act_perm.required_auth.accounts.length === 0) {
                             resolve(0)
@@ -93,12 +95,12 @@ class MultisigProposalsHandler {
 
                         for (let a = 0; a < act_perm.required_auth.accounts.length; a++) {
                             const perm = act_perm.required_auth.accounts[a];
-                            // console.log('getting permission', perm)
+                            // this.logger.info('getting permission', perm)
                             const p = await self.permissionToThreshold(perm.permission, dac_id);
                             thresholds.push(p)
                         }
 
-                        // console.log('thresholds', thresholds, Math.max(...thresholds))
+                        // this.logger.info('thresholds', thresholds, Math.max(...thresholds))
 
                     }
                 }
@@ -118,7 +120,7 @@ class MultisigProposalsHandler {
         return new Promise(async (resolve, reject) => {
             let type = MsigTypes.TYPE_UNKNOWN;
             if (!trx || !trx.actions) {
-                console.error(`Bad transaction`, trx);
+                this.logger.error(`Bad transaction`, {trx});
                 reject(new Error('Bad transaction'));
             }
 
@@ -175,7 +177,7 @@ class MultisigProposalsHandler {
             }
 
             if (type === MsigTypes.TYPE_UNKNOWN){
-                console.log(`Getting type from `, trx);
+                this.logger.warn(`Unknown msig type`, {trx});
             }
 
             resolve(type);
@@ -185,7 +187,7 @@ class MultisigProposalsHandler {
     async getTrxThreshold(trx, dac_id) {
         return new Promise(async (resolve, reject) => {
             if (!trx || !trx.actions) {
-                console.error(`Bad transaction`, trx);
+                this.logger.error(`Bad transaction`, {trx});
                 reject(new Error('Bad transaction'));
             }
 
@@ -201,13 +203,15 @@ class MultisigProposalsHandler {
                 }
             }
 
-            // console.log(thresholds);
-            resolve(Math.max(...thresholds));
+            // this.logger.info(thresholds);
+            const threshold = Math.max(...thresholds);
+
+            resolve(threshold);
         })
     }
 
     async recalcMsigs(doc, db, retry=false) {
-        // console.log('Recalc', doc)
+        // this.logger.info('Recalc', doc)
 
         // const db = mongo.db(this.config.mongo.dbName);
         const coll = db.collection('multisigs');
@@ -239,7 +243,7 @@ class MultisigProposalsHandler {
             dac_id = doc.action.data.dac_id = 'eos.dac';
         }
 
-        console.log(`Recalc proposal ${proposer}:${proposal_name} on DAC ${dac_id}`);
+        this.logger.info(`Recalc proposal ${proposer}:${proposal_name} on DAC ${dac_id}`, {dac_id, proposer, proposal_name});
 
         const output = {
             block_num,
@@ -261,10 +265,10 @@ class MultisigProposalsHandler {
                 try {
                     const dJSON = require('dirty-json');
                     metadata = dJSON.parse(doc.action.data.metadata);
-                    console.log(`Used dirty-json to parse ${doc.action.data.metadata}`)
+                    this.logger.info(`Used dirty-json to parse ${doc.action.data.metadata}`)
                 } catch (e) {
                     metadata = {title: '', description: ''};
-                    console.error('Failed to parse metadata', doc.action.data.metadata, e.message)
+                    this.logger.error('Failed to parse metadata', {metadata:doc.action.data.metadata, e})
                 }
             }
 
@@ -273,7 +277,7 @@ class MultisigProposalsHandler {
         }
 
 
-        console.log(`parsed ${block_num}:${proposer}:${proposal_name}:${dac_id}`);
+        this.logger.info(`parsed ${block_num}:${proposer}:${proposal_name}:${dac_id}`, {dac_id, proposal, proposal_name});
 
         const data_query = {
             proposal_name
@@ -307,15 +311,15 @@ class MultisigProposalsHandler {
                     this.recalcMsigs(doc, db, true);
                 }, 5000);
             }
-            console.error(`Error getting proposal ${proposal_name} from state`, data_query);
+            this.logger.error(`Error getting proposal ${proposal_name} from state`, {dac_id, proposal, proposal_name});
             return;
         }
-        // console.log(proposal.block_num, proposal.data.proposal_name, proposal.data.packed_transaction)
+        // this.logger.info(proposal.block_num, proposal.data.proposal_name, proposal.data.packed_transaction)
         try {
             output.trx = await this.api.deserializeTransactionWithActions(proposal.data.packed_transaction);
         }
         catch (e){
-            console.error(`Could not deserialise transaction for ${proposal.data.proposal_name}`);
+            this.logger.error(`Could not deserialise transaction for ${proposal.data.proposal_name}`, {dac_id, proposal, proposal_name});
             return;
         }
 
@@ -349,7 +353,7 @@ class MultisigProposalsHandler {
                     }, 5000);
                 }
 
-                console.error(`Could not find proposal in table`);
+                this.logger.error(`Could not find proposal in table`, {dac_id, proposal, proposal_name});
                 return;
             }
         }
@@ -363,11 +367,14 @@ class MultisigProposalsHandler {
         // We have the transaction data, now get approvals
         // Get threshold
         output.threshold = await this.getTrxThreshold(output.trx, dac_id);
+        if (output.threshold === 0){
+            this.logger.warn(`Found threshold of 0`, {dac_id, proposal, proposal_name});
+        }
         output.type = await this.getTrxType(output.trx, dac_id);
         output.expiration = new Date(output.trx.expiration);
 
 
-        // console.log(proposer, proposal_name, output)
+        // this.logger.info(proposer, proposal_name, output)
 
         // Get the current state by getting cancel/exec/clean transactions
         const closing_query = {
@@ -446,14 +453,14 @@ class MultisigProposalsHandler {
         if (end_block) {
             query_provided.block_num = end_block
         }
-        // console.log('Querying approvals', query_provided);
+        // this.logger.info('Querying approvals', query_provided);
 
         const provided = await eosTableAtBlock(query_provided);
         if (provided.count) {
-            // console.log('Provided approvals', provided.results[0].data.provided_approvals);
+            // this.logger.info('Provided approvals', provided.results[0].data.provided_approvals);
             output.provided_approvals = provided.results[0].data.provided_approvals
         } else {
-            // console.log('Resetting provided_approvals');
+            // this.logger.info('Resetting provided_approvals');
             output.provided_approvals = []
         }
 
@@ -461,13 +468,13 @@ class MultisigProposalsHandler {
         // output.provided_approvals = output.provided_approvals.filter((approval) => custodians.includes(approval.actor));
 
         // remove provided approvals from requested approvals
-        console.log('requested', output.requested_approvals);
+        // this.logger.info('requested', output.requested_approvals);
         const provided_actors = output.provided_approvals.map((pro) => pro.actor);
         output.requested_approvals = output.requested_approvals.filter((req) => !provided_actors.includes(req.actor));
         // only include custodians (if the msig is current then they are modified in the api)
         // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
-        console.log(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, output);
+        this.logger.info(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, {doc:output});
         return await coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
 
     }
@@ -479,7 +486,7 @@ class MultisigProposalsHandler {
             this.db = await db;
             this.dac_directory = dac_directory;
 
-            console.log('Reacting to msig action');
+            this.logger.info('Reacting to msig action');
             // delay to wait for the state to update
             setTimeout((() => {
                 this.recalcMsigs(doc, this.db);
@@ -490,6 +497,8 @@ class MultisigProposalsHandler {
     async delta(doc){}
 
     async replay() {
+        this.logger.info('Replaying msigs');
+
         this.db.then(async (mongo) => {
             const db = mongo.db(this.config.mongo.dbName);
             const collection = db.collection('multisigs');
@@ -498,9 +507,9 @@ class MultisigProposalsHandler {
             this.dac_directory = new DacDirectory({config: this.config, db});
             await this.dac_directory.reload();
 
-            console.log('Removing existing entries');
+            this.logger.info('Removing existing entries');
             await collection.deleteMany({});
-            // console.log(await collection.find({}).count());
+            // this.logger.info(await collection.find({}).count());
 
             const res = collection_actions.find({
                 'action.account': {$in: Array.from(this.dac_directory.msig_contracts().values())},
@@ -515,7 +524,7 @@ class MultisigProposalsHandler {
             }
 
             await Promise.all(recalcs);
-            console.log(`Imported ${count} multisig documents`);
+            this.logger.info(`Imported ${count} multisig documents`);
         })
     }
 }
