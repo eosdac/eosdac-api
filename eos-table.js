@@ -105,8 +105,6 @@ class eosTableIter {
     [Symbol.asyncIterator](){
         return {
             next: () => {
-                const self = this;
-                console.log(self.current_pos, this.current_set.length);
                 return new Promise((resolve, reject) => {
                     if (!this.current_set.length || ((this.current_pos >= this.current_set.length) && this.has_more)){
                         // fastify.log.info('Fetching table data...', {code:this.code, scope:this.scope, table:this.table});
