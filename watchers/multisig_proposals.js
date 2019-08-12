@@ -267,10 +267,10 @@ class MultisigProposalsHandler {
                 try {
                     const dJSON = require('dirty-json');
                     metadata = dJSON.parse(doc.action.data.metadata);
-                    this.logger.info(`Used dirty-json to parse ${doc.action.data.metadata}`)
+                    this.logger.info(`Used dirty-json to parse ${doc.action.data.metadata}`, {dac_id, proposer, proposal_name})
                 } catch (e) {
                     metadata = {title: '', description: ''};
-                    this.logger.error('Failed to parse metadata', {metadata:doc.action.data.metadata, e})
+                    this.logger.error('Failed to parse metadata', {metadata:doc.action.data.metadata, e, dac_id, proposer, proposal_name})
                 }
             }
 
@@ -476,7 +476,7 @@ class MultisigProposalsHandler {
         // only include custodians (if the msig is current then they are modified in the api)
         // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
-        this.logger.info(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, {doc:output});
+        this.logger.info(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, {dac_id, doc:output});
         return await coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
 
     }
