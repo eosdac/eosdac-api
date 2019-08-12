@@ -89,7 +89,8 @@ class MultisigProposalsHandler {
                         // this.logger.info(act_perm, act_perm.required_auth.accounts)
 
                         if (act_perm.required_auth.accounts.length === 0) {
-                            resolve(0)
+                            this.logger.warn(`Permission has no required accounts`, {dac_id, perm_name:act_perm.perm_name});
+                            resolve(0);
                         }
 
 
@@ -97,18 +98,19 @@ class MultisigProposalsHandler {
                             const perm = act_perm.required_auth.accounts[a];
                             // this.logger.info('getting permission', perm)
                             const p = await self.permissionToThreshold(perm.permission, dac_id);
-                            thresholds.push(p)
+                            thresholds.push(p);
                         }
 
-                        // this.logger.info('thresholds', thresholds, Math.max(...thresholds))
+                        this.logger.debug('thresholds', {thresholds, dac_id, act_perm})
 
                     }
                 }
 
                 if (!thresholds.length) {
-                    resolve(0)
+                    this.logger.warn(`Did not find any thresholds`, {dac_id, perm});
+                    resolve(0);
                 } else {
-                    resolve(Math.max(...thresholds))
+                    resolve(Math.max(...thresholds));
                 }
             }
         })
