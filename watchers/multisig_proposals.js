@@ -279,7 +279,7 @@ class MultisigProposalsHandler {
         }
 
 
-        this.logger.info(`parsed ${block_num}:${proposer}:${proposal_name}:${dac_id}`, {dac_id, proposal, proposal_name});
+        this.logger.info(`parsed ${block_num}:${proposer}:${proposal_name}:${dac_id}`, {dac_id, proposer, proposal_name});
 
         const data_query = {
             proposal_name
