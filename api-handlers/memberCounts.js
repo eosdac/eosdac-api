@@ -10,9 +10,10 @@ async function memberCounts(fastify, request) {
         const api = fastify.eos.api;
 
         const dac_config = await request.dac_config();
-        const token_contract = dac_config.accounts.get(4);
+        const token_contract = dac_config.symbol.contract;
+        const dac_id = request.dac();
 
-        const cust_req = {code:token_contract, scope:token_contract, table:'members', api, greed_factor:1, primary_key:'sender'};
+        const cust_req = {code:token_contract, scope:dac_id, table:'members', api, greed_factor:1, primary_key:'sender'};
 
         const table_iter = new eosTableIter(cust_req);
         const results = new Map;
