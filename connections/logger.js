@@ -30,7 +30,7 @@ const logger = ((service='undefined-service', config) => {
 
 
     // To make compatible with fastify logger
-    _l.log = () => {_l.info(arguments[0])};
+    // _l.log = () => {_l.info(arguments[0])};
     _l.fatal = () => {_l.error(arguments[0])};
     _l.trace = () => {_l.silly(arguments[0])};
 
