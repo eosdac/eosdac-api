@@ -33,7 +33,7 @@ class MultisigProposalsHandler {
             textEncoder: new TextEncoder(),
         });
 
-        this.logger = require('./connections/logger')('watcher-multisig', config.logger);
+        this.logger = require('../connections/logger')('watcher-multisig', config.logger);
     }
 
     async thresholdFromName(name, dac_id){
