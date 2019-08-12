@@ -8,7 +8,6 @@ async function memberSnapshot(fastify, request) {
     return new Promise(async (resolve, reject) => {
         const db = fastify.mongo.db;
         const dac_config = await request.dac_config();
-        console.log(dac_config);
         // const dac_id = 'eosdac';
         const dac_id = request.dac();
 
