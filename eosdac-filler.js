@@ -243,10 +243,11 @@ class FillManager {
 
         const start_buffer = job.content.slice(0, 8);
         const end_buffer = job.content.slice(8);
-        this.logger.info(`processBlockRange pid : ${process.pid} ${start_block} to ${end_block}`);
 
         const start_block = new Int64BE(start_buffer).toString();
         const end_block = new Int64BE(end_buffer).toString();
+
+        this.logger.info(`processBlockRange pid : ${process.pid} ${start_block} to ${end_block}`);
 
         const dac_directory = new DacDirectory({config: this.config, db:this.db});
         await dac_directory.reload();
