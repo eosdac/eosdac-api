@@ -242,7 +242,7 @@ class MultisigProposalsHandler {
         let dac_id = doc.action.data.dac_id;
 
         if (!dac_id){
-            dac_id = doc.action.data.dac_id = 'eos.dac';
+            dac_id = doc.action.data.dac_id = this.config.eos.legacyDacs[0];
         }
 
         this.logger.info(`Recalc proposal ${proposer}:${proposal_name} on DAC ${dac_id}`, {dac_id, proposer, proposal_name});
