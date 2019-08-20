@@ -252,9 +252,9 @@ class FillManager {
         const dac_directory = new DacDirectory({config: this.config, db:this.db});
         await dac_directory.reload();
 
-        const action_handler = new ActionHandler({queue: this.amq, config: this.config, dac_directory});
-        const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config});
-        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, dac_directory});
+        const action_handler = new ActionHandler({queue: this.amq, config: this.config, dac_directory, logger:this.logger});
+        const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config, logger:this.logger});
+        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, dac_directory, logger:this.logger});
 
 
         this.br = new StateReceiver({startBlock: start_block, endBlock: end_block, mode: 1, config: this.config});
