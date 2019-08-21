@@ -18,7 +18,6 @@ async function memberCounts(fastify, request) {
         const table_iter = new eosTableIter(cust_req);
         const results = new Map;
         results.set('total', 0);
-        let i = 0;
         for await (let row of table_iter){
             const key = `terms_v${row.agreedtermsversion}`;
             if (!results.has(key)){
@@ -32,7 +31,6 @@ async function memberCounts(fastify, request) {
             return obj;
         }, {});
         resolve(res_obj);
-        fastify.log.info(`${i} rows in memberCounts`, res_obj);
     })
 }
 
