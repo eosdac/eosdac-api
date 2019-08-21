@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+process.title = 'eosdac-filler';
 
 const commander = require('commander');
 const {Api, JsonRpc} = require('eosjs');
