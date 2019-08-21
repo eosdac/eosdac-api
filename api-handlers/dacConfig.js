@@ -44,12 +44,43 @@ async function getDacConfig(fastify, request) {
             reject('DAC config not found');
         }
 
-        // convert from map to something fastify can understand
-        const refs = new Map(dac_config_original.refs);
-        const accounts = new Map(dac_config_original.accounts);
 
-        dac_config.accounts = Array.from(accounts, ([key, value]) => {return {key, value}});
-        dac_config.refs =  Array.from(refs, ([key, value]) => {return {key, value}});
+        // format the refs and accounts to something understandable
+        const refs_obj = {};
+        refs_obj.homepage = dac_config_original.refs.get(0) || '';
+        refs_obj.logo_url = dac_config_original.refs.get(1) || '';
+        refs_obj.description = dac_config_original.refs.get(2) || '';
+        refs_obj.logo_noext_url = dac_config_original.refs.get(3) || '';
+        refs_obj.background_url = dac_config_original.refs.get(4) || '';
+        refs_obj.colors = dac_config_original.refs.get(5) || {};
+        refs_obj.client_extension = dac_config_original.refs.get(6) || '';
+        refs_obj.other = [];
+
+        dac_config_original.refs.forEach((val, key) => {
+            if (key > 100){
+                refs_obj.other.push(val);
+            }
+        });
+
+        const accounts_obj = {};
+        accounts_obj.auth = dac_config_original.accounts.get(0) || '';
+        accounts_obj.treasury = dac_config_original.accounts.get(1) || '';
+        accounts_obj.custodian = dac_config_original.accounts.get(2) || '';
+        accounts_obj.msigs = dac_config_original.accounts.get(3) || '';
+        accounts_obj.service = dac_config_original.accounts.get(5) || '';
+        accounts_obj.proposals = dac_config_original.accounts.get(6) || '';
+        accounts_obj.escrow = dac_config_original.accounts.get(7) || '';
+        accounts_obj.other = [];
+
+        dac_config_original.accounts.forEach((val, key) => {
+            if (key > 100){
+                accounts_obj.other.push(val);
+            }
+        });
+
+
+        dac_config.accounts = accounts_obj;
+        dac_config.refs =  refs_obj;
         // console.log(dac_config);
 
         resolve(dac_config);
