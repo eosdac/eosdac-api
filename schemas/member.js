@@ -10,7 +10,7 @@ const memberSchema = {
                 type: 'string'
             }
         },
-        required: []
+        required: ['account']
     }
 };
 
