@@ -11,8 +11,16 @@ async function balanceTimeline(fastify, request) {
         const account = request.query.account;
         const contract = request.query.contract || dac_config.accounts.get(4);
         const symbol = request.query.symbol || dac_config.symbol.split(',')[1];
-        const start_block = request.query.start_block || null;
+        let start_block = request.query.start_block || null;
         const end_block = request.query.end_block || null;
+
+        if (!start_block && !end_block){
+            // max 6 months
+            const six_months = 2 * 60 * 60 * 24 * 90;
+            const api = fastify.eos.api;
+            const info_res = await api.rpc.get_info();
+            start_block = info_res.head_block_num - six_months;
+        }
 
         const query = {'code': contract, 'scope': account, 'table': 'accounts'};
         if (start_block) {
