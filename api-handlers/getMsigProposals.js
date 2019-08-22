@@ -6,7 +6,7 @@ async function getMsigProposals(fastify, request) {
 
 
     return new Promise(async (resolve, reject) => {
-        const dac_directory = await request.dac_directory();
+        const dac_config = await request.dac_config();
         //console.log(dac_directory._custodian_contracts);
         const dac_id = request.dac();
 
@@ -14,7 +14,7 @@ async function getMsigProposals(fastify, request) {
         const db = fastify.mongo.db;
         const collection = db.collection('multisigs');
 
-        const custodian_contract = dac_directory._custodian_contracts.get(dac_id);
+        const custodian_contract = dac_config.accounts.get(2);
         const scope = dac_id;
 
         // Get current custodians
