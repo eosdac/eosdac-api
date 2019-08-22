@@ -17,6 +17,7 @@ const {loadConfig} = require('./functions');
 const {arrayToHex} = require('eosjs/dist/eosjs-serialize');
 const watchers = require('./watchers');
 const DacDirectory = require('./dac-directory');
+const {IPC} = require('node-ipc');
 
 
 class JobProcessor {
@@ -78,6 +79,9 @@ class JobProcessor {
         watchers.forEach((watcher) => {
             watcher.action({doc, dac_directory:this.dac_directory, db:this.db});
         });
+
+        // broadcast to master, to send via ipc
+        process.send(doc);
     }
 
     async processActionJob(job) {
@@ -265,6 +269,9 @@ class JobProcessor {
 
     }
 
+    worker_message(doc){
+        this.ipc.server.broadcast('action', doc);
+    }
 
     async start() {
         this.connectAmq();
@@ -277,10 +284,19 @@ class JobProcessor {
 
         if (cluster.isMaster) {
             this.logger.info(`Starting processor with ${this.config.clusterSize} threads...`);
-            // kue.app.listen(3001)
+            // start ipc server that clients can subscribe to for api cache updates
+            this.ipc = new IPC();
+            this.ipc.config.appspace = 'eosdac.';
+            this.ipc.config.id = 'eosdacprocessor';
+            this.ipc.serve(() => {
+                this.logger.info(`Started IPC`);
+            });
+            this.ipc.server.start();
+
 
             for (let i = 0; i < this.config.clusterSize; i++) {
-                cluster.fork()
+                const worker = cluster.fork();
+                worker.on('message', this.worker_message.bind(this));
             }
         } else {
             const self = this;
