@@ -9,12 +9,17 @@ module.exports = fp((fastify, options, next) => {
     const ipc = new IPC();
     ipc.config.appspace = 'eosdac.';
     ipc.connectTo('eosdacprocessor', () => {
-        ipc.of.eosdacprocessor.on('action', (a) => {
+        ipc.of.eosdacprocessor.on('action', async (a) => {
+            // console.log(dac_directory.msig_accounts());
+
             if (a.action && a.action.name === 'stprofile'){
                 // invalidate profile cache
                 let cache_name = `/v1/eosdac/profile?account=${a.action.data.cand}`;
 
-                fastify.cache.set(fastify.dac(), cache_name);
+                fastify.cache.set(a.action.data.dac_id, cache_name);
+            }
+            else if (a.action && a.action.account === 'dacmultisigs' && a.action.data.dac_id){
+                fastify.cache.removePrefix(a.action.data.dac_id, `/v1/eosdac/msig_proposals`);
             }
         });
     });
@@ -46,12 +51,15 @@ module.exports = fp((fastify, options, next) => {
                 store = true;
             }
         }
+        else if (url === '/v1/eosdac/msig_proposals'){
+            store = true;
+        }
 
         if (store){
             const dac_id = request.dac();
             const body = payload;
 
-            // console.log(`Storing cache for ${dac_id}, ${name}`);
+            console.log(`Storing cache for ${dac_id}, ${name}`);
             fastify.cache.set(dac_id, name, body);
         }
 
