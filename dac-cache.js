@@ -42,7 +42,7 @@ class DacCache {
         }
 
         if (value === null){
-            dac_cache.remove(key);
+            dac_cache.delete(key);
         }
         else {
             dac_cache.set(key, value);
