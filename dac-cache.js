@@ -50,6 +50,18 @@ class DacCache {
 
         this.cache.set(dac_id, dac_cache);
     }
+
+    removePrefix(dac_id, prefix){
+        let dac_cache = this.cache.get(dac_id);
+        if (dac_cache){
+            Array.from(dac_cache.keys()).forEach((k) => {
+                if (k.indexOf(prefix) === 0){
+                    dac_cache.delete(k);
+                }
+            });
+            this.cache.set(dac_id, dac_cache);
+        }
+    }
 };
 
 module.exports = DacCache;
