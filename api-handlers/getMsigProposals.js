@@ -7,7 +7,7 @@ async function getMsigProposals(fastify, request) {
 
     return new Promise(async (resolve, reject) => {
         const dac_directory = await request.dac_directory();
-        console.log(dac_directory._custodian_contracts);
+        //console.log(dac_directory._custodian_contracts);
         const dac_id = request.dac();
 
         const api = fastify.eos.api;
