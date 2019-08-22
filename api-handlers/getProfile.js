@@ -26,7 +26,7 @@ async function getProfile(fastify, request) {
     const cust_contract = dac_config.accounts.get(2);
     const dac_id = request.dac();
 
-    const query = {"action.account": cust_contract, "action.name": "stprofileuns", "action.data.dac_id":dac_id, "action.data.cand": {$in: accounts}};
+    const query = {"action.account": cust_contract, "action.name": "stprofile", "action.data.dac_id":dac_id, "action.data.cand": {$in: accounts}};
 
     if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
         fastify.log.info(`Got legacy dac ${dac_id}`, {dac_id});
