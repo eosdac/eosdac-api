@@ -86,6 +86,9 @@ class DacDirectory {
             for await (let row of table_iter){
                 // console.log(row);
                 row.accounts.forEach((acnt) => {this.add_account(acnt, row.dac_id)});
+                // add the token contract
+                // console.log(`Adding ${row.symbol.contract}`);
+                this.add_account({value:row.symbol.contract, key:4}, row.dac_id);
             }
 
         }
