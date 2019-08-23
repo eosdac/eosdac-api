@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.title = 'eosdac-processor';
+
 const cluster = require('cluster');
 
 const {TextDecoder, TextEncoder} = require('text-encoding');
@@ -14,12 +16,13 @@ const crypto = require('crypto');
 const {loadConfig} = require('./functions');
 const {arrayToHex} = require('eosjs/dist/eosjs-serialize');
 const watchers = require('./watchers');
+const DacDirectory = require('./dac-directory');
+const {IPC} = require('node-ipc');
 
 
 class JobProcessor {
     constructor() {
         this.config = loadConfig();
-
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
         this.api = new Api({
@@ -29,6 +32,8 @@ class JobProcessor {
             textDecoder: new TextDecoder(),
             textEncoder: new TextEncoder(),
         });
+
+        this.logger = require('./connections/logger')('eosdac-processor', this.config.logger);
     }
 
 
@@ -47,7 +52,7 @@ class JobProcessor {
                     if (err) {
                         reject(err)
                     } else {
-                        console.log(`Connected to ${this.config.mongo.url}/${this.config.mongo.dbName}`);
+                        this.logger.info(`Connected to ${this.config.mongo.url}/${this.config.mongo.dbName}`);
                         resolve(client.db(this.config.mongo.dbName))
                     }
                 }).bind(this))
@@ -56,9 +61,9 @@ class JobProcessor {
     }
 
     async connectAmq() {
-        console.log(`Connecting to AMQ`);
+        this.logger.info(`Connecting to AMQ`);
         RabbitSender.closeHandlers = [(() => {
-            console.log('close handler');
+            this.logger.info('close handler');
             this.start()
         }).bind(this)];
         this.amq = RabbitSender.init(this.config.amq)
@@ -66,14 +71,17 @@ class JobProcessor {
     }
 
     async processedActionJob(job, doc) {
-        console.log(`Processed action job, notifying watchers`);
+        this.logger.info(`Processed action job, notifying watchers`);
         this.amq.then((amq) => {
-            amq.ack(job)
+            amq.ack(job);
         });
 
         watchers.forEach((watcher) => {
-            watcher.action(doc)
-        })
+            watcher.action({doc, dac_directory:this.dac_directory, db:this.db});
+        });
+
+        // broadcast to master, to send via ipc
+        process.send(doc);
     }
 
     async processActionJob(job) {
@@ -96,17 +104,17 @@ class JobProcessor {
         const name = sb.getName();
         const data = sb.getBytes();
 
-        console.log('Process action', block_num, account, name, recv_sequence, global_sequence);
+        this.logger.info(`Process action ${block_num} ${account} ${name} ${recv_sequence} ${global_sequence}`);
 
         const action = {account, name, data};
 
-        console.log(`Deserializing action ${account}:${name}`);
+        this.logger.info(`Deserializing action ${account}:${name}`);
 
         let act;
         try {
             act = await this.api.deserializeActions([action]);
         } catch (e) {
-            console.error(`Error deserializing action data ${account}:${name} - ${e.message}`);
+            this.logger.error(`Error deserializing action data ${account}:${name} - ${e.message}`, {e});
             this.amq.then((amq) => {
                 amq.ack(job)
             });
@@ -125,14 +133,21 @@ class JobProcessor {
             global_sequence: MongoLong.fromString(global_sequence)
         };
 
-        console.log(doc);
-
         const self = this;
+
+        let dac_id = '';
+        if (act[0].data.dac_id){
+            dac_id = act[0].data.dac_id;
+        }
 
         this.db.then((db) => {
             const col = db.collection('actions');
             col.insertOne(doc).then(() => {
-                console.log('Save completed');
+                const action_log_meta = {action:doc.action, block_num};
+                if (dac_id){
+                    action_log_meta.dac_id = dac_id;
+                }
+                this.logger.info('Action save completed', action_log_meta);
 
                 self.processedActionJob(job, doc)
 
@@ -141,7 +156,7 @@ class JobProcessor {
                 if (e.code === 11000) { // Duplicate index
                     self.processedActionJob(job, doc)
                 } else {
-                    console.error('DB save failed :(', e);
+                    this.logger.error('DB save failed :(', {e});
 
                     this.amq.then((amq) => {
                         amq.reject(job)
@@ -149,6 +164,16 @@ class JobProcessor {
                 }
             })
         })
+    }
+
+    async processTransactionRow(job){
+        const sb = new Serialize.SerialBuffer({
+            textEncoder: new TextEncoder,
+            textDecoder: new TextDecoder,
+            array: new Uint8Array(job.content)
+        });
+
+
     }
 
     async processContractRow(job) {
@@ -185,16 +210,16 @@ class JobProcessor {
             const data = table_type.deserialize(data_sb);
 
             if (code !== 'eosio') {
-                // console.log(`row version ${row_version}`);
-                // console.log(`code ${code}`);
-                // console.log(`scope ${scope}`);
-                // console.log(`table ${table}`);
-                // console.log(`primary_key ${primary_key}`);
-                // console.log(`payer ${payer}`);
-                // // console.log(`data`)
-                // console.log(data);
+                // this.logger.info(`row version ${row_version}`);
+                // this.logger.info(`code ${code}`);
+                // this.logger.info(`scope ${scope}`);
+                // this.logger.info(`table ${table}`);
+                // this.logger.info(`primary_key ${primary_key}`);
+                // this.logger.info(`payer ${payer}`);
+                // // this.logger.info(`data`)
+                // this.logger.info(data);
 
-                console.log(`Storing ${code}:${table}:${block_timestamp_int}`);
+                this.logger.info(`Storing ${code}:${table}:${block_timestamp_int}`);
 
                 const data_hash = crypto.createHash('sha1').update(data_raw).digest('hex');
 
@@ -211,12 +236,10 @@ class JobProcessor {
                     present
                 };
 
-                console.log(doc);
-
                 this.db.then((db) => {
                     const col = db.collection('contract_rows');
                     col.insertOne(doc).then(() => {
-                        console.log('Save completed');
+                        this.logger.info('Contract row save completed', {dac_id:scope, code, scope, table, block_num});
 
                         this.amq.then((amq) => {
                             amq.ack(job)
@@ -227,7 +250,7 @@ class JobProcessor {
                                 // duplicate index
                                 amq.ack(job)
                             } else {
-                                console.error('DB save failed :(', e);
+                                this.logger.error('Contract rowDB save failed :(', {e});
                                 amq.reject(job)
                             }
                         })
@@ -236,7 +259,7 @@ class JobProcessor {
 
             }
         } catch (e) {
-            console.error(`Error deserializing ${code}:${table} : ${e.message}`);
+            this.logger.error(`Error deserializing ${code}:${table} : ${e.message}`, {e});
             this.amq.then((amq) => {
                 amq.ack(job)
             });
@@ -246,26 +269,40 @@ class JobProcessor {
 
     }
 
+    worker_message(doc){
+        this.ipc.server.broadcast('action', doc);
+    }
 
     async start() {
-        this.contracts = this.config.eos.contracts;
-
         this.connectAmq();
-        this.connectDb();
+        await this.connectDb();
 
         this.delta_handler = new DeltaHandler({config: this.config, queue: this.amq});
 
+        this.dac_directory = new DacDirectory({config: this.config, db:this.db});
+        await this.dac_directory.reload();
+
         if (cluster.isMaster) {
-            console.log(`Starting processor with ${this.config.clusterSize} threads...`);
-            // kue.app.listen(3001)
+            this.logger.info(`Starting processor with ${this.config.clusterSize} threads...`);
+            // start ipc server that clients can subscribe to for api cache updates
+            this.ipc = new IPC();
+            this.ipc.config.appspace = 'eosdac.';
+            this.ipc.config.id = 'eosdacprocessor';
+            this.ipc.serve(() => {
+                this.logger.info(`Started IPC`);
+            });
+            this.ipc.server.start();
+
 
             for (let i = 0; i < this.config.clusterSize; i++) {
-                cluster.fork()
+                const worker = cluster.fork();
+                worker.on('message', this.worker_message.bind(this));
             }
         } else {
             const self = this;
             this.amq.then((amq) => {
                 amq.listen('contract_row', self.processContractRow.bind(self));
+                // amq.listen('generated_transaction', self.processTransactionRow.bind(self));
                 amq.listen('action', self.processActionJob.bind(self))
             })
         }

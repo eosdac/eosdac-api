@@ -31,20 +31,21 @@ async function tokensOwned(fastify, request) {
                         const tokens_res = [];
 
                         tokens.forEach((value, key) => {
-                            const [bal, sym] = value.data.balance.split(' ');
+                            const [bal, symbol] = value.data.balance.split(' ');
                             let precision = 0;
                             const decimal_pos = bal.indexOf('.');
                             if (decimal_pos > -1){
                                 precision = bal.length - (decimal_pos+1);
                             }
-                            const ti = token_info.get(`${value.code}:${sym}`);
+                            const ti = token_info.get(`${value.code}:${symbol}`);
 
                             const token_data = {
                                 contract: value.code,
-                                symbol: `${precision},${sym}`,
+                                symbol,
+                                precision,
                                 logo: 'https://raw.githubusercontent.com/eoscafe/eos-airdrops/master/logos/placeholder.png',
                                 logo_lg: 'https://raw.githubusercontent.com/eoscafe/eos-airdrops/master/logos/placeholder-lg.png',
-                                name: sym
+                                name: symbol
                             };
                             if (ti){
                                 token_data.logo = ti.logo;

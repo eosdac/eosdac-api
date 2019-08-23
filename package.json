@@ -5,6 +5,7 @@
   "author": "<michael@eosdac.io>",
   "license": "MIT",
   "dependencies": {
+    "@shelf/winston-datadog-logs-transport": "^1.0.7",
     "amqplib": "^0.5.3",
     "commander": "^2.19.0",
     "dirty-json": "^0.7.0",
@@ -17,9 +18,13 @@
     "fastify-oas": "^2.0.0-rc.4",
     "int64-buffer": "^0.99.1007",
     "mongodb": "^3.1",
+    "nan": "^2.4.0",
     "node-fetch": "^2.2.0",
+    "node-ipc": "^9.1.1",
     "path": "^0.12.7",
     "text-encoding": "^0.6.4",
-    "ws": "^6.0.0"
+    "winston": "^3.2.1",
+    "ws": "^6.0.0",
+    "zlib": "^1.0.5"
   }
 }

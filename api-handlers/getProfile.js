@@ -15,8 +15,22 @@ const null_profile = {
 
 
 async function getProfile(fastify, request) {
+    const dac_id = request.dac();
+
     const account = request.query.account;
     const accounts = account.split(',');
+    const lookup_accounts = [], cached_accounts = [], cached_account_data = [];
+    accounts.forEach((acnt) => {
+        const cached = fastify.cache.get(dac_id, `/v1/eosdac/profile?account=${acnt}`);
+        console.log(`Found cached for ${acnt}`, cached);
+        if (cached && cached.results && cached.results.length){
+            cached_accounts.push(acnt);
+            cached_account_data.push(cached.results[0]);
+        }
+        else {
+            lookup_accounts.push(acnt);
+        }
+    });
 
     const dac_config = await request.dac_config();
 
@@ -25,7 +39,13 @@ async function getProfile(fastify, request) {
 
     const cust_contract = dac_config.accounts.get(2);
 
-    const query = {"action.account": cust_contract, "action.name": "stprofileuns", "action.data.cand": {$in: accounts}};
+    const query = {"action.account": cust_contract, "action.name": "stprofile", "action.data.dac_id":dac_id, "action.data.cand": {$in: lookup_accounts}};
+
+    if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
+        fastify.log.info(`Got legacy dac ${dac_id}`, {dac_id});
+        query['action.data.dac_id'] = {$in: [dac_id, null]};
+        query['action.name'] = {$in: ['stprofileuns', 'stprofile']};
+    }
 
     const pipeline = [
         {$match: query},
@@ -50,19 +70,26 @@ async function getProfile(fastify, request) {
 
     const res = await collection.aggregate(pipeline);
 
-    const found_accounts = [];
+    const found_accounts = cached_accounts;
     const result = await res.next();
     result.results = result.results.map((row) => {
         // console.log(row.profile)
         if (typeof row.profile === 'string') {
-            row.profile = JSON.parse(row.profile)
+            row.profile = JSON.parse(row.profile);
         }
         delete row._id;
 
         found_accounts.push(row.account);
 
+        // const val = JSON.stringify({results:[row], count:1});
+        const val ={results:[row], count:1};
+        // console.log(`Storing ${dac_id} /v1/eosdac/profile?account=${row.account}`, val);
+        fastify.cache.set(dac_id, `/v1/eosdac/profile?account=${row.account}`, val);
+
         return row
     });
+
+    result.results.push(...cached_account_data);
 
     const missing_accounts = [];
     accounts.forEach((account_name) => {

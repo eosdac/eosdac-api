@@ -1,12 +1,18 @@
+
+process.title = 'eosdac-api';
+
 const openApi = require('./open-api');
 const {loadConfig} = require('./functions');
+const DacCache = require('./dac-cache');
 const path = require('path');
 
 const config = loadConfig();
+const logger = require('./connections/logger')('eosdac-api', config.logger);
 
 const fastify = require('fastify')({
     ignoreTrailingSlash: true,
-    trustProxy: true
+    trustProxy: true,
+    logger
 });
 
 fastify.register(require('fastify-oas'), openApi.options);
@@ -25,6 +31,8 @@ fastify.register(require('fastify-mongodb'), {
 
 fastify.register(require('./fastify-eos'), config);
 fastify.register(require('./fastify-dac'), {});
+fastify.register(require('./fastify-config'), config);
+fastify.register(require('./fastify-cache'), {});
 
 fastify.register(require('fastify-cors'), {
     allowedHeaders: 'Content-Type,X-DAC-Name',

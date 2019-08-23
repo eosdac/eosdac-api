@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.title = 'eosdac-filler';
+
 const commander = require('commander');
 const {Api, JsonRpc} = require('eosjs');
 const {TextDecoder, TextEncoder} = require('text-encoding');
@@ -11,7 +13,7 @@ const {loadConfig, getRestartBlock} = require('./functions');
 const RabbitSender = require('./rabbitsender');
 const cluster = require('cluster');
 const Int64BE = require('int64-buffer').Int64BE;
-const InterestedContracts = require('./interested-contracts');
+const DacDirectory = require('./dac-directory');
 
 let rpc;
 const signatureProvider = null;
@@ -35,7 +37,9 @@ class FillManager {
         this.job = null;
         this.process_only = processOnly;
 
-        console.log(`Loading config ${this.config.name}.config.js`)
+        console.log(`Loading config ${this.config.name}.config.js`);
+
+        this.logger = require('./connections/logger')('eosdac-filler', this.config.logger);
     }
 
     async run() {
@@ -54,7 +58,6 @@ class FillManager {
         let start_block = this.start_block;
         if (start_block === -1) {
             start_block = await getRestartBlock();
-            console.log(`Starting from block ${start_block}, LIB is ${lib}`)
         }
 
         // If replay is set then we start from block 0 in parallel and then start a serial handler from lib onwards
@@ -65,25 +68,25 @@ class FillManager {
 
         this.amq = RabbitSender.init(this.config.amq);
 
-        const interested_contracts = new InterestedContracts({config: this.config, db:this.db});
-        await interested_contracts.reload();
+        const dac_directory = new DacDirectory({config: this.config, db:this.db});
+        await dac_directory.reload();
 
-        const action_handler = new ActionHandler({queue: this.amq, config: this.config, interested_contracts});
-        const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config});
-        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, interested_contracts});
+        const action_handler = new ActionHandler({queue: this.amq, config: this.config, dac_directory, logger:this.logger});
+        const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config, logger:this.logger});
+        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, dac_directory, logger:this.logger});
 
         if (this.replay) {
 
             if (cluster.isMaster) {
 
-                console.log(`Replaying from ${this.start_block} in parallel mode`);
+                this.logger.info(`Replaying from ${this.start_block} in parallel mode`);
 
 
                 let chunk_size = 10000;
                 const range = lib - this.start_block;
 
                 if (chunk_size > (range / this.config.fillClusterSize)) {
-                    console.log('small chunks');
+                    this.logger.info('small chunks');
                     chunk_size = parseInt((range) / this.config.fillClusterSize)
                 }
 
@@ -96,7 +99,7 @@ class FillManager {
                 let break_now = false;
                 let number_jobs = 0;
                 while (true) {
-                    console.log(`adding job for ${from} to ${to}`);
+                    this.logger.info(`adding job for ${from} to ${to}`);
                     let from_buffer = new Int64BE(from).toBuffer();
                     let to_buffer = new Int64BE(to).toBuffer();
 
@@ -125,7 +128,7 @@ class FillManager {
                     }
                 }
 
-                console.log(`Queued ${number_jobs} jobs`);
+                this.logger.info(`Queued ${number_jobs} jobs`);
 
                 for (let i = 0; i < this.config.fillClusterSize; i++) {
                     cluster.fork()
@@ -140,7 +143,7 @@ class FillManager {
                 //queue.process('block_range', 1, this.processBlockRange.bind(this))
                 this.amq = RabbitSender.init(this.config.amq);
 
-                console.log(`Listening to queue for block_range`);
+                this.logger.info(`Listening to queue for block_range`);
                 this.amq.then((amq) => {
                     amq.listen('block_range', this.processBlockRange.bind(this))
                 })
@@ -149,10 +152,10 @@ class FillManager {
         } else if (this.test_block) {
             // const action_handler = new ActionHandler({queue: this.amq, config: this.config})
             // const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config})
-            const delta_handler = new DeltaHandler({queue: this.amq, config: this.config});
+            // const delta_handler = new DeltaHandler({queue: this.amq, config: this.config});
 
 
-            console.log(`Testing single block ${this.test_block}`);
+            this.logger.info(`Testing single block ${this.test_block}`);
             this.br = new StateReceiver({
                 startBlock: this.test_block,
                 endBlock: this.test_block + 1,
@@ -162,7 +165,7 @@ class FillManager {
             this.br.registerTraceHandler(block_handler);
             this.br.registerDeltaHandler(delta_handler);
             this.br.registerDoneHandler(() => {
-                console.log('Test complete')
+                this.logger.info('Test complete')
                 // process.exit(0)
             });
             this.br.start()
@@ -170,15 +173,15 @@ class FillManager {
             if (cluster.isMaster) {
                 //kue.app.listen(3000)
 
-                console.log(`Starting block_range listener only`);
+                this.logger.info(`Starting block_range listener only`);
 
                 for (let i = 0; i < this.config.fillClusterSize; i++) {
-                    cluster.fork()
+                    cluster.fork();
                 }
             } else {
                 this.amq = RabbitSender.init(this.config.amq);
 
-                console.log(`Listening to queue for block_range ONLY`);
+                this.logger.info(`Listening to queue for block_range ONLY`);
                 this.amq.then((amq) => {
                     amq.listen('block_range', this.processBlockRange.bind(this))
                 })
@@ -191,7 +194,7 @@ class FillManager {
                 }
             }
 
-            console.log(`No replay, starting at block ${start_block}`);
+            this.logger.info(`No replay, starting from block ${start_block}, LIB is ${lib}`);
 
             this.br = new StateReceiver({startBlock: start_block, mode: 0, config: this.config});
             this.br.registerTraceHandler(block_handler);
@@ -202,11 +205,11 @@ class FillManager {
     }
 
     workerExit(worker, code, signal) {
-        console.log(`Process exit`);
+        this.logger.info(`Process exit`);
         if (signal) {
-            console.error(`FillManager : worker was killed by signal: ${signal}`);
+            this.logger.warn(`FillManager : worker was killed by signal: ${signal}`);
         } else if (code !== 0) {
-            console.error(`FillManager : worker exited with error code: ${code}`);
+            this.logger.warn(`FillManager : worker exited with error code: ${code}`);
         } else {
             if (this.job) {
                 // Job success
@@ -214,7 +217,7 @@ class FillManager {
                     amq.ack(this.job)
                 })
             }
-            console.log('FillManager : worker success!');
+            this.logger.info('FillManager : worker success!');
         }
 
         if (worker.isDead()) {
@@ -225,18 +228,17 @@ class FillManager {
                 })
             }
 
-            console.error(`FillManager : Worker is dead, starting a new one`);
+            this.logger.warn(`FillManager : Worker is dead, starting a new one`);
             cluster.fork();
 
             if (worker.isMaster) {
-                console.error('FillManager : Main thread died :(')
+                this.logger.error('FillManager : Main thread died :(')
             }
         }
 
     }
 
     async processBlockRange(job) {
-        console.log(`processBlockRange pid : ${process.pid}`, job.content);
         this.job = job;
         //await this.amq.ack(job)
 
@@ -246,50 +248,36 @@ class FillManager {
         const start_block = new Int64BE(start_buffer).toString();
         const end_block = new Int64BE(end_buffer).toString();
 
-        // used if the process dies
-        // this.job_done = this.amq.ack
+        this.logger.info(`processBlockRange pid : ${process.pid} ${start_block} to ${end_block}`);
 
-        console.log(`Starting block listener ${start_block} to ${end_block}`);
+        const dac_directory = new DacDirectory({config: this.config, db:this.db});
+        await dac_directory.reload();
 
-        /*if (this.br) {
-            console.log("Already have StateReceiver")
-            this.br.restart(start_block, end_block)
-            this.br.registerDoneHandler(() => {
-                this.amq.then((amq) => {
-                    amq.ack(job)
-                })
-                console.log(`Finished job ${start_block}-${end_block}`, job)
-            })
-        } else {*/
-
-        const interested_contracts = new InterestedContracts({config: this.config, db:this.db});
-        await interested_contracts.reload();
-
-        const action_handler = new ActionHandler({queue: this.amq, config: this.config, interested_contracts});
-        const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config});
-        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, interested_contracts});
+        const action_handler = new ActionHandler({queue: this.amq, config: this.config, dac_directory, logger:this.logger});
+        const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config, logger:this.logger});
+        const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, dac_directory, logger:this.logger});
 
 
         this.br = new StateReceiver({startBlock: start_block, endBlock: end_block, mode: 1, config: this.config});
         this.br.registerDeltaHandler(delta_handler);
         this.br.registerTraceHandler(block_handler);
         this.br.registerDoneHandler(() => {
-            // console.log(`StateReceiver completed`, job)
+            // this.logger.info(`StateReceiver completed`, job)
             this.amq.then((amq) => {
-                amq.ack(job)
+                amq.ack(job);
             });
-            console.log(`Finished job ${start_block}-${end_block}`)
+            this.logger.info(`Finished job ${start_block}-${end_block}`);
         });
 
-        console.log('StateReceiver created');
+        this.logger.info('StateReceiver created');
 
 
         // start the receiver
         try {
             this.br.start();
-            console.log('Started StateReceiver')
+            this.logger.info('Started StateReceiver');
         } catch (e) {
-            console.error(`ERROR starting StateReceiver : ${e.message}`)
+            this.logger.error(`ERROR starting StateReceiver : ${e.message}`, e);
         }
         //}
     }

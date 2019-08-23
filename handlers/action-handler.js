@@ -9,10 +9,11 @@ const Int64 = require('int64-buffer').Int64BE;
 const {hexToUint8Array} = require('eosjs/dist/eosjs-serialize');
 
 class ActionHandler {
-    constructor({queue, db, config, interested_contracts}) {
+    constructor({queue, db, config, dac_directory, logger}) {
         this.amq = queue;
         this.config = config;
-        this.interested_contracts = interested_contracts;
+        this.dac_directory = dac_directory;
+        this.logger = logger;
         this.connectDb();
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
@@ -57,11 +58,13 @@ class ActionHandler {
     }
 
     async queueAction(block_num, action, trx_id, block_timestamp) {
-        // console.log(`Receive queue ${trx_id} for block ${block_num}`)
-        // console.log(action)
+        // this.logger.info(`Receive queue ${trx_id} for block ${block_num}`)
+        // this.logger.info(action)
 
+        // console.log(`Checking ${action.act.account}:${action.act.name} ${this.interested(action.act.account, action.act.name)}`);
         if (this.interested(action.act.account, action.act.name) && action.receipt[1].receiver === action.act.account) {
-            console.log("Queue Action", action.act.account);
+            this.logger.info("Queue Action", action);
+
             if (action.act.name === 'setabi'){
                 const sb_abi = new Serialize.SerialBuffer({
                     textEncoder: new TextEncoder,
@@ -76,7 +79,7 @@ class ActionHandler {
                 }
 
             }
-            // console.log(action.act.account)
+            // this.logger.info(action.act.account)
             // let data = {
             //     block_num,
             //     trx_id,
@@ -85,7 +88,7 @@ class ActionHandler {
             //     receiver_sequence: action.receipt[1].recv_sequence,
             //     global_sequence: action.receipt[1].global_sequence
             // };
-            // console.log(data)
+            // this.logger.info(data)
 
             const sb_action = new Serialize.SerialBuffer({
                 textEncoder: new TextEncoder,
@@ -99,7 +102,7 @@ class ActionHandler {
             sb_action.pushBytes(action.act.data);
 
             if (this.amq) {
-                // console.log(`Queueing action for ${action.act.account}::${action.act.name}`);
+                // this.logger.info(`Queueing action for ${action.act.account}::${action.act.name}`);
                 this.amq.then((amq) => {
                     const block_buffer = new Int64(block_num).toBuffer();
                     const timestamp_buffer = this.int32ToBuffer(block_timestamp.getTime() / 1000);
@@ -107,18 +110,18 @@ class ActionHandler {
                     const recv_buffer = new Int64(action.receipt[1].recv_sequence).toBuffer();
                     const global_buffer = new Int64(action.receipt[1].global_sequence).toBuffer();
                     const action_buffer = Buffer.from(sb_action.array);
-                    // console.log(`Publishing action`)
+                    // this.logger.info(`Publishing action`)
                     amq.send('action', Buffer.concat([block_buffer, timestamp_buffer, trx_id_buffer, recv_buffer, global_buffer, action_buffer]))
                 })
             } else {
-                console.error(`No queue when processing action for ${action.act.account}::${action.act.name} in ${trx_id}`);
+                console.error(`No queue when processing action for ${action.act.account}::${action.act.name} in ${trx_id}`, {action});
             }
         }
 
 
         if (action.inline_traces && action.inline_traces.length) {
             for (let itc of action.inline_traces) {
-                // console.log("inline trace\n", itc);
+                // this.logger.info("inline trace\n", itc);
                 if (itc[0] === 'action_trace_v0') {
                     this.queueAction(block_num, itc[1], trx_id, block_timestamp);
                 }
@@ -135,7 +138,7 @@ class ActionHandler {
             return true;
         }
 
-        return this.interested_contracts.has(account);
+        return this.dac_directory.has(account);
     }
 }
 

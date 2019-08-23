@@ -6,6 +6,7 @@ async function votesTimeline(fastify, request) {
     // console.log(request)
     return new Promise(async (resolve, reject) => {
         const dac_config = await request.dac_config();
+        const dac_id = request.dac();
         const db = fastify.mongo.db;
         const collection = db.collection('contract_rows');
         const account = request.query.account;
@@ -17,10 +18,16 @@ async function votesTimeline(fastify, request) {
 
         const query = {
             'code': cust_contract,
-            'scope': cust_contract,
+            'scope': dac_id,
             'table': 'candidates',
             'data.candidate_name': {$in: accounts}
         };
+
+        if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
+            fastify.log.info(`Got legacy dac ${dac_id}`, {dac_id});
+            query['scope'] = {$in: [dac_id, cust_contract]};
+        }
+
         if (start_block) {
             if (!('block_num' in query)) {
                 query.block_num = {}

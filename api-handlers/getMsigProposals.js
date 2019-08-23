@@ -7,58 +7,77 @@ async function getMsigProposals(fastify, request) {
 
     return new Promise(async (resolve, reject) => {
         const dac_config = await request.dac_config();
+        //console.log(dac_directory._custodian_contracts);
+        const dac_id = request.dac();
 
         const api = fastify.eos.api;
         const db = fastify.mongo.db;
         const collection = db.collection('multisigs');
 
         const custodian_contract = dac_config.accounts.get(2);
+        const scope = dac_id;
 
         // Get current custodians
-        const custodian_query = {code:custodian_contract, scope:custodian_contract, table:'custodians', limit:100};
-        const custodian_res = await api.rpc.get_table_rows(custodian_query);
-        const custodians = custodian_res.rows.map((row) => row.cust_name);
+        fastify.log.info(`Getting custodians for ${custodian_contract}:${scope}`);
+        const custodian_query = {code:custodian_contract, scope, table:'custodians', limit:100};
+        const custodian_res = api.rpc.get_table_rows(custodian_query);
 
         const status = request.query.status || 0;
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
 
-        const query = {status};
+        const now = new Date();
+
+        const query = {status, dac_id};
+        if (status === 1){ // open
+            query.expiration = {$gt:now};
+        }
+        if (status === 3){ // expired
+            query.status = {$ne:0};
+            query.expiration = {$lt:now};
+        }
 
         try {
-            const res = await collection.find(query).sort({block_num: -1}).skip(parseInt(skip)).limit(parseInt(limit));
+            const res = collection.find(query).sort({block_num: -1}).skip(parseInt(skip)).limit(parseInt(limit));
 
-            const proposals = {results: [], count: 0};
-            let update_expired = false;
-            const now = new Date();
-            const count = await res.count();
+            Promise.all([custodian_res, res]).then(async (responses) => {
+                let [custodian_res, res] = responses;
 
-            if (count === 0) {
-                resolve(proposals);
-            } else {
-                res.forEach((msig) => {
-                    if (status === 1 && msig.expiration <= now){ // open and expired
-                        update_expired = true;
-                    }
-                    else {
+                const current_custodians = custodian_res.rows.map((row) => row.cust_name);
+                const count = await res.count();
+
+                const proposals = {results: [], count: count};
+
+                if (count === 0) {
+                    resolve(proposals);
+                } else {
+                    res.forEach((msig) => {
                         delete msig._id;
+                        let custodians;
 
-                        if (msig.status === 1){ // open
-                            msig.requested_approvals = msig.requested_approvals.filter((req) => custodians.includes(req.actor));
-                            msig.provided_approvals = msig.provided_approvals.filter((pro) => custodians.includes(pro.actor));
+                        if (status === 1){
+                            // current custodians
+                            custodians = current_custodians;
+                        }
+                        else {
+                            custodians = msig.custodians;
+                        }
+
+                        msig.requested_approvals = msig.requested_approvals.filter((req) => custodians.includes(req.actor));
+                        msig.provided_approvals = msig.provided_approvals.filter((pro) => custodians.includes(pro.actor));
+
+                        if (status === 3) { // expired
+                            msig.status = 3;
                         }
 
                         proposals.results.push(msig);
-                    }
-                }, async () => {
-                    proposals.count = count;
-                    resolve(proposals);
 
-                    if (update_expired){
-                        collection.updateMany({status:1, expiration: {$lt:now}}, {$set:{status:3}});
-                    }
-                })
-            }
+                    }, async () => {
+                        resolve(proposals);
+                    })
+                }
+            });
+
         } catch (e) {
             reject(e);
         }

@@ -9,10 +9,11 @@ const Int64 = require('int64-buffer').Int64BE;
 
 
 class DeltaHandler {
-    constructor({queue, config, interested_contracts}) {
+    constructor({queue, config, dac_directory, logger}) {
         this.queue = queue;
         this.config = config;
-        this.interested_contracts = interested_contracts;
+        this.dac_directory = dac_directory;
+        this.logger = logger;
         this.tables = new Map;
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
@@ -55,7 +56,7 @@ class DeltaHandler {
         const contract = await this.api.getContract(code);
         const abi = await this.api.getAbi(code);
 
-        // console.log(abi)
+        // this.logger.info(abi)
 
         let this_table, type;
         for (let t of abi.tables) {
@@ -68,7 +69,7 @@ class DeltaHandler {
         if (this_table) {
             type = this_table.type
         } else {
-            console.error(`Could not find table "${table}" in the abi`);
+            this.logger.error(`Could not find table "${table}" in the abi`, {code, table});
             return
         }
 
@@ -76,12 +77,14 @@ class DeltaHandler {
     }
 
 
-    async queueDelta(block_num, deltas, abi, block_timestamp) {
+    async queueDelta(block_num, deltas, types, block_timestamp) {
         // const data = {block_num, deltas, abi};
         // this.queue.create('block_deltas', data).removeOnComplete(true).save()
 
+        // this.logger.info(`Queue delta for ${block_num}`);
+
         for (const delta of deltas) {
-            // console.log(delta)
+            // this.logger.info(delta)
             switch (delta[0]) {
                 case 'table_delta_v0':
                     if (delta[1].name === 'contract_row') {
@@ -97,40 +100,83 @@ class DeltaHandler {
 
                             let code;
                             try {
-                                // console.log(`row`, row);
+                                // this.logger.info(`row`, row);
                                 sb.get(); // ?
                                 code = sb.getName();
 
                                 if (code === this.config.eos.dacDirectoryContract){
-                                    console.log(`Found dac directory delta change`);
+                                    this.logger.info(`Found dac directory delta change`);
 
                                     const scope = sb.getName();
                                     const table = sb.getName();
 
                                     if (scope === this.config.eos.dacDirectoryContract && table === 'dacs'){
-                                        this.interested_contracts.reload();
+                                        this.dac_directory.reload();
                                     }
                                 }
                                 else if (this.interested(code)) {
-                                    // console.log('Queue delta row')
-                                    console.log(`Queueing delta ${code}`);
+                                    // this.logger.info('Queue delta row')
+                                    this.logger.info(`Queueing delta ${code}`, {code});
                                     await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
                                 } else {
                                     const scope = sb.getName();
                                     const table = sb.getName();
 
+                                    const msig_contract = this.config.eos.msigContract || 'eosio.msig';
+
                                     if (table === 'accounts' && this.interested(scope)) {
-                                        console.log(`Found interesting token balance change ${code}:${scope}:${table}`);
+                                        this.logger.info(`Found interesting token balance change ${code}:${scope}:${table}`, {code, scope, table});
 
                                         await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
                                     }
+                                    else if (code === msig_contract && ['proposal', 'approvals', 'approvals2'].includes(table)){
+                                        this.logger.info(`Queueing msig ${code}:${scope}:${table}`, {code, scope, table});
 
+                                        await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
+                                    }
                                 }
                             } catch (e) {
-                                console.error(`Error processing row.data for ${block_num} : ${e.message}`, e);
+                                this.logger.error(`Error processing row.data for ${block_num} : ${e.message}`, e);
                             }
                         }
                     }
+                    /*else if (delta[1].name === 'generated_transaction') {
+                        // this.logger.info(`Found generated transaction`);
+                        for (const row of delta[1].rows) {
+                            const type = types.get(delta[1].name);
+                            const data_sb = new Serialize.SerialBuffer({
+                                textEncoder: new TextEncoder,
+                                textDecoder: new TextDecoder,
+                                array: row.data
+                            });
+                            const data = type.deserialize(data_sb, new Serialize.SerializerState({ bytesAsUint8Array: true }));
+                            if (data[1].sender === this.config.eos.msigContract){
+                                // Deferred transaction from msig execute, check if it is one of ours
+
+                                const packed = new Uint8Array(Object.values(data[1].packed_trx));
+                                const type_trx = types.get('transaction');
+                                const sb_trx = new Serialize.SerialBuffer({
+                                    textEncoder: new TextEncoder,
+                                    textDecoder: new TextDecoder,
+                                    array: packed
+                                });
+                                const data_trx = type_trx.deserialize(sb_trx, new Serialize.SerializerState({ bytesAsUint8Array: true }));
+
+                                action_loop:
+                                for (let a=0;a<data_trx.actions.length;a++){
+                                    const act = data_trx.actions[a];
+                                    for (let z=0;z<act.authorization.length;z++){
+                                        const auth = act.authorization[z];
+                                        if (this.interested(auth.actor)){
+                                            this.logger.info(`Queuing deferred transaction from msig (actor : ${auth.actor})`);
+                                            await this.queueDeltaRow('generated_transaction', block_num, row, block_timestamp);
+                                            break action_loop;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }*/
                     break
             }
         }
@@ -146,11 +192,11 @@ class DeltaHandler {
         return new Promise((resolve, reject) => {
             this.amq.then((amq) => {
                 const ts = Math.floor(block_timestamp.getTime() / 1000);
-                // console.log('ts', ts);
+                // this.logger.info('ts', ts);
                 const timestamp_buffer = this.int32ToBuffer(ts);
                 const block_buffer = new Int64(block_num).toBuffer();
                 const present_buffer = Buffer.from([row.present]);
-                // console.log(`Publishing ${name}`)
+                // this.logger.info(`Publishing ${name}`)
                 amq.send(name, Buffer.concat([block_buffer, present_buffer, timestamp_buffer, Buffer.from(row.data)]))
                     .then(resolve)
                     .catch(reject)
@@ -164,8 +210,8 @@ class DeltaHandler {
     }
 
 
-    interested(account, name) {
-        return this.interested_contracts.has(account);
+    interested(account) {
+        return this.dac_directory.has(account);
     }
 }
 

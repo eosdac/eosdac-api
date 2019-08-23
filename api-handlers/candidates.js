@@ -21,17 +21,18 @@ async function getCandidates(fastify, request) {
             textEncoder: new TextEncoder(),
         });
 
+        const dac_id = request.dac();
         const dac_config = await request.dac_config();
         const cust_contract = dac_config.accounts.get(2);
 
         const limit = request.query.limit || 20;
         const skip = request.query.skip || 0;
 
-        const candidate_query = {code:cust_contract, scope:cust_contract, table:'candidates', limit:100, key_type:'i64', index_position:3, reverse:true};
+        const candidate_query = {code:cust_contract, scope:dac_id, table:'candidates', limit:100, key_type:'i64', index_position:3, reverse:true};
         const candidate_res = await api.rpc.get_table_rows(candidate_query);
 
 
-        const custodian_query = {code:cust_contract, scope:cust_contract, table:'custodians', limit:100};
+        const custodian_query = {code:cust_contract, scope:dac_id, table:'custodians', limit:100};
         const custodian_res = await api.rpc.get_table_rows(custodian_query);
 
         const custodians_map = new Map();
@@ -47,17 +48,16 @@ async function getCandidates(fastify, request) {
             const candidates = candidate_res.rows;
             // console.log(candidates)
 
-            const enhanced = candidates.filter(a => a.is_active).map((cand) => {
+            const active = candidates.filter(a => a.is_active);
+            active.forEach((cand) => {
                 cand.is_custodian = custodians_map.has(cand.candidate_name);
-                if (cand.custodian_end_time_stamp == "1970-01-01T00:00:00.000"){
+                if (cand.custodian_end_time_stamp === "1970-01-01T00:00:00"){
                     cand.custodian_end_time_stamp = null;
                 }
-
-                return cand;
             });
-            const count = enhanced.length;
+            const count = active.length;
 
-            resolve({results:enhanced.slice(skip, skip+limit), count});
+            resolve({results:active.slice(skip, skip+limit), count});
         }
         else {
             reject('No candidates found');

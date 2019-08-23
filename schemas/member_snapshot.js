@@ -18,7 +18,7 @@ const memberSnapshotSchema = {
                 type: 'integer'
             }
         },
-        required: ['contract']
+        required: []
     },
     response: {
         200: {
@@ -35,7 +35,10 @@ const memberSnapshotSchema = {
                             },
                             "balance": {
                                 description: "Balance at time of snapshot",
-                                type: "string"
+                                type: "array",
+                                items: {
+                                    "type": "string"
+                                }
                             },
                             "terms": {
                                 description: "Version of the terms agreed to",

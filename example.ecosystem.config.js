@@ -16,7 +16,8 @@ module.exports = {
             autorestart: true,
             env: {
                 'CONFIG': 'jungle'
-            }
+            },
+            "pmx": false
         },
         {
             name: 'eosdac-api-jungle',
@@ -27,7 +28,8 @@ module.exports = {
                 'SERVER_PORT': 8383,
                 'SERVER_ADDR': '0.0.0.0',
                 'HOST_NAME': 'api-jungle.eosdac.io'
-            }
+            },
+            "pmx": false
         },
 
 
@@ -48,7 +50,8 @@ module.exports = {
             autorestart: true,
             env: {
                 'CONFIG': 'mainnet'
-            }
+            },
+            "pmx": false
         },
         {
             name: 'eosdac-api-mainnet',
@@ -59,7 +62,8 @@ module.exports = {
                 'SERVER_PORT': 8382,
                 'SERVER_ADDR': '0.0.0.0',
                 'HOST_NAME': 'api.eosdac.io'
-            }
+            },
+            "pmx": false
         }
     ]
 };
