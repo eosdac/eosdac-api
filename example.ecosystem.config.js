@@ -11,6 +11,16 @@ module.exports = {
             }
         },
         {
+            name: "eosdac-blockrange-jungle",
+            script: "./eosdac-blockrange.js",
+            node_args: ["--max-old-space-size=8192"],
+            autorestart: true,
+            kill_timeout: 3600,
+            env: {
+                'CONFIG': 'jungle'
+            }
+        },
+        {
             name: 'eosdac-processor-jungle',
             script: "./eosdac-processor.js",
             autorestart: true,
@@ -37,6 +47,16 @@ module.exports = {
         {
             name: "eosdac-filler-mainnet",
             script: "./eosdac-filler.js",
+            node_args: ["--max-old-space-size=8192"],
+            autorestart: true,
+            kill_timeout: 3600,
+            env: {
+                'CONFIG': 'mainnet'
+            }
+        },
+        {
+            name: "eosdac-blockrange-mainnet",
+            script: "./eosdac-blockrange.js",
             node_args: ["--max-old-space-size=8192"],
             autorestart: true,
             kill_timeout: 3600,
