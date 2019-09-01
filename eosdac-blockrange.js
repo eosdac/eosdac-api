@@ -3,10 +3,7 @@
 process.title = 'eosdac-blockrange';
 
 const commander = require('commander');
-const {Api, JsonRpc} = require('eosjs');
-const {TextDecoder, TextEncoder} = require('text-encoding');
-const fetch = require('node-fetch');
-const {loadConfig, getRestartBlock} = require('./functions');
+const {loadConfig} = require('./functions');
 const Int64BE = require('int64-buffer').Int64BE;
 const DacDirectory = require('./dac-directory');
 
@@ -31,7 +28,7 @@ class BlockRangeManager {
 
         console.log(`Loading config ${this.config.name}.config.js`);
 
-        this.logger = require('./connections/logger')('eosdac-filler', this.config.logger);
+        this.logger = require('./connections/logger')('eosdac-blockrange', this.config.logger);
     }
 
     async run() {
