@@ -19,40 +19,6 @@ const votesTimelineSchema = {
             }
         },
         required: ['account']
-    },
-    response: {
-        200: {
-            type: 'object',
-            properties: {
-                "results": {
-                    type: "array",
-                    items: {
-                        type: "object",
-                        properties: {
-                            "block_num": {
-                                description: "The block number",
-                                type: "string"
-                            },
-                            "block_timestamp": {
-                                description: "The block timestamp",
-                                type: "string"
-                            },
-                            "candidate": {
-                                description: "Candidate",
-                                type: "string"
-                            },
-                            "votes": {
-                                description: "Number of votes",
-                                type: "integer"
-                            }
-                        }
-                    }
-                },
-                "count": {
-                    type: "integer"
-                }
-            }
-        }
     }
 };
 

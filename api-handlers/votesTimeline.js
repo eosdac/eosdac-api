@@ -69,14 +69,34 @@ async function votesTimeline(fastify, request) {
                             votes: row.data.total_votes
                         })
                     }, () => {
-                        // remove rows where the previous value is the same as the current one
-                        for (let i = timeline.length-1; i > 0; i--){  // intentionally exclude the first document
-                            if (timeline[i].votes == timeline[i-1].votes){
-                                timeline[i].remove = true;
-                            }
-                        }
+                        // Group by account
+                        // TODO : Probably more efficient in mongo pipeline
+                        const accounts = {};
+                        const results = [];
+                        timeline.forEach((item) => {
+                            const cand = item.candidate;
+                            delete item.candidate;
 
-                        resolve(timeline.filter(d => !d.remove))
+                            if (typeof accounts[cand] === 'undefined'){
+                                accounts[cand] = [];
+                            }
+                            accounts[cand].push(item);
+                        });
+                        // remove rows where the previous value is the same as the current one
+                        Object.keys(accounts).forEach((cand) => {
+                            const votes = accounts[cand];
+
+                            for (let i = votes.length-1; i > 0; i--){  // intentionally exclude the first document
+                                if (votes[i].votes == votes[i-1].votes){
+                                    votes[i].remove = true;
+                                }
+                            }
+
+                            results.push({candidate:cand, votes: votes.filter(d => !d.remove)});
+                            // accounts[cand] = votes.filter(d => !d.remove);
+                        });
+
+                        resolve(results)
                     })
                 }
 
