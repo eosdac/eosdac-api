@@ -10,9 +10,17 @@ async function votesTimeline(fastify, request) {
         const db = fastify.mongo.db;
         const collection = db.collection('contract_rows');
         const account = request.query.account;
-        const start_block = request.query.start_block || null;
+        let start_block = request.query.start_block || null;
         const end_block = request.query.end_block || null;
         const cust_contract = dac_config.accounts.get(2);
+
+        if (!start_block && !end_block){
+            // max 6 months
+            const six_months = 2 * 60 * 60 * 24 * 90;
+            const api = fastify.eos.api;
+            const info_res = await api.rpc.get_info();
+            start_block = info_res.head_block_num - six_months;
+        }
 
         const accounts = account.split(',');
 
