@@ -33,6 +33,10 @@ const votesTimelineSchema = {
                                 description: "The block number",
                                 type: "string"
                             },
+                            "block_timestamp": {
+                                description: "The block timestamp",
+                                type: "string"
+                            },
                             "candidate": {
                                 description: "Candidate",
                                 type: "string"
