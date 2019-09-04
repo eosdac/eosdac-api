@@ -61,27 +61,23 @@ async function votesTimeline(fastify, request) {
                 if (!await res.count()) {
                     resolve(timeline)
                 } else {
+                    const accounts = {};
+
                     res.forEach((row) => {
-                        timeline.push({
+                        const cand = row.data.candidate_name;
+
+                        if (typeof accounts[cand] === 'undefined'){
+                            accounts[cand] = [];
+                        }
+                        accounts[cand].push({
                             block_timestamp: row.block_timestamp,
                             block_num: row.block_num,
-                            candidate: row.data.candidate_name,
                             votes: row.data.total_votes
                         })
                     }, () => {
                         // Group by account
                         // TODO : Probably more efficient in mongo pipeline
-                        const accounts = {};
                         const results = [];
-                        timeline.forEach((item) => {
-                            const cand = item.candidate;
-                            delete item.candidate;
-
-                            if (typeof accounts[cand] === 'undefined'){
-                                accounts[cand] = [];
-                            }
-                            accounts[cand].push(item);
-                        });
                         // remove rows where the previous value is the same as the current one
                         Object.keys(accounts).forEach((cand) => {
                             const votes = accounts[cand];
@@ -93,10 +89,9 @@ async function votesTimeline(fastify, request) {
                             }
 
                             results.push({candidate:cand, votes: votes.filter(d => !d.remove)});
-                            // accounts[cand] = votes.filter(d => !d.remove);
                         });
 
-                        resolve(results)
+                        resolve(results);
                     })
                 }
 
