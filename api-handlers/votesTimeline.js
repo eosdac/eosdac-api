@@ -55,6 +55,7 @@ async function votesTimeline(fastify, request) {
                 } else {
                     res.forEach((row) => {
                         timeline.push({
+                            block_timestamp: row.block_timestamp,
                             block_num: row.block_num,
                             candidate: row.data.candidate_name,
                             votes: row.data.total_votes
