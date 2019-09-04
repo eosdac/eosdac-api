@@ -69,7 +69,14 @@ async function votesTimeline(fastify, request) {
                             votes: row.data.total_votes
                         })
                     }, () => {
-                        resolve(timeline)
+                        // remove rows where the previous value is the same as the current one
+                        for (let i = timeline.length-1; i > 0; i--){  // intentionally exclude the first document
+                            if (timeline[i].votes == timeline[i-1].votes){
+                                timeline[i].remove = true;
+                            }
+                        }
+
+                        resolve(timeline.filter(d => !d.remove))
                     })
                 }
 
