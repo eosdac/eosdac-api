@@ -11,15 +11,20 @@ async function votesTimeline(fastify, request) {
         const collection = db.collection('contract_rows');
         const account = request.query.account;
         let start_block = request.query.start_block || null;
-        const end_block = request.query.end_block || null;
+        let end_block = request.query.end_block || null;
         const cust_contract = dac_config.accounts.get(2);
+        const api = fastify.eos.api;
 
         if (!start_block && !end_block){
             // max 6 months
             const six_months = 2 * 60 * 60 * 24 * 90;
-            const api = fastify.eos.api;
             const info_res = await api.rpc.get_info();
             start_block = info_res.head_block_num - six_months;
+            end_block = info_res.head_block_num;
+        }
+        if (!end_block){
+            const info_res = await api.rpc.get_info();
+            end_block = info_res.head_block_num;
         }
 
         const accounts = account.split(',');
@@ -50,9 +55,71 @@ async function votesTimeline(fastify, request) {
         }
 
         // console.log(query)
+        const range_size = 60 * 60 * 24 *2; // one day in blocks
+
+        const boundaries = [];
+        let current_block = end_block;
+        while (current_block >= start_block){
+            boundaries.push(current_block);
+            current_block -= range_size;
+        }
+
+        const pipeline = [
+            {$match: query},
+            {'$sort': {block_num: -1}},
+            {
+                '$bucket': {
+                    groupBy: "$block_num",
+                    boundaries: boundaries.sort(),
+                    default: "out_of_range",
+                    output: {
+                        candidate_data: {"$push": "$$ROOT.data"}
+                    }
+                }
+            },
+            { $unwind: '$candidate_data' },
+            { $project: { candidate_name: '$candidate_data.candidate_name', votes: '$candidate_data.total_votes' } },
+            {
+                $group: {
+                    _id: { name: "$candidate_name", block_num:"$_id" },
+                    votes: {"$max": "$votes"}
+                }
+            },
+            { $sort: {"_id.block_num": -1} }
+        ];
+
+        const results = [];
+        const grouped_res = {};
+        const res = await collection.aggregate(pipeline);
+        res.forEach((row) => {
+            // console.log(row);
+            // delete row.candidate_data;
+            if (row._id.block !== 'out_of_range'){
+                const cand = row._id.name;
+
+                if (typeof grouped_res[cand] === 'undefined'){
+                    grouped_res[cand] = [];
+                }
+                grouped_res[cand].push({
+                    block_num: row._id.block_num,
+                    votes: row.votes
+                });
+
+            }
+        }, () => {
+            // console.log(grouped_res);
+
+            Object.keys(grouped_res).forEach((cand) => {
+                // console.log(cand);
+                results.push({candidate:cand, votes: grouped_res[cand]});
+            });
+
+            resolve(results);
+        });
 
 
-        collection.find(query, {sort: {block_num: 1}}, async (err, res) => {
+
+        /*collection.find(query, {sort: {block_num: 1}}, async (err, res) => {
             // console.log("action", res.action.data)
             if (err) {
                 reject(err)
@@ -96,7 +163,7 @@ async function votesTimeline(fastify, request) {
                 }
 
             }
-        })
+        })*/
     })
 }
 
@@ -106,7 +173,8 @@ module.exports = function (fastify, opts, next) {
         schema: votesTimelineSchema.GET
     }, async (request, reply) => {
         const res = await votesTimeline(fastify, request);
-        reply.send({results: res, count: res.length});
+        // reply.send({results: res, count: res.length});
+        reply.send(res);
     });
     next()
 };
