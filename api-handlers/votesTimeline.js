@@ -106,15 +106,10 @@ async function votesTimeline(fastify, request) {
         const res = await collection.aggregate(pipeline);
         res.forEach((row) => {
             // console.log(row);
-            // delete row.candidate_data;
             if (row._id.block !== 'out_of_range'){
                 const cand = row._id.name;
 
                 grouped_res[cand] = grouped_res[cand] || [];
-                // if (typeof grouped_res[cand] === 'undefined'){
-                //     grouped_res[cand] = [];
-                // }
-                // grouped_res[cand].push(row);
                 grouped_res[cand].push({
                     block_num: row._id.block_num,
                     block_timestamp: block_timestamps[row._id.block_num],
@@ -123,63 +118,14 @@ async function votesTimeline(fastify, request) {
 
             }
         }, () => {
-            // console.log(grouped_res);
 
             Object.keys(grouped_res).forEach((cand) => {
-                // console.log(cand);
                 results.push({candidate:cand, votes: grouped_res[cand]});
             });
 
             resolve(results);
         });
 
-
-
-        /*collection.find(query, {sort: {block_num: 1}}, async (err, res) => {
-            // console.log("action", res.action.data)
-            if (err) {
-                reject(err)
-            } else if (res) {
-                const timeline = [];
-                if (!await res.count()) {
-                    resolve(timeline)
-                } else {
-                    const accounts = {};
-
-                    res.forEach((row) => {
-                        const cand = row.data.candidate_name;
-
-                        if (typeof accounts[cand] === 'undefined'){
-                            accounts[cand] = [];
-                        }
-                        accounts[cand].push({
-                            block_timestamp: row.block_timestamp,
-                            block_num: row.block_num,
-                            votes: row.data.total_votes
-                        })
-                    }, () => {
-                        // Group by account
-                        // TODO : Probably more efficient in mongo pipeline
-                        const results = [];
-                        // remove rows where the previous value is the same as the current one
-                        Object.keys(accounts).forEach((cand) => {
-                            const votes = accounts[cand];
-
-                            for (let i = votes.length-1; i > 0; i--){  // intentionally exclude the first document
-                                if (votes[i].votes == votes[i-1].votes){
-                                    votes[i].remove = true;
-                                }
-                            }
-
-                            results.push({candidate:cand, votes: votes.filter(d => !d.remove)});
-                        });
-
-                        resolve(results);
-                    })
-                }
-
-            }
-        })*/
     })
 }
 
