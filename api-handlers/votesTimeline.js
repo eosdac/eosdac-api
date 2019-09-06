@@ -21,11 +21,11 @@ async function votesTimeline(fastify, request) {
 
         let end_block_timestamp = 0;
         if (!start_block && !end_block){
-            // max 6 months
-            const six_months = 2 * 60 * 60 * 24 * 90;
+            // max 3 months
+            const timespan = 2 * 60 * 60 * 24 * 90;
             const info_res = await api.rpc.get_info();
             console.log("INFO : ", JSON.stringify(info_res));
-            start_block = info_res.head_block_num - six_months;
+            start_block = info_res.head_block_num - timespan;
             end_block = info_res.head_block_num;
             end_block_timestamp = Date.parse(info_res.head_block_time);
         }
@@ -33,6 +33,8 @@ async function votesTimeline(fastify, request) {
             const info_res = await api.rpc.get_info();
             end_block = info_res.head_block_num;
         }
+
+        console.log(`Start: ${start_block}, End: ${end_block}, End timestamp: ${end_block_timestamp}`);
 
         const accounts = account.split(',');
 
@@ -73,7 +75,7 @@ async function votesTimeline(fastify, request) {
             block_timestamps[current_block] = new Date(current_block_timestamp);
 
             current_block -= range_size;
-            current_block_timestamp -= range_size * 1000;
+            current_block_timestamp -= range_size * 500;
         }
 
         const pipeline = [
@@ -90,11 +92,10 @@ async function votesTimeline(fastify, request) {
                 }
             },
             { $unwind: '$candidate_data' },
-            { $project: { candidate_name: '$candidate_data.candidate_name', votes: '$candidate_data.total_votes' } },
             {
                 $group: {
-                    _id: { name: "$candidate_name", block_num:"$_id" },
-                    votes: { "$max": "$votes" }
+                    _id: { name: "$candidate_data.candidate_name", block_num:"$_id" },
+                    votes: {"$max": "$candidate_data.total_votes"}
                 }
             },
             { $sort: {"_id.block_num": -1} }
@@ -113,6 +114,7 @@ async function votesTimeline(fastify, request) {
                 // if (typeof grouped_res[cand] === 'undefined'){
                 //     grouped_res[cand] = [];
                 // }
+                // grouped_res[cand].push(row);
                 grouped_res[cand].push({
                     block_num: row._id.block_num,
                     block_timestamp: block_timestamps[row._id.block_num],
