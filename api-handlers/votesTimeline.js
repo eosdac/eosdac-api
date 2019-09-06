@@ -15,12 +15,19 @@ async function votesTimeline(fastify, request) {
         const cust_contract = dac_config.accounts.get(2);
         const api = fastify.eos.api;
 
+        if (end_block && !start_block){
+            throw new Error("If you specify end_block then you must also specify start_block");
+        }
+
+        let end_block_timestamp = 0;
         if (!start_block && !end_block){
             // max 6 months
             const six_months = 2 * 60 * 60 * 24 * 90;
             const info_res = await api.rpc.get_info();
+            console.log("INFO : ", JSON.stringify(info_res));
             start_block = info_res.head_block_num - six_months;
             end_block = info_res.head_block_num;
+            end_block_timestamp = Date.parse(info_res.head_block_time);
         }
         if (!end_block){
             const info_res = await api.rpc.get_info();
@@ -55,13 +62,18 @@ async function votesTimeline(fastify, request) {
         }
 
         // console.log(query)
-        const range_size = 60 * 60 * 24 *2; // one day in blocks
+        const range_size = 60 * 60 * 24 * 2; // one day in blocks
 
         const boundaries = [];
+        let block_timestamps = [];
         let current_block = end_block;
+        let current_block_timestamp = end_block_timestamp;
         while (current_block >= start_block){
             boundaries.push(current_block);
+            block_timestamps[current_block] = new Date(current_block_timestamp);
+
             current_block -= range_size;
+            current_block_timestamp -= range_size * 1000;
         }
 
         const pipeline = [
@@ -82,7 +94,7 @@ async function votesTimeline(fastify, request) {
             {
                 $group: {
                     _id: { name: "$candidate_name", block_num:"$_id" },
-                    votes: {"$max": "$votes"}
+                    votes: { "$max": "$votes" }
                 }
             },
             { $sort: {"_id.block_num": -1} }
@@ -97,11 +109,13 @@ async function votesTimeline(fastify, request) {
             if (row._id.block !== 'out_of_range'){
                 const cand = row._id.name;
 
-                if (typeof grouped_res[cand] === 'undefined'){
-                    grouped_res[cand] = [];
-                }
+                grouped_res[cand] = grouped_res[cand] || [];
+                // if (typeof grouped_res[cand] === 'undefined'){
+                //     grouped_res[cand] = [];
+                // }
                 grouped_res[cand].push({
                     block_num: row._id.block_num,
+                    block_timestamp: block_timestamps[row._id.block_num],
                     votes: row.votes
                 });
 
@@ -173,8 +187,7 @@ module.exports = function (fastify, opts, next) {
         schema: votesTimelineSchema.GET
     }, async (request, reply) => {
         const res = await votesTimeline(fastify, request);
-        // reply.send({results: res, count: res.length});
-        reply.send(res);
+        reply.send({results: res, count: res.length});
     });
     next()
 };
