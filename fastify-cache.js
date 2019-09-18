@@ -25,46 +25,48 @@ module.exports = fp((fastify, options, next) => {
     });
 
 
-    fastify.addHook('preHandler', async (request, reply) => {
-        const name = request.raw.url;
-        const dac_id = request.dac();
-        // console.log(`Reading cache for ${dac_id}, ${name}`);
+    /*
+fastify.addHook('preHandler', async (request, reply) => {
+    const name = request.raw.url;
+    const dac_id = request.dac();
+    // console.log(`Reading cache for ${dac_id}, ${name}`);
 
-        const body = fastify.cache.get(dac_id, name);
-        if (body){
-            reply.send(body);
-        }
+    const body = fastify.cache.get(dac_id, name);
+    if (body){
+        reply.send(body);
+    }
 
-        return;
-    });
+    return;
+});
 
-    fastify.addHook('onSend', (request, reply, payload, done) => {
-        const name = request.raw.url;
-        const [url, data] = name.split('?');
-        let store = false;
+fastify.addHook('onSend', (request, reply, payload, done) => {
+    /*
+    const name = request.raw.url;
+  l, data] = name.split('?');
+    let store = false;
 
-        if (url === '/v1/eosdac/profile'){
-            const account_data = data.split('&').filter((v) => {return v.substr(0,8) === 'account='});
-            // console.log(account_data[0].replace('account=', ''));
-            if (account_data[0].indexOf(',') === -1){
-                // only a single account, cache it
-                store = true;
-            }
-        }
-        else if (url === '/v1/eosdac/msig_proposals'){
+    if (url === '/v1/eosdac/profile'){
+        const account_data = data.split('&').filter((v) => {return v.substr(0,8) === 'account='});
+        // console.log(account_data[0].replace('account=', ''));
+        if (account_data[0].indexOf(',') === -1){
+            // only a single account, cache it
             store = true;
         }
+    }
+    else if (url === '/v1/eosdac/msig_proposals'){
+        store = true;
+    }
 
-        if (store){
-            const dac_id = request.dac();
-            const body = payload;
+    if (store){
+        const dac_id = request.dac();
+        const body = payload;
 
-            console.log(`Storing cache for ${dac_id}, ${name}`);
-            fastify.cache.set(dac_id, name, body);
-        }
+        console.log(`Storing cache for ${dac_id}, ${name}`);
+        fastify.cache.set(dac_id, name, body);
+    }
 
         done(null, payload);
-    })
+    })*/
 
     next();
 }, {
