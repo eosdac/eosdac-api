@@ -4,7 +4,7 @@ const {loadConfig} = require('../functions');
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc} = require('eosjs');
 const fetch = require('node-fetch');
-const zlib = require('zlib');
+const {IPC} = require('node-ipc');
 
 const config = loadConfig();
 
@@ -34,6 +34,14 @@ class MultisigProposalsHandler {
         });
 
         this.logger = require('../connections/logger')('watcher-multisig', config.logger);
+
+        if (config.ipc){
+            this.ipc = new IPC();
+            this.ipc.config.appspace = config.ipc.appspace;
+            this.ipc.connectTo(config.ipc.id, async () => {
+                this.logger.info(`Connected to IPC ${config.ipc.appspace}${config.ipc.id}`);
+            });
+        }
     }
 
     async thresholdFromName(name, dac_id){
@@ -212,7 +220,7 @@ class MultisigProposalsHandler {
         })
     }
 
-    async recalcMsigs(doc, db, retry=false) {
+    async recalcMsigs({doc, db, retry=false, replay=false}) {
         // this.logger.info('Recalc', doc)
 
         // const db = mongo.db(this.config.mongo.dbName);
@@ -232,7 +240,9 @@ class MultisigProposalsHandler {
                 'block_num': {$lt:doc.block_num}
             });
 
-            return this.recalcMsigs(doc_proposed, db);
+            doc_proposed.proposed_retry = true;
+
+            return this.recalcMsigs({doc: doc_proposed, db});
         }
 
         const block_num = doc.block_num;
@@ -240,6 +250,7 @@ class MultisigProposalsHandler {
         const proposer = doc.action.data.proposer;
         const proposal_name = doc.action.data.proposal_name;
         let dac_id = doc.action.data.dac_id;
+
 
         if (!dac_id){
             dac_id = doc.action.data.dac_id = this.config.eos.legacyDacs[0];
@@ -309,8 +320,9 @@ class MultisigProposalsHandler {
         const proposal = res_proposals.results[0];
         if (!proposal) {
             if (!retry){
+                retry = true;
                 setTimeout(() => {
-                    this.recalcMsigs(doc, db, true);
+                    this.recalcMsigs({doc, db, retry});
                 }, 5000);
             }
             this.logger.error(`Error getting proposal ${proposal_name} from state`, {dac_id, proposal, proposal_name});
@@ -351,7 +363,8 @@ class MultisigProposalsHandler {
             if (!res_data.results.length) {
                 if (!retry){
                     setTimeout(() => {
-                        this.recalcMsigs(doc, db, true);
+                        const retry = true;
+                        this.recalcMsigs({doc, db, retry});
                     }, 5000);
                 }
 
@@ -476,6 +489,10 @@ class MultisigProposalsHandler {
         // only include custodians (if the msig is current then they are modified in the api)
         // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
+        if (!replay && this.ipc && !doc.proposed_retry){
+            this.ipc.of.livenotifications.emit('notification', {notify: 'MSIG_PROPOSED', dac_id, proposer, proposal_name, trx_id: doc.trx_id});
+        }
+
         this.logger.info(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, {dac_id, doc:output});
         return await coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
 
@@ -491,7 +508,7 @@ class MultisigProposalsHandler {
             this.logger.info('Reacting to msig action');
             // delay to wait for the state to update
             setTimeout((() => {
-                this.recalcMsigs(doc, this.db);
+                this.recalcMsigs({doc, db: this.db});
             }), 1000)
         }
     }
@@ -519,9 +536,10 @@ class MultisigProposalsHandler {
             }).sort({block_num: -1}).limit(1000);
             let doc;
             let count = 0;
+            const replay = true;
             const recalcs = [];
             while (doc = await res.next()) {
-                recalcs.push(this.recalcMsigs(doc, db));
+                recalcs.push(this.recalcMsigs({doc, db, replay}));
                 count++;
             }
 
