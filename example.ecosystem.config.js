@@ -41,6 +41,15 @@ module.exports = {
             },
             "pmx": false
         },
+        {
+            name: 'eosdac-ws-jungle',
+            script: "./eosdac-ws.js",
+            autorestart: true,
+            env: {
+                'CONFIG': 'jungle'
+            },
+            "pmx": false
+        },
 
 
         // MAINNET
@@ -82,6 +91,15 @@ module.exports = {
                 'SERVER_PORT': 8382,
                 'SERVER_ADDR': '0.0.0.0',
                 'HOST_NAME': 'api.eosdac.io'
+            },
+            "pmx": false
+        },
+        {
+            name: 'eosdac-ws-mainnet',
+            script: "./eosdac-ws.js",
+            autorestart: true,
+            env: {
+                'CONFIG': 'mainnet'
             },
             "pmx": false
         }
