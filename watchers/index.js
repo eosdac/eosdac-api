@@ -3,5 +3,5 @@ const workerProposals = require('./worker_proposals');
 
 module.exports = [
     multisigProposals,
-    // workerProposals
+    workerProposals
 ];

@@ -15,17 +15,26 @@ async function votesTimeline(fastify, request) {
         const cust_contract = dac_config.accounts.get(2);
         const api = fastify.eos.api;
 
+        if (end_block && !start_block){
+            throw new Error("If you specify end_block then you must also specify start_block");
+        }
+
+        let end_block_timestamp = 0;
         if (!start_block && !end_block){
-            // max 6 months
-            const six_months = 2 * 60 * 60 * 24 * 90;
+            // max 3 months
+            const timespan = 2 * 60 * 60 * 24 * 90;
             const info_res = await api.rpc.get_info();
-            start_block = info_res.head_block_num - six_months;
+            console.log("INFO : ", JSON.stringify(info_res));
+            start_block = info_res.head_block_num - timespan;
             end_block = info_res.head_block_num;
+            end_block_timestamp = Date.parse(info_res.head_block_time);
         }
         if (!end_block){
             const info_res = await api.rpc.get_info();
             end_block = info_res.head_block_num;
         }
+
+        console.log(`Start: ${start_block}, End: ${end_block}, End timestamp: ${end_block_timestamp}`);
 
         const accounts = account.split(',');
 
@@ -55,13 +64,18 @@ async function votesTimeline(fastify, request) {
         }
 
         // console.log(query)
-        const range_size = 60 * 60 * 24 *2; // one day in blocks
+        const range_size = 60 * 60 * 24 * 2; // one day in blocks
 
         const boundaries = [];
+        let block_timestamps = [];
         let current_block = end_block;
+        let current_block_timestamp = end_block_timestamp;
         while (current_block >= start_block){
             boundaries.push(current_block);
+            block_timestamps[current_block] = new Date(current_block_timestamp);
+
             current_block -= range_size;
+            current_block_timestamp -= range_size * 500;
         }
 
         const pipeline = [
@@ -78,11 +92,10 @@ async function votesTimeline(fastify, request) {
                 }
             },
             { $unwind: '$candidate_data' },
-            { $project: { candidate_name: '$candidate_data.candidate_name', votes: '$candidate_data.total_votes' } },
             {
                 $group: {
-                    _id: { name: "$candidate_name", block_num:"$_id" },
-                    votes: {"$max": "$votes"}
+                    _id: { name: "$candidate_data.candidate_name", block_num:"$_id" },
+                    votes: {"$max": "$candidate_data.total_votes"}
                 }
             },
             { $sort: {"_id.block_num": -1} }
@@ -93,77 +106,26 @@ async function votesTimeline(fastify, request) {
         const res = await collection.aggregate(pipeline);
         res.forEach((row) => {
             // console.log(row);
-            // delete row.candidate_data;
             if (row._id.block !== 'out_of_range'){
                 const cand = row._id.name;
 
-                if (typeof grouped_res[cand] === 'undefined'){
-                    grouped_res[cand] = [];
-                }
+                grouped_res[cand] = grouped_res[cand] || [];
                 grouped_res[cand].push({
                     block_num: row._id.block_num,
+                    block_timestamp: block_timestamps[row._id.block_num],
                     votes: row.votes
                 });
 
             }
         }, () => {
-            // console.log(grouped_res);
 
             Object.keys(grouped_res).forEach((cand) => {
-                // console.log(cand);
                 results.push({candidate:cand, votes: grouped_res[cand]});
             });
 
             resolve(results);
         });
 
-
-
-        /*collection.find(query, {sort: {block_num: 1}}, async (err, res) => {
-            // console.log("action", res.action.data)
-            if (err) {
-                reject(err)
-            } else if (res) {
-                const timeline = [];
-                if (!await res.count()) {
-                    resolve(timeline)
-                } else {
-                    const accounts = {};
-
-                    res.forEach((row) => {
-                        const cand = row.data.candidate_name;
-
-                        if (typeof accounts[cand] === 'undefined'){
-                            accounts[cand] = [];
-                        }
-                        accounts[cand].push({
-                            block_timestamp: row.block_timestamp,
-                            block_num: row.block_num,
-                            votes: row.data.total_votes
-                        })
-                    }, () => {
-                        // Group by account
-                        // TODO : Probably more efficient in mongo pipeline
-                        const results = [];
-                        // remove rows where the previous value is the same as the current one
-                        Object.keys(accounts).forEach((cand) => {
-                            const votes = accounts[cand];
-
-                            for (let i = votes.length-1; i > 0; i--){  // intentionally exclude the first document
-                                if (votes[i].votes == votes[i-1].votes){
-                                    votes[i].remove = true;
-                                }
-                            }
-
-                            results.push({candidate:cand, votes: votes.filter(d => !d.remove)});
-                        });
-
-                        resolve(results);
-                    })
-                }
-
-            }
-        })*/
     })
 }
 
@@ -173,8 +135,7 @@ module.exports = function (fastify, opts, next) {
         schema: votesTimelineSchema.GET
     }, async (request, reply) => {
         const res = await votesTimeline(fastify, request);
-        // reply.send({results: res, count: res.length});
-        reply.send(res);
+        reply.send({results: res, count: res.length});
     });
     next()
 };
