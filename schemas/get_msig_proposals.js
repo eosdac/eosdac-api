@@ -19,6 +19,14 @@ const getMsigProposalsSchema = {
             "skip": {
                 description: 'Skip number of results',
                 type: 'integer'
+            },
+            "proposer": {
+                description: 'Filter by proposing account',
+                type: 'string'
+            },
+            "proposal_name": {
+                description: 'Filter by proposal name',
+                type: 'string'
             }
         },
         required: []

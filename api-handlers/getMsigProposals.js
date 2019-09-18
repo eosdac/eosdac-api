@@ -25,6 +25,8 @@ async function getMsigProposals(fastify, request) {
         const status = request.query.status || 0;
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
+        const proposer = request.query.proposer || '';
+        const proposal_name = request.query.proposal_name || '';
 
         const now = new Date();
 
@@ -35,6 +37,12 @@ async function getMsigProposals(fastify, request) {
         if (status === 3){ // expired
             query.status = {$ne:0};
             query.expiration = {$lt:now};
+        }
+        if (proposal_name){
+            query.proposal_name = proposal_name;
+        }
+        if (proposer){
+            query.proposer = proposer;
         }
 
         try {
