@@ -22,7 +22,7 @@ async function getMsigProposals(fastify, request) {
         const custodian_query = {code:custodian_contract, scope, table:'custodians', limit:100};
         const custodian_res = api.rpc.get_table_rows(custodian_query);
 
-        const status = request.query.status || null;
+        const status = request.query.status;
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
         const proposer = request.query.proposer || '';
@@ -31,7 +31,7 @@ async function getMsigProposals(fastify, request) {
         const now = new Date();
 
         const query = {dac_id};
-        if (status !== null){
+        if (typeof status !== 'undefined'){
             query.status = status;
             if (status === 1){ // open
                 query.expiration = {$gt:now};
