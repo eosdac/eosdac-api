@@ -53,7 +53,6 @@ fastify.ready().then(async () => {
         await fastify.listen(process.env.SERVER_PORT, process.env.SERVER_ADDR)
     } catch (err) {
         fastify.log.error(err);
-        console.error(err);
         process.exit(1)
     }
 })();
