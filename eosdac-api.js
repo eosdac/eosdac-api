@@ -4,7 +4,6 @@ process.title = 'eosdac-api';
 
 const openApi = require('./open-api');
 const {loadConfig} = require('./functions');
-const DacCache = require('./dac-cache');
 const path = require('path');
 
 const config = loadConfig();
