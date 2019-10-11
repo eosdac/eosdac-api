@@ -312,7 +312,7 @@ class MultisigProposalsHandler {
             db,
             code: this.msig_contract,
             scope: proposer,
-            table: 'approvals',
+            table: {'$in': ['approvals', 'approvals2']},
             block_num: check_block,
             data_query
         });
