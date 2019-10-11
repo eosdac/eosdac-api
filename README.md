@@ -49,7 +49,11 @@ If you are deploying the api after your contracts have been deployed or you need
 
 `CONFIG=jungle ./eosdac-filler.js -r`
 
-This will spawn a number of processes to pull blocks from the chain, if you want to run more filler processes on another machine, you can start with the `-p` flag, this will only read from the queued replay tasks.
+You can also use the `-s` flag to specify a replay with a start block (so you don't have to start from block 0):
+
+`CONFIG=jungle ./eosdac-filler.js -r -s 25629516`
+
+Replays will spawn a number of processes to pull blocks from the chain, if you want to run more filler processes on another machine, you can start with the `-p` flag, this will only read from the queued replay tasks.
 
 `CONFIG=jungle ./eosdac-filler.js -p`
 

@@ -10,6 +10,14 @@ module.exports = {
     amq: {
         connectionString: 'amqp://user:pass@host/vhost'
     },
+    ws: {
+        host: '127.0.0.1',
+        port: '3030'
+    },
+    ipc: {
+        id: 'livenotifications',
+        appspace: 'eosdac.'
+    },
     eos: {
         chainId: "e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473",
         endpoint: 'http://jungle2.eosdac.io:8882',

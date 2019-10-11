@@ -23,6 +23,7 @@
     "node-ipc": "^9.1.1",
     "path": "^0.12.7",
     "text-encoding": "^0.6.4",
+    "websocket": "^1.0.30",
     "winston": "^3.2.1",
     "ws": "^6.0.0",
     "zlib": "^1.0.5"

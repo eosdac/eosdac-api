@@ -62,7 +62,7 @@ class ActionHandler {
         // this.logger.info(action)
 
         // console.log(`Checking ${action.act.account}:${action.act.name} ${this.interested(action.act.account, action.act.name)}`);
-        if (this.interested(action.act.account, action.act.name) && action.receipt[1].receiver === action.act.account) {
+        if (this.interested(action.act.account, action.act.name) && action.receipt && action.receipt[1].receiver === action.act.account) {
             this.logger.info("Queue Action", action);
 
             if (action.act.name === 'setabi'){

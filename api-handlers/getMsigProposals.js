@@ -22,19 +22,31 @@ async function getMsigProposals(fastify, request) {
         const custodian_query = {code:custodian_contract, scope, table:'custodians', limit:100};
         const custodian_res = api.rpc.get_table_rows(custodian_query);
 
-        const status = request.query.status || 0;
+        const status = request.query.status;
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
+        const proposer = request.query.proposer || '';
+        const proposal_name = request.query.proposal_name || '';
 
         const now = new Date();
 
-        const query = {status, dac_id};
-        if (status === 1){ // open
-            query.expiration = {$gt:now};
+        const query = {dac_id};
+        if (typeof status !== 'undefined'){
+            query.status = status;
+            if (status === 1){ // open
+                query.expiration = {$gt:now};
+            }
+            if (status === 3){ // expired
+                query.status = {$ne:0};
+                query.expiration = {$lt:now};
+            }
         }
-        if (status === 3){ // expired
-            query.status = {$ne:0};
-            query.expiration = {$lt:now};
+
+        if (proposal_name){
+            query.proposal_name = proposal_name;
+        }
+        if (proposer){
+            query.proposer = proposer;
         }
 
         try {

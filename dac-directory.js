@@ -56,6 +56,14 @@ class DacDirectory {
 
 
         let res;
+        const query_data = {
+            api: this.api,
+            code: this.config.eos.dacDirectoryContract,
+            scope: this.config.eos.dacDirectoryContract,
+            table: 'dacs',
+            greed_factor: 1,
+            primary_key: 'dac_id'
+        };
 
         if (this.mode === 'single'){
             query_data.lower_bound = this.dac_id;
@@ -72,15 +80,6 @@ class DacDirectory {
             });
         }
         else {
-            const query_data = {
-                api: this.api,
-                code: this.config.eos.dacDirectoryContract,
-                scope: this.config.eos.dacDirectoryContract,
-                table: 'dacs',
-                greed_factor: 1,
-                primary_key: 'dac_id'
-            };
-
             const table_iter = new eosTableIter(query_data);
 
             for await (let row of table_iter){
