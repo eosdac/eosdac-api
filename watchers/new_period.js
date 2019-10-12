@@ -11,11 +11,11 @@ class NewPeriodHandler {
         this.logger = require('../connections/logger')('watcher-multisig', config.logger);
 
         if (config.ipc){
-            this.ipc = new IPC();
-            this.ipc.config.appspace = config.ipc.appspace;
-            this.ipc.connectTo(config.ipc.id, async () => {
-                this.logger.info(`Connected to IPC ${config.ipc.appspace}${config.ipc.id}`);
-            });
+            // this.ipc = new IPC();
+            // this.ipc.config.appspace = config.ipc.appspace;
+            // this.ipc.connectTo(config.ipc.id, async () => {
+            //     this.logger.info(`Connected to IPC ${config.ipc.appspace}${config.ipc.id}`);
+            // });
         }
     }
 

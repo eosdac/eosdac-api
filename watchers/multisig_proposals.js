@@ -36,11 +36,11 @@ class MultisigProposalsHandler {
         this.logger = require('../connections/logger')('watcher-multisig', config.logger);
 
         if (config.ipc){
-            this.ipc = new IPC();
-            this.ipc.config.appspace = config.ipc.appspace;
-            this.ipc.connectTo(config.ipc.id, async () => {
-                this.logger.info(`Connected to IPC ${config.ipc.appspace}${config.ipc.id}`);
-            });
+            // this.ipc = new IPC();
+            // this.ipc.config.appspace = config.ipc.appspace;
+            // this.ipc.connectTo(config.ipc.id, async () => {
+            //     this.logger.info(`Connected to IPC ${config.ipc.appspace}${config.ipc.id}`);
+            // });
         }
     }
 
@@ -220,6 +220,32 @@ class MultisigProposalsHandler {
         })
     }
 
+    async getApprovals(proposer, data_query, check_block){
+
+        let approvals_data = [];
+        let res_approvals = await eosTableAtBlock({
+            db,
+            code: this.msig_contract,
+            scope: proposer,
+            table: 'approvals',
+            block_num: check_block,
+            data_query
+        });
+
+        if (!res_approvals.results.length){
+            res_approvals = await eosTableAtBlock({
+                db,
+                code: this.msig_contract,
+                scope: proposer,
+                table: 'approvals2',
+                block_num: check_block,
+                data_query
+            });
+        }
+
+        return approvals_data;
+    }
+
     async recalcMsigs({doc, db, retry=false, replay=false}) {
         // this.logger.info('Recalc', doc)
 
@@ -308,14 +334,8 @@ class MultisigProposalsHandler {
             block_num: check_block,
             data_query
         });
-        const res_approvals = await eosTableAtBlock({
-            db,
-            code: this.msig_contract,
-            scope: proposer,
-            table: {'$in': ['approvals', 'approvals2']},
-            block_num: check_block,
-            data_query
-        });
+
+        const approvals_data = this.getApprovals(proposer, data_query, check_block);
 
         const proposal = res_proposals.results[0];
         if (!proposal) {
@@ -475,8 +495,16 @@ class MultisigProposalsHandler {
             // this.logger.info('Provided approvals', provided.results[0].data.provided_approvals);
             output.provided_approvals = provided.results[0].data.provided_approvals
         } else {
+            const query_provided2 = {db: db, code: this.msig_contract, scope: proposer, table: 'approvals2', data_query};
+            const provided2 = await eosTableAtBlock(query_provided2);
+            if (provided2.count) {
+                output.provided_approvals = provided.results[0].data.provided_approvals
+            }
+            else {
+                output.provided_approvals = [];
+            }
             // this.logger.info('Resetting provided_approvals');
-            output.provided_approvals = []
+
         }
 
         // only include custodians
