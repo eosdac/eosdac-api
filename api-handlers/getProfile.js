@@ -15,7 +15,7 @@ const null_profile = {
 
 
 async function getProfile(fastify, request) {
-    const dac_id = 'eos.dac';
+    const dac_id = request.dac();
 
     const account = request.query.account;
     const accounts = account.split(',');
