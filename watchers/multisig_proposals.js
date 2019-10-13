@@ -220,9 +220,13 @@ class MultisigProposalsHandler {
         })
     }
 
-    async getApprovals(proposer, data_query, check_block){
+    async getApprovals(db, proposer, data_query, check_block){
 
-        let approvals_data = [];
+        let approvals_data = {
+            requested_approvals: [],
+            provided_approvals: []
+        };
+
         let res_approvals = await eosTableAtBlock({
             db,
             code: this.msig_contract,
@@ -232,7 +236,10 @@ class MultisigProposalsHandler {
             data_query
         });
 
-        if (!res_approvals.results.length){
+        if (res_approvals.results.length) {
+            approvals_data = res_approvals.results[0].data;
+        }
+        else {
             res_approvals = await eosTableAtBlock({
                 db,
                 code: this.msig_contract,
@@ -241,6 +248,17 @@ class MultisigProposalsHandler {
                 block_num: check_block,
                 data_query
             });
+
+            if (res_approvals.results.length){
+                approvals_data = res_approvals.results[0].data;
+
+                approvals_data.requested_approvals = approvals_data.requested_approvals.map((r) => {
+                    return r.level;
+                });
+                approvals_data.provided_approvals = approvals_data.provided_approvals.map((p) => {
+                    return p.level;
+                });
+            }
         }
 
         return approvals_data;
@@ -335,7 +353,10 @@ class MultisigProposalsHandler {
             data_query
         });
 
-        const approvals_data = this.getApprovals(proposer, data_query, check_block);
+        const approvals_data = await this.getApprovals(db, proposer, data_query, check_block);
+        output.requested_approvals = approvals_data.requested_approvals;
+        output.provided_approvals = approvals_data.provided_approvals;
+
 
         const proposal = res_proposals.results[0];
         if (!proposal) {
@@ -393,10 +414,6 @@ class MultisigProposalsHandler {
             }
         }
         output.trxid = res_data.results[0].data.transactionid;
-
-        if (res_approvals.count) {
-            output.requested_approvals = res_approvals.results[0].data.requested_approvals;
-        }
 
 
         // We have the transaction data, now get approvals
@@ -483,29 +500,6 @@ class MultisigProposalsHandler {
         output.custodians = custodians;
 
 
-        // Get the latest provided approvals
-        const query_provided = {db: db, code: this.msig_contract, scope: proposer, table: 'approvals', data_query};
-        if (end_block) {
-            query_provided.block_num = end_block
-        }
-        // this.logger.info('Querying approvals', query_provided);
-
-        const provided = await eosTableAtBlock(query_provided);
-        if (provided.count) {
-            // this.logger.info('Provided approvals', provided.results[0].data.provided_approvals);
-            output.provided_approvals = provided.results[0].data.provided_approvals
-        } else {
-            const query_provided2 = {db: db, code: this.msig_contract, scope: proposer, table: 'approvals2', data_query};
-            const provided2 = await eosTableAtBlock(query_provided2);
-            if (provided2.count) {
-                output.provided_approvals = provided.results[0].data.provided_approvals
-            }
-            else {
-                output.provided_approvals = [];
-            }
-            // this.logger.info('Resetting provided_approvals');
-
-        }
 
         // only include custodians
         // output.provided_approvals = output.provided_approvals.filter((approval) => custodians.includes(approval.actor));
