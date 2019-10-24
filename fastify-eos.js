@@ -1,7 +1,7 @@
 const fp = require('fastify-plugin');
 
 const {TextDecoder, TextEncoder} = require('text-encoding');
-const {Api, JsonRpc} = require('eosjs');
+const {Api, JsonRpc} = require('@jafri/eosjs2');
 const fetch = require('node-fetch');
 
 module.exports = fp((fastify, options, next) => {
