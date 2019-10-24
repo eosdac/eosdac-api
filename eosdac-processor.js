@@ -5,7 +5,7 @@ process.title = 'eosdac-processor';
 const cluster = require('cluster');
 
 const {TextDecoder, TextEncoder} = require('text-encoding');
-const {Api, JsonRpc, Serialize} = require('eosjs');
+const {Api, JsonRpc, Serialize} = require('@jafri/eosjs2');
 const {DeltaHandler} = require('./handlers');
 const fetch = require('node-fetch');
 const MongoClient = require('mongodb').MongoClient;
@@ -81,7 +81,11 @@ class JobProcessor {
         });
 
         // broadcast to master, to send via ipc
-        process.send(doc);
+        try {
+            process.send(doc);
+        }
+        catch (e){}
+
     }
 
     async processActionJob(job) {
