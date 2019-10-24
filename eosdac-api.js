@@ -4,7 +4,6 @@ process.title = 'eosdac-api';
 
 const openApi = require('./open-api');
 const {loadConfig} = require('./functions');
-const DacCache = require('./dac-cache');
 const path = require('path');
 
 const config = loadConfig();
@@ -53,7 +52,6 @@ fastify.ready().then(async () => {
         await fastify.listen(process.env.SERVER_PORT, process.env.SERVER_ADDR)
     } catch (err) {
         fastify.log.error(err);
-        console.error(err);
         process.exit(1)
     }
 })();
