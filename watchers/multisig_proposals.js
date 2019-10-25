@@ -516,7 +516,7 @@ class MultisigProposalsHandler {
         }
 
         this.logger.info(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, {dac_id, doc:output});
-        return await coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
+        return coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
 
     }
 
