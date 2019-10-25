@@ -478,9 +478,6 @@ class MultisigProposalsHandler {
         // if the msig has ended then get the custodians at the time it ended
         const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
         let scope = dac_id;
-        if (dac_id === 'eos.dac'){
-            scope = {$in:[custodian_contract, dac_id]};
-        }
         const custodian_query = {
             db,
             code: custodian_contract,
