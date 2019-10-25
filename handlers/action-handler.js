@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 
-const {Api, JsonRpc, Serialize} = require('eosjs');
+const {Api, JsonRpc, Serialize} = require('@jafri/eosjs2');
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const fetch = require('node-fetch');
 
