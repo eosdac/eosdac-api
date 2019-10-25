@@ -220,37 +220,40 @@ class MultisigProposalsHandler {
         })
     }
 
-    async getApprovals(db, proposer, data_query, check_block){
+    async getApprovals(db, proposer, data_query, check_block=0){
 
         let approvals_data = {
             requested_approvals: [],
             provided_approvals: []
         };
 
-        let res_approvals = await eosTableAtBlock({
+        const table_query = {
             db,
             code: this.msig_contract,
             scope: proposer,
             table: 'approvals',
-            block_num: check_block,
             data_query
-        });
+        };
+        if (check_block > 0){
+            table_query.block_num = check_block;
+        }
+
+        // console.log(table_query);
+
+        let res_approvals = await eosTableAtBlock(table_query);
 
         if (res_approvals.results.length) {
             approvals_data = res_approvals.results[0].data;
+            console.log(`Approvals data at block ${check_block}`, approvals_data);
         }
         else {
-            res_approvals = await eosTableAtBlock({
-                db,
-                code: this.msig_contract,
-                scope: proposer,
-                table: 'approvals2',
-                block_num: check_block,
-                data_query
-            });
+            console.log(`checking new table at block ${check_block}`);
+            table_query.table = 'approvals2';
+            res_approvals = await eosTableAtBlock(table_query);
 
             if (res_approvals.results.length){
                 approvals_data = res_approvals.results[0].data;
+                // console.log(approvals_data);
 
                 approvals_data.requested_approvals = approvals_data.requested_approvals.map((r) => {
                     return r.level;
@@ -283,6 +286,11 @@ class MultisigProposalsHandler {
                 'action.data.proposer': doc.action.data.proposer,
                 'block_num': {$lt:doc.block_num}
             });
+
+            if (!doc_proposed){
+                console.error(`Could not find original proposal for ${doc.action.data.proposer}:${doc.action.data.proposal_name}`);
+                return;
+            }
 
             doc_proposed.proposed_retry = true;
 
@@ -353,9 +361,6 @@ class MultisigProposalsHandler {
             data_query
         });
 
-        const approvals_data = await this.getApprovals(db, proposer, data_query, check_block);
-        output.requested_approvals = approvals_data.requested_approvals;
-        output.provided_approvals = approvals_data.provided_approvals;
 
 
         const proposal = res_proposals.results[0];
@@ -473,6 +478,13 @@ class MultisigProposalsHandler {
             end_block = ca.block_num - 1
         }
 
+
+        // Get current approvals
+        const approvals_data = await this.getApprovals(db, proposer, data_query, end_block);
+        output.requested_approvals = approvals_data.requested_approvals;
+        output.provided_approvals = approvals_data.provided_approvals;
+
+
         // Get current custodians
         let custodians = [];
         // if the msig has ended then get the custodians at the time it ended
@@ -558,6 +570,10 @@ class MultisigProposalsHandler {
             const replay = true;
             const recalcs = [];
             while (doc = await res.next()) {
+                // if (doc.action.data.proposal_name !== 'ryrg1alqdmw2'){
+                //     continue;
+                // }
+                // console.log(doc.action.data);
                 recalcs.push(this.recalcMsigs({doc, db, replay}));
                 count++;
             }
