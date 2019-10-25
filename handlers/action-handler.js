@@ -6,7 +6,7 @@ const fetch = require('node-fetch');
 
 const Int64 = require('int64-buffer').Int64BE;
 
-const {hexToUint8Array} = require('eosjs/dist/eosjs-serialize');
+const {hexToUint8Array} = require('@jafri/eosjs2/dist/eosjs-serialize');
 
 class ActionHandler {
     constructor({queue, db, config, dac_directory, logger}) {
