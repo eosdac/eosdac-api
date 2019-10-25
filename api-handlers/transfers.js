@@ -1,7 +1,7 @@
 const {transfersSchema} = require('../schemas');
 
 const {TextDecoder, TextEncoder} = require('text-encoding');
-const {Api, JsonRpc} = require('eosjs');
+const {Api, JsonRpc} = require('@jafri/eosjs2');
 const fetch = require('node-fetch');
 
 const {loadConfig} = require('../functions');

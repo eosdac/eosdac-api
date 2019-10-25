@@ -2,7 +2,7 @@ const connectMongo = require('../connections/mongo');
 const {loadConfig} = require('../functions');
 
 const {TextDecoder, TextEncoder} = require('text-encoding');
-const {Api, JsonRpc} = require('eosjs');
+const {Api, JsonRpc} = require('@jafri/eosjs2');
 const fetch = require('node-fetch');
 const {IPC} = require('node-ipc');
 
