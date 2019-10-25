@@ -521,9 +521,8 @@ class MultisigProposalsHandler {
     }
 
     async action({doc, dac_directory, db}) {
-        const msig_contracts = Array.from(dac_directory.msig_contracts().values());
-
-        if (msig_contracts.includes(doc.action.account)) {
+        const dac_msig_contract = this.config.eos.dacMsigContract || 'dacmultisigs';
+        if (doc.action.account === dac_msig_contract) {
             this.db = await db;
             this.dac_directory = dac_directory;
 
@@ -531,7 +530,7 @@ class MultisigProposalsHandler {
             // delay to wait for the state to update
             setTimeout((() => {
                 this.recalcMsigs({doc, db: this.db});
-            }), 1000)
+            }), 1000);
         }
     }
 
@@ -552,8 +551,9 @@ class MultisigProposalsHandler {
             await collection.deleteMany({});
             // this.logger.info(await collection.find({}).count());
 
+            const dac_msig_contract = this.config.eos.dacMsigContract || 'dacmultisigs';
             const res = collection_actions.find({
-                'action.account': {$in: Array.from(this.dac_directory.msig_contracts().values())},
+                'action.account': dac_msig_contract,
                 'action.name': {$in:['proposed', 'proposede']}
             }).sort({block_num: -1}).limit(1000);
             let doc;
