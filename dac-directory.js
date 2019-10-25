@@ -1,5 +1,5 @@
 
-const {Api, JsonRpc} = require('eosjs');
+const {Api, JsonRpc} = require('@jafri/eosjs2');
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const fetch = require('node-fetch');
 const {eosTableIter} = require('./eos-table');
