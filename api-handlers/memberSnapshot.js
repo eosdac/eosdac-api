@@ -26,16 +26,13 @@ async function memberSnapshot(fastify, request) {
         let has_more = true;
 
         const members_match = {db, code: contract, scope: dac_id, table: 'members', limit, skip, exclude_scope:true};
-        if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
-            members_match.scope = {$in: [dac_id, contract]};
-        }
         if (block_num) {
             members_match.block_num = {$lte: new MongoLong(block_num)}
         }
 
         const members = new Map;
 
-        // console.log(members_res.count);
+        console.log(members_match);
 
         while (has_more){
             const members_res = await eosTableAtBlock(members_match);
@@ -45,7 +42,8 @@ async function memberSnapshot(fastify, request) {
             });
             fastify.log.info(`Members results length ${members_res.count}`, {dac_id});
 
-            if (members_res.count < limit + members_match.skip){
+            if (members_res.count <= limit + members_match.skip){
+                console.log(`DO NOT HAVE MORE`);
                 has_more = false;
             }
             else {
@@ -101,9 +99,6 @@ async function memberSnapshot(fastify, request) {
 
         // Get candidates and add stake
         const candidates_match = {db, code: custodian_contract, scope: dac_id, table: 'candidates', limit:1000};
-        if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
-            candidates_match.scope = {$in: [dac_id, custodian_contract]};
-        }
         if (block_num) {
             candidates_match.block_num = {$lte: new MongoLong(block_num)}
         }
