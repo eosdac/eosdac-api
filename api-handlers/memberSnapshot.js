@@ -27,12 +27,12 @@ async function memberSnapshot(fastify, request) {
 
         const members_match = {db, code: contract, scope: dac_id, table: 'members', limit, skip, exclude_scope:true};
         if (block_num) {
-            members_match.block_num = {$lte: new MongoLong(block_num)}
+            console.log(`BLOCK : ${block_num}`);
+            members_match.block_num = block_num;
         }
 
         const members = new Map;
 
-        console.log(members_match);
 
         while (has_more){
             const members_res = await eosTableAtBlock(members_match);
@@ -55,10 +55,6 @@ async function memberSnapshot(fastify, request) {
             members_match.skip += limit;
             fastify.log.info(`Skip to member ${members_match.skip}`, {dac_id});
         }
-
-        // console.log(members.keys());
-
-
 
 
         // Loop through all balances and if they are in the members Map then add balance
