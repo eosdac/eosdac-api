@@ -43,6 +43,14 @@ const memberSnapshotSchema = {
                             "terms": {
                                 description: "Version of the terms agreed to",
                                 type: "integer"
+                            },
+                            "zero_balance": {
+                                description: "Member has a zero balance",
+                                type: "boolean"
+                            },
+                            "voter": {
+                                description: "Member is voting",
+                                type: "boolean"
                             }
                         }
                     }

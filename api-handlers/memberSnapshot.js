@@ -38,7 +38,9 @@ async function memberSnapshot(fastify, request) {
             const members_res = await eosTableAtBlock(members_match);
 
             members_res.results.forEach((member) => {
-                members.set(member.data.sender, {terms: member.data.agreedtermsversion, balance: null, block_num: member.block_num});
+                // console.log(member.data);
+                const zero_bal = '0.' + '0'.repeat(precision);
+                members.set(member.data.sender, {terms: member.data.agreedtermsversion, zero_balance: true, balance: [zero_bal, symbol], voter: false, block_num: member.block_num});
             });
             fastify.log.info(`Members results length ${members_res.count}`, {dac_id});
 
@@ -75,6 +77,9 @@ async function memberSnapshot(fastify, request) {
                 if (members.has(balance.scope)){
                     const member_data = members.get(balance.scope);
                     member_data.balance = balance.data.balance.split(' ');
+                    if (parseFloat(member_data.balance[0]) > 0){
+                        member_data.zero_balance = false;
+                    }
                     members.set(balance.scope, member_data);
                 }
                 // balances.set(member.data.sender, {terms: member.data.agreedtermsversion, balance: null, block_num: member.block_num});
@@ -92,7 +97,51 @@ async function memberSnapshot(fastify, request) {
             fastify.log.info(`Skip to balance ${balances_match.skip}`, {dac_id});
         }
 
-        // console.log(members);
+
+        // Get all voters
+        const voters = new Set;
+        skip = 0;
+        has_more = true;
+        const voter_match = {db, code: custodian_contract, table: 'votes', limit, skip, scope:dac_id};
+        if (block_num) {
+            voter_match.block_num = {$lte: new MongoLong(block_num)}
+        }
+        // voter_match.data_query = {voter};
+
+        while (has_more){
+            const votes_res = await eosTableAtBlock(voter_match);
+
+            votes_res.results.forEach((voter_row) => {
+                if (voter_row.data.candidates.length){
+                    voters.add(voter_row.data.voter);
+                }
+            });
+
+            fastify.log.info(`${votes_res.count} votes found`, {dac_id});
+            if (votes_res.count < limit + voter_match.skip){
+                has_more = false;
+            }
+            else {
+                has_more = true;
+            }
+
+            voter_match.skip += limit;
+            fastify.log.info(`Skip to balance ${voter_match.skip}`, {dac_id});
+        }
+
+        // console.log(voters);
+
+
+        // Check if each member is voting
+        for (let k of members){
+        //     // console.log(k[0]);
+            const voter = k[0];
+            const voter_data = k[1];
+            if (voters.has(voter)){
+                voter_data.voter = true;
+                members.set(voter, voter_data);
+            }
+        }
 
 
 
@@ -153,13 +202,7 @@ async function memberSnapshot(fastify, request) {
                 break
         }
 
-
-        // Remove members without a balance
-        const sorted = members_arr.sort(sorter).filter((val) => {
-            return (val.balance !== null);
-        });
-
-
+        const sorted = members_arr.sort(sorter);
 
         resolve({results: sorted, count: sorted.length})
 
