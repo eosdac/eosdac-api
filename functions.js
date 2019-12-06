@@ -17,8 +17,8 @@ async function getRestartBlock() {
     const config = loadConfig();
     const mongo = await connectMongo(config);
     //
-    const coll_actions = mongo.db(config.mongo.dbName).collection('actions');
-    const coll_contract_rows = mongo.db(config.mongo.dbName).collection('contract_rows');
+    const coll_actions = mongo.collection('actions');
+    const coll_contract_rows = mongo.collection('contract_rows');
 
     let actions_block = 1, contract_rows_block = 1;
 
