@@ -190,17 +190,15 @@ class DeltaHandler {
 
     async queueDeltaRow(name, block_num, row, block_timestamp) {
         return new Promise((resolve, reject) => {
-            this.amq.then((amq) => {
-                const ts = Math.floor(block_timestamp.getTime() / 1000);
-                // this.logger.info('ts', ts);
-                const timestamp_buffer = this.int32ToBuffer(ts);
-                const block_buffer = new Int64(block_num).toBuffer();
-                const present_buffer = Buffer.from([row.present]);
-                // this.logger.info(`Publishing ${name}`)
-                amq.send(name, Buffer.concat([block_buffer, present_buffer, timestamp_buffer, Buffer.from(row.data)]))
-                    .then(resolve)
-                    .catch(reject)
-            })
+            const ts = Math.floor(block_timestamp.getTime() / 1000);
+            // this.logger.info('ts', ts);
+            const timestamp_buffer = this.int32ToBuffer(ts);
+            const block_buffer = new Int64(block_num).toBuffer();
+            const present_buffer = Buffer.from([row.present]);
+            // this.logger.info(`Publishing ${name}`)
+            this.amq.send(name, Buffer.concat([block_buffer, present_buffer, timestamp_buffer, Buffer.from(row.data)]))
+                .then(resolve)
+                .catch(reject)
         })
 
     }

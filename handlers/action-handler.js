@@ -103,16 +103,14 @@ class ActionHandler {
 
             if (this.amq) {
                 // this.logger.info(`Queueing action for ${action.act.account}::${action.act.name}`);
-                this.amq.then((amq) => {
-                    const block_buffer = new Int64(block_num).toBuffer();
-                    const timestamp_buffer = this.int32ToBuffer(block_timestamp.getTime() / 1000);
-                    const trx_id_buffer = Buffer.from(trx_id_arr);
-                    const recv_buffer = new Int64(action.receipt[1].recv_sequence).toBuffer();
-                    const global_buffer = new Int64(action.receipt[1].global_sequence).toBuffer();
-                    const action_buffer = Buffer.from(sb_action.array);
-                    // this.logger.info(`Publishing action`)
-                    amq.send('action', Buffer.concat([block_buffer, timestamp_buffer, trx_id_buffer, recv_buffer, global_buffer, action_buffer]))
-                })
+                const block_buffer = new Int64(block_num).toBuffer();
+                const timestamp_buffer = this.int32ToBuffer(block_timestamp.getTime() / 1000);
+                const trx_id_buffer = Buffer.from(trx_id_arr);
+                const recv_buffer = new Int64(action.receipt[1].recv_sequence).toBuffer();
+                const global_buffer = new Int64(action.receipt[1].global_sequence).toBuffer();
+                const action_buffer = Buffer.from(sb_action.array);
+                // this.logger.info(`Publishing action`)
+                this.amq.send('action', Buffer.concat([block_buffer, timestamp_buffer, trx_id_buffer, recv_buffer, global_buffer, action_buffer]))
             } else {
                 console.error(`No queue when processing action for ${action.act.account}::${action.act.name} in ${trx_id}`, {action});
             }
