@@ -4,7 +4,8 @@ const {Api, JsonRpc, Serialize} = require('@jafri/eosjs2');
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const fetch = require('node-fetch');
 
-const RabbitSender = require('../rabbitsender');
+const Amq = require('../connections/amq');
+const connectMongo = require('../connections/mongo');
 const Int64 = require('int64-buffer').Int64BE;
 
 
@@ -31,11 +32,14 @@ class DeltaHandler {
     }
 
     async connectDb() {
-        this.db = await this._connectDb();
+        if (this.config.mongo) {
+            this.db = await connectMongo(this.config);
+        }
     }
 
     async connectAmq() {
-        this.amq = RabbitSender.init(this.config.amq)
+        this.amq = new Amq(this.config);
+        return await this.amq.init();
     }
 
     async _connectDb() {
