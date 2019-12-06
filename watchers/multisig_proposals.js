@@ -98,7 +98,7 @@ class MultisigProposalsHandler {
             // console.log(table_query);
 
             let res_state = await eosTableAtBlock(table_query);
-            if (res_state.count == 0){
+            if (res_state.count == 0 || res_state.results[0].lastperioddate === '1970-01-01T00:00:00'){
                 resolve(1);
                 return;
             }
