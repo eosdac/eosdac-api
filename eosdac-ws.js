@@ -145,7 +145,8 @@ if (cluster.isMaster){
 }
 else {
     console.log(`Starting worker`);
-    startWSServer();
+    console.log(config.ws);
+    startWSServer(config.ws.host, config.ws.port);
 
     process.on('message', receiveWorkerMessage);
 
