@@ -76,10 +76,32 @@ class MultisigProposalsHandler {
         });
     }
 
-    async permissionToThreshold(perm, dac_id) {
+    async permissionToThreshold(perm, dac_id, check_block=0) {
         return new Promise(async (resolve) => {
             const self = this;
             const auth_account = this.dac_directory._auth_accounts.get(dac_id);
+            const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
+
+            // When DAC is in genesis custodian state before unlock
+            // Maybe read auth later, but assume 1 for now
+            const db = await this.db;
+            const table_query = {
+                db,
+                code: custodian_contract,
+                scope: dac_id,
+                table: 'state'
+            };
+            if (check_block > 0){
+                table_query.block_num = check_block;
+            }
+
+            // console.log(table_query);
+
+            let res_state = await eosTableAtBlock(table_query);
+            if (res_state.count == 0){
+                resolve(1);
+                return;
+            }
 
             if (perm.actor === auth_account) {
                 resolve(await this.thresholdFromName(perm.permission, dac_id))
@@ -194,7 +216,7 @@ class MultisigProposalsHandler {
         });
     }
 
-    async getTrxThreshold(trx, dac_id) {
+    async getTrxThreshold(trx, dac_id, check_block) {
         return new Promise(async (resolve, reject) => {
             if (!trx || !trx.actions) {
                 this.logger.error(`Bad transaction`, {trx});
@@ -209,7 +231,7 @@ class MultisigProposalsHandler {
                 for (let p = 0; p < act.authorization.length; p++) {
                     const perm = act.authorization[p];
 
-                    thresholds.push(await this.permissionToThreshold(perm, dac_id));
+                    thresholds.push(await this.permissionToThreshold(perm, dac_id, check_block));
                 }
             }
 
@@ -423,7 +445,7 @@ class MultisigProposalsHandler {
 
         // We have the transaction data, now get approvals
         // Get threshold
-        output.threshold = await this.getTrxThreshold(output.trx, dac_id);
+        output.threshold = await this.getTrxThreshold(output.trx, dac_id, check_block);
         if (output.threshold === 0){
             this.logger.warn(`Found threshold of 0`, {dac_id, proposal, proposal_name});
         }
