@@ -42,20 +42,6 @@ class DeltaHandler {
         return await this.amq.init();
     }
 
-    async _connectDb() {
-        if (this.config.mongo) {
-            return new Promise((resolve, reject) => {
-                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, (err, client) => {
-                    if (err) {
-                        reject(err)
-                    } else {
-                        resolve(client.db(this.config.mongo.dbName))
-                    }
-                })
-            })
-        }
-    }
-
     async getTableType(code, table) {
         const contract = await this.api.getContract(code);
         const abi = await this.api.getAbi(code);
