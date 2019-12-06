@@ -8,7 +8,8 @@ async function connectMongo(config) {
                 console.error("\nFailed to connect\n", err);
                 reject(err)
             } else if (client) {
-                resolve(client)
+                console.log(`Connected to mongo at ${config.mongo.url}`);
+                resolve(client.db(config.mongo.dbName))
             }
         });
     });

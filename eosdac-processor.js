@@ -10,7 +10,8 @@ const {DeltaHandler} = require('./handlers');
 const fetch = require('node-fetch');
 const MongoClient = require('mongodb').MongoClient;
 const MongoLong = require('mongodb').Long;
-const RabbitSender = require('./rabbitsender');
+const Amq = require('./connections/amq');
+const connectMongo = require('./connections/mongo');
 const Int64 = require('int64-buffer').Int64BE;
 const crypto = require('crypto');
 const {loadConfig} = require('./functions');
@@ -38,43 +39,19 @@ class JobProcessor {
 
 
     async connectDb() {
-        this.db = this._connectDb()
-    }
-
-    async _connectDb() {
         if (this.config.mongo) {
-            return new Promise(async (resolve, reject) => {
-                if (this.db) {
-                    resolve(await this.db);
-                    return
-                }
-                MongoClient.connect(this.config.mongo.url, {useNewUrlParser: true}, ((err, client) => {
-                    if (err) {
-                        reject(err)
-                    } else {
-                        this.logger.info(`Connected to ${this.config.mongo.url}/${this.config.mongo.dbName}`);
-                        resolve(client.db(this.config.mongo.dbName))
-                    }
-                }).bind(this))
-            })
+            this.db = await connectMongo(this.config);
         }
     }
 
     async connectAmq() {
-        this.logger.info(`Connecting to AMQ`);
-        RabbitSender.closeHandlers = [(() => {
-            this.logger.info('close handler');
-            this.start()
-        }).bind(this)];
-        this.amq = RabbitSender.init(this.config.amq)
-
+        this.amq = new Amq(this.config);
+        return await this.amq.init();
     }
 
     async processedActionJob(job, doc) {
         this.logger.info(`Processed action job, notifying watchers`);
-        this.amq.then((amq) => {
-            amq.ack(job);
-        });
+        this.amq.ack(job);
 
         watchers.forEach((watcher) => {
             watcher.action({doc, dac_directory:this.dac_directory, db:this.db});
@@ -144,30 +121,28 @@ class JobProcessor {
             dac_id = act[0].data.dac_id;
         }
 
-        this.db.then((db) => {
-            const col = db.collection('actions');
-            col.insertOne(doc).then(() => {
-                const action_log_meta = {action:doc.action, block_num};
-                if (dac_id){
-                    action_log_meta.dac_id = dac_id;
-                }
-                this.logger.info('Action save completed', action_log_meta);
+        const col = this.db.collection('actions');
+        col.insertOne(doc).then(() => {
+            const action_log_meta = {action:doc.action, block_num};
+            if (dac_id){
+                action_log_meta.dac_id = dac_id;
+            }
+            this.logger.info('Action save completed', action_log_meta);
 
-                self.processedActionJob(job, doc)
+            self.processedActionJob(job, doc);
 
 
-            }).catch((e) => {
-                if (e.code === 11000) { // Duplicate index
-                    self.processedActionJob(job, doc)
-                } else {
-                    this.logger.error('DB save failed :(', {e});
+        }).catch((e) => {
+            if (e.code === 11000) { // Duplicate index
+                self.processedActionJob(job, doc);
+            } else {
+                this.logger.error('DB save failed :(', {e});
 
-                    this.amq.then((amq) => {
-                        amq.reject(job)
-                    })
-                }
-            })
-        })
+                this.amq.then((amq) => {
+                    amq.reject(job);
+                })
+            }
+        });
     }
 
     async processTransactionRow(job){
@@ -240,34 +215,24 @@ class JobProcessor {
                     present
                 };
 
-                this.db.then((db) => {
-                    const col = db.collection('contract_rows');
-                    col.insertOne(doc).then(() => {
-                        this.logger.info('Contract row save completed', {dac_id:scope, code, scope, table, block_num});
-
-                        this.amq.then((amq) => {
-                            amq.ack(job)
-                        })
-                    }).catch((e) => {
-                        this.amq.then((amq) => {
-                            if (e.code === 11000) {
-                                // duplicate index
-                                amq.ack(job)
-                            } else {
-                                this.logger.error('Contract rowDB save failed :(', {e});
-                                amq.reject(job)
-                            }
-                        })
-                    })
-                })
+                const col = this.db.collection('contract_rows');
+                col.insertOne(doc).then(() => {
+                    this.logger.info('Contract row save completed', {dac_id:scope, code, scope, table, block_num});
+                    this.amq.ack(job);
+                }).catch((e) => {
+                    if (e.code === 11000) {
+                        // duplicate index
+                        this.amq.ack(job)
+                    } else {
+                        this.logger.error('Contract rowDB save failed :(', {e});
+                        this.amq.reject(job)
+                    }
+                });
 
             }
         } catch (e) {
             this.logger.error(`Error deserializing ${code}:${table} : ${e.message}`, {e});
-            this.amq.then((amq) => {
-                amq.ack(job)
-            });
-
+            this.amq.ack(job);
         }
 
 
@@ -278,7 +243,7 @@ class JobProcessor {
     }
 
     async start() {
-        this.connectAmq();
+        await this.connectAmq();
         await this.connectDb();
 
         this.delta_handler = new DeltaHandler({config: this.config, queue: this.amq});
@@ -303,12 +268,9 @@ class JobProcessor {
                 worker.on('message', this.worker_message.bind(this));
             }
         } else {
-            const self = this;
-            this.amq.then((amq) => {
-                amq.listen('contract_row', self.processContractRow.bind(self));
-                // amq.listen('generated_transaction', self.processTransactionRow.bind(self));
-                amq.listen('action', self.processActionJob.bind(self))
-            })
+            this.amq.listen('contract_row', this.processContractRow.bind(this));
+            // amq.listen('generated_transaction', self.processTransactionRow.bind(self));
+            this.amq.listen('action', this.processActionJob.bind(this));
         }
     }
 }
