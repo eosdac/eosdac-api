@@ -30,7 +30,7 @@ class NewPeriodHandler {
         }
     }
 
-    async delta(doc){}
+    async delta({doc, dac_directory, db}){}
 
     async replay() {}
 }

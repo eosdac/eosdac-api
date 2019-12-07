@@ -490,6 +490,8 @@ class WorkerProposalsHandler {
         }
     }
 
+    async delta({doc, dac_directory, db}){}
+
     async replay() {
         const db = await connectMongo(this.config);
         const collection = db.collection('workerproposals');
