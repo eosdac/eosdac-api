@@ -491,8 +491,7 @@ class WorkerProposalsHandler {
     }
 
     async replay() {
-        const mongo = await connectMongo(this.config);
-        const db = mongo.db(this.config.mongo.dbName);
+        const db = await connectMongo(this.config);
         const collection = db.collection('workerproposals');
         const collection_actions = db.collection('actions');
 
