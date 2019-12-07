@@ -31,6 +31,10 @@ const getProfileSchema = {
                                 description: "",
                                 type: "integer"
                             },
+                            "member_type": {
+                                description: "Type of member",
+                                type: "integer"
+                            },
                             "profile": {
                                 description: "",
                                 type: "object",

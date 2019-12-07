@@ -1,5 +1,6 @@
 const {getProfileSchema} = require('../schemas');
 const {NotFound} = require('http-errors');
+const {eosTableAtBlock,} = require('../eos-table');
 
 const null_profile = {
     description: "",
@@ -25,6 +26,7 @@ async function getProfile(fastify, request) {
     const collection = db.collection('actions');
 
     const cust_contract = dac_config.accounts.get(2);
+    const token_contract = dac_config.symbol.contract;
 
     const query = {"action.account": cust_contract, "action.name": "stprofile", "action.data.dac_id":dac_id, "action.data.cand": {$in: accounts}};
 
@@ -87,6 +89,57 @@ async function getProfile(fastify, request) {
             });
         }
     });
+
+
+    // Calculate member type
+    const api = fastify.eos.api;
+    for (let r=0;r<result.results.length;r++){
+        const data = result.results[r];
+        data.member_type = 0;
+        // check if custodian
+        // console.log(api);
+        const cust_res = await api.rpc.get_table_rows({
+            code: cust_contract,
+            scope: dac_id,
+            table: 'custodians',
+            upper_bound: data.account,
+            lower_bound: data.account
+        });
+        if (cust_res.rows.length){
+            data.member_type = 3; // custodian
+        }
+        else {
+            // check for candidate
+            const cand_res = await api.rpc.get_table_rows({
+                code: cust_contract,
+                scope: dac_id,
+                table: 'candidates',
+                upper_bound: data.account,
+                lower_bound: data.account
+            });
+            if (cand_res.rows.length){
+                data.member_type = 2; // candidate
+            }
+            else {
+                // check for member
+
+                const cand_res = await api.rpc.get_table_rows({
+                    code: token_contract,
+                    scope: dac_id,
+                    table: 'members',
+                    upper_bound: data.account,
+                    lower_bound: data.account
+                });
+                if (cand_res.rows.length){
+                    data.member_type = 1; // member
+                }
+            }
+            console.log(cand_res);
+        }
+
+        result.results[r] = data;
+        // console.log(data);
+    }
 
     // console.log(missing_accounts)
 
