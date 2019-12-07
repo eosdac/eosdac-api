@@ -8,6 +8,7 @@
     "@jafri/eosjs2": "^20.0.1-e34c16e.170",
     "@shelf/winston-datadog-logs-transport": "^1.0.7",
     "amqplib": "^0.5.3",
+    "array-xor": "^0.1.1",
     "commander": "^2.19.0",
     "dirty-json": "^0.7.0",
     "elasticsearch": "^15.3.0",
