@@ -155,6 +155,22 @@ class JobProcessor {
 
     }
 
+    async processedContractRow(job, doc) {
+        this.logger.info(`Processed contract row job, notifying watchers`);
+        this.amq.ack(job);
+
+        watchers.forEach((watcher) => {
+            watcher.delta({doc, dac_directory:this.dac_directory, db:this.db});
+        });
+
+        // broadcast to master, to send via ipc
+        try {
+            process.send(doc);
+        }
+        catch (e){}
+
+    }
+
     async processContractRow(job) {
         const sb = new Serialize.SerialBuffer({
             textEncoder: new TextEncoder,
@@ -218,14 +234,16 @@ class JobProcessor {
                 const col = this.db.collection('contract_rows');
                 col.insertOne(doc).then(() => {
                     this.logger.info('Contract row save completed', {dac_id:scope, code, scope, table, block_num});
-                    this.amq.ack(job);
+                    this.processedContractRow(job, doc);
+                    // this.amq.ack(job);
                 }).catch((e) => {
                     if (e.code === 11000) {
                         // duplicate index
-                        this.amq.ack(job)
+                        // this.amq.ack(job);
+                        this.processedContractRow(job, doc);
                     } else {
                         this.logger.error('Contract rowDB save failed :(', {e});
-                        this.amq.reject(job)
+                        this.amq.reject(job);
                     }
                 });
 
