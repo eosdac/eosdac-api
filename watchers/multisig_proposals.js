@@ -565,7 +565,7 @@ class MultisigProposalsHandler {
         }
     }
 
-    async delta(doc){}
+    async delta({doc, dac_directory, db}){}
 
     async replay() {
         this.logger.info('Replaying msigs');
