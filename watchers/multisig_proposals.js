@@ -570,39 +570,33 @@ class MultisigProposalsHandler {
     async replay() {
         this.logger.info('Replaying msigs');
 
-        this.db.then(async (mongo) => {
-            const db = mongo.db(this.config.mongo.dbName);
-            const collection = db.collection('multisigs');
-            const collection_actions = db.collection('actions');
+        const db = await this.db;
+        const collection = db.collection('multisigs');
+        const collection_actions = db.collection('actions');
 
-            this.dac_directory = new DacDirectory({config: this.config, db});
-            await this.dac_directory.reload();
+        this.dac_directory = new DacDirectory({config: this.config, db});
+        await this.dac_directory.reload();
 
-            this.logger.info('Removing existing entries');
-            await collection.deleteMany({});
-            // this.logger.info(await collection.find({}).count());
+        this.logger.info('Removing existing entries');
+        await collection.deleteMany({});
+        // this.logger.info(await collection.find({}).count());
 
-            const dac_msig_contract = this.config.eos.dacMsigContract || 'dacmultisigs';
-            const res = collection_actions.find({
-                'action.account': dac_msig_contract,
-                'action.name': {$in:['proposed', 'proposede']}
-            }).sort({block_num: -1}).limit(1000);
-            let doc;
-            let count = 0;
-            const replay = true;
-            const recalcs = [];
-            while (doc = await res.next()) {
-                // if (doc.action.data.proposal_name !== 'ryrg1alqdmw2'){
-                //     continue;
-                // }
-                // console.log(doc.action.data);
-                recalcs.push(this.recalcMsigs({doc, db, replay}));
-                count++;
-            }
+        const dac_msig_contract = this.config.eos.dacMsigContract || 'dacmultisigs';
+        const res = collection_actions.find({
+            'action.account': dac_msig_contract,
+            'action.name': {$in: ['proposed', 'proposede']}
+        }).sort({block_num: -1}).limit(1000);
+        let doc;
+        let count = 0;
+        const replay = true;
+        const recalcs = [];
+        while (doc = await res.next()) {
+            recalcs.push(this.recalcMsigs({doc, db, replay}));
+            count++;
+        }
 
-            await Promise.all(recalcs);
-            this.logger.info(`Imported ${count} multisig documents`);
-        })
+        await Promise.all(recalcs);
+        this.logger.info(`Imported ${count} multisig documents`);
     }
 }
 
