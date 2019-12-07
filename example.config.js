@@ -25,6 +25,7 @@ module.exports = {
         msigContract: 'eosio.msig',
         dacGenesisBlock: 12345,  // the first block that includes any dac contract actions including the initial setcode
         dacDirectoryContract: 'dacdirectory',
+        dacMsigContract: 'dacmultisigs',
         legacyDacs: ['eos.dac'],
         dacDirectoryMode: 'all',
         dacDirectoryDacId: ''
