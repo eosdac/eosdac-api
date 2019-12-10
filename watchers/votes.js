@@ -111,6 +111,7 @@ class VotesHandler {
 
         // const dac_custodian_contracts = Map.keys(this.dac_directory.custodian_contracts());
         const dac_custodian_contracts = [...new Set(this.dac_directory.custodian_contracts().values())];
+        console.log(dac_custodian_contracts);
 
         const table_query = {
             db,
@@ -121,13 +122,17 @@ class VotesHandler {
 
         if (res_candidates.count){
             console.log(`Found ${res_candidates.count} candidates`);
+
             const candidates = res_candidates.results.map(row => {
+                // dont include v1 style contracts
                 return {
                     name: row.data.candidate_name,
                     dac_id: row.scope,
                     custodian_contract: row.code
                 };
-            });
+
+            })
+                .filter(c => !dac_custodian_contracts.includes(c.dac_id));
 
             for (let c=0;c<candidates.length;c++){
                 const cand = candidates[c];
