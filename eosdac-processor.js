@@ -100,8 +100,8 @@ class JobProcessor {
             return;
         }
 
-
-        delete act[0].authorization;
+        // const authorization = act[0].authorization;
+        // delete act[0].authorization;
 
         const doc = {
             block_num: MongoLong.fromString(block_num),
