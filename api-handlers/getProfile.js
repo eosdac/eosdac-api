@@ -14,6 +14,17 @@ const null_profile = {
     url: ""
 };
 
+async function getMemberType(account, dac_id, db){
+    let member_type = 0;
+
+    const coll = db.collection('memberstats');
+    const res = await coll.findOne({account, dac_id});
+    if (res){
+        member_type = res.member_type;
+    }
+
+    return member_type;
+}
 
 async function getProfile(fastify, request) {
     const dac_id = request.dac();
@@ -92,51 +103,11 @@ async function getProfile(fastify, request) {
 
 
     // Calculate member type
-    const api = fastify.eos.api;
     for (let r=0;r<result.results.length;r++){
         const data = result.results[r];
-        data.member_type = 0;
-        // check if custodian
-        // console.log(api);
-        const cust_res = await api.rpc.get_table_rows({
-            code: cust_contract,
-            scope: dac_id,
-            table: 'custodians',
-            upper_bound: data.account,
-            lower_bound: data.account
-        });
-        if (cust_res.rows.length){
-            data.member_type = 3; // custodian
-        }
-        else {
-            // check for candidate
-            const cand_res = await api.rpc.get_table_rows({
-                code: cust_contract,
-                scope: dac_id,
-                table: 'candidates',
-                upper_bound: data.account,
-                lower_bound: data.account
-            });
-            if (cand_res.rows.length){
-                data.member_type = 2; // candidate
-            }
-            else {
-                // check for member
+        data.member_type = await getMemberType(data.account, dac_id, db);
 
-                const cand_res = await api.rpc.get_table_rows({
-                    code: token_contract,
-                    scope: dac_id,
-                    table: 'members',
-                    upper_bound: data.account,
-                    lower_bound: data.account
-                });
-                if (cand_res.rows.length){
-                    data.member_type = 1; // member
-                }
-            }
-            console.log(cand_res);
-        }
-
+        // console.log(data);
         result.results[r] = data;
         // console.log(data);
     }
