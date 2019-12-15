@@ -16,6 +16,7 @@ class DacDirectory {
         this._msig_contracts = new Map();
         this._custodian_contracts = new Map();
         this._proposals_contracts = new Map();
+        this._token_contracts = new Map();
 
         this.logger = require('./connections/logger')('dacdirectory', config.logger);
 
@@ -109,6 +110,9 @@ class DacDirectory {
         else if (acnt.key === 6){ // proposals
             this._proposals_contracts.set(dac_id, acnt.value);
         }
+        else if (acnt.key === 4){ // token
+            this._token_contracts.set(dac_id, acnt.value);
+        }
     }
 
     auth_accounts() {
@@ -125,6 +129,10 @@ class DacDirectory {
 
     proposals_contracts() {
         return this._proposals_contracts;
+    }
+
+    token_contracts() {
+        return this._token_contracts;
     }
 
     has(value) {
