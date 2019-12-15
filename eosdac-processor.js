@@ -96,10 +96,8 @@ class JobProcessor {
             act = await this.api.deserializeActions([action]);
         } catch (e) {
             this.logger.error(`Error deserializing action data ${account}:${name} - ${e.message}`, {e});
-            this.amq.then((amq) => {
-                amq.ack(job)
-            });
-            return
+            this.amq.ack(job);
+            return;
         }
 
 
