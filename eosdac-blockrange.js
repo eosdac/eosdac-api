@@ -10,8 +10,7 @@ const DacDirectory = require('./dac-directory');
 const {ActionHandler, TraceHandler, DeltaHandler} = require('./handlers');
 const StateReceiver = require('../eosio-statereceiver');
 
-// const kue = require('kue')
-const RabbitSender = require('./rabbitsender');
+const Amq = require('./connections/amq');
 const cluster = require('cluster');
 
 
@@ -35,20 +34,18 @@ class BlockRangeManager {
         cluster.on('exit', this.workerExit.bind(this));
 
         if (cluster.isMaster) {
-            //kue.app.listen(3000)
-
             this.logger.info(`Starting block_range listener only`);
 
             for (let i = 0; i < this.config.fillClusterSize; i++) {
                 cluster.fork();
             }
         } else {
-            this.amq = RabbitSender.init(this.config.amq);
+
+            this.amq = new Amq(this.config);
+            await this.amq.init();
 
             this.logger.info(`Listening to queue for block_range ONLY`);
-            this.amq.then((amq) => {
-                amq.listen('block_range', this.processBlockRange.bind(this))
-            })
+            this.amq.listen('block_range', this.processBlockRange.bind(this));
         }
 
     }
@@ -62,19 +59,14 @@ class BlockRangeManager {
         } else {
             if (this.job) {
                 // Job success
-                this.amq.then((amq) => {
-                    amq.ack(this.job)
-                })
+                this.amq.ack(this.job);
             }
             this.logger.info('FillManager : worker success!');
         }
 
         if (worker.isDead()) {
             if (this.job) {
-                const job = this.job;
-                this.amq.then((amq) => {
-                    amq.reject(job)
-                })
+                this.amq.reject(this.job);
             }
 
             this.logger.warn(`FillManager : Worker is dead, starting a new one`);
@@ -112,9 +104,7 @@ class BlockRangeManager {
         this.br.registerTraceHandler(block_handler);
         this.br.registerDoneHandler(() => {
             // this.logger.info(`StateReceiver completed`, job)
-            this.amq.then((amq) => {
-                amq.ack(job);
-            });
+            this.amq.ack(job);
             this.logger.info(`Finished job ${start_block}-${end_block}`);
         });
 
