@@ -15,15 +15,13 @@ const cluster = require('cluster');
 
 
 class BlockRangeManager {
-    constructor({startBlock = 0, endBlock = 0xffffffff, config = '', irreversibleOnly = false, replay = false, test = 0, processOnly = false}) {
+    constructor({startBlock = 0, endBlock = 0xffffffff, config = '', irreversibleOnly = false, replay = false}) {
         this.config = loadConfig();
         this.start_block = startBlock;
         this.end_block = endBlock;
         this.replay = replay;
         this.br = null;
-        this.test_block = test;
         this.job = null;
-        this.process_only = processOnly;
 
         console.log(`Loading config ${this.config.name}.config.js`);
 
