@@ -44,7 +44,9 @@ async function balanceTimeline(fastify, request) {
             } else if (res) {
                 const timeline = [];
                 if (!await res.count()) {
-                    resolve(timeline)
+                    let zero_bal = `0 ${symbol}`;
+                    timeline.push({block_num:0, balance:zero_bal});
+                    resolve(timeline);
                 } else {
                     res.forEach((row) => {
                         const [bal, sym] = row.data.balance.split(' ');
