@@ -102,19 +102,25 @@ class TokensHandler {
     }
 
     async replay() {
-        console.log(`Recalculating token balances`);
-        const db = await connectMongo(config);
-        // this.recalc_tokens('evilmikehere', db);
-        // return;
-        const collection = db.collection('contract_rows');
-        const res = await collection.distinct('scope', {table:'accounts'});
-        const promises = [];
-        res.forEach(account => {
-            promises.push(this.recalc_tokens(account, db));
+        return new Promise(async (resolve, reject) => {
+            console.log(`Recalculating token balances`);
+            const db = await connectMongo(config);
+            // this.recalc_tokens('evilmikehere', db);
+            // return;
+            const collection = db.collection('contract_rows');
+            const res = await collection.aggregate([{$group: {_id:'$scope'}}]);
+            const promises = [];
+            res.forEach(row => {
+                const account = row._id;
+                promises.push(this.recalc_tokens(account, db));
+            }, async () => {
+                const res = await Promise.all(promises);
+                console.log(`Recalculated ${promises.length} account tokens owned`);
+                resolve(res);
+            });
         });
 
-        await Promise.all(promises);
-        console.log(`Recalculated ${promises.length} account tokens owned`);
+
     }
 }
 
