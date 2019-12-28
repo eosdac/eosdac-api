@@ -17,6 +17,7 @@ class DacDirectory {
         this._custodian_contracts = new Map();
         this._proposals_contracts = new Map();
         this._token_contracts = new Map();
+        this._referendum_contracts = new Map();
 
         this.logger = require('./connections/logger')('dacdirectory', config.logger);
 
@@ -52,6 +53,7 @@ class DacDirectory {
         this._custodian_contracts = new Map();
         this._auth_accounts = new Map();
         this._proposals_contracts = new Map();
+        this._referendum_contracts = new Map();
 
         this.logger.info(`Reloading dacdirectory`);
 
@@ -113,6 +115,9 @@ class DacDirectory {
         else if (acnt.key === 4){ // token
             this._token_contracts.set(dac_id, acnt.value);
         }
+        else if (acnt.key === 10){ // referendum
+            this._referendum_contracts.set(dac_id, acnt.value);
+        }
     }
 
     auth_accounts() {
@@ -133,6 +138,10 @@ class DacDirectory {
 
     token_contracts() {
         return this._token_contracts;
+    }
+
+    referendum_contracts() {
+        return this._referendum_contracts;
     }
 
     has(value) {
