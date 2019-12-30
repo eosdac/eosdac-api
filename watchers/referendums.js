@@ -31,13 +31,13 @@ class ReferendumsHandler {
     async recalcReferendum(doc, db) {
         this.logger.info(`Calculating referendum at block ${doc.block_num}`);
 
-        const action_data = doc.action.data;
-
+        let action_data = doc.action.data;
         if (['vote', 'cancel', 'exec'].includes(doc.action.name)){
             doc = await this.getProposeAction({db, doc, dac_id: action_data.dac_id, referendum_id: action_data.referendum_id});
             console.log('PROPOSE', doc)
+            action_data = doc.action.data;
         }
-        // console.log(doc);
+
         if (doc.action.name !== 'propose'){
             console.log(`Not interested in ${doc.action.name} actions`);
             return
