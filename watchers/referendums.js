@@ -43,7 +43,7 @@ class ReferendumsHandler {
             return
         }
 
-        const res = await eosTableAtBlock({code:doc.action.account, db, scope: action_data.dac_id, table: 'referenda', block_num: doc.block_num});
+        const res = await eosTableAtBlock({code:doc.action.account, db, scope: action_data.dac_id, table: 'referendums', block_num: doc.block_num});
         const { results, count } = res;
         // console.log(results, count)
         if (count){
@@ -66,7 +66,7 @@ class ReferendumsHandler {
             output.expires = exp_date;
 
             const data_query = {referendum_id: ref_data.referendum_id};
-            const close_query = {code:doc.action.account, db, scope: action_data.dac_id, table: 'referenda', data_query};
+            const close_query = {code:doc.action.account, db, scope: action_data.dac_id, table: 'referendums', data_query};
             if (closing_action){ // still open
                 console.log(closing_action)
                 close_query.block_num = closing_action.block_num;
