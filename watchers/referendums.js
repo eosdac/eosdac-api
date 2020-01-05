@@ -56,6 +56,7 @@ class ReferendumsHandler {
             // this.logger.info(JSON.stringify(ref_data));
             output.id = ref_data.referendum_id;
             output.content = action_data.content;
+            output.dac_id = action_data.dac_id;
 
             // check expiry date
             const exp_date = new Date(Date.parse(ref_data.expires.replace(['.000', '.500'], '')));
