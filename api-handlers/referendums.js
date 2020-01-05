@@ -8,10 +8,11 @@ async function getReferendums(fastify, request) {
         const config = loadConfig();
 
         const db = fastify.mongo.db;
+        const dac_id = request.dac();
 
         const now = new Date();
         const coll = db.collection('referendums');
-        const res = await coll.find({status: 0, expires: {$gte:now}});
+        const res = await coll.find({status: 0, expires: {$gte:now}, dac_id});
 
         let ret = [];
         res.forEach((row) => {
