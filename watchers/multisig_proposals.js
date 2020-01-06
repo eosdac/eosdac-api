@@ -275,7 +275,7 @@ class MultisigProposalsHandler {
         return approvals_data;
     }
 
-    async recalcMsigs({doc, db, retry=false, replay=false}) {
+    async recalcMsigs({doc, db, retry=false, replay=false, original_doc=null}) {
         // this.logger.info('Recalc', doc)
 
         // const db = mongo.db(this.config.mongo.dbName);
@@ -284,8 +284,10 @@ class MultisigProposalsHandler {
 
         const dac_directory = this.dac_directory;
         const msig_contracts = Array.from(dac_directory.msig_contracts().values());
+        let is_propose = true
 
         if (!['proposed', 'proposede'].includes(doc.action.name)){
+            is_propose = false
             // find the original proposed
             const doc_proposed = await coll_actions.findOne({
                 'action.account': {$in:msig_contracts},
@@ -302,7 +304,7 @@ class MultisigProposalsHandler {
 
             doc_proposed.proposed_retry = true;
 
-            return this.recalcMsigs({doc: doc_proposed, db});
+            return this.recalcMsigs({doc: doc_proposed, db, original_doc: doc});
         }
 
         const block_num = doc.block_num;
@@ -528,8 +530,29 @@ class MultisigProposalsHandler {
         // only include custodians (if the msig is current then they are modified in the api)
         // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
-        if (!replay && this.ipc && !doc.proposed_retry){
+        if (!replay && this.ipc && !doc.proposed_retry && is_propose){
             this.ipc.of.livenotifications.emit('notification', {notify: 'MSIG_PROPOSED', dac_id, proposer, proposal_name, trx_id: doc.trx_id});
+        }
+        else if (!replay && original_doc && !doc.proposed_retry && this.ipc){
+            let msg_name = '';
+            switch (original_doc.action.name){
+                case 'approvede':
+                    msg_name = 'MSIG_APPROVED';
+                    break;
+                case 'unapprovede':
+                    msg_name = 'MSIG_UNAPPROVED';
+                    break;
+                case 'cancellede':
+                    msg_name = 'MSIG_CANCELLED';
+                    break;
+                case 'executede':
+                    msg_name = 'MSIG_EXECUTED';
+                    break;
+            }
+
+            if (msg_name){
+                this.ipc.of.livenotifications.emit('notification', {notify: msg_name, dac_id, proposer, proposal_name, trx_id: original_doc.trx_id});
+            }
         }
 
         this.logger.info(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, {dac_id, doc:output});
