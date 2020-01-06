@@ -46,34 +46,20 @@ class MultisigProposalsHandler {
 
     async thresholdFromName(name, dac_id){
         // this.logger.info(`Getting threshold ${name} for ${dac_id}`);
-        return new Promise(async (resolve, reject) => {
-            const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
-            const scope = dac_id;
-            const table_rows_req = {code:custodian_contract, scope, table:'config2'};
-            const dac_config_res = await this.api.rpc.get_table_rows(table_rows_req);
-            const dac_config = dac_config_res.rows[0];
-
-            if (!dac_config){
-                this.logger.info(`DAC config not found`, {table_rows_req, dac_id});
-                reject(`Could not find dac config for ${dac_id} "${name}"`);
-                return;
+        const auth_account = this.dac_directory._auth_accounts.get(dac_id);
+        const account_res = await this.api.rpc.get_account(auth_account);
+        // quick fix for active linked to high
+        if (name === 'active'){
+            name = 'high';
+        }
+        // console.log(account_res.permissions);
+        for (let p=0;p<account_res.permissions.length;p++){
+            if (account_res.permissions[p].perm_name === name){
+                return account_res.permissions[p].required_auth.threshold;
             }
+        }
 
-            switch (name) {
-                case 'low':
-                    resolve(dac_config.auth_threshold_low);
-                    break;
-                case 'med':
-                    resolve(dac_config.auth_threshold_mid);
-                    break;
-                case 'high':
-                case 'active':
-                    resolve(dac_config.auth_threshold_high);
-                    break;
-                default:
-                    reject(`Unknown permission name "${name}"`);
-            }
-        });
+        return 0;
     }
 
     async permissionToThreshold(perm, dac_id, check_block=0) {
