@@ -5,6 +5,7 @@ const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc} = require('@jafri/eosjs2');
 const fetch = require('node-fetch');
 const MongoLong = require('mongodb').Long;
+const IPCClient = require('../ipc-client');
 
 const {eosTableAtBlock} = require('../eos-table');
 const DacDirectory = require('../dac-directory');
@@ -15,6 +16,7 @@ class WorkerProposalsHandler {
     constructor() {
         this.config = loadConfig();
         this.db = connectMongo(this.config);
+        this.replay = false;
 
         // this.proposals_contracts = this.dac_directory._proposals_contracts.get(dac_id);
         // this.proposals_contract = config.eos.proposalsContract || 'dacproposals';
@@ -30,19 +32,26 @@ class WorkerProposalsHandler {
         });
 
         this.logger = require('../connections/logger')('watcher-proposals', this.config.logger);
+
+        if (this.config.ipc){
+            this.ipc = new IPCClient(this.config.ipc);
+        }
     }
 
     async recalcProposal(doc, db) {
 
         const coll = db.collection('workerproposals');
         const coll_actions = db.collection('actions');
+        let original_doc = null;
 
         let data = doc.action.data;
+        let original_data = null;
         if ((!data.id && !data.proposal_id) || (!data.dac_scope && !data.dac_id)){
             // Old format
             this.logger.warn(`Proposal in old format`);
             return;
         }
+        let actor = data.proposer;
 
         const dac_id = data.dac_scope || data.dac_id;
         this.logger.info(`Recalc worker proposal ${doc.action.data.id}:${dac_id}`, {dac_id});
@@ -76,6 +85,8 @@ class WorkerProposalsHandler {
 
             this.logger.info('Finding createprop action');
 
+            original_doc = doc;
+
             doc = await coll_actions.findOne(createprop_query);
 
             if (!doc){
@@ -86,6 +97,7 @@ class WorkerProposalsHandler {
             }
 
             if (!doc){
+                original_data = original_doc.action.data;
                 this.logger.error(`Could not find createprop for proposal id ${data.proposal_id}`, {dac_id, proposal_id:data.proposal_id});
                 return;
             }
@@ -168,6 +180,45 @@ class WorkerProposalsHandler {
                     break;
             }
         });
+
+        let action = doc.action;
+
+        if (!this.replay && this.ipc){
+            let notify = 'WP_PROPOSED';
+            if (original_doc){
+                action = original_doc.action;
+
+                switch (original_doc.action.name){
+                    case 'arbapprove':
+                        notify = 'WP_ARB_APPROVE';
+                        actor = original_data.arbitrator;
+                        break;
+                    case 'cancel':
+                        notify = 'WP_CANCEL';
+                        break;
+                    case 'comment':
+                        notify = 'WP_COMMENT';
+                        actor = original_data.commenter;
+                        break;
+                    case 'completework':
+                        notify = 'WP_COMPLETE_WORK';
+                        break;
+                    case 'finalize':
+                        notify = 'WP_FINALIZE';
+                        break;
+                    case 'startwork':
+                        notify = 'WP_START_WORK';
+                        break;
+                    case 'voteprop':
+                        notify = 'WP_VOTED';
+                        actor = original_data.custodian;
+                        break;
+                }
+            }
+
+
+            this.ipc.send_notification({notify, dac_id, wp_data:data, action, actor, trx_id: doc.trx_id});
+        }
 
         this.logger.info(`Saving ${data.id}`, data);
         coll.updateOne({id: data.id}, {$set:data}, {upsert:true});
@@ -493,6 +544,7 @@ class WorkerProposalsHandler {
     async delta({doc, dac_directory, db}){}
 
     async replay() {
+        this.replay = true;
         const db = await connectMongo(this.config);
         const collection = db.collection('workerproposals');
         const collection_actions = db.collection('actions');
