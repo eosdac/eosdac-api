@@ -63,3 +63,46 @@ Replays will spawn a number of processes to pull blocks from the chain, if you w
 you can start with the blockrange process using pm2 (it should be started automatically).
 
 `pm2 start --only eosdac-blockrange-jungle`
+
+## API WebSocket
+
+The eosdac-ws process opens a websocket which can be used by external clients to listen 
+for messages about significant events.
+
+Connect to the websocket server, eosDAC provides endpoints at the following locations:
+
+`ws://api.eosdac.io:3030` - EOS Mainnet
+`ws://api-jungle.eosdac.io:3030` - Jungle Network
+
+This example will connect and request notifications for a particular DAC ID
+
+```
+const endpoint = 'ws://api.eosdac.io:3030';
+const dac_id = 'eosdac';
+const ws = new WebSocket(endpoint);
+ws.onmessage = (msg) => {
+    console.log('Received message', msg.data);
+};
+ws.onopen = () => {
+    console.log(`Websocket opened to ${endpoint}`);
+    ws.send(JSON.stringify({type:'register', data:{dac_id}}));
+    console.log(`Sent register message for ${dac_id}`);
+};
+```
+
+The following notifications are sent
+
+## Multisig proposals
+```
+MSIG_PROPOSED
+MSIG_APPROVED
+MSIG_UNAPPROVED
+MSIG_CANCELLED
+MSIG_EXECUTED
+```
+## Voting and Elections
+
+```
+VOTES_CHANGED
+NEW_PERIOD
+```
