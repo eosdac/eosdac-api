@@ -45,7 +45,6 @@ class WorkerProposalsHandler {
         let original_doc = null;
 
         let data = doc.action.data;
-        let original_data = null;
         if ((!data.id && !data.proposal_id) || (!data.dac_scope && !data.dac_id)){
             // Old format
             this.logger.warn(`Proposal in old format`);
@@ -97,7 +96,6 @@ class WorkerProposalsHandler {
             }
 
             if (!doc){
-                original_data = original_doc.action.data;
                 this.logger.error(`Could not find createprop for proposal id ${data.proposal_id}`, {dac_id, proposal_id:data.proposal_id});
                 return;
             }
@@ -191,14 +189,14 @@ class WorkerProposalsHandler {
                 switch (original_doc.action.name){
                     case 'arbapprove':
                         notify = 'WP_ARB_APPROVE';
-                        actor = original_data.arbitrator;
+                        actor = action.data.arbitrator;
                         break;
                     case 'cancel':
                         notify = 'WP_CANCEL';
                         break;
                     case 'comment':
                         notify = 'WP_COMMENT';
-                        actor = original_data.commenter;
+                        actor = action.data.commenter;
                         break;
                     case 'completework':
                         notify = 'WP_COMPLETE_WORK';
@@ -211,7 +209,7 @@ class WorkerProposalsHandler {
                         break;
                     case 'voteprop':
                         notify = 'WP_VOTED';
-                        actor = original_data.custodian;
+                        actor = action.data.custodian;
                         break;
                 }
             }
