@@ -74,7 +74,7 @@ class VotesHandler {
         }
 
         if (this.ipc){
-            this.ipc.send_notification({notify: 'VOTES_CHANGED', dac_id, prev: votes_before, current: votes_after, trx_id: doc.trx_id});
+            this.ipc.send_notification({notify: 'VOTES_CHANGED', dac_id, voter, prev: votes_before, current: votes_after, trx_id: doc.trx_id});
         }
 
         const vote_deltas = array_xor(votes_before, votes_after);
