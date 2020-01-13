@@ -9,6 +9,7 @@ const MongoDate = require('mongodb').Date;
 
 const {eosTableAtBlock} = require('../eos-table');
 const DacDirectory = require('../dac-directory');
+const IPCClient = require('../ipc-client');
 
 
 class ReferendumsHandler {
@@ -24,6 +25,10 @@ class ReferendumsHandler {
             textDecoder: new TextDecoder(),
             textEncoder: new TextEncoder(),
         });
+
+        if (this.config.ipc){
+            this.ipc = new IPCClient(this.config.ipc);
+        }
 
         this.logger = require('../connections/logger')('watcher-proposals', this.config.logger);
     }
