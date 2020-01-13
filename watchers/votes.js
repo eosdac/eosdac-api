@@ -6,6 +6,7 @@ const config = loadConfig();
 const {eosTableAtBlock,} = require('../eos-table');
 const DacDirectory = require('../dac-directory');
 const array_xor = require('array-xor');
+const IPCClient = require('../ipc-client');
 
 
 class VotesHandler {
@@ -18,11 +19,7 @@ class VotesHandler {
         this.logger = require('../connections/logger')('watcher-multisig', config.logger);
 
         if (config.ipc){
-            // this.ipc = new IPC();
-            // this.ipc.config.appspace = config.ipc.appspace;
-            // this.ipc.connectTo(config.ipc.id, async () => {
-            //     this.logger.info(`Connected to IPC ${config.ipc.appspace}${config.ipc.id}`);
-            // });
+            this.ipc = new IPCClient(config.ipc);
         }
     }
 
@@ -74,6 +71,10 @@ class VotesHandler {
         }
         if (res_after.count){
             votes_after = res_after.results[0].data.candidates;
+        }
+
+        if (this.ipc){
+            this.ipc.send_notification({notify: 'VOTES_CHANGED', dac_id, prev: votes_before, current: votes_after, trx_id: doc.trx_id});
         }
 
         const vote_deltas = array_xor(votes_before, votes_after);
