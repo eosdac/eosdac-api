@@ -50,7 +50,6 @@ class WorkerProposalsHandler {
             this.logger.warn(`Proposal in old format`);
             return;
         }
-        let actor = data.proposer;
 
         const dac_id = data.dac_scope || data.dac_id;
         this.logger.info(`Recalc worker proposal ${doc.action.data.id}:${dac_id}`, {dac_id});
@@ -103,6 +102,7 @@ class WorkerProposalsHandler {
             data = doc.action.data;
         }
 
+        let actor = data.proposer;
         const closing_action = await this.getClosingAction(data, db, doc);
 
         // get votes and updates between start and end block
