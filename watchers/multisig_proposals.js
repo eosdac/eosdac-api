@@ -545,7 +545,7 @@ class MultisigProposalsHandler {
         // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
         if (!replay && this.ipc && !doc.proposed_retry && is_propose){
-            this.ipc.send_notification({notify: 'MSIG_PROPOSED', dac_id, proposer, proposal_name, trx_id: doc.trx_id});
+            this.ipc.send_notification({notify: 'MSIG_PROPOSED', dac_id, msig_data:output, actor, proposer, proposal_name, trx_id: doc.trx_id});
         }
         else if (!replay && original_doc && this.ipc){
 
