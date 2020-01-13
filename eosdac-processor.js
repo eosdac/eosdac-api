@@ -272,7 +272,7 @@ class JobProcessor {
             // start ipc server that clients can subscribe to for api cache updates
             this.ipc = new IPC();
             this.ipc.config.appspace = this.config.ipc.appspace;
-            this.ipc.config.id = this.config.id;
+            this.ipc.config.id = this.config.ipc.id;
             this.ipc.serve(() => {
                 this.logger.info(`Started IPC`);
             });
