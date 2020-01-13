@@ -121,6 +121,7 @@ const startIPCServer = () => {
     const ipc = new IPC();
     ipc.config.appspace = config.ipc.appspace;
     ipc.config.id = config.ipc.id;
+    ipc.config.retry = 1500;
     ipc.serve(() => {
         console.log(`Started IPC Server`);
         ipc.server.on('notification', receiveIPCMessage(ipc, 'notification'));

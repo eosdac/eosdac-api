@@ -1,6 +1,6 @@
 const {loadConfig} = require('../functions');
 
-const {IPC} = require('node-ipc');
+const IPCClient = require('../ipc-client');
 
 
 
@@ -11,11 +11,7 @@ class NewPeriodHandler {
         this.logger = require('../connections/logger')('watcher-multisig', config.logger);
 
         if (config.ipc){
-            // this.ipc = new IPC();
-            // this.ipc.config.appspace = config.ipc.appspace;
-            // this.ipc.connectTo(config.ipc.id, async () => {
-            //     this.logger.info(`Connected to IPC ${config.ipc.appspace}${config.ipc.id}`);
-            // });
+            this.ipc = new IPCClient(config.ipc);
         }
     }
 
@@ -25,7 +21,7 @@ class NewPeriodHandler {
         if (custodian_contracts.includes(doc.action.account) && doc.action.name === 'newperiode') {
             console.log(`NEWPERIOD`);
             if (this.ipc){
-                this.ipc.of.livenotifications.emit('notification', {notify: 'NEW_PERIOD', dac_id:doc.action.data.dac_id, trx_id: doc.trx_id});
+                this.ipc.send_notification({notify: 'NEW_PERIOD', dac_id:doc.action.data.dac_id, trx_id: doc.trx_id});
             }
         }
     }

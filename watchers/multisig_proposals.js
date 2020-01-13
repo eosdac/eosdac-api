@@ -4,7 +4,7 @@ const {loadConfig} = require('../functions');
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc} = require('@jafri/eosjs2');
 const fetch = require('node-fetch');
-const {IPC} = require('node-ipc');
+const IPCClient = require('../ipc-client');
 
 const config = loadConfig();
 
@@ -36,11 +36,7 @@ class MultisigProposalsHandler {
         this.logger = require('../connections/logger')('watcher-multisig', config.logger);
 
         if (config.ipc){
-            // this.ipc = new IPC();
-            // this.ipc.config.appspace = config.ipc.appspace;
-            // this.ipc.connectTo(config.ipc.id, async () => {
-            //     this.logger.info(`Connected to IPC ${config.ipc.appspace}${config.ipc.id}`);
-            // });
+            this.ipc = new IPCClient(config.ipc);
         }
     }
 
@@ -164,6 +160,9 @@ class MultisigProposalsHandler {
                     case 'newmemtermse':
                         type = MsigTypes.TYPE_TERMS;
                         break;
+                    case 'regaccount':
+                    case 'regref':
+                    case 'stakeconfig':
                     case 'updateconfig':
                     case 'updateconfige':
                         type = MsigTypes.TYPE_CONFIG;
@@ -531,9 +530,13 @@ class MultisigProposalsHandler {
         // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
         if (!replay && this.ipc && !doc.proposed_retry && is_propose){
-            this.ipc.of.livenotifications.emit('notification', {notify: 'MSIG_PROPOSED', dac_id, proposer, proposal_name, trx_id: doc.trx_id});
+            this.ipc.send_notification({notify: 'MSIG_PROPOSED', dac_id, proposer, proposal_name, trx_id: doc.trx_id});
         }
-        else if (!replay && original_doc && !doc.proposed_retry && this.ipc){
+        else if (!replay && original_doc && this.ipc){
+
+            if (original_doc){
+                console.log(`original doc send notification`, original_doc);
+            }
             let msg_name = '';
             switch (original_doc.action.name){
                 case 'approvede':
@@ -551,7 +554,7 @@ class MultisigProposalsHandler {
             }
 
             if (msg_name){
-                this.ipc.of.livenotifications.emit('notification', {notify: msg_name, dac_id, proposer, proposal_name, trx_id: original_doc.trx_id});
+                this.ipc.send_notification({notify: msg_name, dac_id, proposer, proposal_name, trx_id: original_doc.trx_id});
             }
         }
 
