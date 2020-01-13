@@ -71,8 +71,8 @@ for messages about significant events.
 
 Connect to the websocket server, eosDAC provides endpoints at the following locations:
 
-`ws://api.eosdac.io:3030` - EOS Mainnet
-`ws://api-jungle.eosdac.io:3030` - Jungle Network
+- `ws://api.eosdac.io:3030` - EOS Mainnet
+- `ws://api-jungle.eosdac.io:3030` - Jungle Network
 
 This example will connect and request notifications for a particular DAC ID
 
