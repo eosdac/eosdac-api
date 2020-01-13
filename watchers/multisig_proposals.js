@@ -283,10 +283,25 @@ class MultisigProposalsHandler {
 
         const dac_directory = this.dac_directory;
         const msig_contracts = Array.from(dac_directory.msig_contracts().values());
-        let is_propose = true
+        let is_propose = true;
+        let actor = doc.action.data.proposer
 
         if (!['proposed', 'proposede'].includes(doc.action.name)){
             is_propose = false
+            switch (doc.action.name){
+                case 'approvede':
+                    actor = doc.action.data.approver
+                    break
+                case 'cancellede':
+                    actor = doc.action.data.canceler
+                    break
+                case 'executede':
+                    actor = doc.action.data.executer
+                    break
+                case 'unapprovede':
+                    actor = doc.action.data.unapprover
+                    break
+            }
             // find the original proposed
             const doc_proposed = await coll_actions.findOne({
                 'action.account': {$in:msig_contracts},
@@ -554,7 +569,7 @@ class MultisigProposalsHandler {
             }
 
             if (msg_name){
-                this.ipc.send_notification({notify: msg_name, dac_id, proposer, proposal_name, trx_id: original_doc.trx_id});
+                this.ipc.send_notification({notify: msg_name, msig_data:output, actor, dac_id, proposer, proposal_name, trx_id: original_doc.trx_id});
             }
         }
 
