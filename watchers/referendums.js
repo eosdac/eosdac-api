@@ -4,8 +4,6 @@ const {loadConfig} = require('../functions');
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc} = require('@jafri/eosjs2');
 const fetch = require('node-fetch');
-const MongoLong = require('mongodb').Long;
-const MongoDate = require('mongodb').Date;
 
 const {eosTableAtBlock} = require('../eos-table');
 const DacDirectory = require('../dac-directory');
