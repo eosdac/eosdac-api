@@ -119,8 +119,8 @@ const startWSServer = (host = '127.0.0.1', port = 3030) => {
 
 const startIPCServer = () => {
     const ipc = new IPC();
-    ipc.config.appspace = 'eosdac.';
-    ipc.config.id = 'livenotifications';
+    ipc.config.appspace = config.ipc.appspace;
+    ipc.config.id = config.ipc.id;
     ipc.serve(() => {
         console.log(`Started IPC Server`);
         ipc.server.on('notification', receiveIPCMessage(ipc, 'notification'));

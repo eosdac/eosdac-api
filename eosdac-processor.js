@@ -271,8 +271,8 @@ class JobProcessor {
             this.logger.info(`Starting processor with ${this.config.clusterSize} threads...`);
             // start ipc server that clients can subscribe to for api cache updates
             this.ipc = new IPC();
-            this.ipc.config.appspace = 'eosdac.';
-            this.ipc.config.id = 'eosdacprocessor';
+            this.ipc.config.appspace = this.config.ipc.appspace;
+            this.ipc.config.id = this.config.id;
             this.ipc.serve(() => {
                 this.logger.info(`Started IPC`);
             });
