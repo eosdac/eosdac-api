@@ -17,7 +17,7 @@ class TokensHandler {
 
         this.dac_config = null;
 
-        this.logger = require('../connections/logger')('watcher-multisig', config.logger);
+        this.logger = require('../connections/logger')('watcher-tokens', config.logger);
     }
 
     async recalc_tokens(account, db){
