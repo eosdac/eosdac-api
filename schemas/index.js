@@ -16,4 +16,5 @@ module.exports = {
     votersSchema: require('./voters'),
     myDacsSchema: require('./my_dacs'),
     referendumsSchema: require('./referendums'),
+    financialReportsSchema: require('./financial_reports'),
 };

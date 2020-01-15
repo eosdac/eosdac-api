@@ -61,9 +61,14 @@ class ActionHandler {
         // this.logger.info(`Receive queue ${trx_id} for block ${block_num}`)
         // this.logger.info(action)
 
-        // console.log(`Checking ${action.act.account}:${action.act.name} ${this.interested(action.act.account, action.act.name)}`);
-        if (this.interested(action.act.account, action.act.name) && action.receipt && action.receipt[1].receiver === action.act.account) {
-            this.logger.info("Queue Action", action);
+        // console.log(action.receipt);
+        const isInterestedAction = (this.interested(action.act.account, action.act.name) && action.receipt && action.receipt[1].receiver === action.act.account);
+        const isInterestedTransfer = (action.receipt && this.interested(action.receipt[1].receiver));
+
+        // console.log(`Checking ${action.act.account}:${action.act.name} ${isInterestedAction || isInterestedTransfer}`);
+
+        if (isInterestedAction || isInterestedTransfer) {
+            this.logger.info(`Queue Action ${action.act.account}:${action.act.name}`, action);
 
             if (action.act.name === 'setabi'){
                 const sb_abi = new Serialize.SerialBuffer({

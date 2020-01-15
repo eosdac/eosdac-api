@@ -2,7 +2,7 @@ const MongoLong = require('mongodb').Long;
 const connectMongo = require('./connections/mongo');
 const {loadConfig} = require('./functions');
 
-async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 100, data_query = {}, block_num = -1, exclude_scope = false}) {
+async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 100, data_query = {}, block_num = -1, block_timestamp = null, exclude_scope = false}) {
     return new Promise(async (resolve, reject) => {
         const col = db.collection('contract_rows');
 
@@ -17,6 +17,9 @@ async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 1
         }
         if (block_num > -1) {
             match.block_num = {$lte: MongoLong.fromString(block_num + '')}
+        }
+        if (block_timestamp) {
+            match.block_timestamp = {$lte: block_timestamp}
         }
 
         let second_match = {present: 1};
