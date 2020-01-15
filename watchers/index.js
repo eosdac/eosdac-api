@@ -5,6 +5,7 @@ const tokens = require('./tokens');
 const referendums = require('./referendums');
 const newPeriod = require('./new_period');
 const memberStatus = require('./member_status');
+const dacdirectory = require('./dacdirectory');
 
 module.exports = [
     memberStatus,
@@ -13,5 +14,6 @@ module.exports = [
     votes,
     tokens,
     referendums,
-    newPeriod
+    newPeriod,
+    dacdirectory
 ];

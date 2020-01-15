@@ -103,6 +103,8 @@ class DeltaHandler {
                                     if (scope === this.config.eos.dacDirectoryContract && table === 'dacs'){
                                         this.dac_directory.reload();
                                     }
+
+                                    await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
                                 }
                                 else if (this.interested(code)) {
                                     // this.logger.info('Queue delta row')

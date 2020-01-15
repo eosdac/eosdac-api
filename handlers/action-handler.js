@@ -134,10 +134,14 @@ class ActionHandler {
 
     interested(account, name) {
         if (name === 'onblock') {
-            return false
+            return false;
         }
 
         if (account === 'eosio' && name === 'setabi'){
+            return true;
+        }
+
+        if (account === this.config.eos.dacDirectoryContract) {
             return true;
         }
 
