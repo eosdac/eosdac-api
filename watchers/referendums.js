@@ -13,6 +13,7 @@ const IPCClient = require('../ipc-client');
 class ReferendumsHandler {
 
     constructor() {
+        this.replay = false;
         this.config = loadConfig();
         this.db = connectMongo(this.config);
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
@@ -207,6 +208,7 @@ class ReferendumsHandler {
     async delta({doc, dac_directory, db}){}
 
     async replay() {
+        this.replay = true;
         const db = await connectMongo(this.config);
         const collection = db.collection('referendums');
         const collection_actions = db.collection('actions');
