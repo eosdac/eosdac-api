@@ -35,7 +35,13 @@ class ReferendumsHandler {
         this.logger.info(`Calculating referendum at block ${doc.block_num}`);
 
         let action_data = doc.action.data;
+        let actor = action_data.proposer;
+        let original_doc = null;
         if (['vote', 'cancel', 'exec'].includes(doc.action.name)){
+            original_doc = doc;
+            if (doc.action.name === 'vote'){
+                actor = action_data.voter;
+            }
             doc = await this.getProposeAction({db, doc, dac_id: action_data.dac_id, referendum_id: action_data.referendum_id});
             console.log('PROPOSE', doc)
             action_data = doc.action.data;
@@ -117,6 +123,22 @@ class ReferendumsHandler {
             // console.log(output);
             const coll = db.collection('referendums');
             await coll.updateOne({id: output.id}, {$set:output}, {upsert:true});
+
+            if (!this.replay && this.ipc){
+                let notify = 'REFERENDUM_PROPOSED';
+                switch (original_doc.action.name){
+                    case 'vote':
+                        notify = 'REFERENDUM_VOTED';
+                        break;
+                    case 'cancel':
+                        notify = 'REFERENDUM_CANCEL';
+                        break;
+                    case 'exec':
+                        notify = 'REFERENDUM_EXECUTED';
+                        break;
+                }
+                this.ipc.send_notification({notify, dac_id: output.dac_id, referendum_data:output, actor, trx_id: doc.trx_id});
+            }
         }
         else {
             console.error(`Could not find referendum in contract_rows`);
