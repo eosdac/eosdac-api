@@ -97,7 +97,11 @@ class TokensHandler {
 
     async delta({doc, dac_directory, db}){
         if (doc.table === 'accounts'){
-            this.recalc_tokens(doc.scope, db);
+            const dt = doc.block_timestamp.getTime();
+            const now = new Date().getTime();
+            if (Math.abs(now - dt) < 20000){ // only process if block is within the last 20 seconds
+                this.recalc_tokens(doc.scope, db);
+            }
         }
     }
 
