@@ -134,10 +134,10 @@ class FillManager {
                 }
 
                 // Start from current lib
-                this.br = new StateReceiver({startBlock: lib, mode: 1, config: this.config});
-                this.br.registerTraceHandler(block_handler);
-                this.br.registerDeltaHandler(delta_handler);
-                this.br.start()
+                // this.br = new StateReceiver({startBlock: lib, mode: 1, config: this.config});
+                // this.br.registerTraceHandler(block_handler);
+                // this.br.registerDeltaHandler(delta_handler);
+                // this.br.start()
             } else {
                 //queue.process('block_range', 1, this.processBlockRange.bind(this))
                 this.logger.info(`Listening to queue for block_range`);
