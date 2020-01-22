@@ -536,8 +536,14 @@ class MultisigProposalsHandler {
         // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
         const dt = block_timestamp.getTime();
+        let original_timestamp = null;
+        if (original_doc){
+            original_timestamp = original_doc.block_timestamp.getTime();
+        }
         const now = new Date().getTime();
-        if (!replay && this.ipc && (Math.abs(now - dt) < 20000)){
+        // Check that action is within last 20 seconds
+        const max_delay = 20 * 1000;
+        if (!replay && this.ipc && (Math.abs(now - dt) < max_delay || (original_timestamp && Math.abs(now - original_timestamp) < max_delay))){
             if (is_propose && !doc.proposed_retry){
                 this.sendNotification('MSIG_PROPOSED', {dac_id, msig_data:output, actor, proposer, proposal_name, trx_id: doc.trx_id});
             }
@@ -550,19 +556,18 @@ class MultisigProposalsHandler {
                         break;
                     case 'unapprovede':
                         msg_name = 'MSIG_UNAPPROVED';
-                        actor = original_doc.action.data.unapprover
+                        actor = original_doc.action.data.unapprover;
                         break;
                     case 'cancellede':
                         msg_name = 'MSIG_CANCELLED';
-                        actor = original_doc.action.data.canceler
+                        actor = original_doc.action.data.canceler;
                         break;
                     case 'executede':
                         msg_name = 'MSIG_EXECUTED';
-                        actor = original_doc.action.data.executer
+                        actor = original_doc.action.data.executer;
                         break;
                 }
 
-                console.log(`NOT PROPOSE ${actor}`)
                 if (msg_name){
                     this.sendNotification(msg_name, {msig_data:output, actor, dac_id, proposer, proposal_name, trx_id: original_doc.trx_id});
                 }
