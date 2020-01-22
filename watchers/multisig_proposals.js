@@ -274,6 +274,11 @@ class MultisigProposalsHandler {
         return approvals_data;
     }
 
+    async sendNotification(msg_name, data){
+        data.notify = msg_name
+        this.ipc.send_notification({msig_data:output, actor, dac_id, proposer, proposal_name, trx_id: original_doc.trx_id});
+    }
+
     async recalcMsigs({doc, db, retry=false, replay=false, original_doc=null}) {
         // this.logger.info('Recalc', doc)
 
@@ -288,20 +293,6 @@ class MultisigProposalsHandler {
 
         if (!['proposed', 'proposede'].includes(doc.action.name)){
             is_propose = false
-            switch (doc.action.name){
-                case 'approvede':
-                    actor = doc.action.data.approver
-                    break
-                case 'cancellede':
-                    actor = doc.action.data.canceler
-                    break
-                case 'executede':
-                    actor = doc.action.data.executer
-                    break
-                case 'unapprovede':
-                    actor = doc.action.data.unapprover
-                    break
-            }
             // find the original proposed
             const doc_proposed = await coll_actions.findOne({
                 'action.account': {$in:msig_contracts},
@@ -544,34 +535,40 @@ class MultisigProposalsHandler {
         // only include custodians (if the msig is current then they are modified in the api)
         // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
-        if (!replay && this.ipc && !doc.proposed_retry && is_propose){
-            this.ipc.send_notification({notify: 'MSIG_PROPOSED', dac_id, msig_data:output, actor, proposer, proposal_name, trx_id: doc.trx_id});
-        }
-        else if (!replay && original_doc && this.ipc){
+        const dt = block_timestamp.getTime();
+        const now = new Date().getTime();
+        if (!replay && this.ipc && (Math.abs(now - dt) < 20000)){
+            if (is_propose && !doc.proposed_retry){
+                this.sendNotification('MSIG_PROPOSED', {dac_id, msig_data:output, actor, proposer, proposal_name, trx_id: doc.trx_id});
+            }
+            else if (original_doc){
+                let msg_name = '';
+                switch (original_doc.action.name){
+                    case 'approvede':
+                        msg_name = 'MSIG_APPROVED';
+                        actor = original_doc.action.data.approver;
+                        break;
+                    case 'unapprovede':
+                        msg_name = 'MSIG_UNAPPROVED';
+                        actor = original_doc.action.data.unapprover
+                        break;
+                    case 'cancellede':
+                        msg_name = 'MSIG_CANCELLED';
+                        actor = original_doc.action.data.canceler
+                        break;
+                    case 'executede':
+                        msg_name = 'MSIG_EXECUTED';
+                        actor = original_doc.action.data.executer
+                        break;
+                }
 
-            if (original_doc){
-                console.log(`original doc send notification`, original_doc);
-            }
-            let msg_name = '';
-            switch (original_doc.action.name){
-                case 'approvede':
-                    msg_name = 'MSIG_APPROVED';
-                    break;
-                case 'unapprovede':
-                    msg_name = 'MSIG_UNAPPROVED';
-                    break;
-                case 'cancellede':
-                    msg_name = 'MSIG_CANCELLED';
-                    break;
-                case 'executede':
-                    msg_name = 'MSIG_EXECUTED';
-                    break;
-            }
-
-            if (msg_name){
-                this.ipc.send_notification({notify: msg_name, msig_data:output, actor, dac_id, proposer, proposal_name, trx_id: original_doc.trx_id});
+                console.log(`NOT PROPOSE ${actor}`)
+                if (msg_name){
+                    this.sendNotification(msg_name, {msig_data:output, actor, dac_id, proposer, proposal_name, trx_id: original_doc.trx_id});
+                }
             }
         }
+
 
         this.logger.info(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, {dac_id, doc:output});
         return coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
