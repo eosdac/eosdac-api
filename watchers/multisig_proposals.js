@@ -276,7 +276,7 @@ class MultisigProposalsHandler {
 
     async sendNotification(msg_name, data){
         data.notify = msg_name
-        this.ipc.send_notification({msig_data:data, actor, dac_id, proposer, proposal_name, trx_id: original_doc.trx_id});
+        this.ipc.send_notification(data);
     }
 
     async recalcMsigs({doc, db, retry=false, replay=false, original_doc=null}) {
