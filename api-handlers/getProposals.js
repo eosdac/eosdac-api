@@ -31,7 +31,7 @@ async function getProposals(fastify, request) {
         try {
             if (id) {
                 const id_res = await collection.findOne({
-                    id: MongoLong.fromString(id)
+                    id
                 });
 
                 delete id_res._id;
