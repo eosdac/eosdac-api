@@ -83,8 +83,6 @@ class WorkerProposalsHandler {
             doc = await coll_actions.findOne(createprop_query);
 
             if (!doc){
-                // check for old format, we can remove this eventually since it only ever hit testnets
-                createprop_query['action.data.dac_scope'] = createprop_query['action.data.dac_id'];
                 delete createprop_query['action.data.dac_id'];
                 doc = await coll_actions.findOne(createprop_query);
             }
