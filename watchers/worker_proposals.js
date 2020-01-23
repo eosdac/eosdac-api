@@ -45,14 +45,9 @@ class WorkerProposalsHandler {
         let original_doc = null;
 
         let data = doc.action.data;
-        if ((!data.id && !data.proposal_id) || (!data.dac_scope && !data.dac_id)){
-            // Old format
-            this.logger.warn(`Proposal in old format`);
-            return;
-        }
-
         const dac_id = data.dac_scope || data.dac_id;
-        this.logger.info(`Recalc worker proposal ${doc.action.data.id}:${dac_id}`, {dac_id});
+        const proposal_id = data.id || data.proposal_id;
+        this.logger.info(`Recalc worker proposal ${proposal_id}:${dac_id}`, {dac_id});
 
         const proposals_contract = this.dac_directory._proposals_contracts.get(dac_id);
         // const table_rows_req = {code: proposals_contract, scope: dac_id, table: 'config'};
@@ -76,7 +71,7 @@ class WorkerProposalsHandler {
             const createprop_query = {
                 "action.account": proposals_contract,
                 "action.name": 'createprop',
-                "action.data.id": data.proposal_id,
+                "action.data.id": proposal_id,
                 "action.data.dac_id": dac_id,
                 "block_num": {$lte: doc.block_num}
             };
@@ -95,7 +90,7 @@ class WorkerProposalsHandler {
             }
 
             if (!doc){
-                this.logger.error(`Could not find createprop for proposal id ${data.proposal_id}`, {dac_id, proposal_id:data.proposal_id});
+                this.logger.error(`Could not find createprop for proposal id ${proposal_id}`, {dac_id, proposal_id});
                 return;
             }
 
@@ -118,7 +113,7 @@ class WorkerProposalsHandler {
         data.escrow_status = await this.getEscrowStatus(data, db);
         data.status = await this.getStatus(data, db, closing_action);
         if (data.status === null){
-            this.logger.error(`No status for ${data.proposal_id}`, {dac_id, proposal_id:data.proposal_id});
+            this.logger.error(`No status for ${proposal_id}`, {dac_id, proposal_id});
             return;
         }
         const votes = await this.calculateVotes(data, db, closing_block_num);
@@ -131,7 +126,7 @@ class WorkerProposalsHandler {
         const complete_work_action = await coll_actions.findOne({
             "action.account": proposals_contract,
             "action.name": 'completework',
-            "action.data.proposal_id": data.id,
+            "action.data.proposal_id": proposal_id,
             "action.data.dac_id": dac_id,
             "block_num": {$gte: doc.block_num}
         });
@@ -142,7 +137,7 @@ class WorkerProposalsHandler {
         const start_work_action = await coll_actions.findOne({
             "action.account": proposals_contract,
             "action.name": 'startwork',
-            "action.data.proposal_id": data.id,
+            "action.data.proposal_id": proposal_id,
             "action.data.dac_id": dac_id,
             "block_num": {$gte: doc.block_num}
         });
@@ -151,7 +146,7 @@ class WorkerProposalsHandler {
         }
 
 
-        data.id = MongoLong.fromString(data.id);
+        data.id = data.id;
         data.dac_id = dac_id;
         data.block_num = doc.block_num;
         data.block_timestamp = doc.block_timestamp;
@@ -265,7 +260,7 @@ class WorkerProposalsHandler {
         const proposals_contract = this.dac_directory._proposals_contracts.get(dac_id);
 
         const data_query = {
-            key: data.id
+            proposal_id: data.id
         };
         // get current status from the table
         const table_query = {
