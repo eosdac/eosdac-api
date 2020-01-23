@@ -10,7 +10,7 @@ async function getProposals(fastify, request) {
         const dac_id = request.dac();
 
         const id = request.query.id || 0;
-        const status = (request.query.status || '').split(',').map(parseInt).filter(v => !isNaN(v));
+        const status = (request.query.status || '').split(',').map(i => parseInt(i)).filter(v => !isNaN(v));
         const skip = request.query.skip || 0;
         const limit = request.query.limit || 20;
         const arbitrator = request.query.arbitrator || null;
@@ -27,7 +27,7 @@ async function getProposals(fastify, request) {
         if (proposer){
             query.proposer = proposer;
         }
-        console.log(query);
+        // console.log('WP QUERY', query);
         try {
             if (id) {
                 const id_res = await collection.findOne({
