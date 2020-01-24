@@ -285,7 +285,6 @@ class WorkerProposalsHandler {
 
         if (closing_action){
             this.logger.info(`Closing action`, {closing_action});
-            table_query.block_num = closing_action.block_num -1;
 
             if (closing_action.action.name === 'cancel'){
                 return 100;
