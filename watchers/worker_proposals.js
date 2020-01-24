@@ -107,7 +107,7 @@ class WorkerProposalsHandler {
         }
 
 
-        const proposal_data = await this.getProposalData(data, db);
+        const proposal_data = await this.getProposalData({dac_id, id: proposal_id}, db, closing_block_num);
         data.comments = await this.getComments(data, db, closing_action, doc.block_num);
         data.escrow_status = await this.getEscrowStatus(data, db);
         data.status = await this.getStatus(data, db, closing_action);
@@ -256,7 +256,7 @@ class WorkerProposalsHandler {
         });
     }
 
-    async getProposalData(data, db){
+    async getProposalData(data, db, closing_block_num = null){
         const dac_id = data.dac_scope || data.dac_id;
         const proposals_contract = this.dac_directory._proposals_contracts.get(dac_id);
 
@@ -271,6 +271,9 @@ class WorkerProposalsHandler {
             db,
             data_query
         };
+        if (closing_block_num){
+            table_query.block_num = closing_block_num - 1
+        }
 
         const table_res = await eosTableAtBlock(table_query);
         if (!table_res.count){
