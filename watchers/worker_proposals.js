@@ -16,7 +16,7 @@ class WorkerProposalsHandler {
     constructor() {
         this.config = loadConfig();
         this.db = connectMongo(this.config);
-        this.replay = false;
+        this.is_replay = false;
 
         // this.proposals_contracts = this.dac_directory._proposals_contracts.get(dac_id);
         // this.proposals_contract = config.eos.proposalsContract || 'dacproposals';
@@ -179,7 +179,7 @@ class WorkerProposalsHandler {
 
         let action = doc.action;
 
-        if (!this.replay && this.ipc){
+        if (!this.is_replay && this.ipc){
             let notify = 'WP_PROPOSED';
             if (original_doc){
                 action = original_doc.action;
@@ -548,7 +548,7 @@ class WorkerProposalsHandler {
     async delta({doc, dac_directory, db}){}
 
     async replay() {
-        this.replay = true;
+        this.is_replay = true;
         const db = await connectMongo(this.config);
         const collection = db.collection('workerproposals');
         const collection_actions = db.collection('actions');
