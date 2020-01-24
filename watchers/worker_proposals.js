@@ -107,6 +107,7 @@ class WorkerProposalsHandler {
         }
 
 
+        const proposal_data = await this.getProposalData(data, db);
         data.comments = await this.getComments(data, db, closing_action, doc.block_num);
         data.escrow_status = await this.getEscrowStatus(data, db);
         data.status = await this.getStatus(data, db, closing_action);
@@ -119,6 +120,8 @@ class WorkerProposalsHandler {
         data.vote_totals = votes.totals;
         const block_date = Date.parse(doc.block_timestamp);
         data.propose_timestamp = new Date(block_date);
+        const expiry = Date.parse(proposal_data.expiry);
+        data.expiry = new Date(expiry);
 
 
         const complete_work_action = await coll_actions.findOne({
@@ -251,9 +254,7 @@ class WorkerProposalsHandler {
         });
     }
 
-    async getStatus(data, db, closing_action){
-        this.logger.info('Update status');
-
+    async getProposalData(data, db){
         const dac_id = data.dac_scope || data.dac_id;
         const proposals_contract = this.dac_directory._proposals_contracts.get(dac_id);
 
@@ -268,6 +269,17 @@ class WorkerProposalsHandler {
             db,
             data_query
         };
+
+        const table_res = await eosTableAtBlock(table_query);
+        if (!table_res.count){
+            this.logger.error(`Could not find state for proposal ${data.id}`, {dac_id, table_query});
+            return null;
+        }
+        return table_res.results[0].data;
+    }
+
+    async getStatus(data, db, closing_action){
+        this.logger.info('Get status');
 
         if (closing_action){
             this.logger.info(`Closing action`, {closing_action});
@@ -284,12 +296,9 @@ class WorkerProposalsHandler {
             }
         }
 
-        const table_res = await eosTableAtBlock(table_query);
-        if (!table_res.count){
-            this.logger.error(`Could not find state for proposal ${data.id}`, {dac_id, table_query});
-            return null;
-        }
-        const status = table_res.results[0].data.state;
+        const prop_data = this.getProposalData(data, db);
+
+        const status = prop_data.state;
 
         return status;
     }
