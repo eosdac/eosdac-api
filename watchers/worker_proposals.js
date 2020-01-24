@@ -124,6 +124,7 @@ class WorkerProposalsHandler {
         data.expiry = new Date(expiry);
 
 
+        data.complete_work_timestamp = null;
         const complete_work_action = await coll_actions.findOne({
             "action.account": proposals_contract,
             "action.name": 'completework',
@@ -135,6 +136,7 @@ class WorkerProposalsHandler {
             data.complete_work_timestamp = new Date(Date.parse(complete_work_action.block_timestamp));
         }
 
+        data.start_work_timestamp = null;
         const start_work_action = await coll_actions.findOne({
             "action.account": proposals_contract,
             "action.name": 'startwork',
