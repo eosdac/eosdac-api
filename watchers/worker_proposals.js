@@ -298,7 +298,7 @@ class WorkerProposalsHandler {
             }
         }
 
-        const prop_data = this.getProposalData(data, db);
+        const prop_data = await this.getProposalData(data, db);
 
         const status = prop_data.state;
 
