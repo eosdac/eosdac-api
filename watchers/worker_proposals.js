@@ -239,7 +239,7 @@ class WorkerProposalsHandler {
                 this.logger.info('Closing action', {closing_action});
                 query.block_num['$lte'] = await closing_action.block_num;
             }
-            const comments_res = coll_actions.find(query);
+            const comments_res = coll_actions.find(query).sort({block_num:-1});
 
             comments_res.forEach((comment) => {
                 const comment_data = {
