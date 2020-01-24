@@ -45,8 +45,11 @@ class WorkerProposalsHandler {
         let original_doc = null;
 
         let data = doc.action.data;
-        const dac_id = data.dac_scope || data.dac_id;
+        const dac_id = data.dac_id;
         const proposal_id = data.id || data.proposal_id;
+        if (!proposal_id || !dac_id){
+            return;
+        }
         this.logger.info(`Recalc worker proposal ${proposal_id}:${dac_id}`, {dac_id});
 
         const proposals_contract = this.dac_directory._proposals_contracts.get(dac_id);
@@ -108,6 +111,9 @@ class WorkerProposalsHandler {
 
 
         const proposal_data = await this.getProposalData({dac_id, id: proposal_id}, db, closing_block_num);
+        if (!proposal_data){
+            return;
+        }
         data.comments = await this.getComments(data, db, closing_action, doc.block_num);
         data.escrow_status = await this.getEscrowStatus(data, db);
         data.status = await this.getStatus(data, db, closing_action);
