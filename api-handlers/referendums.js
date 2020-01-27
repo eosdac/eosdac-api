@@ -12,7 +12,12 @@ async function getReferendums(fastify, request) {
 
         const now = new Date();
         const coll = db.collection('referendums');
-        const res = await coll.find({status: 0, expires: {$gte:now}, dac_id});
+        const query = { dac_id };
+        const status = request.query.status;
+        if (status !== undefined) {
+            query.status = status;
+        }
+        const res = await coll.find(query);
 
         let ret = [];
         res.forEach((row) => {

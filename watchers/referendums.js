@@ -32,18 +32,24 @@ class ReferendumsHandler {
         this.logger = require('../connections/logger')('watcher-proposals', this.config.logger);
     }
 
+    async recalcReferendumById(dac_id, referendum_id, account, block_num, db) {
+        const doc = await this.getProposeAction({db, block_num, dac_id, referendum_id, account});
+        return this.recalcReferendum(doc, db)
+    }
+
     async recalcReferendum(doc, db) {
         this.logger.info(`Calculating referendum at block ${doc.block_num}`);
 
         let action_data = doc.action.data;
         let actor = action_data.proposer;
         let original_doc = null;
+
         if (['vote', 'cancel', 'exec'].includes(doc.action.name)){
             original_doc = doc;
             if (doc.action.name === 'vote'){
                 actor = action_data.voter;
             }
-            doc = await this.getProposeAction({db, doc, dac_id: action_data.dac_id, referendum_id: action_data.referendum_id});
+            doc = await this.getProposeAction({db, block_num: doc.block_num, account: doc.action.account, dac_id: action_data.dac_id, referendum_id: action_data.referendum_id});
             console.log('PROPOSE', doc)
             action_data = doc.action.data;
         }
@@ -53,7 +59,16 @@ class ReferendumsHandler {
             return
         }
 
-        const res = await eosTableAtBlock({code:doc.action.account, db, scope: action_data.dac_id, table: 'referendums', block_num: doc.block_num});
+        const data_query = {referendum_id: action_data.referendum_id};
+        console.log('data_query', data_query);
+        const res = await eosTableAtBlock({
+            code:doc.action.account,
+            db,
+            scope: action_data.dac_id,
+            table: 'referendums',
+            block_num: doc.block_num,
+            data_query
+        });
         const { results, count } = res;
         // console.log(results, count)
         if (count){
@@ -76,7 +91,6 @@ class ReferendumsHandler {
             }
             output.expires = exp_date;
 
-            const data_query = {referendum_id: ref_data.referendum_id};
             const close_query = {code:doc.action.account, db, scope: action_data.dac_id, table: 'referendums', data_query};
             if (closing_action){ // still open
                 console.log(closing_action)
@@ -101,6 +115,7 @@ class ReferendumsHandler {
             else if (ref_data.voting_type === 1){ // account
                 votes = close_data.account_votes;
             }
+            output.status = close_data.status;
 
 
             votes.forEach(val => {
@@ -127,17 +142,20 @@ class ReferendumsHandler {
 
             if (!this.replay && this.ipc){
                 let notify = 'REFERENDUM_PROPOSED';
-                switch (original_doc.action.name){
-                    case 'vote':
-                        notify = 'REFERENDUM_VOTED';
-                        break;
-                    case 'cancel':
-                        notify = 'REFERENDUM_CANCEL';
-                        break;
-                    case 'exec':
-                        notify = 'REFERENDUM_EXECUTED';
-                        break;
+                if (original_doc) {
+                    switch (original_doc.action.name){
+                        case 'vote':
+                            notify = 'REFERENDUM_VOTED';
+                            break;
+                        case 'cancel':
+                            notify = 'REFERENDUM_CANCEL';
+                            break;
+                        case 'exec':
+                            notify = 'REFERENDUM_EXECUTED';
+                            break;
+                    }
                 }
+
                 this.ipc.send_notification({notify, dac_id: output.dac_id, referendum_data:output, actor, trx_id: doc.trx_id});
             }
         }
@@ -147,14 +165,14 @@ class ReferendumsHandler {
 
     }
 
-    async getProposeAction({db, doc, dac_id, referendum_id}){
+    async getProposeAction({db, dac_id, referendum_id, block_num, account}){
         return new Promise(async (resolve, reject) => {
-            const start_block = doc.block_num;
+            const start_block = block_num;
             const coll_actions = db.collection('actions');
 
             const proposed_query = {
-                "action.account": doc.action.account,
-                "action.name": 'proposed',
+                "action.account": account,
+                "action.name": 'propose',
                 "action.data.dac_id": dac_id,
                 "action.data.referendum_id": referendum_id,
                 "block_num": {$lte: start_block}
@@ -163,9 +181,12 @@ class ReferendumsHandler {
             const proposed_res = await coll_actions.find(proposed_query);
 
             const proposed_act = await proposed_res.next();
+            if (!proposed_act){
+                return null;
+            }
 
             const trx_query = {
-                "action.account": doc.action.account,
+                "action.account": account,
                 "action.name": 'propose',
                 "trx_id": proposed_act.trx_id
             };
@@ -197,15 +218,27 @@ class ReferendumsHandler {
     }
 
     async action({doc, dac_directory, db}) {
-        const referendum_contracts = Array.from(dac_directory.referendum_contracts().values());
-        if (referendum_contracts.includes(doc.action.account)){
-            this.db = await db;
-            this.dac_directory = dac_directory;
-            this.recalcReferendum(doc, db);
-        }
+        // const referendum_contracts = new Set(Array.from(dac_directory.referendum_contracts().values()));
+        // if (referendum_contracts.has(doc.action.account)){
+        //     this.db = await db;
+        //     this.dac_directory = dac_directory;
+        //     setTimeout(() => {
+        //         this.recalcReferendum(doc, db);
+        //     }, 600);
+        // }
     }
 
-    async delta({doc, dac_directory, db}){}
+    async delta({doc, dac_directory, db}){
+        // delta update
+        const referendum_contracts = new Set(Array.from(dac_directory.referendum_contracts().values()));
+        if (referendum_contracts.has(doc.code) && doc.table === 'referendums'){
+            this.db = await db;
+            this.dac_directory = dac_directory;
+            setTimeout(() => {
+                this.recalcReferendumById(doc.scope, doc.data.referendum_id, doc.code, doc.block_num, db);
+            }, 600);
+        }
+    }
 
     async replay() {
         this.replay = true;
