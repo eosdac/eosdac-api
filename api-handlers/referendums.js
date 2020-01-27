@@ -13,10 +13,12 @@ async function getReferendums(fastify, request) {
         const coll = db.collection('referendums');
         const query = { dac_id };
         const status = request.query.status;
+        const skip = request.query.skip || 0;
+        const limit = request.query.limit || 20;
         if (status !== undefined) {
             query.status = status;
         }
-        const res = await coll.find(query).sort({expires:-1});
+        const res = await coll.find(query).sort({expires:-1}).skip(parseInt(skip)).limit(parseInt(limit));
 
         let ret = [];
         res.forEach((row) => {
