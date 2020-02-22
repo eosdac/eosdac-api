@@ -458,7 +458,7 @@ class MultisigProposalsHandler {
         };
         const closing_actions = await coll_actions.find(closing_query).sort({block_num: 1});
 
-        const ca = await closing_actions.next();
+        let ca = await closing_actions.next();
         if (ca) {
             switch (ca.action.name) {
                 case 'cancelled':
@@ -479,7 +479,35 @@ class MultisigProposalsHandler {
                     break
             }
 
-            output.block_num = ca.block_num
+            output.block_num = ca.block_num;
+        }
+        else {
+            // check that it hasnt been executed or cancelled directly via eosio.msig
+            const closing_query_msig = {
+                'block_num': {$gt: block_num},
+                'action.account': this.msig_contract,
+                'action.name': {$in: ['exec', 'cancel']},
+                'action.data.proposal_name': proposal_name,
+                'action.data.proposer': proposer
+            };
+            const closing_actions_msig = await coll_actions.find(closing_query_msig).sort({block_num: 1});
+            ca = await closing_actions_msig.next();
+
+            if (ca){
+                switch (ca.action.name) {
+                    case 'cancel':
+                        output.status = MultisigProposalsHandler.STATUS_CANCELLED;
+                        break;
+                    case 'exec':
+                        output.status = MultisigProposalsHandler.STATUS_EXECUTED;
+
+                        // add executor to the data
+                        output.executer = ca.action.data.executer;
+                        output.executed_trxid = ca.trx_id;
+                        break;
+                }
+                output.block_num = ca.block_num;
+            }
         }
 
 
