@@ -599,7 +599,7 @@ class MultisigProposalsHandler {
 
     async action({doc, dac_directory, db}) {
         const dac_msig_contract = this.config.eos.dacMsigContract || 'dacmultisigs';
-        if (doc.action.account === dac_msig_contract) {
+        if (doc.action.account === dac_msig_contract || doc.action.account === this.msig_contract) {
             this.db = await db;
             this.dac_directory = dac_directory;
 
