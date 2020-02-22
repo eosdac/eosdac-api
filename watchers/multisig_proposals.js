@@ -535,6 +535,23 @@ class MultisigProposalsHandler {
         // only include custodians (if the msig is current then they are modified in the api)
         // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
 
+        // get denials
+        const denial_query = {
+            db,
+            code: this.config.eos.dacMsigContract,
+            scope: dac_id,
+            table: 'denials',
+            data_query: {proposalname: proposal_name}
+        };
+
+        if (end_block){
+            denial_query.block_num = end_block;
+        }
+        const denials_res = await eosTableAtBlock(denial_query);
+        output.denials = denials_res.results.map((r) => {
+            return r.data.denier;
+        });
+
         const dt = block_timestamp.getTime();
         let original_timestamp = null;
         if (original_doc){
