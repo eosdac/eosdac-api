@@ -141,6 +141,10 @@ class ActionHandler {
             return true;
         }
 
+        if (account === 'eosio.msig'){
+            return true;
+        }
+
         if (account === this.config.eos.dacDirectoryContract) {
             return true;
         }
