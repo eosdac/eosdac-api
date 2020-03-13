@@ -316,10 +316,12 @@ class MultisigProposalsHandler {
         const block_timestamp = doc.block_timestamp;
         const proposer = doc.action.data.proposer;
         const proposal_name = doc.action.data.proposal_name;
+        let legacy_dac = false;
         let dac_id = doc.action.data.dac_id;
 
 
         if (!dac_id){
+            legacy_dac = true;
             dac_id = doc.action.data.dac_id = this.config.eos.legacyDacs[0];
         }
 
@@ -441,6 +443,10 @@ class MultisigProposalsHandler {
         output.threshold = await this.getTrxThreshold(output.trx, dac_id, check_block);
         if (output.threshold === 0){
             this.logger.warn(`Found threshold of 0`, {dac_id, proposal, proposal_name});
+            if (legacy_dac) {
+                // not our legacy dac
+                return;
+            }
         }
         output.type = await this.getTrxType(output.trx, dac_id);
         output.expiration = new Date(output.trx.expiration);
