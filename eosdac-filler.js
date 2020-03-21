@@ -20,7 +20,7 @@ const signatureProvider = null;
 
 
 const {ActionHandler, TraceHandler, DeltaHandler} = require('./handlers');
-const StateReceiver = require('../eosio-statereceiver');
+const StateReceiver = require('@eosdacio/eosio-statereceiver');
 
 // var access = fs.createWriteStream('filler.log')
 // process.stdout.write = process.stderr.write = access.write.bind(access)
