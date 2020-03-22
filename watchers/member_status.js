@@ -90,7 +90,7 @@ class MemberStatusHandler {
     }
 
     async recalc_member_status({account, db, replay=false}){
-        return;
+        // return;
         console.log(`Recalc member status ${account}`);
 
         const types = await this.getMembershipTypes(account, db);
