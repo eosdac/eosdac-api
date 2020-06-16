@@ -19,7 +19,7 @@ let rpc;
 const signatureProvider = null;
 
 
-const {ActionHandler, TraceHandler, DeltaHandler} = require('./handlers');
+const {ActionHandler, TraceHandler, DeltaHandler, BlockHandler} = require('./handlers');
 const StateReceiver = require('@eosdacio/eosio-statereceiver');
 
 // var access = fs.createWriteStream('filler.log')
@@ -73,7 +73,7 @@ class FillManager {
         await dac_directory.reload();
 
         const action_handler = new ActionHandler({queue: this.amq, config: this.config, dac_directory, logger:this.logger});
-        const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config, logger:this.logger});
+        const trace_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config, logger:this.logger});
         const delta_handler = new DeltaHandler({queue: this.amq, config: this.config, dac_directory, logger:this.logger});
 
         if (this.replay) {
@@ -146,7 +146,7 @@ class FillManager {
 
         } else if (this.test_block) {
             // const action_handler = new ActionHandler({queue: this.amq, config: this.config})
-            // const block_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config})
+            // const trace_handler = new TraceHandler({queue: this.amq, action_handler, config: this.config})
             // const delta_handler = new DeltaHandler({queue: this.amq, config: this.config});
 
 
@@ -157,7 +157,7 @@ class FillManager {
                 mode: 1,
                 config: this.config
             });
-            this.br.registerTraceHandler(block_handler);
+            this.br.registerTraceHandler(trace_handler);
             this.br.registerDeltaHandler(delta_handler);
             this.br.registerDoneHandler(() => {
                 this.logger.info('Test complete')
@@ -187,10 +187,14 @@ class FillManager {
 
             this.logger.info(`No replay, starting from block ${start_block}, LIB is ${lib}`);
 
+
+            const block_handler = new BlockHandler({config: this.config});
+
             this.br = new StateReceiver({startBlock: start_block, mode: 0, config: this.config});
-            this.br.registerTraceHandler(block_handler);
+            this.br.registerTraceHandler(trace_handler);
             this.br.registerDeltaHandler(delta_handler);
-            this.br.start()
+            this.br.registerBlockHandler(block_handler);
+            this.br.start();
         }
 
     }
