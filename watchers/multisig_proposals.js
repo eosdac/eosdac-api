@@ -432,7 +432,7 @@ class MultisigProposalsHandler {
                     }, 5000);
                 }
 
-                this.logger.error(`Could not find proposal in table`, {dac_id, proposal, proposal_name});
+                this.logger.error(`Could not find proposal in table`, {dac_id, check_block, proposal_name});
                 return;
             }
         }
