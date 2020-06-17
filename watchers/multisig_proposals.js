@@ -293,17 +293,18 @@ class MultisigProposalsHandler {
 
         if (!['proposed', 'proposede'].includes(doc.action.name)){
             is_propose = false
+            console.log(`Action is not proposal ${doc.action.name}`);
             // find the original proposed
             const doc_proposed = await coll_actions.findOne({
                 'action.account': {$in:msig_contracts},
                 'action.name': {$in:['proposed', 'proposede']},
                 'action.data.proposal_name': doc.action.data.proposal_name,
                 'action.data.proposer': doc.action.data.proposer,
-                'block_num': {$lt:doc.block_num}
+                'block_num': {$lte:doc.block_num}
             });
 
             if (!doc_proposed){
-                console.error(`Could not find original proposal for ${doc.action.data.proposer}:${doc.action.data.proposal_name}`);
+                console.error(`Could not find original proposal for ${doc.action.data.proposer}:${doc.action.data.proposal_name} at block ${doc.block_num}`);
                 return;
             }
 
