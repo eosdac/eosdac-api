@@ -28,7 +28,7 @@ async function transfers(fastify, request) {
             const query = {
                 'action.account': token_account,
                 'action.name': 'transfer',
-                'action.data.quantity': {$regex: `${token_code}$`, $options:""}
+                'action.data.quantity': {$regex: ` ${token_code}$`, $options:""}
             };
             const res = collection.find(query).sort({block_num: -1})
                 .skip(parseInt(skip))
