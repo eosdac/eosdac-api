@@ -63,7 +63,7 @@ class ActionHandler {
 
         // console.log(action.receipt);
         const isInterestedAction = (this.interested(action.act.account, action.act.name) && action.receipt && action.receipt[1].receiver === action.act.account);
-        const isInterestedTransfer = (action.receipt && this.interested(action.receipt[1].receiver));
+        const isInterestedTransfer = (action.receipt && this.interested(action.receipt[1].receiver) && action.receipt[1].receiver === action.act.account);
 
         // console.log(`Checking ${action.act.account}:${action.act.name} ${isInterestedAction || isInterestedTransfer}`);
 
