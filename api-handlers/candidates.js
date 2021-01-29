@@ -3,6 +3,7 @@ const {candidatesSchema} = require('../schemas');
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc} = require('@jafri/eosjs2');
 const fetch = require('node-fetch');
+const {getProfiles} = require('../profile-helper.js');
 
 const {loadConfig} = require('../functions');
 
@@ -57,7 +58,28 @@ async function getCandidates(fastify, request) {
             });
             const count = active.length;
 
-            resolve({results:active.slice(skip, skip+limit), count});
+            const dac_id = request.dac();
+            const dac_config = await request.dac_config();
+            const db = fastify.mongo.db;
+            let legacy = false;
+            if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
+                fastify.log.info(`Got legacy dac ${dac_id}`, {dac_id});
+                legacy = true;
+            }
+
+            const active_candidates = active.slice(skip, skip+limit);
+            const accounts = active_candidates.map(c => c.candidate_name);
+
+            const profiles = await getProfiles(db, dac_config, dac_id, accounts, legacy);
+
+            for (let a = 0; a < active_candidates.length; a++) {
+                const profile_wrapper = profiles.results.find(p => p.account === active_candidates[a].candidate_name);
+                if (profile_wrapper){
+                    active_candidates[a].profile = profile_wrapper.profile;
+                }
+            }
+
+            resolve({results:active_candidates, count});
         }
         else {
             resolve({results:[], count: 0});

@@ -28,6 +28,23 @@ const candidatesSchema = {
                             "candidate_name": {
                                 type: "string"
                             },
+                            "profile": {
+                                type: "object",
+                                properties: {
+                                    "givenName": {
+                                        type: "string"
+                                    },
+                                    "familyName": {
+                                        type: "string"
+                                    },
+                                    "image": {
+                                        type: "string"
+                                    },
+                                    "description": {
+                                        type: "string"
+                                    }
+                                }
+                            },
                             "custodian_end_time_stamp": {
                                 type: ["string", "null"]
                             },
