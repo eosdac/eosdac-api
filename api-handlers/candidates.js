@@ -60,7 +60,7 @@ async function getCandidates(fastify, request) {
             resolve({results:active.slice(skip, skip+limit), count});
         }
         else {
-            resolve({[], count: 0});
+            resolve([], count: 0});
         }
 
     })
