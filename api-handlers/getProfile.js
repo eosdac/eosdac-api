@@ -75,7 +75,10 @@ async function getProfile(fastify, request) {
     result.results = result.results.map((row) => {
         // console.log(row.profile)
         if (typeof row.profile === 'string') {
-            row.profile = JSON.parse(row.profile);
+            try {
+                row.profile = JSON.parse(row.profile);
+            }
+            catch (e) {}
         }
         delete row._id;
 
