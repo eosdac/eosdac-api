@@ -78,7 +78,11 @@ async function getProfile(fastify, request) {
             try {
                 row.profile = JSON.parse(row.profile);
             }
-            catch (e) {}
+            catch (e) {
+                const desc = row.profile;
+                row.profile = null_profile;
+                row.profile.description = desc;
+            }
         }
         delete row._id;
 
