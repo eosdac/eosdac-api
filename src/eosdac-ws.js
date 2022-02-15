@@ -89,7 +89,7 @@ const startWSServer = (host = '127.0.0.1', port = 3030) => {
         response.writeHead(200, {
             "Content-Type": "text/html"
         });
-        fs.createReadStream("static/ws-test.html").pipe(response);
+        fs.createReadStream("../static/ws-test.html").pipe(response);
     };
 
 
