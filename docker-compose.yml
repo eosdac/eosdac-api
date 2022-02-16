@@ -66,3 +66,8 @@ services:
     environment:
       CONFIG: '${CONFIG}'
     restart: on-failure
+
+networks:
+  default:
+    external: true
+    name: lamington

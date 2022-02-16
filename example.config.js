@@ -2,16 +2,16 @@ module.exports = {
     fillClusterSize: 4,
     clusterSize: 10,
     mongo: {
-        url: 'mongodb://localhost:27017',
+        url: 'mongodb://eosdac-api-db-1:27017',
         dbName: 'eosdac',
         traceCollection: 'traces',
         stateCollection: 'states'
     },
     amq: {
-        connectionString: 'amqp://user:pass@host/vhost'
+        connectionString: 'amqp://user:pass@eosdac-api-queue-1/vhost'
     },
     ws: {
-        host: '127.0.0.1',
+        host: 'eosdac-api-ws-1',
         port: '3030'
     },
     ipc: {
@@ -19,11 +19,11 @@ module.exports = {
         appspace: 'eosdac.'
     },
     eos: {
-        chainId: "e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473",
-        endpoint: 'http://jungle2.eosdac.io:8882',
-        wsEndpoint: 'ws://jungle2.eosdac.io:8080',
-        msigContract: 'eosio.msig',
-        dacGenesisBlock: 12345,  // the first block that includes any dac contract actions including the initial setcode
+        chainId: "8be32650b763690b95b7d7e32d7637757a0a7392ad04f1c393872e525a2ce82b",
+        endpoint: 'http://lamington:8888',
+        // wsEndpoint: 'ws://jungle2.eosdac.io:8080',
+        msigContract: 'msigworlds',
+        dacGenesisBlock: 1,  // the first block that includes any dac contract actions including the initial setcode
         dacDirectoryContract: 'dacdirectory',
         dacMsigContract: 'dacmultisigs',
         legacyDacs: ['eos.dac'],
