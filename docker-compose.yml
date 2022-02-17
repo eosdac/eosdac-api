@@ -16,6 +16,8 @@ services:
     restart: on-failure
     ports:
       - '8800:8800'
+    volumes:
+      - eosdac-api:/tmp/
 
   processor:
     image: ghcr.io/alien-worlds/eosdac_processor
@@ -29,6 +31,8 @@ services:
     environment:
       CONFIG: '${CONFIG}'
     restart: on-failure
+    volumes:
+      - eosdac-api:/tmp/
 
   blockrange:
     image: ghcr.io/alien-worlds/eosdac_blockrange
@@ -42,6 +46,8 @@ services:
     environment:
       CONFIG: '${CONFIG}'
     restart: on-failure
+    volumes:
+      - eosdac-api:/tmp/
 
   filler:
     image: ghcr.io/alien-worlds/eosdac_filler
@@ -55,6 +61,8 @@ services:
     environment:
       CONFIG: '${CONFIG}'
     restart: on-failure
+    volumes:
+      - eosdac-api:/tmp/
 
   ws:
     image: ghcr.io/alien-worlds/eosdac_ws
@@ -68,8 +76,13 @@ services:
     environment:
       CONFIG: '${CONFIG}'
     restart: on-failure
+    volumes:
+      - eosdac-api:/tmp/
 
 networks:
   default:
     external: true
     name: lamington
+
+volumes:
+  eosdac-api:
