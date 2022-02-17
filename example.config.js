@@ -8,7 +8,7 @@ module.exports = {
         stateCollection: 'states'
     },
     amq: {
-        connectionString: 'amqp://user:pass@eosdac-api-queue-1/vhost'
+        connectionString: 'amqp://guest:guest@eosdac-api-queue-1/'
     },
     ws: {
         host: 'eosdac-api-ws-1',
