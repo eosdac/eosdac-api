@@ -11,6 +11,8 @@ services:
         - ghcr.io/alien-worlds/eosdac_api
     environment:
       CONFIG: '${CONFIG}'
+      SERVER_PORT: '8800' 
+      SERVER_ADDR: '0.0.0.0'
     restart: on-failure
     ports:
       - '8800:8800'
