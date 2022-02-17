@@ -21,7 +21,7 @@ module.exports = {
     eos: {
         chainId: "8be32650b763690b95b7d7e32d7637757a0a7392ad04f1c393872e525a2ce82b",
         endpoint: 'http://lamington:8888',
-        // wsEndpoint: 'ws://jungle2.eosdac.io:8080',
+        wsEndpoint: 'ws://eosdac-api-ws-1:3030',
         msigContract: 'msigworlds',
         dacGenesisBlock: 1,  // the first block that includes any dac contract actions including the initial setcode
         dacDirectoryContract: 'dacdirectory',
