@@ -37,17 +37,38 @@ The API service uses fastify to provide a fast API development platform, it read
 
 Once running the api will open the configured port and provide document on http://your.domain/v1/eosdac/docs
 
+## Settings up a local blockchain for testing (optional)
+
+```
+git clone git@github.com:Alien-Worlds/eosdac-contracts.git
+cd eosdac-contracts
+yarn
+yarn test
+```
+The command `yarn test` will build and start a docker container with a fresh blockchain, compile and deploy the eosdac-contracts and run the tests. The docker container will stay running and the nodeos API node of the blockchain will be exposed on port 8888. You can verify that the blockchain is running from the host system:
+
+```
+curl http://127.0.0.1:8888/v1/chain/get_info
+```
+
+ It also creates a docker network named `lamington` that you can use to connect to the blockchain from other docker containers.
+
 ## Configuring
 
 Each config is named [name].config.js, copy `example.config.js` to your name of choice, eg. `cp example.config.js jungle.config.js`
 
 Edit your file to include the correct contract names and endpoints.  `amq.connectionString` is your your RabbitMQ connection string.
 
+
 ## Starting
 
-The eosdac-api is started using pm2.  Install it globally using `sudo npm i -g pm2` and then configure `ecosystem.config.js`, this file will configure how many processes will start and what configuration file they will use.
+In order to start the services in docker, just use the command:
+```
+CONFIG=example docker compose up --build
+```
+You can switch between different configs by giving a different value to the CONFIG env variable. 
 
-`pm2 start` will start all the processes listed in the ecosystem.config.js file.
+If you use the default example config, it will automatically try to connect to a blockchain running locally on port 8888. In order to run it, see above.
 
 ## Replaying
 
