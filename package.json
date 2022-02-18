@@ -4,6 +4,13 @@
   "main": "index.js",
   "author": "<michael@eosdac.io>",
   "license": "MIT",
+  "scripts": {
+    "api":"node src/eosdac-api.js",
+    "processor":"node src/eosdac-processor.js",
+    "blockrange":"node src/eosdac-blockrange.js",
+    "filler":"node src/eosdac-filler.js ${flags}",
+    "ws":"node src/eosdac-ws.js"
+  },
   "dependencies": {
     "@eosdacio/eosio-statereceiver": "^1.0.4",
     "@jafri/eosjs2": "^20.0.1-e34c16e.170",

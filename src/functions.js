@@ -5,7 +5,7 @@ function loadConfig() {
     if (!config_name) {
         throw new Error(`Config not specified, please provide CONFIG environmental variable`)
     }
-    const config = require(`./${config_name}.config`);
+    const config = require(`../${config_name}.config`);
 
     config.name = config_name;
 
