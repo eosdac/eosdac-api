@@ -78,6 +78,8 @@ services:
     restart: on-failure
     volumes:
       - eosdac-api:/tmp/
+    ports:
+      - '3030:3030'
 
 networks:
   default:
