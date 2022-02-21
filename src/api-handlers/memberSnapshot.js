@@ -13,8 +13,8 @@ async function memberSnapshot(fastify, request) {
 
         const contract = request.query.contract || dac_config.symbol.contract;
         const custodian_contract = dac_config.accounts.get(2);
-        const symbol = request.query.symbol || dac_config.symbol.symbol.split(',')[1];
-        const precision = parseInt(dac_config.symbol.symbol.split(',')[0]);
+        const symbol = request.query.symbol || dac_config.symbol.sym.split(',')[1];
+        const precision = parseInt(dac_config.symbol.sym.split(',')[0]);
         const block_num = request.query.block_num || null;
         const sort_col = request.query.sort || 'account';
 
