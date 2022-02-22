@@ -60,6 +60,7 @@ services:
         - ghcr.io/alien-worlds/eosdac_filler
     environment:
       CONFIG: '${CONFIG}'
+      FILLER_FLAGS: '-r'
     restart: on-failure
     volumes:
       - eosdac-api:/tmp/
