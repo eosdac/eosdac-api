@@ -141,7 +141,7 @@ class ActionHandler {
             return true;
         }
 
-        if (account === 'eosio.msig'){
+        if (account === this.config.eos.msigContract){
             return true;
         }
 
