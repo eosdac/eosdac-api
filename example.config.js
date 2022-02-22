@@ -22,7 +22,7 @@ module.exports = {
         chainId: "8be32650b763690b95b7d7e32d7637757a0a7392ad04f1c393872e525a2ce82b",
         endpoint: 'http://lamington:8888',
         wsEndpoint: 'ws://eosdac-api-ws-1:3030',
-        msigContract: 'msigworlds',
+        msigContract: 'msig.world',
         dacGenesisBlock: 1,  // the first block that includes any dac contract actions including the initial setcode
         dacDirectoryContract: 'dacdirectory',
         dacMsigContract: 'dacmultisigs',
