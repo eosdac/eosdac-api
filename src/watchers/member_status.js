@@ -144,7 +144,7 @@ class MemberStatusHandler {
         const dac_custodian_contracts = Array.from(new Set(this.dac_directory.token_contracts().values()));
         const query = {
             'action.account': {$in: dac_custodian_contracts},
-            'action.name': 'memberrege'
+            'action.name': 'memberreg'
         };
         // console.log(query);
         const res = collection_actions.find(query).sort({block_num: -1}).limit(10000);
