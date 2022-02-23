@@ -20,7 +20,7 @@ async function transfers(fastify, request) {
         const limit = request.query.limit || 100;
 
         const token_account = dac_config.symbol.contract;
-        const [precision, token_code] = dac_config.symbol.symbol.split(',');
+        const [precision, token_code] = dac_config.symbol.sym.split(',');
 
         const transfers = {results:[], count:0};
 

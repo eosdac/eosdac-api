@@ -18,7 +18,7 @@ class NewPeriodHandler {
     async action({doc, dac_directory, db}) {
         const custodian_contracts = Array.from(dac_directory.custodian_contracts().values());
 
-        if (custodian_contracts.includes(doc.action.account) && doc.action.name === 'newperiode') {
+        if (custodian_contracts.includes(doc.action.account) && doc.action.name === 'newperiod') {
             console.log(`NEWPERIOD`);
             if (this.ipc){
                 this.ipc.send_notification({notify: 'NEW_PERIOD', dac_id:doc.action.data.dac_id, trx_id: doc.trx_id});
