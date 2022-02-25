@@ -81,9 +81,7 @@ async function votesTimeline(fastify, request) {
           boundaries.unshift(1)
         }
         assert(boundaries.length >= 2, `boundaries.length must be 2, is: ${JSON.stringify(boundaries)}`);
-        boundaries.sort(function(a, b) {
-          return a - b;
-        });
+        boundaries.sort((a, b) => a - b);
         const pipeline = [
             {$match: query},
             {'$sort': {block_num: -1}},
