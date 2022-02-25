@@ -76,14 +76,18 @@ async function votesTimeline(fastify, request) {
             current_block -= range_size;
             current_block_timestamp -= range_size * 500;
         }
-
+        assert(boundaries.length >= 2, `boundaries.length must be 2, is: ${JSON.stringify(boundaries)}`);
+        boundaries.sort(function(a, b) {
+          return a - b;
+        });
+        console.log(`boundaries after sorting: ${JSON.stringify(boundaries)}`);
         const pipeline = [
             {$match: query},
             {'$sort': {block_num: -1}},
             {
                 '$bucket': {
                     groupBy: "$block_num",
-                    boundaries: boundaries.sort(),
+                    boundaries,
                     default: "out_of_range",
                     output: {
                         candidate_data: {"$push": "$$ROOT.data"}
