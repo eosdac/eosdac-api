@@ -1,3 +1,4 @@
+const assert  = require('assert');
 const {votesTimelineSchema} = require('../schemas');
 
 const MongoLong = require('mongodb').Long;
