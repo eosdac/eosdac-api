@@ -291,61 +291,28 @@ class MultisigProposalsHandler {
         let is_propose = true;
         let actor = doc.action.data.proposer
 
-        if (!['propose',].includes(doc.action.name)){
-            is_propose = false
-            console.log(`Action is not proposal ${doc.action.name}`);
-            // find the original proposed
-            const doc_proposed = await coll_actions.findOne({
-                'action.account': {$in:msig_contracts},
-                'action.name': {$in:['propose', ]},
-                'action.data.proposal_name': doc.action.data.proposal_name,
-                'action.data.proposer': doc.action.data.proposer,
-                'block_num': {$lte:doc.block_num}
-            });
-
-            if (!doc_proposed){
-                console.error(`Could not find original proposal for ${doc.action.data.proposer}:${doc.action.data.proposal_name} at block ${doc.block_num}`);
-                return;
-            }
-
-            doc_proposed.proposed_retry = true;
-
-            return this.recalcMsigs({doc: doc_proposed, db, original_doc: doc});
-        }
-
+        
         const block_num = doc.block_num;
         const block_timestamp = doc.block_timestamp;
-        const proposer = doc.action.data.proposer;
         const proposal_name = doc.action.data.proposal_name;
-        let legacy_dac = false;
         let dac_id = doc.action.data.dac_id;
-
-
-        if (!dac_id){
-            legacy_dac = true;
-            dac_id = doc.action.data.dac_id = this.config.eos.legacyDacs[0];
-        }
-
-        this.logger.info(`Recalc proposal ${proposer}:${proposal_name} on DAC ${dac_id}`, {dac_id, proposer, proposal_name});
+        this.logger.info(`Recalc proposal ${JSON.stringify(doc, null, 2)}`);
         
-        const metadata = weird_map_to_normal_map(doc.action.data.metadata);
-        console.log(`metadata: ${JSON.stringify(metadata)}`)
+        // const metadata = weird_map_to_normal_map(doc.action.data.metadata);
+        // console.log(`metadata: ${JSON.stringify(metadata)}`)
         const output = {
             block_num,
             block_timestamp,
-            proposer,
             proposal_name,
             dac_id,
             threshold: 0,
             requested_approvals: [],
             provided_approvals: [],
-            status: MultisigProposalsHandler.STATUS_OPEN,
-            title: metadata.title,
-            description: metadata.description
+            // status: MultisigProposalsHandler.STATUS_PENDING,
         };
 
-        this.logger.info(`parsed ${block_num}:${proposer}:${proposal_name}:${dac_id}`, {dac_id, proposer, proposal_name});
-
+        this.logger.info(`parsed ${block_num}:${proposal_name}:${dac_id}`, {dac_id, proposal_name});
+        
         const data_query = {
             proposal_name
         };
@@ -376,17 +343,33 @@ class MultisigProposalsHandler {
             this.logger.error(`Error getting proposal ${proposal_name} from state`, {dac_id, proposal, proposal_name});
             return;
         }
-        // this.logger.info(proposal.block_num, proposal.data.proposal_name, proposal.data.packed_transaction)
+
+        this.logger.info(`proposal ${proposal_name} from db: ${JSON.stringify(proposal, null, 2)}`)
+        
+        const proposer = proposal.data.proposer
+        output.status = proposal.data.state
+        output.proposer = proposer
+        
+        if(proposal.data.metadata) {
+          output.metadata = weird_map_to_normal_map(proposal.data.metadata)          
+        } else {
+          output.metadata = null
+        }
+        if(proposal_name == '134k2wakdmpa') {
+          this.logger.info(`134k2wakdmpa ohai 1`)          
+        }
         try {
             output.trx = await this.api.deserializeTransactionWithActions(proposal.data.packed_transaction);
         }
         catch (e){
-            this.logger.error(`Could not deserialise transaction for ${proposal.data.proposal_name}`, {dac_id, proposal, proposal_name});
-            return;
+            this.logger.error(`Could not deserialise transaction for ${proposal_name}`, {dac_id, proposal, proposal_name});
+            console.log(`proposal: ${JSON.stringify(proposal, null, 2)}`)
+            throw e;
         }
 
-        
-        output.trxid = proposal.data.transactionid;
+        if(proposal_name == '134k2wakdmpa') {
+          this.logger.info(`134k2wakdmpa ohai 2`)          
+        }
 
 
         // We have the transaction data, now get approvals
@@ -394,101 +377,30 @@ class MultisigProposalsHandler {
         output.threshold = await this.getTrxThreshold(output.trx, dac_id, check_block);
         if (output.threshold === 0){
             this.logger.warn(`Found threshold of 0`, {dac_id, proposal, proposal_name});
-            if (legacy_dac) {
-                // not our legacy dac
-                return;
-            }
         }
         output.type = await this.getTrxType(output.trx, dac_id);
         output.expiration = new Date(output.trx.expiration);
 
-
-        // this.logger.info(proposer, proposal_name, output)
-
-        // Get the current state by getting cancel/exec/clean transactions
-        const closing_query = {
-            'block_num': {$gt: block_num},
-            'action.account': {$in:msig_contracts},
-            'action.name': {$in: ['cancelled', 'executed', 'clean', 'cancellede', 'executede', 'cleane', 'exec']},
-            'action.data.proposal_name': proposal_name,
-            'action.data.proposer': proposer
-        };
-        const closing_actions = await coll_actions.find(closing_query).sort({block_num: 1});
-
-        let ca = await closing_actions.next();
-        if (ca) {
-            switch (ca.action.name) {
-                case 'cancelled':
-                case 'cancellede':
-                    output.status = MultisigProposalsHandler.STATUS_CANCELLED;
-                    break;
-                case 'executed':
-                case 'executede':
-                    output.status = MultisigProposalsHandler.STATUS_EXECUTED;
-
-                    // add executor to the data
-                    output.executer = ca.action.data.executer;
-                    output.executed_trxid = ca.trx_id;
-                    break;
-                case 'clean':
-                case 'cleane':
-                    output.status = MultisigProposalsHandler.STATUS_EXPIRED;
-                    break
-            }
-
-            output.block_num = ca.block_num;
+        if(proposal_name == '134k2wakdmpa') {
+          this.logger.info(`134k2wakdmpa ohai 2.1`)          
         }
-        else {
-            // check that it hasnt been executed or cancelled directly via eosio.msig
-            const closing_query_msig = {
-                'block_num': {$gt: block_num},
-                'action.account': this.msig_contract,
-                'action.name': {$in: ['exec', 'cancel']},
-                'action.data.proposal_name': proposal_name,
-                'action.data.proposer': proposer
-            };
-            const closing_actions_msig = await coll_actions.find(closing_query_msig).sort({block_num: 1});
-            ca = await closing_actions_msig.next();
-
-            if (ca){
-                switch (ca.action.name) {
-                    case 'cancel':
-                        output.status = MultisigProposalsHandler.STATUS_CANCELLED;
-                        break;
-                    case 'exec':
-                        output.status = MultisigProposalsHandler.STATUS_EXECUTED;
-
-                        // add executor to the data
-                        output.executer = ca.action.data.executer;
-                        output.executed_trxid = ca.trx_id;
-                        break;
-                }
-                output.block_num = ca.block_num;
-            }
-        }
-
-
-        if (output.expiration < new Date() && output.status === MultisigProposalsHandler.STATUS_OPEN){
-            output.status = MultisigProposalsHandler.STATUS_EXPIRED;
-        }
-
-
-        let end_block = 0;
-        if (ca) {
-            end_block = ca.block_num - 1
-        }
-
+        
 
         // Get current approvals
-        const approvals_data = await this.getApprovals(db, proposer, data_query, end_block);
+        const approvals_data = await this.getApprovals(db, proposer, data_query, check_block);
         output.requested_approvals = approvals_data.requested_approvals;
         output.provided_approvals = approvals_data.provided_approvals;
 
-
+        if(proposal_name == '134k2wakdmpa') {
+          this.logger.info(`134k2wakdmpa ohai 2.2`)          
+        }
         // Get current custodians
         let custodians = [];
         // if the msig has ended then get the custodians at the time it ended
         const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
+        if(proposal_name == '134k2wakdmpa') {
+          this.logger.info(`134k2wakdmpa ohai 2.3`)          
+        }
         let scope = dac_id;
         const custodian_query = {
             db,
@@ -497,9 +409,8 @@ class MultisigProposalsHandler {
             table: 'custodians',
             limit:100
         };
-
-        if (end_block){
-            custodian_query.block_num = end_block;
+        if(proposal_name == '134k2wakdmpa') {
+          this.logger.info(`134k2wakdmpa ohai 3`)          
         }
 
         const custodian_res = await eosTableAtBlock(custodian_query);
@@ -529,14 +440,14 @@ class MultisigProposalsHandler {
             data_query: {proposalname: proposal_name}
         };
 
-        if (end_block){
-            denial_query.block_num = end_block;
-        }
+        
         const denials_res = await eosTableAtBlock(denial_query);
         output.denials = denials_res.results.map((r) => {
             return r.data.denier;
         });
-
+        if(proposal_name == '134k2wakdmpa') {
+          this.logger.info(`134k2wakdmpa ohai 4`)          
+        }
         const dt = block_timestamp.getTime();
         let original_timestamp = null;
         if (original_doc){
@@ -552,19 +463,19 @@ class MultisigProposalsHandler {
             else if (original_doc){
                 let msg_name = '';
                 switch (original_doc.action.name){
-                    case 'approvede':
+                    case 'approve':
                         msg_name = 'MSIG_APPROVED';
                         actor = original_doc.action.data.approver;
                         break;
-                    case 'unapprovede':
+                    case 'unapprove':
                         msg_name = 'MSIG_UNAPPROVED';
                         actor = original_doc.action.data.unapprover;
                         break;
-                    case 'cancellede':
+                    case 'cancel':
                         msg_name = 'MSIG_CANCELLED';
                         actor = original_doc.action.data.canceler;
                         break;
-                    case 'executede':
+                    case 'exec':
                         msg_name = 'MSIG_EXECUTED';
                         actor = original_doc.action.data.executer;
                         break;
@@ -575,10 +486,12 @@ class MultisigProposalsHandler {
                 }
             }
         }
+        if(proposal_name == '134k2wakdmpa') {
+          this.logger.info(`134k2wakdmpa ohai 5`)          
+        }
 
-
-        this.logger.info(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, {dac_id, doc:output});
-        return coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
+        this.logger.info(`Inserting MSIG to db: ${JSON.stringify(output, null, 2)}`);
+        return coll.updateOne({proposer, proposal_name, dac_id}, {$set: output}, {upsert: true})
 
     }
 
@@ -646,9 +559,8 @@ function weird_map_to_normal_map(weird_map) {
   return d
 }
 
-MultisigProposalsHandler.STATUS_CANCELLED = 0;
-MultisigProposalsHandler.STATUS_OPEN = 1;
-MultisigProposalsHandler.STATUS_EXECUTED = 2;
-MultisigProposalsHandler.STATUS_EXPIRED = 3;
+MultisigProposalsHandler.STATUS_PENDING = 0;
+MultisigProposalsHandler.STATUS_EXECUTED = 1;
+MultisigProposalsHandler.STATUS_CANCELLED = 2;
 
 module.exports = new MultisigProposalsHandler();
