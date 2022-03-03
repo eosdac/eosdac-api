@@ -2,16 +2,16 @@ module.exports = {
     fillClusterSize: 4,
     clusterSize: 10,
     mongo: {
-        url: 'mongodb://eosdac-api-db-1:27017',
+        url: 'mongodb://eosdac-api_db_1:27017',
         dbName: 'eosdac',
         traceCollection: 'traces',
         stateCollection: 'states'
     },
     amq: {
-        connectionString: 'amqp://guest:guest@eosdac-api-queue-1/'
+        connectionString: 'amqp://guest:guest@eosdac-api_queue_1/'
     },
     ws: {
-        host: 'eosdac-api-ws-1',
+        host: 'eosdac-api_ws_1',
         port: '3030'
     },
     ipc: {
