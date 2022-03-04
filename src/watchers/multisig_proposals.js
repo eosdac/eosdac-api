@@ -99,19 +99,7 @@ class MultisigProposalsHandler {
 
                     if (act_perm.perm_name === perm.permission) {
                         // this.logger.info(act_perm, act_perm.required_auth.accounts)
-
-                        if (act_perm.required_auth.accounts.length === 0) {
-                            this.logger.warn(`Permission has no required accounts`, {dac_id, perm_name:act_perm.perm_name});
-                            resolve(0);
-                        }
-
-
-                        for (let a = 0; a < act_perm.required_auth.accounts.length; a++) {
-                            const perm = act_perm.required_auth.accounts[a];
-                            // this.logger.info('getting permission', perm)
-                            const p = await self.permissionToThreshold(perm.permission, dac_id);
-                            thresholds.push(p);
-                        }
+                        return resolve(act_perm.required_auth.threshold)
 
                         this.logger.debug('thresholds', {thresholds, dac_id, act_perm})
 
@@ -227,7 +215,7 @@ class MultisigProposalsHandler {
         })
     }
 
-    async getApprovals(db, proposer, data_query, check_block=0){
+    async getApprovals(db, dac_id, data_query, check_block=0){
 
         let approvals_data = {
             requested_approvals: [],
@@ -237,7 +225,7 @@ class MultisigProposalsHandler {
         const table_query = {
             db,
             code: this.msig_contract,
-            scope: proposer,
+            scope: dac_id,
             table: 'approvals',
             data_query
         };
@@ -248,14 +236,14 @@ class MultisigProposalsHandler {
         // console.log(table_query);
 
         let res_approvals = await eosTableAtBlock(table_query);
-
+        
         if (res_approvals.results.length) {
             approvals_data = res_approvals.results[0].data;
             console.log(`Approvals data at block ${check_block}`, approvals_data);
         }
         else {
             console.log(`checking new table at block ${check_block}`);
-            table_query.table = 'approvals2';
+            table_query.table = 'approvals';
             res_approvals = await eosTableAtBlock(table_query);
 
             if (res_approvals.results.length){
@@ -280,7 +268,7 @@ class MultisigProposalsHandler {
     }
 
     async recalcMsigs({doc, db, retry=false, replay=false, original_doc=null}) {
-        // this.logger.info('Recalc', doc)
+        this.logger.info('recalcMsigs', doc)
 
         // const db = mongo.db(this.config.mongo.dbName);
         const coll = db.collection('multisigs');
@@ -291,90 +279,44 @@ class MultisigProposalsHandler {
         let is_propose = true;
         let actor = doc.action.data.proposer
 
-        if (!['proposed', 'proposede'].includes(doc.action.name)){
-            is_propose = false
-            console.log(`Action is not proposal ${doc.action.name}`);
-            // find the original proposed
-            const doc_proposed = await coll_actions.findOne({
-                'action.account': {$in:msig_contracts},
-                'action.name': {$in:['proposed', 'proposede']},
-                'action.data.proposal_name': doc.action.data.proposal_name,
-                'action.data.proposer': doc.action.data.proposer,
-                'block_num': {$lte:doc.block_num}
-            });
-
-            if (!doc_proposed){
-                console.error(`Could not find original proposal for ${doc.action.data.proposer}:${doc.action.data.proposal_name} at block ${doc.block_num}`);
-                return;
-            }
-
-            doc_proposed.proposed_retry = true;
-
-            return this.recalcMsigs({doc: doc_proposed, db, original_doc: doc});
-        }
-
+        
         const block_num = doc.block_num;
         const block_timestamp = doc.block_timestamp;
-        const proposer = doc.action.data.proposer;
         const proposal_name = doc.action.data.proposal_name;
-        let legacy_dac = false;
         let dac_id = doc.action.data.dac_id;
-
-
-        if (!dac_id){
-            legacy_dac = true;
-            dac_id = doc.action.data.dac_id = this.config.eos.legacyDacs[0];
-        }
-
-        this.logger.info(`Recalc proposal ${proposer}:${proposal_name} on DAC ${dac_id}`, {dac_id, proposer, proposal_name});
-
+        this.logger.info(`Recalc proposal ${JSON.stringify(doc, null, 2)}`);
+        
+        // const metadata = weird_map_to_normal_map(doc.action.data.metadata);
+        // console.log(`metadata: ${JSON.stringify(metadata)}`)
         const output = {
             block_num,
             block_timestamp,
-            proposer,
             proposal_name,
             dac_id,
-            threshold: 0,
             requested_approvals: [],
             provided_approvals: [],
-            status: MultisigProposalsHandler.STATUS_OPEN
+            // status: MultisigProposalsHandler.STATUS_PENDING,
         };
 
-        if (doc.action.data.metadata) {
-            let metadata = '';
-            try {
-                metadata = JSON.parse(doc.action.data.metadata)
-            } catch (e) {
-                try {
-                    const dJSON = require('dirty-json');
-                    metadata = dJSON.parse(doc.action.data.metadata);
-                    this.logger.info(`Used dirty-json to parse ${doc.action.data.metadata}`, {dac_id, proposer, proposal_name})
-                } catch (e) {
-                    metadata = {title: '', description: ''};
-                    this.logger.error('Failed to parse metadata', {metadata:doc.action.data.metadata, e, dac_id, proposer, proposal_name})
-                }
-            }
-
-            output.title = metadata.title;
-            output.description = metadata.description;
-        }
-
-
-        this.logger.info(`parsed ${block_num}:${proposer}:${proposal_name}:${dac_id}`, {dac_id, proposer, proposal_name});
-
+        this.logger.info(`parsed ${block_num}:${proposal_name}:${dac_id}`, {dac_id, proposal_name});
+        
         const data_query = {
             proposal_name
         };
         let check_block = block_num + 1;
-        if (['cancelled', 'executed', 'cancellede', 'executede'].includes(doc.action.name)) {
-            check_block = block_num - 1
+        if (['exec'].includes(doc.action.name)) {
+          return coll.updateOne({proposal_name, dac_id}, {$set: {status: MultisigProposalsHandler.STATUS_EXECUTED}})
+
+        }
+        if (['cancel'].includes(doc.action.name)) {
+          return coll.updateOne({proposal_name, dac_id}, {$set: {status: MultisigProposalsHandler.STATUS_CANCELLED}})
         }
 
         const res_proposals = await eosTableAtBlock({
             db,
             code: this.msig_contract,
-            scope: proposer,
-            table: 'proposal',
+            scope: dac_id,
+            table: 'proposals',
             block_num: check_block,
             data_query
         });
@@ -392,153 +334,56 @@ class MultisigProposalsHandler {
             this.logger.error(`Error getting proposal ${proposal_name} from state`, {dac_id, proposal, proposal_name});
             return;
         }
-        // this.logger.info(proposal.block_num, proposal.data.proposal_name, proposal.data.packed_transaction)
+
+        this.logger.info(`proposal ${proposal_name} from db: ${JSON.stringify(proposal, null, 2)}`)
+        
+        const proposer = proposal.data.proposer
+        output.status = proposal.data.state
+        output.proposer = proposer
+        
+        
+        if(proposal.data.metadata) {
+          output.metadata = weird_map_to_normal_map(proposal.data.metadata)          
+        } else {
+          output.metadata = null
+        }
+        
         try {
             output.trx = await this.api.deserializeTransactionWithActions(proposal.data.packed_transaction);
         }
         catch (e){
-            this.logger.error(`Could not deserialise transaction for ${proposal.data.proposal_name}`, {dac_id, proposal, proposal_name});
-            return;
+            this.logger.error(`Could not deserialise transaction for ${proposal_name}`, {dac_id, proposal, proposal_name});
+            console.log(`proposal: ${JSON.stringify(proposal, null, 2)}`)
+            throw e;
         }
 
-        // get the trxid stored in the dacmultisigs table
-        const local_data_query = {
-            proposalname: proposal_name
-        };
-        let res_data = await eosTableAtBlock({
-            db,
-            code: {$in:msig_contracts},
-            scope: proposer,
-            table: 'proposals',
-            block_num: check_block,
-            data_query: local_data_query
-        });
-        if (!res_data.results.length){
-            // new format where dac id is the scope
-            res_data = await eosTableAtBlock({
-                db,
-                code: {$in:msig_contracts},
-                scope: dac_id,
-                table: 'proposals',
-                block_num: check_block,
-                data_query: local_data_query
-            });
-
-            if (!res_data.results.length) {
-                if (!retry){
-                    setTimeout(() => {
-                        const retry = true;
-                        this.recalcMsigs({doc, db, retry});
-                    }, 5000);
-                }
-
-                this.logger.error(`Could not find proposal in table`, {dac_id, check_block, proposal_name});
-                return;
-            }
-        }
-        output.trxid = res_data.results[0].data.transactionid;
+        
 
 
         // We have the transaction data, now get approvals
         // Get threshold
+
         output.threshold = await this.getTrxThreshold(output.trx, dac_id, check_block);
         if (output.threshold === 0){
             this.logger.warn(`Found threshold of 0`, {dac_id, proposal, proposal_name});
-            if (legacy_dac) {
-                // not our legacy dac
-                return;
-            }
         }
         output.type = await this.getTrxType(output.trx, dac_id);
         output.expiration = new Date(output.trx.expiration);
 
-
-        // this.logger.info(proposer, proposal_name, output)
-
-        // Get the current state by getting cancel/exec/clean transactions
-        const closing_query = {
-            'block_num': {$gt: block_num},
-            'action.account': {$in:msig_contracts},
-            'action.name': {$in: ['cancelled', 'executed', 'clean', 'cancellede', 'executede', 'cleane']},
-            'action.data.proposal_name': proposal_name,
-            'action.data.proposer': proposer
-        };
-        const closing_actions = await coll_actions.find(closing_query).sort({block_num: 1});
-
-        let ca = await closing_actions.next();
-        if (ca) {
-            switch (ca.action.name) {
-                case 'cancelled':
-                case 'cancellede':
-                    output.status = MultisigProposalsHandler.STATUS_CANCELLED;
-                    break;
-                case 'executed':
-                case 'executede':
-                    output.status = MultisigProposalsHandler.STATUS_EXECUTED;
-
-                    // add executor to the data
-                    output.executer = ca.action.data.executer;
-                    output.executed_trxid = ca.trx_id;
-                    break;
-                case 'clean':
-                case 'cleane':
-                    output.status = MultisigProposalsHandler.STATUS_EXPIRED;
-                    break
-            }
-
-            output.block_num = ca.block_num;
-        }
-        else {
-            // check that it hasnt been executed or cancelled directly via eosio.msig
-            const closing_query_msig = {
-                'block_num': {$gt: block_num},
-                'action.account': this.msig_contract,
-                'action.name': {$in: ['exec', 'cancel']},
-                'action.data.proposal_name': proposal_name,
-                'action.data.proposer': proposer
-            };
-            const closing_actions_msig = await coll_actions.find(closing_query_msig).sort({block_num: 1});
-            ca = await closing_actions_msig.next();
-
-            if (ca){
-                switch (ca.action.name) {
-                    case 'cancel':
-                        output.status = MultisigProposalsHandler.STATUS_CANCELLED;
-                        break;
-                    case 'exec':
-                        output.status = MultisigProposalsHandler.STATUS_EXECUTED;
-
-                        // add executor to the data
-                        output.executer = ca.action.data.executer;
-                        output.executed_trxid = ca.trx_id;
-                        break;
-                }
-                output.block_num = ca.block_num;
-            }
-        }
-
-
+        
         if (output.expiration < new Date() && output.status === MultisigProposalsHandler.STATUS_OPEN){
             output.status = MultisigProposalsHandler.STATUS_EXPIRED;
         }
-
-
-        let end_block = 0;
-        if (ca) {
-            end_block = ca.block_num - 1
-        }
-
-
         // Get current approvals
-        const approvals_data = await this.getApprovals(db, proposer, data_query, end_block);
-        output.requested_approvals = approvals_data.requested_approvals;
-        output.provided_approvals = approvals_data.provided_approvals;
-
+        const approvals_data = await this.getApprovals(db, dac_id, data_query, check_block);
+        output.requested_approvals = approvals_data.requested_approvals.map(x => x.level);
+        output.provided_approvals = approvals_data.provided_approvals.map(x => x.level);
 
         // Get current custodians
         let custodians = [];
         // if the msig has ended then get the custodians at the time it ended
         const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
+        
         let scope = dac_id;
         const custodian_query = {
             db,
@@ -547,10 +392,7 @@ class MultisigProposalsHandler {
             table: 'custodians',
             limit:100
         };
-
-        if (end_block){
-            custodian_query.block_num = end_block;
-        }
+        
 
         const custodian_res = await eosTableAtBlock(custodian_query);
 
@@ -558,35 +400,19 @@ class MultisigProposalsHandler {
 
         output.custodians = custodians;
 
-
-
-        // only include custodians
-        // output.provided_approvals = output.provided_approvals.filter((approval) => custodians.includes(approval.actor));
-
-        // remove provided approvals from requested approvals
-        // this.logger.info('requested', output.requested_approvals);
-        const provided_actors = output.provided_approvals.map((pro) => pro.actor);
-        output.requested_approvals = output.requested_approvals.filter((req) => !provided_actors.includes(req.actor));
-        // only include custodians (if the msig is current then they are modified in the api)
-        // output.requested_approvals = output.requested_approvals.filter((req) => custodians.includes(req.actor));
-
         // get denials
         const denial_query = {
             db,
-            code: this.config.eos.dacMsigContract,
+            code: this.config.eos.msigContract,
             scope: dac_id,
             table: 'denials',
             data_query: {proposalname: proposal_name}
         };
 
-        if (end_block){
-            denial_query.block_num = end_block;
-        }
+        
         const denials_res = await eosTableAtBlock(denial_query);
-        output.denials = denials_res.results.map((r) => {
-            return r.data.denier;
-        });
-
+        output.denials = denials_res.results.map((r) =>  r.data.denier);
+        
         const dt = block_timestamp.getTime();
         let original_timestamp = null;
         if (original_doc){
@@ -602,19 +428,19 @@ class MultisigProposalsHandler {
             else if (original_doc){
                 let msg_name = '';
                 switch (original_doc.action.name){
-                    case 'approvede':
+                    case 'approve':
                         msg_name = 'MSIG_APPROVED';
                         actor = original_doc.action.data.approver;
                         break;
-                    case 'unapprovede':
+                    case 'unapprove':
                         msg_name = 'MSIG_UNAPPROVED';
                         actor = original_doc.action.data.unapprover;
                         break;
-                    case 'cancellede':
+                    case 'cancel':
                         msg_name = 'MSIG_CANCELLED';
                         actor = original_doc.action.data.canceler;
                         break;
-                    case 'executede':
+                    case 'exec':
                         msg_name = 'MSIG_EXECUTED';
                         actor = original_doc.action.data.executer;
                         break;
@@ -625,19 +451,20 @@ class MultisigProposalsHandler {
                 }
             }
         }
-
-
-        this.logger.info(`Inserting ${proposer}:${proposal_name}:${output.trxid}`, {dac_id, doc:output});
-        return coll.updateOne({proposer, proposal_name, trxid: output.trxid}, {$set: output}, {upsert: true})
+        
+        // this.logger.info(`Inserting MSIG to db: ${JSON.stringify(output, null, 2)}`);
+        return coll.updateOne({proposal_name, dac_id}, {$set: output}, {upsert: true})
 
     }
 
     async action({doc, dac_directory, db}) {
-        const dac_msig_contract = this.config.eos.dacMsigContract || 'dacmultisigs';
+        const dac_msig_contract = this.config.eos.msigContract || 'dacmultisigs';
+        console.log(`multisig_proposal.action doc.action.account: ${doc.action.account}`)
         if (doc.action.account === dac_msig_contract || doc.action.account === this.msig_contract) {
             this.db = await db;
             this.dac_directory = dac_directory;
-
+            
+            console.log('Reacting to msig action')
             this.logger.info('Reacting to msig action');
             // delay to wait for the state to update
             setTimeout((() => {
@@ -662,10 +489,10 @@ class MultisigProposalsHandler {
         await collection.deleteMany({});
         // this.logger.info(await collection.find({}).count());
 
-        const dac_msig_contract = this.config.eos.dacMsigContract || 'dacmultisigs';
+        const dac_msig_contract = this.config.eos.msigContract || 'dacmultisigs';
         const res = collection_actions.find({
             'action.account': dac_msig_contract,
-            'action.name': {$in: ['proposed', 'proposede']}
+            'action.name': {$in: ['propose']}
         }).sort({block_num: -1}).limit(1000);
         let doc;
         let count = 0;
@@ -681,10 +508,21 @@ class MultisigProposalsHandler {
     }
 }
 
+/* Transforms the weird EOS-style map
+ * [{"key":"title","value":"xxx"},{"key":"description","value":"yyy"}]
+ * to something normal:
+ * {"title": "xxx", "description": "yyy"}
+ */
+function weird_map_to_normal_map(weird_map) {
+  const d = {}
+  for(const {key, value} of weird_map) {
+    d[key] = value
+  }
+  return d
+}
 
-MultisigProposalsHandler.STATUS_CANCELLED = 0;
-MultisigProposalsHandler.STATUS_OPEN = 1;
-MultisigProposalsHandler.STATUS_EXECUTED = 2;
-MultisigProposalsHandler.STATUS_EXPIRED = 3;
+MultisigProposalsHandler.STATUS_PENDING = 0;
+MultisigProposalsHandler.STATUS_EXECUTED = 1;
+MultisigProposalsHandler.STATUS_CANCELLED = 2;
 
 module.exports = new MultisigProposalsHandler();

@@ -19,7 +19,7 @@ async function balanceTimeline(fastify, request) {
             const six_months = 2 * 60 * 60 * 24 * 90;
             const api = fastify.eos.api;
             const info_res = await api.rpc.get_info();
-            start_block = info_res.head_block_num - six_months;
+            start_block = Math.max(1, info_res.head_block_num - six_months);
         }
 
         const query = {'code': contract, 'scope': account, 'table': 'accounts'};

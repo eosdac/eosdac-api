@@ -85,7 +85,7 @@ class VotesHandler {
     }
 
     async action({doc, dac_directory, db}) {
-        if (doc.action.name === 'votecuste'){
+        if (doc.action.name === 'votecust'){
             // console.log(doc);
 
             setTimeout((() => {

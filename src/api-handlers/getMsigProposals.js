@@ -50,11 +50,11 @@ async function getMsigProposals(fastify, request) {
         }
 
         try {
+          console.log(`getMsigProposals query: ${JSON.stringify(query, null, 2)}`)
             const res = collection.find(query).sort({block_num: -1}).skip(parseInt(skip)).limit(parseInt(limit));
 
             Promise.all([custodian_res, res]).then(async (responses) => {
                 let [custodian_res, res] = responses;
-
                 const current_custodians = custodian_res.rows.map((row) => row.cust_name);
                 const count = await res.count();
 
@@ -64,10 +64,11 @@ async function getMsigProposals(fastify, request) {
                     resolve(proposals);
                 } else {
                     res.forEach((msig) => {
+                      console.log(`msig: ${JSON.stringify(msig, null, 2)}`)
                         delete msig._id;
                         let custodians;
 
-                        if (status === 1){
+                        if (status === 0){
                             // current custodians
                             custodians = current_custodians;
                         }
@@ -75,11 +76,11 @@ async function getMsigProposals(fastify, request) {
                             custodians = msig.custodians;
                         }
 
-                        msig.requested_approvals = msig.requested_approvals.filter((req) => custodians.includes(req.actor));
-                        msig.provided_approvals = msig.provided_approvals.filter((pro) => custodians.includes(pro.actor));
+                        // msig.requested_approvals = msig.requested_approvals.filter((req) => custodians.includes(req.actor));
+                        // msig.provided_approvals = msig.provided_approvals.filter((pro) => custodians.includes(pro.actor));
 
-                        if (status === 3) { // expired
-                            msig.status = 3;
+                        if (status === 2) { // cancelled
+                            msig.status = 2;
                         }
 
                         proposals.results.push(msig);

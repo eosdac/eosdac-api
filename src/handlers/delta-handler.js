@@ -121,7 +121,7 @@ class DeltaHandler {
 
                                         await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);
                                     }
-                                    else if (code === msig_contract && ['proposal', 'approvals', 'approvals2'].includes(table)){
+                                    else if (code === msig_contract && ['proposals', 'approvals', 'approvals2'].includes(table)){
                                         this.logger.info(`Queueing msig ${code}:${scope}:${table}`, {code, scope, table});
 
                                         await this.queueDeltaRow('contract_row', block_num, row, block_timestamp);

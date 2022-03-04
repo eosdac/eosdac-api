@@ -1,3 +1,4 @@
+const assert  = require('assert');
 const {votesTimelineSchema} = require('../schemas');
 
 const MongoLong = require('mongodb').Long;
@@ -24,7 +25,7 @@ async function votesTimeline(fastify, request) {
             // max 3 months
             const timespan = 2 * 60 * 60 * 24 * 90;
             const info_res = await api.rpc.get_info();
-            start_block = info_res.head_block_num - timespan;
+            start_block = Math.max(1, info_res.head_block_num - timespan);
             end_block = info_res.head_block_num;
             end_block_timestamp = Date.parse(info_res.head_block_time);
         }
@@ -76,14 +77,18 @@ async function votesTimeline(fastify, request) {
             current_block -= range_size;
             current_block_timestamp -= range_size * 500;
         }
-
+        if(boundaries.length < 2) {
+          boundaries.unshift(1)
+        }
+        assert(boundaries.length >= 2, `boundaries.length must be 2, is: ${JSON.stringify(boundaries)}`);
+        boundaries.sort((a, b) => a - b);
         const pipeline = [
             {$match: query},
             {'$sort': {block_num: -1}},
             {
                 '$bucket': {
                     groupBy: "$block_num",
-                    boundaries: boundaries.sort(),
+                    boundaries,
                     default: "out_of_range",
                     output: {
                         candidate_data: {"$push": "$$ROOT.data"}
