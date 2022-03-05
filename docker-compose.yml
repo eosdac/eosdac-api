@@ -2,6 +2,7 @@ version: '3.7'
 services:
   api:
     image: ghcr.io/alien-worlds/eosdac_api
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
@@ -21,6 +22,7 @@ services:
 
   processor:
     image: ghcr.io/alien-worlds/eosdac_processor
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
@@ -36,6 +38,7 @@ services:
 
   blockrange:
     image: ghcr.io/alien-worlds/eosdac_blockrange
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
@@ -51,6 +54,7 @@ services:
 
   filler:
     image: ghcr.io/alien-worlds/eosdac_filler
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
@@ -67,6 +71,7 @@ services:
 
   ws:
     image: ghcr.io/alien-worlds/eosdac_ws
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
