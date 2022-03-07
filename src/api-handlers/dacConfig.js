@@ -32,7 +32,7 @@ async function getDacConfig(fastify, request) {
         dac_config.config = {};
         const cust_contract = dac_config_original.accounts.get(2);
 
-        const cust_req = {code:cust_contract, scope:dac_id, table:'config', limit:1};
+        const cust_req = {code:cust_contract, scope:dac_id, table:'config2', limit:1};
         const cust_res = await api.rpc.get_table_rows(cust_req);
 
         if (cust_res.rows.length){
