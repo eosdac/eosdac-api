@@ -300,16 +300,42 @@ class MultisigProposalsHandler {
 
         this.logger.info(`parsed ${block_num}:${proposal_name}:${dac_id}`, {dac_id, proposal_name});
         
+        // get id stored in the msigworlds table
+        const local_data_query = {
+            proposal_name: proposal_name
+        };
+        let check_block = block_num + 1;
+        let res_data = await eosTableAtBlock({
+            db,
+            code: this.msig_contract,
+            scope: dac_id,
+            table: 'proposals',
+            block_num: check_block,
+            data_query: local_data_query
+        });
+
+        if (!res_data.results.length) {
+            if (!retry){
+                setTimeout(() => {
+                    const retry = true;
+                    this.recalcMsigs({doc, db, retry});
+                }, 5000);
+            }
+
+            this.logger.error(`Could not find proposal in table`, {dac_id, check_block, proposal_name});
+            return;
+        }
+        output.gid = res_data.results[0].data.id;
+        
         const data_query = {
             proposal_name
         };
-        let check_block = block_num + 1;
         if (['exec'].includes(doc.action.name)) {
-          return coll.updateOne({proposal_name, dac_id}, {$set: {status: MultisigProposalsHandler.STATUS_EXECUTED}})
+          return coll.updateOne({dac_id, gid: output.gid}, {$set: {status: MultisigProposalsHandler.STATUS_EXECUTED}})
 
         }
         if (['cancel'].includes(doc.action.name)) {
-          return coll.updateOne({proposal_name, dac_id}, {$set: {status: MultisigProposalsHandler.STATUS_CANCELLED}})
+          return coll.updateOne({dac_id, gid: output.gid}, {$set: {status: MultisigProposalsHandler.STATUS_CANCELLED}})
         }
 
         const res_proposals = await eosTableAtBlock({
@@ -452,8 +478,10 @@ class MultisigProposalsHandler {
             }
         }
         
+        
+        
         // this.logger.info(`Inserting MSIG to db: ${JSON.stringify(output, null, 2)}`);
-        return coll.updateOne({proposal_name, dac_id}, {$set: output}, {upsert: true})
+        return coll.updateOne({dac_id, gid: output.gid}, {$set: output}, {upsert: true})
 
     }
 
