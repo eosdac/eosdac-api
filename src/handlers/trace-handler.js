@@ -8,7 +8,7 @@ class TraceHandler {
     }
 
     async queueTrace(block_num, traces, block_timestamp) {
-
+        
         for (const trace of traces) {
             switch (trace[0]) {
                 case 'transaction_trace_v0':
