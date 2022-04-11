@@ -11,7 +11,7 @@ const Int64 = require('int64-buffer').Int64BE;
 
 class DeltaHandler {
     constructor({queue, config, dac_directory, logger}) {
-        this.queue = queue;
+        this.amq = queue;
         this.config = config;
         this.dac_directory = dac_directory;
         this.logger = logger;
@@ -27,7 +27,9 @@ class DeltaHandler {
         });
 
         this.connectDb();
-        this.connectAmq();
+        if (!this.amq) {
+            this.connectAmq();
+        }
 
     }
 
@@ -187,9 +189,11 @@ class DeltaHandler {
             const block_buffer = new Int64(block_num).toBuffer();
             const present_buffer = Buffer.from([row.present]);
             // this.logger.info(`Publishing ${name}`)
+            if (this.amq) {
             this.amq.send(name, Buffer.concat([block_buffer, present_buffer, timestamp_buffer, Buffer.from(row.data)]))
                 .then(resolve)
                 .catch(reject)
+            }
         })
 
     }
