@@ -20,20 +20,11 @@ const signatureProvider = null;
 
 
 const {ActionHandler, TraceHandler, DeltaHandler, BlockHandler} = require('./handlers');
-const StateReceiver = require('@eosdacio/eosio-statereceiver');
+// const StateReceiver = require('@eosdacio/eosio-statereceiver');
+const StateReceiver = require('./state-receiver');
 
 // var access = fs.createWriteStream('filler.log')
 // process.stdout.write = process.stderr.write = access.write.bind(access)
-
-const disposeHandlers = (stateReceiver) => {
-    stateReceiver.trace_handlers = [];
-    stateReceiver.delta_handlers = [];
-    stateReceiver.done_handlers = [];
-    stateReceiver.progress_handlers = [];
-    stateReceiver.connected_handlers = [];
-    stateReceiver.block_handlers = [];
-    stateReceiver.fork_handlers = [];
-}
 
 class FillManager {
     constructor({startBlock = 0, endBlock = 0xffffffff, config = '', irreversibleOnly = false, replay = false, test = 0, processOnly = false}) {
@@ -197,8 +188,7 @@ class FillManager {
 
             this.logger.info(`No replay, starting from block ${start_block}, LIB is ${lib}`);
             this.amq.onDisconnected(() => {
-                disposeHandlers(this.br);
-                this.br.connection.ws.terminate();
+                this.br.stop(true);
             });
 
             this.amq.onReconnected(() => {
