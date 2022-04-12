@@ -69,7 +69,7 @@ class Amq {
         this.initialized = true;
         this.connection_errors = 0;
 
-        conn.on('error', (err) => {
+        conn.on('error', async (err) => {
             if (err.message !== 'Connection closing') {
                 const log_fn = (this.connection_errors > this.max_connection_errors)?this.logger.error:this.logger.warn;
 
@@ -81,7 +81,7 @@ class Amq {
                 this.reconnect();
             }
         });
-        conn.on('close', () => {
+        conn.on('close', async () => {
             this.logger.warn('Connection closed');
             this.initialized = false;
             if (this.disconnectHandler) {
