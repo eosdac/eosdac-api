@@ -28,7 +28,7 @@ class Amq {
             try {
                 await this.init();
                 if (this.reconnectHandler) {
-                    this.reconnectHandler();
+                    await this.reconnectHandler();
                 }
             }
             catch (e){
@@ -76,7 +76,7 @@ class Amq {
                 log_fn('Connection Error', {e:err});
                 this.initialized = false;
                 if (this.disconnectHandler) {
-                    this.disconnectHandler();
+                    await this.disconnectHandler();
                 }
                 this.reconnect();
             }
@@ -85,7 +85,7 @@ class Amq {
             this.logger.warn('Connection closed');
             this.initialized = false;
             if (this.disconnectHandler) {
-                    this.disconnectHandler();
+                    await this.disconnectHandler();
                 }
             this.reconnect();
         });
