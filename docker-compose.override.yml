@@ -23,7 +23,7 @@ services:
 
   filler:
     command:
-      ['sh', '-c', 'scripts/wq.sh && flags="${FILLER_FLAGS}" yarn filler']
+      ['sh', '-c', 'scripts/wq.sh && flags="${FILLER_FLAGS}" yarn filler -r']
     depends_on:
       - queue
     volumes:

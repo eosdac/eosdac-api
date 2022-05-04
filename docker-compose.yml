@@ -66,12 +66,16 @@ services:
       CONFIG: '${CONFIG}'
       FILLER_FLAGS: '-r'
     restart: on-failure
+   
+    command:
+      ['sh', '-c', 'scripts/wq.sh && flags="${FILLER_FLAGS}" yarn filler -r -s 105376981']
     volumes:
       - eosdac-api:/tmp/
 
   ws:
     image: ghcr.io/alien-worlds/eosdac_ws
     platform: linux/amd64
+    
     build:
       context: .
       dockerfile: Dockerfile

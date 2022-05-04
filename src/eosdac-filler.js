@@ -104,7 +104,8 @@ class FillManager {
                     let from_buffer = new Int64BE(from).toBuffer();
                     let to_buffer = new Int64BE(to).toBuffer();
 
-                    this.amq.send('block_range', Buffer.concat([from_buffer, to_buffer]));
+                    let b = Buffer.concat([from_buffer, to_buffer]);
+                    this.amq.send('block_range', b);
                     number_jobs++;
 
                     if (to === lib) {

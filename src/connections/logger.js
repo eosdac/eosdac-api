@@ -11,6 +11,18 @@ const logger = ((service='undefined-service', config) => {
             new winston.transports.Console({
                 format: winston.format.simple(),
                 colorize: true
+            }),
+            new winston.transports.File({
+                filename: `logs/${service}_debug.log`,
+                level: 'debug'
+            }),
+            new winston.transports.File({
+                filename: `logs/${service}_info.log`,
+                level: 'info'
+            }),
+            new winston.transports.File({
+                filename: `logs/${service}_error.log`,
+                level: 'error'
             })
         ]
     });
