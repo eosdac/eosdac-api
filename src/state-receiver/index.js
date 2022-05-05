@@ -9,7 +9,7 @@ class StateReceiver {
     startBlock = 0,
     endBlock = 0xffffffff,
     config,
-    mode = 0,
+    mode = SERIAL,
     irreversibleOnly = false,
   }) {
     this.trace_handlers = [];
@@ -113,6 +113,7 @@ class StateReceiver {
     this.connection = new Connection({
       socketAddress: this.config.eos.wsEndpoint,
       socketAddresses: this.config.eos.wsEndpoints,
+      config: this.config,
       receivedAbi: (() => {
         this.requestBlocks();
 
@@ -138,6 +139,7 @@ class StateReceiver {
     this.connection = new Connection({
       socketAddress: this.config.eos.wsEndpoint,
       socketAddresses: this.config.eos.wsEndpoints,
+      config: this.config,
       receivedAbi: (() => {
         this.requestBlocks();
 
@@ -159,8 +161,8 @@ class StateReceiver {
   async requestBlocks() {
     try {
       this.current_block = 0;
-
-      await this.connection.requestBlocks({
+      this.ws_start_time = performance.now();
+      const msg = {
         irreversible_only: this.irreversible_only,
         start_block_num: parseInt(this.start_block),
         end_block_num: parseInt(this.end_block),
@@ -168,7 +170,9 @@ class StateReceiver {
         fetch_block: true,
         fetch_traces: this.trace_handlers.length > 0,
         fetch_deltas: this.delta_handlers.length > 0,
-      });
+      };
+      this.logger.info(msg);
+      await this.connection.requestBlocks(msg);
     } catch (e) {
       this.logger.error(e);
       process.exit(1);
@@ -185,10 +189,9 @@ class StateReceiver {
   async receivedBlock(response, block, traces, deltas) {
     if (!response.this_block) return;
     let block_num = response.this_block.block_num;
-    //this.logger.info(response.this_block)
-    // this.logger.info(`Received block ${block_num}`)
+    //this.logger.info(`Received block ${block_num}`)
 
-    if (this.mode === 0 && block_num <= this.current_block) {
+    if (this.mode === SERIAL && block_num <= this.current_block) {
       this.logger.info(
         `Detected fork in serial mode: current:${block_num} <= head:${this.current_block}`
       );
@@ -221,7 +224,7 @@ class StateReceiver {
     if (deltas && deltas.length) {
       this.delta_handlers.forEach(
         ((handler) => {
-          if (this.mode === 0) {
+          if (this.mode === SERIAL) {
             handler.processDelta(
               block_num,
               deltas,
@@ -242,7 +245,7 @@ class StateReceiver {
 
     if (traces) {
       this.trace_handlers.forEach((handler) => {
-        if (this.mode === 0) {
+        if (this.mode === SERIAL) {
           handler.processTrace(block_num, traces, block_timestamp);
         } else {
           handler.queueTrace(block_num, traces, block_timestamp);
@@ -251,7 +254,7 @@ class StateReceiver {
     }
     if (block) {
       this.block_handlers.forEach((handler) => {
-        if (this.mode === 0) {
+        if (this.mode === SERIAL) {
           handler.processBlock(block_num, block);
         } else {
           handler.queueBlock(block_num, block);
