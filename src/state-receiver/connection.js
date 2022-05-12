@@ -180,7 +180,7 @@ class Connection {
   }
 
   onClose(code) {
-    this.logger.error(
+    this.logger.info(
       `Websocket disconnected from ${
         this.socketAddresses[this.socket_index]
       } with code ${code}`
