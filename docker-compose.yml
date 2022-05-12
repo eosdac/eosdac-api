@@ -67,8 +67,6 @@ services:
       FILLER_FLAGS: '-r'
     restart: on-failure
    
-    command:
-      ['sh', '-c', 'scripts/wq.sh && flags="${FILLER_FLAGS}" yarn filler -r -s 105376981']
     volumes:
       - eosdac-api:/tmp/
 
