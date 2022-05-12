@@ -242,7 +242,12 @@ class Connection {
       if (response.this_block) {
         let block_num = response.this_block.block_num;
         this.currentArgs.start_block_num = block_num - 50; // replay 25 seconds
+      } else {
+        this.logger.info("Stop processing blocks");
+        break;
       }
+
+
       this.send(["get_blocks_ack_request_v0", { num_messages: 1 }]);
       let block,
         traces = [],

@@ -59,6 +59,7 @@ class FillManager {
         if (start_block === -1) {
             start_block = await getRestartBlock();
         }
+        let end_block = this.end_block;
 
         // If replay is set then we start from block 0 in parallel and then start a serial handler from lib onwards
         // Otherwise we start from this.start_block in serial
@@ -201,7 +202,7 @@ class FillManager {
 
             const block_handler = new BlockHandler({config: this.config});
 
-            this.br = new StateReceiver({startBlock: start_block, mode: 0, config: this.config});
+            this.br = new StateReceiver({startBlock: start_block, endBlock: end_block, mode: 0, config: this.config});
             this.br.registerTraceHandler(trace_handler);
             this.br.registerDeltaHandler(delta_handler);
             this.br.registerBlockHandler(block_handler);
@@ -287,7 +288,8 @@ commander
     .version('0.1', '-v, --version')
     .option('-s, --start-block <start-block>', 'Start at this block', -1)
     .option('-t, --test <block>', 'Test mode, specify a single block to pull and process', parseInt, 0)
-    .option('-e, --end-block <end-block>', 'End block (exclusive)', parseInt, 0xffffffff)
+    //.option('-e, --end-block <end-block>', 'End block (exclusive)', parseInt, 0xffffffff)
+    .option('-e, --end-block <end-block>', 'End block (exclusive)', 0xffffffff)
     .option('-r, --replay', 'Force replay (ignore head block)', false)
     .option('-p, --process-only', 'Only process queue items (do not populate)', false)
     .parse(process.argv);
