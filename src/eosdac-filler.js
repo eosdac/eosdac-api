@@ -22,12 +22,13 @@ const signatureProvider = null;
 const {ActionHandler, TraceHandler, DeltaHandler, BlockHandler} = require('./handlers');
 // const StateReceiver = require('@eosdacio/eosio-statereceiver');
 const StateReceiver = require('./state-receiver');
+const { exit } = require('process');
 
 // var access = fs.createWriteStream('filler.log')
 // process.stdout.write = process.stderr.write = access.write.bind(access)
 
 class FillManager {
-    constructor({startBlock = 0, endBlock = 0xffffffff, config = '', irreversibleOnly = false, replay = false, test = 0, processOnly = false}) {
+    constructor({startBlock = 0, endBlock = 0xffffffff, config = '', irreversibleOnly = false, replay = false, test = 0, processOnly = false, populateOnly = false}) {
         this.config = loadConfig();
         this.start_block = startBlock;
         this.end_block = endBlock;
@@ -36,6 +37,7 @@ class FillManager {
         this.test_block = test;
         this.job = null;
         this.process_only = processOnly;
+        this.populate_only = populateOnly;
 
         console.log(`Loading config ${this.config.name}.config.js`);
 
@@ -132,6 +134,8 @@ class FillManager {
 
                 this.logger.info(`Queued ${number_jobs} jobs`);
 
+                if (this.populate_only) return exit(0);
+                
                 for (let i = 0; i < this.config.fillClusterSize; i++) {
                     cluster.fork();
                 }
@@ -143,6 +147,7 @@ class FillManager {
                 // this.br.start()
             } else {
                 //queue.process('block_range', 1, this.processBlockRange.bind(this))
+                
                 this.logger.info(`Listening to queue for block_range`);
                 this.amq.listen('block_range', this.processBlockRange.bind(this));
             }
@@ -177,6 +182,7 @@ class FillManager {
                     cluster.fork();
                 }
             } else {
+
                 this.logger.info(`Listening to queue for block_range ONLY`);
                 this.amq.listen('block_range', this.processBlockRange.bind(this));
             }
@@ -292,6 +298,7 @@ commander
     .option('-e, --end-block <end-block>', 'End block (exclusive)', 0xffffffff)
     .option('-r, --replay', 'Force replay (ignore head block)', false)
     .option('-p, --process-only', 'Only process queue items (do not populate)', false)
+    .option('-l, --populate-only', 'Only queue items (do not process) (Use with -r only)', false)
     .parse(process.argv);
 
 
