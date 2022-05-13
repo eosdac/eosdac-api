@@ -133,12 +133,11 @@ class FillManager {
                 }
 
                 this.logger.info(`Queued ${number_jobs} jobs`);
-
-                if (this.populate_only) return exit(0);
                 
                 for (let i = 0; i < this.config.fillClusterSize; i++) {
                     cluster.fork();
                 }
+                
 
                 // Start from current lib
                 // this.br = new StateReceiver({startBlock: lib, mode: 1, config: this.config});
@@ -147,9 +146,10 @@ class FillManager {
                 // this.br.start()
             } else {
                 //queue.process('block_range', 1, this.processBlockRange.bind(this))
-                
-                this.logger.info(`Listening to queue for block_range`);
-                this.amq.listen('block_range', this.processBlockRange.bind(this));
+                if (!this.populate_only) {
+                    this.logger.info(`Listening to queue for block_range`);
+                    this.amq.listen('block_range', this.processBlockRange.bind(this));
+                } 
             }
 
         } else if (this.test_block) {
