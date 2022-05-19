@@ -2,6 +2,22 @@
 
 process.title = 'eosdac-processor';
 
+const commander = require('commander');
+const watchers = require('./watchers');
+commander
+    .version('0.1', '-v, --version')
+    .option('-w, --named-watcher <named-watcher>', 'Start with a single watcher', -1)
+    .option('-l, --list-watchers', 'List watchers', false)
+    .parse(process.argv);
+
+if (commander.listWatchers)
+{
+    console.log("\nWatcher names:\n")
+    watchers.forEach((watcher) => {
+        console.log(watcher.constructor.name);
+    });
+    process.exit(0);
+}
 const cluster = require('cluster');
 
 const {TextDecoder, TextEncoder} = require('text-encoding');
@@ -16,14 +32,15 @@ const Int64 = require('int64-buffer').Int64BE;
 const crypto = require('crypto');
 const {loadConfig} = require('./functions');
 const {arrayToHex} = require('@jafri/eosjs2/dist/eosjs-serialize');
-const watchers = require('./watchers');
 const DacDirectory = require('./dac-directory');
 const {IPC} = require('node-ipc');
 
 
 class JobProcessor {
-    constructor() {
+    constructor({namedWatcher = ""}) {
+        
         this.config = loadConfig();
+        this.namedWatcher = namedWatcher;
 
         const rpc = new JsonRpc(this.config.eos.endpoint, {fetch});
         this.api = new Api({
@@ -49,13 +66,21 @@ class JobProcessor {
         return await this.amq.init();
     }
 
+
     async processedActionJob(job, doc) {
         this.logger.info(`Processed action job, notifying watchers`);
         this.amq.ack(job);
 
-        watchers.forEach((watcher) => {
+        if (this.namedWatcher) {
+            this.logger.info(`Notifying ${this.namedWatcher} only.`);
+            const watcher = watchers.find((watcher) => watcher.constructor.name === this.namedWatcher);
             watcher.action({doc, dac_directory:this.dac_directory, db:this.db});
-        });
+        }
+        else {
+            watchers.forEach((watcher) => {
+                watcher.action({doc, dac_directory:this.dac_directory, db:this.db});
+            });
+        }
 
         // broadcast to master, to send via ipc
         try {
@@ -291,6 +316,5 @@ class JobProcessor {
     }
 }
 
-
-const processor = new JobProcessor();
+const processor = new JobProcessor(commander);
 processor.start();
