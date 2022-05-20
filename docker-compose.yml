@@ -66,12 +66,14 @@ services:
       CONFIG: '${CONFIG}'
       FILLER_FLAGS: '-r'
     restart: on-failure
+   
     volumes:
       - eosdac-api:/tmp/
 
   ws:
     image: ghcr.io/alien-worlds/eosdac_ws
     platform: linux/amd64
+    
     build:
       context: .
       dockerfile: Dockerfile
