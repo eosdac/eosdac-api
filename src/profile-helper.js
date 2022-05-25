@@ -10,11 +10,11 @@ const null_profile = {
     url: ""
 };
 
-async function getMemberType(account, dac_id, db){
+async function getMemberType(account, dacName, db){
     let member_type = 0;
 
     const coll = db.collection('memberstats');
-    const res = await coll.findOne({account, dac_id});
+    const res = await coll.findOne({account, dac_id: dacName});
     if (res){
         member_type = res.member_type;
     }
@@ -22,14 +22,14 @@ async function getMemberType(account, dac_id, db){
     return member_type;
 }
 
-async function getProfiles(db, dac_config, dac_id, accounts, legacy = false) {
+async function getProfiles(db, dac_config, dacName, accounts, legacy = false) {
     const collection = db.collection('actions');
     const cust_contract = dac_config.accounts.get(2);
 
-    const query = {"action.account": cust_contract, "action.name": "stprofile", "action.data.dac_id":dac_id, "action.data.cand": {$in: accounts}};
+    const query = {"action.account": cust_contract, "action.name": "stprofile", "action.data.dac_id":dacName, "action.data.cand": {$in: accounts}};
 
     if (legacy){
-        query['action.data.dac_id'] = {$in: [dac_id, null]};
+        query['action.data.dac_id'] = {$in: [dacName, null]};
         query['action.name'] = {$in: ['stprofileuns', 'stprofile']};
     }
 
@@ -98,7 +98,7 @@ async function getProfiles(db, dac_config, dac_id, accounts, legacy = false) {
     // Calculate member type
     for (let r=0;r<result.results.length;r++){
         const data = result.results[r];
-        data.member_type = await getMemberType(data.account, dac_id, db);
+        data.member_type = await getMemberType(data.account, dacName, db);
 
         // console.log(data);
         result.results[r] = data;
