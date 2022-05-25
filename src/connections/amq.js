@@ -98,7 +98,6 @@ class Amq {
             }
             this.logger.info(`Message sent to queue ${queue_name}`);
             return this.channel.sendToQueue(queue_name, msg, {deliveryMode: true})
-)
         } else {
             this.logger.error('Cannot perform operation "send", AMQ is not connected!');
         }
