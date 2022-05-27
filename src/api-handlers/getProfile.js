@@ -1,26 +1,25 @@
 const {getProfileSchema} = require('../schemas');
 const {NotFound} = require('http-errors');
-const {eosTableAtBlock,} = require('../eos-table');
 const {getProfiles} = require('../profile-helper.js');
+const { loadConfig, loadDacConfig } = require('../functions');
 
 async function getProfile(fastify, request) {
-    const dac_id = request.dac();
-
-    const account = request.query.account;
+    const config = loadConfig();
+    const { account, dac_id } = request.query;
+    const dacId = dac_id || config.eos.legacyDacs[0];
     const accounts = account.split(',');
-    const dac_config = await request.dac_config();
+    const dacConfig = await loadDacConfig(fastify, dacId);
 
     const db = fastify.mongo.db;
-
-    const token_contract = dac_config.symbol.contract;
+    const token_contract = dacConfig.symbol.contract;
 
     let legacy = false;
-    if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.length && fastify.config.eos.legacyDacs.includes(dac_id)){
-        fastify.log.info(`Got legacy dac ${dac_id}`, {dac_id});
+    if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.includes(dacId)){
+        fastify.log.info(`Got legacy dac ${dacId}`, {dacName: dacId});
         legacy = true;
     }
 
-    const result = getProfiles(db, dac_config, dac_id, accounts, legacy);
+    const result = getProfiles(db, dacConfig, dacId, accounts, legacy);
 
 
     return result
