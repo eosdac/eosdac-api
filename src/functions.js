@@ -42,9 +42,9 @@ async function getRestartBlock() {
     return block
 }
 
-const loadDacConfig = async (fastify, dac_name) => {
+const loadDacConfig = async (fastify, dacId) => {
     const global_config = loadConfig();
-    const dac_config_cache = fastify.dac_cache_get(dac_name);
+    const dac_config_cache = fastify.dac_cache_get(dacId);
     if (dac_config_cache){
         fastify.log.info(`Returning cached dac info`);
         return dac_config_cache;
@@ -54,13 +54,13 @@ const loadDacConfig = async (fastify, dac_name) => {
             code: global_config.eos.dacDirectoryContract,
             scope: global_config.eos.dacDirectoryContract,
             table: 'dacs',
-            lower_bound: dac_name,
-            upper_bound: dac_name
+            lower_bound: dacId,
+            upper_bound: dacId
         });
 
         if (res.rows.length){
             const row = res.rows[0];
-            if (row.dac_id === dac_name){
+            if (row.dac_id === dacId){
                 const account_map = new Map();
                 row.accounts.forEach((acnt) => {
                     account_map.set(acnt.key, acnt.value);
@@ -72,13 +72,13 @@ const loadDacConfig = async (fastify, dac_name) => {
                     ref_map.set(ref.key, ref.value);
                 });
                 row.refs = ref_map;
-                fastify.dac_name_cache.set(dac_name, row);
+                fastify.dac_name_cache.set(dacId, row);
 
                 return row;
             }
         }
 
-        fastify.log.warn(`Could not find dac with ID ${dac_name}`);
+        fastify.log.warn(`Could not find dac with ID ${dacId}`);
         return null;
     }
 }

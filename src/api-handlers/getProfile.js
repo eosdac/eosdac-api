@@ -5,21 +5,21 @@ const { loadConfig, loadDacConfig } = require('../functions');
 
 async function getProfile(fastify, request) {
     const config = loadConfig();
-    const { account, dac_name } = request.query;
-    const dacName = dac_name || config.eos.legacyDacs[0];
+    const { account, dac_id } = request.query;
+    const dacId = dac_id || config.eos.legacyDacs[0];
     const accounts = account.split(',');
-    const dacConfig = await loadDacConfig(fastify, dacName);
+    const dacConfig = await loadDacConfig(fastify, dacId);
 
     const db = fastify.mongo.db;
     const token_contract = dacConfig.symbol.contract;
 
     let legacy = false;
-    if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.includes(dacName)){
-        fastify.log.info(`Got legacy dac ${dacName}`, {dacName});
+    if (fastify.config.eos.legacyDacs && fastify.config.eos.legacyDacs.includes(dacId)){
+        fastify.log.info(`Got legacy dac ${dacId}`, {dacName: dacId});
         legacy = true;
     }
 
-    const result = getProfiles(db, dacConfig, dacName, accounts, legacy);
+    const result = getProfiles(db, dacConfig, dacId, accounts, legacy);
 
 
     return result

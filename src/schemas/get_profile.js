@@ -9,13 +9,13 @@ const getProfileSchema = {
                 description: 'Account to fetch, you can supply multiple accounts by separating them with a comma',
                 type: 'string'
             },
-            "dac_name": {
+            "dac_id": {
                 description: 'Organization name',
                 type: 'string'
             }
         },
         required: ['account'],
-        required: ['dac_name']
+        required: ['dac_id']
     },
     response: {
         200: {
