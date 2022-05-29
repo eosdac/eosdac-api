@@ -1,12 +1,13 @@
 const {getProfileSchema} = require('../schemas');
 const {NotFound} = require('http-errors');
 const {getProfiles} = require('../profile-helper.js');
-const { loadConfig, loadDacConfig } = require('../functions');
+const { loadDacConfig } = require('../functions');
 
 async function getProfile(fastify, request) {
-    const config = loadConfig();
-    const { account, dac_id } = request.query;
-    const dacId = dac_id || config.eos.legacyDacs[0];
+    const {
+        query: { account },
+        params: { dacId },
+    } = request;
     const accounts = account.split(',');
     const dacConfig = await loadDacConfig(fastify, dacId);
 
@@ -27,7 +28,7 @@ async function getProfile(fastify, request) {
 
 
 module.exports = function (fastify, opts, next) {
-    fastify.get('/profile', {
+    fastify.get('/:dacId/profile', {
         schema: getProfileSchema.GET
     }, async (request, reply) => {
         const profile = await getProfile(fastify, request);

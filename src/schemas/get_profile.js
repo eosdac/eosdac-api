@@ -2,6 +2,16 @@ const getProfileSchema = {
     description: 'Get user profile',
     summary: 'Fetches the user profile for a member',
     tags: ['v1'],
+    params: {
+        type: 'object',
+        required: [ 'dacId' ],
+        properties: {
+            dacId: {
+                type: 'string',
+                description: 'Organization name',
+            }
+        }
+    },
     querystring: {
         type: 'object',
         properties: {
@@ -9,13 +19,8 @@ const getProfileSchema = {
                 description: 'Account to fetch, you can supply multiple accounts by separating them with a comma',
                 type: 'string'
             },
-            "dac_id": {
-                description: 'Organization name',
-                type: 'string'
-            }
         },
         required: ['account'],
-        required: ['dac_id']
     },
     response: {
         200: {
