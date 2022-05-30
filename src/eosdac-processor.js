@@ -6,7 +6,7 @@ const commander = require('commander');
 const watchers = require('./watchers');
 commander
     .version('0.1', '-v, --version')
-    .option('-w, --named-watcher <named-watcher>', 'Start with a single watcher', -1)
+    .option('-w, --named-watcher <named-watcher>', 'Start with a single watcher')
     .option('-l, --list-watchers', 'List watchers', false)
     .parse(process.argv);
 
