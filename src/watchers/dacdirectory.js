@@ -87,7 +87,7 @@ class DacdirectoryHandler {
         await coll.createIndex({dac_id: 1, symbol: 1}, {unique: true});
 
         const symbol = doc.data.symbol;
-        const [precision_str, symbol_code] = symbol.sym.split(',');
+        const [precision_str, symbol_code] = (symbol.sym || symbol.symbol).split(',');
         symbol.code = symbol_code;
         symbol.precision = parseInt(precision_str);
 

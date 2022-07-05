@@ -46,7 +46,6 @@ class RabbitSender {
         }
 
         return this.channel.sendToQueue(queue_name, msg, {deliveryMode: true})
-)
     }
 
     async listen(queue_name, cb) {

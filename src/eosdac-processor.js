@@ -74,11 +74,19 @@ class JobProcessor {
         if (this.namedWatcher) {
             this.logger.info(`Notifying ${this.namedWatcher} only.`);
             const watcher = watchers.find((watcher) => watcher.constructor.name === this.namedWatcher);
-            watcher.action({doc, dac_directory:this.dac_directory, db:this.db});
+            if (watcher) {
+                watcher.action({doc, dac_directory:this.dac_directory, db:this.db}).catch(error => {
+                    this.logger.info(`Watcher error: ${error}`);
+                });
+            } else {
+                this.logger.warn('Watcher not found');
+            }
         }
         else {
             watchers.forEach((watcher) => {
-                watcher.action({doc, dac_directory:this.dac_directory, db:this.db});
+                watcher.action({doc, dac_directory:this.dac_directory, db:this.db}).catch(error => {
+                    this.logger.info(`Watcher error: ${error}`);
+                });
             });
         }
 
