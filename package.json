@@ -5,11 +5,12 @@
   "author": "<michael@eosdac.io>",
   "license": "MIT",
   "scripts": {
-    "api":"node src/eosdac-api.js",
-    "processor":"node src/eosdac-processor.js",
-    "blockrange":"node src/eosdac-blockrange.js",
-    "filler":"node src/eosdac-filler.js ${flags}",
-    "ws":"node src/eosdac-ws.js"
+    "api": "node src/eosdac-api.js",
+    "processor": "node src/eosdac-processor.js",
+    "blockrange": "node src/eosdac-blockrange.js",
+    "filler": "node src/eosdac-filler.js ${flags}",
+    "ws": "node src/eosdac-ws.js",
+    "test:api": "jest --config=jest.config.api.js --detectOpenHandles --forceExit"
   },
   "dependencies": {
     "@eosdacio/eosio-statereceiver": "^1.0.4",
@@ -36,5 +37,8 @@
     "winston": "^3.2.1",
     "ws": "^6.0.0",
     "zlib": "^1.0.5"
+  },
+  "devDependencies": {
+    "jest": "^28.1.3"
   }
 }
