@@ -10,7 +10,7 @@
     "blockrange": "node src/eosdac-blockrange.js",
     "filler": "node src/eosdac-filler.js ${flags}",
     "ws": "node src/eosdac-ws.js",
-    "test:api": "jest --config=jest.config.api.js --detectOpenHandles --forceExit"
+    "test:api": "jest --config=jest.config.api.js --forceExit"
   },
   "dependencies": {
     "@eosdacio/eosio-statereceiver": "^1.0.4",

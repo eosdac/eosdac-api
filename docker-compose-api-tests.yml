@@ -1,0 +1,38 @@
+version: '3.7'
+services:
+  api-tests-runner:
+    platform: linux/amd64
+    build:
+      context: .
+      args:
+        CONFIG: '${CONFIG}'
+      target: api-tests-runner
+      dockerfile: Dockerfile.api.tests
+    command: [ 'sh', '-c', 'yarn test:api' ]
+    environment:
+      CONFIG: '${CONFIG}'
+      SERVER_PORT: '8800'
+      SERVER_ADDR: '0.0.0.0'
+    depends_on:
+      - mongo-seed
+
+  mongo-seed:
+    build:
+      context: .
+      target: mongo-seed
+      dockerfile: Dockerfile.api.tests
+    links:
+      - db
+    depends_on:
+      - db
+
+  db:
+    container_name: eosdac-api-test-db
+    image: mongo
+    ports:
+      - 27017
+    volumes:
+      - database:/data/db
+
+volumes:
+  database:
