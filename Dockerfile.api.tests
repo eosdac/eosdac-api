@@ -1,0 +1,24 @@
+FROM mongo AS mongo-seed
+
+COPY tests/seed/*.seed.json /
+
+# drop existing test db and reimport seed for fresh test
+CMD mongoimport --host db --db eosdac --collection state --type json --file /state.seed.json --jsonArray --drop
+
+FROM node:17-alpine3.12 AS api-tests-runner
+
+RUN apk add --no-cache --virtual build-dependencies python2 g++ make
+
+ARG CONFIG
+ENV CONFIG=$CONFIG
+
+RUN apk add curl
+
+RUN mkdir -p /var/www/api
+
+COPY . /var/www/api
+COPY test.config.js /var/www/api/${CONFIG}.config.js
+
+WORKDIR /var/www/api
+
+RUN yarn
