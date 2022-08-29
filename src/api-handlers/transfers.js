@@ -1,10 +1,10 @@
-const {transfersSchema} = require('../schemas');
+const { transfersSchema } = require('../schemas');
 
-const {TextDecoder, TextEncoder} = require('text-encoding');
-const {Api, JsonRpc} = require('@jafri/eosjs2');
+const { TextDecoder, TextEncoder } = require('text-encoding');
+const { Api, JsonRpc } = require('@jafri/eosjs2');
 const fetch = require('node-fetch');
 
-const {loadConfig} = require('../functions');
+const { loadConfig } = require('../functions');
 
 
 async function transfers(fastify, request) {
@@ -22,15 +22,15 @@ async function transfers(fastify, request) {
         const token_account = dac_config.symbol.contract;
         const [precision, token_code] = dac_config.symbol.sym.split(',');
 
-        const transfers = {results:[], count:0};
+        const transfers = { results: [], count: 0 };
 
         try {
             const query = {
                 'action.account': token_account,
                 'action.name': 'transfer',
-                'action.data.quantity': {$regex: ` ${token_code}$`, $options:""}
+                'action.data.quantity': { $regex: ` ${token_code}$`, $options: "" }
             };
-            const res = collection.find(query).sort({block_num: -1})
+            const res = collection.find(query).sort({ block_num: -1 })
                 .skip(parseInt(skip))
                 .limit(parseInt(limit));
             const count = await res.count();
@@ -44,7 +44,7 @@ async function transfers(fastify, request) {
                 resolve(transfers);
             });
         }
-        catch (e){
+        catch (e) {
             fastify.log.error(`Error getting transfers ${e.message}`);
             reject(e);
         }
