@@ -3,3 +3,5 @@ node_modules
 
 # Test coverage directory
 coverage
+
+dist
