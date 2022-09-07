@@ -1,4 +1,4 @@
-const { getMsigProposalsSchema } = require('../schemas');
+import { getMsigProposalsSchema } from '../schemas';
 
 async function getMsigProposals(fastify, request) {
 	// console.log(request)
@@ -33,7 +33,7 @@ async function getMsigProposals(fastify, request) {
 
 		const now = new Date();
 
-		const query = { dac_id };
+		const query: any = { dac_id };
 		if (typeof status !== 'undefined') {
 			query.status = status;
 			if (status === 1) {
@@ -63,7 +63,7 @@ async function getMsigProposals(fastify, request) {
 				.limit(parseInt(limit));
 
 			Promise.all([custodian_res, res]).then(async responses => {
-				let [custodian_res, res] = responses;
+				const [custodian_res, res] = responses;
 				const current_custodians = custodian_res.rows.map(row => row.cust_name);
 				const count = await res.count();
 

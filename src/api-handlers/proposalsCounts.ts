@@ -1,4 +1,4 @@
-const { proposalsCountsSchema } = require('../schemas');
+import { proposalsCountsSchema } from '../schemas';
 
 async function proposalsCounts(fastify, request) {
 	const get_count = async (collection, query) => {
@@ -13,7 +13,7 @@ async function proposalsCounts(fastify, request) {
 
 		const account = request.query.account;
 
-		const counts = {};
+		const counts: any = {};
 		try {
 			if (account) {
 				const inbox_query = {

@@ -1,5 +1,4 @@
-const { proposalsInboxSchema } = require('../schemas');
-const MongoLong = require('mongodb').Long;
+import { proposalsInboxSchema } from '../schemas';
 
 async function proposalsInbox(fastify, request) {
 	return new Promise(async (resolve, reject) => {

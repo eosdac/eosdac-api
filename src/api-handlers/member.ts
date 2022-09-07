@@ -1,5 +1,4 @@
-const { memberSchema } = require('../schemas');
-const { NotFound } = require('http-errors');
+import { memberSchema } from '../schemas';
 
 const null_profile = {
 	description: '',

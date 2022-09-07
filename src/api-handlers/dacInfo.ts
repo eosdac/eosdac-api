@@ -1,6 +1,5 @@
-const { dacInfoSchema } = require('../schemas');
-
-const { loadConfig } = require('../functions');
+import { dacInfoSchema } from '../schemas';
+import { loadConfig } from '../functions';
 
 async function getDacConfig(fastify, request) {
 	return new Promise(async (resolve, reject) => {
@@ -12,7 +11,7 @@ async function getDacConfig(fastify, request) {
 		const symbol_code = request.query.symbol_code;
 		const symbol_contract = request.query.symbol_contract;
 
-		const query = {};
+		const query: any = {};
 		if (symbol_code && symbol_contract) {
 			query['symbol.code'] = symbol_code;
 			query['symbol.contract'] = symbol_contract;

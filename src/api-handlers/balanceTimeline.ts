@@ -1,6 +1,6 @@
-const { balanceTimelineSchema } = require('../schemas');
+import { balanceTimelineSchema } from '../schemas';
 
-const MongoLong = require('mongodb').Long;
+import { Long as MongoLong } from 'mongodb';
 
 async function balanceTimeline(fastify, request) {
 	// console.log(request)
@@ -22,7 +22,7 @@ async function balanceTimeline(fastify, request) {
 			start_block = Math.max(1, info_res.head_block_num - six_months);
 		}
 
-		const query = { code: contract, scope: account, table: 'accounts' };
+		const query: any = { code: contract, scope: account, table: 'accounts' };
 		if (start_block) {
 			if (!('block_num' in query)) {
 				query.block_num = {};
@@ -43,7 +43,7 @@ async function balanceTimeline(fastify, request) {
 			} else if (res) {
 				const timeline = [];
 				if (!(await res.count())) {
-					let zero_bal = `0 ${symbol}`;
+					const zero_bal = `0 ${symbol}`;
 					timeline.push({ block_num: 0, balance: zero_bal });
 					resolve(timeline);
 				} else {
@@ -83,7 +83,7 @@ module.exports = function (fastify, opts, next) {
 			schema: balanceTimelineSchema.GET,
 		},
 		async (request, reply) => {
-			const res = await balanceTimeline(fastify, request);
+			const res: any = await balanceTimeline(fastify, request);
 			reply.send({ results: res, count: res.length });
 		}
 	);

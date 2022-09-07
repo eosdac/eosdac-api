@@ -1,7 +1,7 @@
-const assert = require('assert');
-const { votesTimelineSchema } = require('../schemas');
+import assert = require('assert');
+import { votesTimelineSchema } from '../schemas';
 
-const MongoLong = require('mongodb').Long;
+import { Long as MongoLong } from 'mongodb';
 
 async function votesTimeline(fastify, request) {
 	// console.log(request)
@@ -42,7 +42,7 @@ async function votesTimeline(fastify, request) {
 
 		const accounts = account.split(',');
 
-		const query = {
+		const query: any = {
 			code: cust_contract,
 			scope: dac_id,
 			table: 'candidates',
@@ -75,7 +75,7 @@ async function votesTimeline(fastify, request) {
 		const range_size = 60 * 60 * 24 * 2; // one day in blocks
 
 		const boundaries = [];
-		let block_timestamps = [];
+		const block_timestamps = [];
 		let current_block = end_block;
 		let current_block_timestamp = end_block_timestamp;
 		while (current_block >= start_block) {
@@ -151,7 +151,7 @@ module.exports = function (fastify, opts, next) {
 			schema: votesTimelineSchema.GET,
 		},
 		async (request, reply) => {
-			const res = await votesTimeline(fastify, request);
+			const res: any = await votesTimeline(fastify, request);
 			reply.send({ results: res, count: res.length });
 		}
 	);

@@ -1,4 +1,4 @@
-const { myDacsSchema } = require('../schemas');
+import { myDacsSchema } from '../schemas';
 
 async function myDacs(fastify, request) {
 	const db = fastify.mongo.db;

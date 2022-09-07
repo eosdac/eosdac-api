@@ -1,4 +1,4 @@
-const { stateSchema } = require('../schemas');
+import { stateSchema } from '../schemas';
 
 async function state(fastify, request) {
 	// console.log(request)

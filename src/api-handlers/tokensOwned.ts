@@ -1,4 +1,4 @@
-const { tokensOwnedSchema } = require('../schemas');
+import { tokensOwnedSchema } from '../schemas';
 
 async function tokensOwned(fastify, request) {
 	// console.log(request)
@@ -50,7 +50,7 @@ module.exports = function (fastify, opts, next) {
 			schema: tokensOwnedSchema.GET,
 		},
 		async (request, reply) => {
-			const res = await tokensOwned(fastify, request);
+			const res: any = await tokensOwned(fastify, request);
 			reply.send({ results: res, count: res.length });
 		}
 	);

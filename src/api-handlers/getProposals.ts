@@ -1,5 +1,4 @@
-const { getProposalsSchema } = require('../schemas');
-const MongoLong = require('mongodb').Long;
+import { getProposalsSchema } from '../schemas';
 
 async function getProposals(fastify, request) {
 	return new Promise(async (resolve, reject) => {
@@ -18,7 +17,7 @@ async function getProposals(fastify, request) {
 		const proposer = request.query.proposer || null;
 		const proposals = { results: [], count: 0 };
 
-		const query = { dac_id };
+		const query: any = { dac_id };
 		if (status.length) {
 			query.status = { $in: status };
 		}

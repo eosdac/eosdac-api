@@ -1,7 +1,7 @@
-const { memberSnapshotSchema } = require('../schemas');
-const { eosTableAtBlock } = require('../eos-table');
+import { memberSnapshotSchema } from '../schemas';
+import { eosTableAtBlock } from '../eos-table';
 
-const MongoLong = require('mongodb').Long;
+import { Long as MongoLong } from 'mongodb';
 
 async function memberSnapshot(fastify, request) {
 	// console.log(request)
@@ -32,7 +32,7 @@ async function memberSnapshot(fastify, request) {
 		let skip = 0;
 		let has_more = true;
 
-		const members_match = {
+		const members_match: any = {
 			db,
 			code: contract,
 			scope: dac_id,
@@ -80,7 +80,7 @@ async function memberSnapshot(fastify, request) {
 		// Loop through all balances and if they are in the members Map then add balance
 		skip = 0;
 		has_more = true;
-		const balances_match = {
+		const balances_match: any = {
 			db,
 			code: contract,
 			table: 'accounts',
@@ -123,7 +123,7 @@ async function memberSnapshot(fastify, request) {
 		const voters = new Set();
 		skip = 0;
 		has_more = true;
-		const voter_match = {
+		const voter_match: any = {
 			db,
 			code: custodian_contract,
 			table: 'votes',
@@ -159,7 +159,7 @@ async function memberSnapshot(fastify, request) {
 		// console.log(voters);
 
 		// Check if each member is voting
-		for (let k of members) {
+		for (const k of members) {
 			//     // console.log(k[0]);
 			const voter = k[0];
 			const voter_data = k[1];
@@ -170,7 +170,7 @@ async function memberSnapshot(fastify, request) {
 		}
 
 		// Get candidates and add stake
-		const candidates_match = {
+		const candidates_match: any = {
 			db,
 			code: custodian_contract,
 			scope: dac_id,
@@ -217,7 +217,7 @@ async function memberSnapshot(fastify, request) {
 			if (b.balance) {
 				b_bal = b.balance[0];
 			}
-			return parseFloat(a_bal) > parseFloat(b_bal) ? -1 : 1;
+			return a_bal > b_bal ? -1 : 1;
 		};
 		const account_sorter = (a, b) => (a[sort_col] < b[sort_col] ? -1 : 1);
 		switch (sort_col) {

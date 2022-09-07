@@ -1,11 +1,12 @@
-const { candidatesSchema } = require('../schemas');
+import { candidatesSchema } from '../schemas';
 
-const { TextDecoder, TextEncoder } = require('text-encoding');
-const { Api, JsonRpc } = require('@jafri/eosjs2');
-const fetch = require('node-fetch');
-const { getProfiles } = require('../profile-helper.js');
+import { TextDecoder, TextEncoder } from 'text-encoding';
 
-const { loadConfig } = require('../functions');
+import { Api, JsonRpc } from '@jafri/eosjs2';
+import fetch from 'node-fetch';
+import { getProfiles } from '../profile-helper';
+
+import { loadConfig } from '../functions';
 
 async function getCandidates(fastify, request) {
 	return new Promise(async (resolve, reject) => {

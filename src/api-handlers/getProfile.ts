@@ -1,7 +1,7 @@
-const { getProfileSchema } = require('../schemas');
-const { NotFound } = require('http-errors');
-const { getProfiles } = require('../profile-helper.js');
-const { loadDacConfig } = require('../functions');
+import { getProfileSchema } from '../schemas';
+import { NotFound } from 'http-errors';
+import { getProfiles } from '../profile-helper';
+import { loadDacConfig } from '../functions';
 
 async function getProfile(fastify, request) {
 	const {

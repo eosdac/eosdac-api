@@ -1,10 +1,10 @@
-const { dacConfigSchema } = require('../schemas');
+import { dacConfigSchema } from '../schemas';
 
-const { TextDecoder, TextEncoder } = require('text-encoding');
-const { Api, JsonRpc } = require('@jafri/eosjs2');
-const fetch = require('node-fetch');
+import { TextDecoder, TextEncoder } from 'text-encoding';
+import { Api, JsonRpc } from '@jafri/eosjs2';
+import fetch from 'node-fetch';
 
-const { loadConfig } = require('../functions');
+import { loadConfig } from '../functions';
 
 async function getDacConfig(fastify, request) {
 	// console.log(request)
@@ -23,7 +23,7 @@ async function getDacConfig(fastify, request) {
 
 		const dac_id = request.dac();
 		const dac_config_original = await request.dac_config();
-		const dac_config = {
+		const dac_config: any = {
 			dac_id: dac_config_original.dac_id,
 			owner: dac_config_original.owner,
 		};

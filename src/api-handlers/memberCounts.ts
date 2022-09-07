@@ -1,8 +1,6 @@
-const { memberCountsSchema } = require('../schemas');
+import { memberCountsSchema } from '../schemas';
 
-const MongoLong = require('mongodb').Long;
-
-const { eosTableIter } = require('../eos-table');
+import { eosTableIter } from '../eos-table';
 
 async function memberCounts(fastify, request) {
 	// console.log(request)
@@ -25,7 +23,7 @@ async function memberCounts(fastify, request) {
 		const table_iter = new eosTableIter(cust_req);
 		const results = new Map();
 		results.set('total', 0);
-		for await (let row of table_iter) {
+		for await (const row of table_iter) {
 			const key = `terms_v${row.agreedtermsversion}`;
 			if (!results.has(key)) {
 				results.set(key, 0);
@@ -48,7 +46,7 @@ module.exports = function (fastify, opts, next) {
 			schema: memberCountsSchema.GET,
 		},
 		async (request, reply) => {
-			const res = await memberCounts(fastify, request);
+			const res: any = await memberCounts(fastify, request);
 			reply.send({ results: res, count: res.length });
 		}
 	);

@@ -1,6 +1,6 @@
-const { referendumsSchema } = require('../schemas');
+import { referendumsSchema } from '../schemas';
 
-const { loadConfig } = require('../functions');
+import { loadConfig } from '../functions';
 
 async function getReferendums(fastify, request) {
 	return new Promise(async (resolve, reject) => {
@@ -10,7 +10,7 @@ async function getReferendums(fastify, request) {
 		const dac_id = request.dac();
 
 		const coll = db.collection('referendums');
-		const query = { dac_id };
+		const query: any = { dac_id };
 		const status = request.query.status;
 		const skip = request.query.skip || 0;
 		const limit = request.query.limit || 20;
@@ -23,7 +23,7 @@ async function getReferendums(fastify, request) {
 			.skip(parseInt(skip))
 			.limit(parseInt(limit));
 
-		let ret = [];
+		const ret = [];
 		res.forEach(
 			row => {
 				delete row._id;

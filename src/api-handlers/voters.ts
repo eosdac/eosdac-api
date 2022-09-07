@@ -1,4 +1,4 @@
-const { votersSchema } = require('../schemas');
+import { votersSchema } from '../schemas';
 
 async function voters(fastify, request) {
 	// console.log(request)

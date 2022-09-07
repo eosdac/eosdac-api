@@ -1,10 +1,4 @@
-const { transfersSchema } = require('../schemas');
-
-const { TextDecoder, TextEncoder } = require('text-encoding');
-const { Api, JsonRpc } = require('@jafri/eosjs2');
-const fetch = require('node-fetch');
-
-const { loadConfig } = require('../functions');
+import { transfersSchema } from '../schemas';
 
 async function transfers(fastify, request) {
 	// console.log(request)
