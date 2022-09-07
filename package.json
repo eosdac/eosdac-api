@@ -9,7 +9,12 @@
     "api:dev": "tsc-watch --onSuccess \"node -r ts-node/register -r tsconfig-paths/register src/eosdac-api.ts\"",
     "test:api": "jest --config=jest.config.api.ts --forceExit",
     "clean": "rm -rf ./dist",
-    "build": "yarn clean && tsc"
+    "build": "yarn clean && tsc",
+    "lint": "eslint \"src/**/*\" \"tests/**/*\"",
+    "lint:fix": "eslint --fix \"src/**/*\" \"tests/**/*\"",
+    "prettier:check": "yarn prettier --check \"src/**/*\" \"tests/**/*\"",
+    "prettier:fix": "yarn prettier --write \"src/**/*\" \"tests/**/*\"",
+    "format": "yarn prettier:fix && yarn lint:fix"
   },
   "dependencies": {
     "@eosdacio/eosio-statereceiver": "^1.0.4",
