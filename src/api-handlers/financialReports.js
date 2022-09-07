@@ -1,5 +1,5 @@
-const {financialReportsSchema} = require('../schemas');
-const {eosTableAtBlock} = require('../eos-table')
+const { financialReportsSchema } = require('../schemas');
+const { eosTableAtBlock } = require('../eos-table');
 
 const MongoLong = require('mongodb').Long;
 
@@ -81,13 +81,16 @@ async function financialReports(fastify, request) {
     })
 }
 
-
 module.exports = function (fastify, opts, next) {
-    fastify.get('/financial_reports', {
-        schema: financialReportsSchema.GET
-    }, async (request, reply) => {
-        const res = await financialReports(fastify, request);
-        reply.send({ results: res, count: res.length });
-    });
-    next()
+	fastify.get(
+		'/financial_reports',
+		{
+			schema: financialReportsSchema.GET,
+		},
+		async (request, reply) => {
+			const res = await financialReports(fastify, request);
+			reply.send({ results: res, count: res.length });
+		}
+	);
+	next();
 };

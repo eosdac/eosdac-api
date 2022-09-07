@@ -4,19 +4,17 @@ const { HTTP_METHOD, HTTP_STATUS } = require('../common');
 const environment = createApiTestEnvironment();
 environment.initialize();
 
-
 // meta
 const Api = {
-  method: HTTP_METHOD.GET,
-  url: "/v1/eosdac/financial_reports"
-}
+	method: HTTP_METHOD.GET,
+	url: '/v1/eosdac/financial_reports',
+};
 
 const Data = {
-  Account: "token.worlds",
-  Start: "1600176000000",
-  End: "1660176000000",
-}
-
+	Account: 'token.worlds',
+	Start: '1600176000000',
+	End: '1660176000000',
+};
 
 /* TODO: after getting succesful response for the endpoint, we need to
  *  - write test to verify proper successful response
@@ -26,17 +24,21 @@ const Data = {
  */
 
 describe('Financial Reports API Test', () => {
-  it('should return error if start is not provided', async () => {
-    const response = await getApiResponse(Api.method, `${Api.url}?account=${Data.Account}&end=${Data.End}`)
-    const jsonResp = JSON.parse(response.body)
+	it('should return error if start is not provided', async () => {
+		const response = await getApiResponse(
+			Api.method,
+			`${Api.url}?account=${Data.Account}&end=${Data.End}`
+		);
+		const jsonResp = JSON.parse(response.body);
 
-    expect(response.statusCode).toEqual(HTTP_STATUS.BAD_REQUEST);
-    expect(jsonResp.message).toEqual("querystring should have required property 'start'")
-  });
+		expect(response.statusCode).toEqual(HTTP_STATUS.BAD_REQUEST);
+		expect(jsonResp.message).toEqual(
+			"querystring should have required property 'start'"
+		);
+	});
 });
-
 
 // helpers
 const getApiResponse = async function (method, url) {
-  return await environment.server.inject({ method, url });
-}
+	return await environment.server.inject({ method, url });
+};

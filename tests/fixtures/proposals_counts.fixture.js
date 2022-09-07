@@ -1,9 +1,9 @@
 module.exports.proposalsCountZero = {
-  inbox: 0
-}
+	inbox: 0,
+};
 
 module.exports.proposalsCountNonZero = {
-  inbox: 2
-}
+	inbox: 2,
+};
 
-module.exports.proposalsCountEmptyResponse = {}
+module.exports.proposalsCountEmptyResponse = {};

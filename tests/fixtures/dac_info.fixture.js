@@ -1,1 +1,1 @@
-module.exports.emptyResponse = { results: [], count: 0 }
+module.exports.emptyResponse = { results: [], count: 0 };

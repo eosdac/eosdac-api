@@ -1,13 +1,15 @@
 function loadConfig() {
-    const config_name = (process.env.CONFIG) ? process.env.CONFIG : '';
-    if (!config_name) {
-        throw new Error(`Config not specified, please provide CONFIG environmental variable`)
-    }
-    const config = require(`../${config_name}.config`);
+	const config_name = process.env.CONFIG ? process.env.CONFIG : '';
+	if (!config_name) {
+		throw new Error(
+			`Config not specified, please provide CONFIG environmental variable`
+		);
+	}
+	const config = require(`../${config_name}.config`);
 
-    config.name = config_name;
+	config.name = config_name;
 
-    return config
+	return config;
 }
 
 const loadDacConfig = async (fastify, dacId) => {

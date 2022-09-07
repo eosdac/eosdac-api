@@ -1,4 +1,4 @@
 module.exports.emptyResponse = {
-    results: [],
-    count: 0,
-}
+	results: [],
+	count: 0,
+};
