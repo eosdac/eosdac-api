@@ -1,7 +1,6 @@
-export const stateSuccessResponse = {
+module.exports.stateSuccessResponse = {
   results: {
-    current_block: 106123419
+    current_block: 106171671
   },
   count: 1
-};
-
+}

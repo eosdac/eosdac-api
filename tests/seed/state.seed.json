@@ -1,8 +1,5 @@
 [
   {
-    "_id": {
-      "$oid": "62f252b1f5f818dd96ba2a3e"
-    },
     "name": "current_block",
     "value": 106171671
   }

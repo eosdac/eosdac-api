@@ -1,0 +1,225 @@
+[
+  {
+    "block_num": 105377063,
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614125768000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "federation",
+    "table": "accounts",
+    "primary_key": {
+      "$numberLong": "5640004268304891904"
+    },
+    "payer": "federation",
+    "data": {
+      "balance": "0.0000 NER"
+    },
+    "data_hash": "7e8f6c82de30e12d798efdbda2684de1b787e604",
+    "present": 1
+  },
+  {
+    "block_num": 105377017,
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614125745000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "federation",
+    "table": "accounts",
+    "primary_key": {
+      "$numberLong": "4997101127846592512"
+    },
+    "payer": "federation",
+    "data": {
+      "balance": "0.0000 EYE"
+    },
+    "data_hash": "53f44393fbc736639714a2f5121e42cfb2cd2e76",
+    "present": 1
+  },
+  {
+    "block_num": 105377114,
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614125794000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "federation",
+    "table": "accounts",
+    "primary_key": {
+      "$numberLong": "5640004268304891904"
+    },
+    "payer": "federation",
+    "data": {
+      "balance": "0.0000 NER"
+    },
+    "data_hash": "7e8f6c82de30e12d798efdbda2684de1b787e604",
+    "present": 1
+  },
+  {
+    "block_num": 105377175,
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614125824000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "federation",
+    "table": "accounts",
+    "primary_key": {
+      "$numberLong": "5640004268304891904"
+    },
+    "payer": "federation",
+    "data": {
+      "balance": "0.0000 NER"
+    },
+    "data_hash": "7e8f6c82de30e12d798efdbda2684de1b787e604",
+    "present": 1
+  },
+  {
+    "block_num": 105377126,
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614125800000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "federation",
+    "table": "accounts",
+    "primary_key": {
+      "$numberLong": "5640004268304891904"
+    },
+    "payer": "federation",
+    "data": {
+      "balance": "0.0000 NER"
+    },
+    "data_hash": "7e8f6c82de30e12d798efdbda2684de1b787e604",
+    "present": 1
+  },
+  {
+    "block_num": 105377158,
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614125816000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "federation",
+    "table": "accounts",
+    "primary_key": {
+      "$numberLong": "5640004268304891904"
+    },
+    "payer": "federation",
+    "data": {
+      "balance": "0.0000 NER"
+    },
+    "data_hash": "7e8f6c82de30e12d798efdbda2684de1b787e604",
+    "present": 1
+  },
+  {
+    "block_num": 105377352,
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614125913000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "federation",
+    "table": "accounts",
+    "primary_key": {
+      "$numberLong": "5640004268304891904"
+    },
+    "payer": "federation",
+    "data": {
+      "balance": "0.0000 NER"
+    },
+    "data_hash": "7e8f6c82de30e12d798efdbda2684de1b787e604",
+    "present": 1
+  },
+  {
+    "block_num": 105377323,
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614125898000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "federation",
+    "table": "accounts",
+    "primary_key": {
+      "$numberLong": "5640004268304891904"
+    },
+    "payer": "federation",
+    "data": {
+      "balance": "0.0000 NER"
+    },
+    "data_hash": "7e8f6c82de30e12d798efdbda2684de1b787e604",
+    "present": 1
+  },
+  {
+    "block_num": 105377446,
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614125960000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "federation",
+    "table": "accounts",
+    "primary_key": {
+      "$numberLong": "5640004268304891904"
+    },
+    "payer": "federation",
+    "data": {
+      "balance": "0.0000 NER"
+    },
+    "data_hash": "7e8f6c82de30e12d798efdbda2684de1b787e604",
+    "present": 1
+  },
+  {
+    "block_num": 105377412,
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614125943000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "federation",
+    "table": "accounts",
+    "primary_key": {
+      "$numberLong": "5640004268304891904"
+    },
+    "payer": "federation",
+    "data": {
+      "balance": "0.0000 NER"
+    },
+    "data_hash": "7e8f6c82de30e12d798efdbda2684de1b787e604",
+    "present": 1
+  },
+  {
+    "block_num": {
+      "$numberLong": "105578904"
+    },
+    "block_timestamp": {
+      "$date": {
+        "$numberLong": "1614226736000"
+      }
+    },
+    "code": "token.worlds",
+    "scope": "eyeke",
+    "table": "members",
+    "primary_key": {
+      "$numberLong": "158905257541574"
+    },
+    "payer": "suzqu.wam",
+    "data": {
+      "sender": "suzqu.wam",
+      "agreedtermsversion": "1"
+    },
+    "data_hash": "3089db8a88b2c7d0930ef44f0c96675678efde31",
+    "present": 1
+  }
+]

@@ -1,0 +1,50 @@
+[
+    {
+        "dac_id": "eyeke",
+        "status": 1
+    },
+    {
+        "dac_id": "eyeke",
+        "status": 1,
+        "finalize_voted": "eyeke.worlds"
+    },
+    {
+        "dac_id": "eyeke",
+        "status": 1,
+        "approve_voted": "eyeke.worlds"
+    },
+    {
+        "dac_id": "eyeke",
+        "status": 2,
+        "finalize_voted": "eyeke.worlds"
+    },
+    {
+        "dac_id": "eyeke",
+        "status": 0,
+        "approve_voted": "eyeke.worlds"
+    },
+    {
+        "dac_id": "eos.dac",
+        "status": 1
+    },
+    {
+        "dac_id": "eos.dac",
+        "status": 1,
+        "finalize_voted": "token.worlds"
+    },
+    {
+        "dac_id": "eos.dac",
+        "status": 1,
+        "approve_voted": "token.worlds"
+    },
+    {
+        "dac_id": "eos.dac",
+        "status": 2,
+        "finalize_voted": "token.worlds"
+    },
+    {
+        "dac_id": "eos.dac",
+        "status": 0,
+        "approve_voted": "token.worlds"
+    }
+]

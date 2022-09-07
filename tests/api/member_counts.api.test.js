@@ -1,6 +1,6 @@
 const { createApiTestEnvironment } = require('../environments');
 const { HTTP_METHOD, HTTP_STATUS } = require('../common');
-const { stateSuccessResponse } = require('../fixtures/state.fixture');
+const fixtures = require('../fixtures/member_counts.fixture');
 
 const environment = createApiTestEnvironment();
 environment.initialize();
@@ -9,10 +9,10 @@ environment.initialize();
 // meta
 const Api = {
   method: HTTP_METHOD.GET,
-  url: "/v1/eosdac/state"
+  url: "/v1/eosdac/member_counts"
 }
 
-describe('State API Test', () => {
+describe('Member counts API Test', () => {
 
   it('should return status 200', async () => {
     const response = await getApiResponse(Api.method, Api.url)
@@ -20,12 +20,11 @@ describe('State API Test', () => {
     expect(response.statusCode).toEqual(HTTP_STATUS.OK);
   });
 
-  it('should return current block', async () => {
+  it('should return the count', async () => {
     const response = await getApiResponse(Api.method, Api.url)
 
-    expect(JSON.parse(response.body)).toEqual(stateSuccessResponse);
+    expect(JSON.parse(response.body)).toEqual(fixtures.memberCountsResponse);
   });
-
 });
 
 
