@@ -1,16 +1,17 @@
-const winston = require('winston');
-// const DatadogTransport = require('winston-datadog');
-const DatadogTransport = require('@shelf/winston-datadog-logs-transport');
+import winston = require('winston');
+import DatadogTransport = require('@shelf/winston-datadog-logs-transport');
 
-const logger = (service = 'undefined-service', config) => {
+export const logger = (service = 'undefined-service', config) => {
 	const _l = winston.createLogger({
 		level: 'debug',
 		format: winston.format.json(),
 		defaultMeta: { service },
 		transports: [
 			new winston.transports.Console({
-				format: winston.format.simple(),
-				colorize: true,
+				format: winston.format.combine(
+					winston.format.simple(),
+					winston.format.colorize(),
+				)
 			}),
 			new winston.transports.File({
 				filename: `logs/${service}_debug.log`,
@@ -39,16 +40,6 @@ const logger = (service = 'undefined-service', config) => {
 		);
 	}
 
-	// To make compatible with fastify logger
-	// _l.log = () => {_l.info(arguments[0])};
-	_l.fatal = () => {
-		_l.error(arguments[0]);
-	};
-	_l.trace = () => {
-		_l.silly(arguments[0]);
-	};
-
 	return _l;
 };
 
-module.exports = logger;
