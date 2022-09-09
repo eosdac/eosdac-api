@@ -26,3 +26,4 @@ COPY test.config.js /var/www/api/${CONFIG}.config.js
 WORKDIR /var/www/api
 
 RUN yarn
+RUN yarn build

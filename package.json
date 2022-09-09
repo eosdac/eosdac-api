@@ -5,12 +5,11 @@
   "author": "<michael@eosdac.io>",
   "license": "MIT",
   "scripts": {
-    "api": "node src/eosdac-api.js",
-    "processor": "node src/eosdac-processor.js",
-    "blockrange": "node src/eosdac-blockrange.js",
-    "filler": "node src/eosdac-filler.js ${flags}",
-    "ws": "node src/eosdac-ws.js",
-    "test:api": "jest --config=jest.config.api.js --forceExit"
+    "api": "node -r ts-node/register -r tsconfig-paths/register src/eosdac-api.ts",
+    "api:dev": "tsc-watch --onSuccess \"node -r ts-node/register -r tsconfig-paths/register src/eosdac-api.ts\"",
+    "test:api": "jest --config=jest.config.api.ts --forceExit",
+    "clean": "rm -rf ./dist",
+    "build": "yarn clean && tsc"
   },
   "dependencies": {
     "@eosdacio/eosio-statereceiver": "^1.0.4",
@@ -18,7 +17,7 @@
     "@shelf/winston-datadog-logs-transport": "^1.0.7",
     "amqplib": "^0.5.3",
     "array-xor": "^0.1.1",
-    "commander": "^2.19.0",
+    "commander": "^9.4.0",
     "dirty-json": "^0.7.0",
     "elasticsearch": "^15.3.0",
     "fastify": "^2.0.1",
@@ -39,6 +38,17 @@
     "zlib": "^1.0.5"
   },
   "devDependencies": {
-    "jest": "^28.1.3"
+    "@types/amqplib": "^0.8.2",
+    "@types/jest": "^27.0.3",
+    "@types/node": "^18.7.15",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.0",
+    "jest": "27.4.5",
+    "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
+    "tsc-watch": "^5.0.3",
+    "tsconfig-paths": "^4.1.0",
+    "typescript": "^4.8.3"
   }
 }

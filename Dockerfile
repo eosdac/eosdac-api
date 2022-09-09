@@ -11,9 +11,10 @@ ADD static /var/www/api/static
 ADD scripts /var/www/api/scripts
 ADD src /var/www/api/src
 
-COPY package.json tokens.json /var/www/api/
+COPY package.json tokens.json tsconfig.json /var/www/api/
 COPY example.config.js /var/www/api/${CONFIG}.config.js
 
 WORKDIR /var/www/api
 
 RUN yarn
+RUN yarn build
