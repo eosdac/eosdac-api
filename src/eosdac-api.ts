@@ -12,7 +12,7 @@ import logger = require('./connections/logger');
 logger('eosdac-api', config.logger)
 
 
-const buildAPIServer = async () => {
+export const buildAPIServer = async () => {
     const api = fastify({
         ignoreTrailingSlash: true,
         trustProxy: true,
@@ -82,7 +82,7 @@ const buildAPIServer = async () => {
     return api;
 }
 
-const startAPIServer = async () => {
+export const startAPIServer = async () => {
     try {
         const api = await buildAPIServer();
         await api.listen(process.env.SERVER_PORT, process.env.SERVER_ADDR);
@@ -94,7 +94,3 @@ const startAPIServer = async () => {
 
 startAPIServer();
 
-module.exports = {
-    buildAPIServer,
-    startAPIServer,
-}
