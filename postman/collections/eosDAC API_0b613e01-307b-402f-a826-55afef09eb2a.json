@@ -10,11 +10,11 @@
 			"name": "v1/eosdac",
 			"item": [
 				{
-					"name": "200 (empty) - Get DAC",
+					"name": "Empty response",
 					"item": [
 						{
-							"name": "Get DAC by dac_id",
-							"id": "e6081a13-7a7c-44a7-8f29-760ceca439f1",
+							"name": "EMPTY - /voters -Get voters for a particular candidate",
+							"id": "2ac428a9-7897-4f7f-b630-b66f32ee0cee",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -22,71 +22,419 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/dac_info?dac_id=eyeke",
+									"raw": "{{base_url}}/{{api_version}}/eosdac/voters?candidate=Excepteur qui off",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
 										"eosdac",
-										"dac_info"
+										"voters"
 									],
 									"query": [
 										{
-											"key": "dac_id",
-											"value": "eyeke"
-										},
-										{
-											"key": "symbol_code",
-											"value": "4,EYE",
-											"disabled": true
-										},
-										{
-											"key": "symbol_contract",
-											"value": "token.worlds",
-											"disabled": true
+											"key": "candidate",
+											"value": "Excepteur qui off",
+											"description": "(Required) Filter by candidate account"
 										}
 									]
 								},
-								"description": "Fetch DAC information"
+								"description": "Get Voters"
 							},
 							"response": [
 								{
-									"id": "d1947255-f220-4d9c-9318-a241bcb1ab61",
-									"name": "Default Response",
+									"id": "e7501278-a0fc-4faa-8376-ab52cd89de5b",
+									"name": "empty response",
 									"originalRequest": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{base_url}}/{{api_version}}/eosdac/dac_info",
+											"raw": "{{base_url}}/{{api_version}}/eosdac/voters?candidate=awtesterooo1",
 											"host": [
 												"{{base_url}}"
 											],
 											"path": [
 												"{{api_version}}",
 												"eosdac",
-												"dac_info"
+												"voters"
+											],
+											"query": [
+												{
+													"key": "candidate",
+													"value": "awtesterooo1",
+													"description": "(Required) Filter by candidate account"
+												}
 											]
 										}
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "text",
+									"_postman_previewlanguage": "json",
 									"header": [
 										{
-											"key": "Content-Type",
-											"value": "text/plain"
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "content-length",
+											"value": "24"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 01 Sep 2022 12:51:42 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
 										}
 									],
 									"cookie": [],
 									"responseTime": null,
-									"body": ""
+									"body": "{\n    \"results\": [],\n    \"count\": 0\n}"
 								}
 							]
 						},
 						{
-							"name": "Get DAC by symbol",
-							"id": "e2033010-e845-4929-b91c-10fcff17d863",
+							"name": "EMPTY - /votes_timeline -Get timeline of votes for a particular account",
+							"id": "debed586-a5c3-4d20-8092-efb3d4a9c952",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/votes_timeline?account=eyeke.world&start_block=105740200&end_block=105740215",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"votes_timeline"
+									],
+									"query": [
+										{
+											"key": "account",
+											"value": "eyeke.world",
+											"description": "(Required) Account to fetch"
+										},
+										{
+											"key": "start_block",
+											"value": "105740200",
+											"description": "Start block (inclusive)"
+										},
+										{
+											"key": "end_block",
+											"value": "105740215",
+											"description": "End block (inclusive)"
+										}
+									]
+								},
+								"description": "Votes Timeline"
+							},
+							"response": [
+								{
+									"id": "26c50863-cfc0-4586-80c2-35422dffb9f5",
+									"name": "empty response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/{{api_version}}/eosdac/votes_timeline?account=eyeke.world&start_block=105740200&end_block=105740215",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"{{api_version}}",
+												"eosdac",
+												"votes_timeline"
+											],
+											"query": [
+												{
+													"key": "account",
+													"value": "eyeke.world",
+													"description": "(Required) Account to fetch"
+												},
+												{
+													"key": "start_block",
+													"value": "105740200",
+													"description": "Start block (inclusive)"
+												},
+												{
+													"key": "end_block",
+													"value": "105740215",
+													"description": "End block (inclusive)"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "content-length",
+											"value": "24"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 01 Sep 2022 13:07:06 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"responseTime": null,
+									"body": "{\n    \"results\": [],\n    \"count\": 0\n}"
+								}
+							]
+						},
+						{
+							"name": "EMPTY - /my_dacs - List all DACs that this account is a member of",
+							"id": "d73ddc56-a864-4b84-a6a2-27e61e2011f8",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/my_dacs?account=token.worlds",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"my_dacs"
+									],
+									"query": [
+										{
+											"key": "account",
+											"value": "token.worlds",
+											"description": "(Required) Filter by account"
+										}
+									]
+								},
+								"description": "My DACs"
+							},
+							"response": [
+								{
+									"id": "4ca21a53-9d0f-49da-9ab0-87973015d820",
+									"name": "empty response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/{{api_version}}/eosdac/my_dacs?account=token.worlds",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"{{api_version}}",
+												"eosdac",
+												"my_dacs"
+											],
+											"query": [
+												{
+													"key": "account",
+													"value": "token.worlds",
+													"description": "(Required) Filter by account"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "content-length",
+											"value": "24"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 01 Sep 2022 13:17:14 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"responseTime": null,
+									"body": "{\n    \"results\": [],\n    \"count\": 0\n}"
+								}
+							]
+						},
+						{
+							"name": "EMPTY - /msig_proposals -Get current msig proposals",
+							"id": "2b595713-eec0-479b-997f-fcf7c02eb9fc",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/msig_proposals?status=1&limit=30&skip=0&proposer=anim est eiusmod eu nisi&proposal_name=Ut in",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"msig_proposals"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "1",
+											"description": "Filter by current status (0=cancelled, 1=open, 2=executed, 3=expired)"
+										},
+										{
+											"key": "limit",
+											"value": "30",
+											"description": "Limit result count (1-100)"
+										},
+										{
+											"key": "skip",
+											"value": "0",
+											"description": "Skip number of results"
+										},
+										{
+											"key": "proposer",
+											"value": "anim est eiusmod eu nisi",
+											"description": "Filter by proposing account"
+										},
+										{
+											"key": "proposal_name",
+											"value": "Ut in",
+											"description": "Filter by proposal name"
+										}
+									]
+								},
+								"description": "Fetch msig proposals"
+							},
+							"response": [
+								{
+									"id": "8e1b4bc8-61d5-4b0c-b564-25f6142946f7",
+									"name": "empty response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/{{api_version}}/eosdac/msig_proposals?status=1&limit=30&skip=0&proposer=anim est eiusmod eu nisi&proposal_name=Ut in",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"{{api_version}}",
+												"eosdac",
+												"msig_proposals"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "1",
+													"description": "Filter by current status (0=cancelled, 1=open, 2=executed, 3=expired)"
+												},
+												{
+													"key": "limit",
+													"value": "30",
+													"description": "Limit result count (1-100)"
+												},
+												{
+													"key": "skip",
+													"value": "0",
+													"description": "Skip number of results"
+												},
+												{
+													"key": "proposer",
+													"value": "anim est eiusmod eu nisi",
+													"description": "Filter by proposing account"
+												},
+												{
+													"key": "proposal_name",
+													"value": "Ut in",
+													"description": "Filter by proposal name"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "content-length",
+											"value": "24"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 01 Sep 2022 13:19:04 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"responseTime": null,
+									"body": "{\n    \"results\": [],\n    \"count\": 0\n}"
+								}
+							]
+						},
+						{
+							"name": "EMPTY - /dac_info - Get DAC",
+							"id": "e6081a13-7a7c-44a7-8f29-760ceca439f1",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -111,13 +459,11 @@
 										},
 										{
 											"key": "symbol_code",
-											"value": "4,EYE",
-											"type": "text"
+											"value": "4,EYE"
 										},
 										{
 											"key": "symbol_contract",
-											"value": "token.worlds",
-											"type": "text"
+											"value": "token.worlds"
 										}
 									]
 								},
@@ -125,13 +471,13 @@
 							},
 							"response": [
 								{
-									"id": "3e5d91ee-ec68-49d5-ad86-f0cacec3e140",
-									"name": "Default Response",
+									"id": "53370212-3299-43e5-88f8-d47a144f44f8",
+									"name": "empty response (by dac_id)",
 									"originalRequest": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{base_url}}/{{api_version}}/eosdac/dac_info",
+											"raw": "{{base_url}}/{{api_version}}/eosdac/dac_info?dac_id=eyeke",
 											"host": [
 												"{{base_url}}"
 											],
@@ -139,29 +485,665 @@
 												"{{api_version}}",
 												"eosdac",
 												"dac_info"
+											],
+											"query": [
+												{
+													"key": "dac_id",
+													"value": "eyeke"
+												},
+												{
+													"key": "symbol_code",
+													"value": "4,EYE",
+													"disabled": true
+												},
+												{
+													"key": "symbol_contract",
+													"value": "token.worlds",
+													"disabled": true
+												}
 											]
 										}
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "text",
+									"_postman_previewlanguage": "json",
 									"header": [
 										{
-											"key": "Content-Type",
-											"value": "text/plain"
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "content-length",
+											"value": "24"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 01 Sep 2022 13:24:45 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
 										}
 									],
 									"cookie": [],
 									"responseTime": null,
-									"body": ""
+									"body": "{\n    \"results\": [],\n    \"count\": 0\n}"
+								},
+								{
+									"id": "cc62e394-1b5a-493d-8ce0-2725bef88e07",
+									"name": "empty response (by symbol)",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/{{api_version}}/eosdac/dac_info?symbol_code=4,EYE&symbol_contract=token.worlds",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"{{api_version}}",
+												"eosdac",
+												"dac_info"
+											],
+											"query": [
+												{
+													"key": "dac_id",
+													"value": "eyeke",
+													"disabled": true
+												},
+												{
+													"key": "symbol_code",
+													"value": "4,EYE"
+												},
+												{
+													"key": "symbol_contract",
+													"value": "token.worlds"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "content-length",
+											"value": "24"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 01 Sep 2022 13:25:11 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"responseTime": null,
+									"body": "{\n    \"results\": [],\n    \"count\": 0\n}"
+								}
+							]
+						},
+						{
+							"name": "EMPTY - /member - Get info about a member, including token balances, profile and votes",
+							"id": "ce2c8a60-54eb-4832-a2eb-addd74b4ac4b",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/member?account=token.worlds",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"member"
+									],
+									"query": [
+										{
+											"key": "account",
+											"value": "token.worlds",
+											"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
+										}
+									]
+								},
+								"description": "Get member information"
+							},
+							"response": [
+								{
+									"id": "e423a6ca-9a2f-48c8-a643-3cee5045f250",
+									"name": "empty response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/{{api_version}}/eosdac/member?account=token.worlds",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"{{api_version}}",
+												"eosdac",
+												"member"
+											],
+											"query": [
+												{
+													"key": "account",
+													"value": "token.worlds",
+													"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "content-length",
+											"value": "195"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 01 Sep 2022 13:27:58 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"responseTime": null,
+									"body": "{\n    \"results\": [\n        {\n            \"account\": \"token.worlds\",\n            \"block_num\": 0,\n            \"profile\": {\n                \"description\": \"\",\n                \"email\": \"\",\n                \"familyName\": \"\",\n                \"gender\": \"\",\n                \"givenName\": \"\",\n                \"image\": \"\",\n                \"sameAs\": [],\n                \"timezone\": \"0\",\n                \"url\": \"\"\n            }\n        }\n    ],\n    \"count\": []\n}"
+								}
+							]
+						},
+						{
+							"name": "EMPTY - /referendums - Get referendums",
+							"id": "40c94a9c-3b08-4163-9a13-74f7c388dafc",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/referendums?status=46876837&limit=18747420&skip=0",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"referendums"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "46876837",
+											"description": "Status of referendum"
+										},
+										{
+											"key": "limit",
+											"value": "18747420",
+											"description": "Limit number of results"
+										},
+										{
+											"key": "skip",
+											"value": "0",
+											"description": "Skip number of results"
+										}
+									]
+								},
+								"description": "Get referendums"
+							},
+							"response": [
+								{
+									"id": "36965f4b-7331-442f-985a-0b0c2b70d5aa",
+									"name": "empty response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/{{api_version}}/eosdac/referendums?status=46876837&limit=18747420&skip=0",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"{{api_version}}",
+												"eosdac",
+												"referendums"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "46876837",
+													"description": "Status of referendum"
+												},
+												{
+													"key": "limit",
+													"value": "18747420",
+													"description": "Limit number of results"
+												},
+												{
+													"key": "skip",
+													"value": "0",
+													"description": "Skip number of results"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "content-length",
+											"value": "24"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 01 Sep 2022 13:11:07 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"responseTime": null,
+									"body": "{\n    \"results\": [],\n    \"count\": 0\n}"
+								}
+							]
+						},
+						{
+							"name": "EMPTY - /proposals_inbox - Gets a list of worker proposals which require a particular users attention",
+							"id": "6754ce54-238f-4d45-859f-f980480480ab",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/proposals_inbox?account=veniam consectetur&limit=100&skip=0",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"proposals_inbox"
+									],
+									"query": [
+										{
+											"key": "account",
+											"value": "veniam consectetur",
+											"description": "(Required) Filter by account"
+										},
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "Limit result count"
+										},
+										{
+											"key": "skip",
+											"value": "0",
+											"description": "Skip number of results"
+										}
+									]
+								},
+								"description": "Fetch worker proposals inbox"
+							},
+							"response": [
+								{
+									"id": "40099277-7ca9-4625-ac1a-adfd0431dc58",
+									"name": "success response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/{{api_version}}/eosdac/proposals_inbox?account=veniam consectetur&limit=100&skip=0",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"{{api_version}}",
+												"eosdac",
+												"proposals_inbox"
+											],
+											"query": [
+												{
+													"key": "account",
+													"value": "veniam consectetur",
+													"description": "(Required) Filter by account"
+												},
+												{
+													"key": "limit",
+													"value": "100",
+													"description": "Limit result count"
+												},
+												{
+													"key": "skip",
+													"value": "0",
+													"description": "Skip number of results"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "content-length",
+											"value": "24"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 01 Sep 2022 13:12:37 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"responseTime": null,
+									"body": "{\n    \"results\": [\n        { \n            \"dac_id\": \"eyeke\", \n            \"status\": 2, \n            \"finalize_voted\": \"eyeke.worlds\" \n        },\n        { \n            \"dac_id\": \"eyeke\", \n            \"status\": 0, \n            \"approve_voted\": \"eyeke.worlds\" \n        }\n    ],\n    \"count\": 2\n}"
+								}
+							]
+						},
+						{
+							"name": "EMPTY - tokens_owned - Get list of tokens owned by a particular account",
+							"id": "1fbeaf53-b2be-47ca-ac3b-bac46bb2f5bc",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/tokens_owned?account=ve",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"tokens_owned"
+									],
+									"query": [
+										{
+											"key": "account",
+											"value": "ve",
+											"description": "(Required) Account to fetch"
+										}
+									]
+								},
+								"description": "Tokens Owned"
+							},
+							"response": [
+								{
+									"id": "3550c396-7416-46f0-805c-2886d03f854a",
+									"name": "success response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/{{api_version}}/eosdac/tokens_owned?account=ve",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"{{api_version}}",
+												"eosdac",
+												"tokens_owned"
+											],
+											"query": [
+												{
+													"key": "account",
+													"value": "ve"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"responseTime": null,
+									"body": "{\n  \"results\": [\n    {\n      \"contract\": \"occaecat adipisicing\",\n      \"symbol\": \"enim\",\n      \"precision\": -56377012,\n      \"name\": \"dolor officia ad Excepteur\",\n      \"logo\": \"do minim incididunt officia Lorem\",\n      \"logo_lg\": \"Ut adipisicing ut\"\n    },\n    {\n      \"contract\": \"eu\",\n      \"symbol\": \"magna cillum incididunt sit\",\n      \"precision\": -59250247,\n      \"name\": \"in mollit cillum\",\n      \"logo\": \"cupidatat esse\",\n      \"logo_lg\": \"sed anim esse nulla\"\n    }\n  ],\n  \"count\": -38697721\n}"
 								}
 							]
 						}
 					],
-					"id": "c3e614c9-e01f-43e2-a969-20519fcfdb93"
+					"id": "68372631-0e01-43d6-a30f-c111c26cf665"
 				},
 				{
-					"name": "Get timeline of token balance changes",
+					"name": "/proposals - Get worker proposals",
+					"id": "c3c65341-981b-4436-87f6-b6bdeff0d76a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/eosdac/proposals?status=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"eosdac",
+								"proposals"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "0",
+									"description": "Filter by status (0,1,2). Use comma to separate multiple values"
+								},
+								{
+									"key": "arbitrator",
+									"value": "deserunt anim nostrud",
+									"description": "Filter by arbitrator",
+									"disabled": true
+								},
+								{
+									"key": "proposer",
+									"value": "proident dolor quis nisi velit",
+									"description": "Filter by proposer",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Limit result count",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Skip number of results",
+									"disabled": true
+								},
+								{
+									"key": "id",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Fetch worker proposals"
+					},
+					"response": [
+						{
+							"id": "286c5330-3e04-4bbc-95ce-a5cfac0cc374",
+							"name": "success response (by status)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/proposals?status=0",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"proposals"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "0",
+											"description": "Filter by status (0,1,2). Use comma to separate multiple values"
+										},
+										{
+											"key": "arbitrator",
+											"value": "deserunt anim nostrud",
+											"description": "Filter by arbitrator",
+											"disabled": true
+										},
+										{
+											"key": "proposer",
+											"value": "proident dolor quis nisi velit",
+											"description": "Filter by proposer",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "Limit result count",
+											"disabled": true
+										},
+										{
+											"key": "skip",
+											"value": "0",
+											"description": "Skip number of results",
+											"disabled": true
+										},
+										{
+											"key": "id",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "205"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 23 Aug 2022 11:54:17 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"results\": [\n        {\n            \"dac_id\": \"eyeke\",\n            \"status\": 0,\n            \"approve_voted\": \"dao.worlds\"\n        },\n        {\n            \"dac_id\": \"eyeke\",\n            \"status\": 0,\n            \"finalize_voted\": \"token.worlds\"\n        },\n        {\n            \"dac_id\": \"eyeke\",\n            \"status\": 0,\n            \"approve_voted\": \"token.worlds\"\n        }\n    ],\n    \"count\": 3\n}"
+						}
+					]
+				},
+				{
+					"name": "/balance_timeline  - Get timeline of token balance changes",
 					"id": "e25f5b95-c1d0-4905-a68a-a1837b8b2e59",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -175,7 +1157,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/balance_timeline?account=ve&contract=mollit v&symbol=ad&start_block=-73993191&end_block=40126782",
+							"raw": "{{base_url}}/{{api_version}}/eosdac/balance_timeline?account=federation&contract=token.worlds&symbol=NER&start_block=105377017&end_block=105377352",
 							"host": [
 								"{{base_url}}"
 							],
@@ -187,27 +1169,27 @@
 							"query": [
 								{
 									"key": "account",
-									"value": "ve",
+									"value": "federation",
 									"description": "(Required) Account to fetch"
 								},
 								{
 									"key": "contract",
-									"value": "mollit v",
+									"value": "token.worlds",
 									"description": "Contract"
 								},
 								{
 									"key": "symbol",
-									"value": "ad",
+									"value": "NER",
 									"description": "Token Symbol"
 								},
 								{
 									"key": "start_block",
-									"value": "-73993191",
+									"value": "105377017",
 									"description": "Start block (inclusive)"
 								},
 								{
 									"key": "end_block",
-									"value": "40126782",
+									"value": "105377352",
 									"description": "End block (inclusive)"
 								}
 							]
@@ -216,13 +1198,18 @@
 					},
 					"response": [
 						{
-							"id": "a9bc0a04-6ffc-420b-b37d-1060a2efaf60",
+							"id": "de39d876-a3b0-4d80-8649-7c651c0592a9",
 							"name": "success response",
 							"originalRequest": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/balance_timeline?account=ve&contract=mollit v&symbol=ad&start_block=-73993191&end_block=40126782",
+									"raw": "{{base_url}}/{{api_version}}/eosdac/balance_timeline?account=federation&contract=token.worlds&symbol=NER&start_block=105377017&end_block=105377352",
 									"host": [
 										"{{base_url}}"
 									],
@@ -234,23 +1221,28 @@
 									"query": [
 										{
 											"key": "account",
-											"value": "ve"
+											"value": "federation",
+											"description": "(Required) Account to fetch"
 										},
 										{
 											"key": "contract",
-											"value": "mollit v"
+											"value": "token.worlds",
+											"description": "Contract"
 										},
 										{
 											"key": "symbol",
-											"value": "ad"
+											"value": "NER",
+											"description": "Token Symbol"
 										},
 										{
 											"key": "start_block",
-											"value": "-73993191"
+											"value": "105377017",
+											"description": "Start block (inclusive)"
 										},
 										{
 											"key": "end_block",
-											"value": "40126782"
+											"value": "105377352",
+											"description": "End block (inclusive)"
 										}
 									]
 								}
@@ -260,18 +1252,38 @@
 							"_postman_previewlanguage": "json",
 							"header": [
 								{
-									"key": "Content-Type",
-									"value": "application/json"
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "415"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Aug 2022 14:59:02 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
 								}
 							],
 							"cookie": [],
 							"responseTime": null,
-							"body": "{\n  \"results\": [\n    {\n      \"block_num\": \"nisi ea\",\n      \"balance\": \"ad esse\"\n    },\n    {\n      \"block_num\": \"ad nisi\",\n      \"balance\": \"eu nostrud laborum dolor\"\n    }\n  ],\n  \"count\": 70248674\n}"
+							"body": "{\n    \"results\": [\n        {\n            \"block_num\": \"105377063\",\n            \"balance\": \"0.0000 NER\"\n        },\n        {\n            \"block_num\": \"105377114\",\n            \"balance\": \"0.0000 NER\"\n        },\n        {\n            \"block_num\": \"105377126\",\n            \"balance\": \"0.0000 NER\"\n        },\n        {\n            \"block_num\": \"105377158\",\n            \"balance\": \"0.0000 NER\"\n        },\n        {\n            \"block_num\": \"105377175\",\n            \"balance\": \"0.0000 NER\"\n        },\n        {\n            \"block_num\": \"105377323\",\n            \"balance\": \"0.0000 NER\"\n        },\n        {\n            \"block_num\": \"105377352\",\n            \"balance\": \"0.0000 NER\"\n        },\n        {\n            \"block_num\": \"199959920\",\n            \"balance\": \"0.0000 NER\"\n        }\n    ],\n    \"count\": 8\n}"
 						}
 					]
 				},
 				{
-					"name": "Get current DAC candidates",
+					"name": "/candidates - Get current DAC candidates",
 					"id": "a7716339-0a11-4479-ba4c-f57590df042c",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -311,13 +1323,18 @@
 					},
 					"response": [
 						{
-							"id": "16c10d08-b94b-4a23-8854-92a87c047086",
+							"id": "a1833a4c-ad7f-42c2-b9d4-72657eb25c89",
 							"name": "success response",
 							"originalRequest": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/candidates?limit=-48760170&skip=96982703",
+									"raw": "{{base_url}}/{{api_version}}/eosdac/candidates?limit=100&skip=0",
 									"host": [
 										"{{base_url}}"
 									],
@@ -329,11 +1346,13 @@
 									"query": [
 										{
 											"key": "limit",
-											"value": "-48760170"
+											"value": "100",
+											"description": "Limit result count"
 										},
 										{
 											"key": "skip",
-											"value": "96982703"
+											"value": "0",
+											"description": "Skip number of results"
 										}
 									]
 								}
@@ -343,271 +1362,38 @@
 							"_postman_previewlanguage": "json",
 							"header": [
 								{
-									"key": "Content-Type",
-									"value": "application/json"
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "2881"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 01 Sep 2022 13:18:16 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
 								}
 							],
 							"cookie": [],
 							"responseTime": null,
-							"body": "{\n  \"results\": [\n    {\n      \"candidate_name\": \"pariatur laborum\",\n      \"profile\": {\n        \"givenName\": \"dolor sed aute\",\n        \"familyName\": \"pariatur voluptate dolor ad\",\n        \"image\": \"veniam elit consequat nisi\",\n        \"description\": \"veniam nisi aliqua occaecat\"\n      },\n      \"custodian_end_time_stamp\": \"nostrud Lorem\",\n      \"is_active\": true,\n      \"is_custodian\": true,\n      \"locked_tokens\": \"reprehenderi\",\n      \"requestedpay\": \"minim velit ea amet in\",\n      \"total_votes\": -81365520\n    },\n    {\n      \"candidate_name\": \"velit deserunt qui\",\n      \"profile\": {\n        \"givenName\": \"veniam offici\",\n        \"familyName\": \"dolor sed\",\n        \"image\": \"ad tempor culpa\",\n        \"description\": \"laborum\"\n      },\n      \"custodian_end_time_stamp\": \"fugiat cupidatat consectetur nisi aliquip\",\n      \"is_active\": false,\n      \"is_custodian\": false,\n      \"locked_tokens\": \"velit sint\",\n      \"requestedpay\": \"fugiat\",\n      \"total_votes\": 28100470\n    }\n  ],\n  \"count\": -82803320\n}"
+							"body": "{\n    \"results\": [\n        {\n            \"candidate_name\": \"x4iqw.wam\",\n            \"profile\": {\n                \"givenName\": \"\",\n                \"familyName\": \"\",\n                \"image\": \"\",\n                \"description\": \"\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        },\n        {\n            \"candidate_name\": \"suzqu.wam\",\n            \"profile\": {\n                \"givenName\": \"Squanchy\",\n                \"familyName\": \"Squanch\",\n                \"image\": \"https://vignette1.wikia.nocookie.net/rickandmorty/images/5/56/S2e10_squanchy_close.png/revision/latest?cb=20160923052032\",\n                \"description\": \"I am squanching in here\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        },\n        {\n            \"candidate_name\": \"neyau.wam\",\n            \"profile\": {\n                \"givenName\": \"\",\n                \"familyName\": \"\",\n                \"image\": \"\",\n                \"description\": \"\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        },\n        {\n            \"candidate_name\": \"mgaqy.wam\",\n            \"profile\": {\n                \"givenName\": \"\",\n                \"familyName\": \"\",\n                \"image\": \"\",\n                \"description\": \"\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        },\n        {\n            \"candidate_name\": \"jdtqy.wam\",\n            \"profile\": {\n                \"givenName\": \"\",\n                \"familyName\": \"\",\n                \"image\": \"\",\n                \"description\": \"\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        },\n        {\n            \"candidate_name\": \"hweaq.wam\",\n            \"profile\": {\n                \"givenName\": \"\",\n                \"familyName\": \"\",\n                \"image\": \"\",\n                \"description\": \"\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        },\n        {\n            \"candidate_name\": \"hcmqw.wam\",\n            \"profile\": {\n                \"givenName\": \"\",\n                \"familyName\": \"\",\n                \"image\": \"\",\n                \"description\": \"\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        },\n        {\n            \"candidate_name\": \"gsoaw.wam\",\n            \"profile\": {\n                \"givenName\": \"\",\n                \"familyName\": \"\",\n                \"image\": \"\",\n                \"description\": \"\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        },\n        {\n            \"candidate_name\": \"fineartvault\",\n            \"profile\": {\n                \"givenName\": \"\",\n                \"familyName\": \"\",\n                \"image\": \"\",\n                \"description\": \"\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        },\n        {\n            \"candidate_name\": \"anyo.cabal\",\n            \"profile\": {\n                \"givenName\": \"\",\n                \"familyName\": \"\",\n                \"image\": \"\",\n                \"description\": \"\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        },\n        {\n            \"candidate_name\": \"51mqs.wam\",\n            \"profile\": {\n                \"givenName\": \"\",\n                \"familyName\": \"\",\n                \"image\": \"\",\n                \"description\": \"\"\n            },\n            \"custodian_end_time_stamp\": null,\n            \"is_active\": true,\n            \"is_custodian\": false,\n            \"locked_tokens\": \"0.0000 NER\",\n            \"requestedpay\": \"0.0000 TLM\",\n            \"total_votes\": 0\n        }\n    ],\n    \"count\": 11\n}"
 						}
 					]
 				},
 				{
-					"name": "500 - Get current DAC config",
-					"id": "67cbf5e3-f51b-4244-b26d-292fad31fc1b",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/dac_config",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"{{api_version}}",
-								"eosdac",
-								"dac_config"
-							]
-						},
-						"description": "Fetch DAC config"
-					},
-					"response": [
-						{
-							"id": "e2d97a8e-d977-4582-a3ee-0c4fe91dadd9",
-							"name": "success response",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/dac_config",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"{{api_version}}",
-										"eosdac",
-										"dac_config"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"responseTime": null,
-							"body": "{\n  \"auth_threshold_high\": 75154787,\n  \"auth_threshold_med\": 48011938,\n  \"auth_threshold_low\": 995003,\n  \"authaccount\": \"ea mollit\",\n  \"initial_vote_quorum_percent\": -83410349,\n  \"lockup_release_time_delay\": -92853062,\n  \"lockupasset\": \"minim quis voluptate tempor\",\n  \"maxvotes\": 43647485,\n  \"numelected\": 95109651,\n  \"periodlength\": 65006302,\n  \"requested_pay_max\": \"aute id officia incididunt\",\n  \"serviceprovider\": \"sit fugiat\",\n  \"should_pay_via_service_provider\": false,\n  \"tokenholder\": \"voluptate esse in\",\n  \"vote_quorum_percent\": 57191969,\n  \"accounts\": [\n    {\n      \"name\": \"consequat nostrud eu ut\",\n      \"type\": -62182890\n    },\n    {\n      \"name\": \"occaecat ad deserunt in\",\n      \"type\": 77526707\n    }\n  ],\n  \"symbol\": \"dolore sed\"\n}"
-						}
-					]
-				},
-				{
-					"name": "FAILS - Given a start and end date (and optional account), will return opening and closing balances as well as income and expenditure",
-					"id": "2a957e5f-ca80-47f7-a686-82bd786eca5a",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/financial_reports?account=token.worlds&start=1600176000000&end=1660176000000",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"{{api_version}}",
-								"eosdac",
-								"financial_reports"
-							],
-							"query": [
-								{
-									"key": "account",
-									"value": "token.worlds",
-									"description": "Account to fetch"
-								},
-								{
-									"key": "start",
-									"value": "1600176000000",
-									"description": "(Required) Start Date"
-								},
-								{
-									"key": "end",
-									"value": "1660176000000",
-									"description": "(Required) End Date"
-								}
-							]
-						},
-						"description": "Financial Reports"
-					},
-					"response": [
-						{
-							"id": "b806e105-f59a-45bc-97c5-b2e18cb3fe9f",
-							"name": "Default Response",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/financial_reports?account=ve&start=9397674&end=80543471",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"{{api_version}}",
-										"eosdac",
-										"financial_reports"
-									],
-									"query": [
-										{
-											"key": "account",
-											"value": "ve"
-										},
-										{
-											"key": "start",
-											"value": "9397674"
-										},
-										{
-											"key": "end",
-											"value": "80543471"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"responseTime": null,
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "200 (empty) - Get current msig proposals",
-					"id": "2b595713-eec0-479b-997f-fcf7c02eb9fc",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/msig_proposals?status=1&limit=30&skip=0&proposer=anim est eiusmod eu nisi&proposal_name=Ut in",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"{{api_version}}",
-								"eosdac",
-								"msig_proposals"
-							],
-							"query": [
-								{
-									"key": "status",
-									"value": "1",
-									"description": "Filter by current status (0=cancelled, 1=open, 2=executed, 3=expired)"
-								},
-								{
-									"key": "limit",
-									"value": "30",
-									"description": "Limit result count (1-100)"
-								},
-								{
-									"key": "skip",
-									"value": "0",
-									"description": "Skip number of results"
-								},
-								{
-									"key": "proposer",
-									"value": "anim est eiusmod eu nisi",
-									"description": "Filter by proposing account"
-								},
-								{
-									"key": "proposal_name",
-									"value": "Ut in",
-									"description": "Filter by proposal name"
-								}
-							]
-						},
-						"description": "Fetch msig proposals"
-					},
-					"response": [
-						{
-							"id": "e97a7734-de5c-41a9-b748-691b2680beb5",
-							"name": "Default Response",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/msig_proposals?status=1&limit=30&skip=96982703&proposer=anim est eiusmod eu nisi&proposal_name=Ut in",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"{{api_version}}",
-										"eosdac",
-										"msig_proposals"
-									],
-									"query": [
-										{
-											"key": "status",
-											"value": "1"
-										},
-										{
-											"key": "limit",
-											"value": "30"
-										},
-										{
-											"key": "skip",
-											"value": "96982703"
-										},
-										{
-											"key": "proposer",
-											"value": "anim est eiusmod eu nisi"
-										},
-										{
-											"key": "proposal_name",
-											"value": "Ut in"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"responseTime": null,
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "200 (empty) - Get member profile",
+					"name": "/:dacId/profile - Get member profile",
 					"id": "5a4848b7-6538-40ea-919d-ca9af84e873e",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -621,21 +1407,27 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/eyeke/profile?account=eyeke.world",
+							"raw": "{{base_url}}/{{api_version}}/eosdac/:dacId/profile?account=suzqu.wam",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"{{api_version}}",
 								"eosdac",
-								"eyeke",
+								":dacId",
 								"profile"
 							],
 							"query": [
 								{
 									"key": "account",
-									"value": "eyeke.world",
+									"value": "suzqu.wam",
 									"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
+								}
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "nerix"
 								}
 							]
 						},
@@ -643,8 +1435,72 @@
 					},
 					"response": [
 						{
+							"id": "6d429ff0-092b-4b4e-8ec5-9445ebc89cf9",
+							"name": "success response (single account)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/nerix/profile?account=suzqu.wam",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"nerix",
+										"profile"
+									],
+									"query": [
+										{
+											"key": "account",
+											"value": "suzqu.wam",
+											"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "314"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Aug 2022 16:26:01 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"results\": [\n        {\n            \"account\": \"suzqu.wam\",\n            \"block_num\": 105578904,\n            \"member_type\": 0,\n            \"profile\": {\n                \"description\": \"I am squanching in here\",\n                \"familyName\": \"Squanch\",\n                \"givenName\": \"Squanchy\",\n                \"image\": \"https://vignette1.wikia.nocookie.net/rickandmorty/images/5/56/S2e10_squanchy_close.png/revision/latest?cb=20160923052032\"\n            }\n        }\n    ],\n    \"count\": 1\n}"
+						},
+						{
 							"id": "7d5c58c0-f5e7-4b0b-b7f1-45f372d7384d",
-							"name": "success response",
+							"name": "success response (multiple accounts)",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
@@ -690,181 +1546,7 @@
 					]
 				},
 				{
-					"name": "200 (empty) - Get current worker proposals",
-					"id": "c3c65341-981b-4436-87f6-b6bdeff0d76a",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/proposals?status=pariatur labore nostrud Excepteur&arbitrator=deserunt anim nostrud&proposer=proident dolor quis nisi velit&limit=100&skip=0",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"{{api_version}}",
-								"eosdac",
-								"proposals"
-							],
-							"query": [
-								{
-									"key": "status",
-									"value": "pariatur labore nostrud Excepteur",
-									"description": "Filter by status, for multiple separate with a comma"
-								},
-								{
-									"key": "arbitrator",
-									"value": "deserunt anim nostrud",
-									"description": "Filter by arbitrator"
-								},
-								{
-									"key": "proposer",
-									"value": "proident dolor quis nisi velit",
-									"description": "Filter by proposer"
-								},
-								{
-									"key": "limit",
-									"value": "100",
-									"description": "Limit result count"
-								},
-								{
-									"key": "skip",
-									"value": "0",
-									"description": "Skip number of results"
-								}
-							]
-						},
-						"description": "Fetch worker proposals"
-					},
-					"response": [
-						{
-							"id": "d27b2c4e-9f11-4baf-ae76-5b884fa740c0",
-							"name": "Default Response",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/proposals?status=pariatur labore nostrud Excepteur&arbitrator=deserunt anim nostrud&proposer=proident dolor quis nisi velit&limit=-48760170&skip=96982703",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"{{api_version}}",
-										"eosdac",
-										"proposals"
-									],
-									"query": [
-										{
-											"key": "status",
-											"value": "pariatur labore nostrud Excepteur"
-										},
-										{
-											"key": "arbitrator",
-											"value": "deserunt anim nostrud"
-										},
-										{
-											"key": "proposer",
-											"value": "proident dolor quis nisi velit"
-										},
-										{
-											"key": "limit",
-											"value": "-48760170"
-										},
-										{
-											"key": "skip",
-											"value": "96982703"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"responseTime": null,
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "200 (empty) - Get info about a member, including token balances, profile and votes",
-					"id": "ce2c8a60-54eb-4832-a2eb-addd74b4ac4b",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/member?account=token.worlds",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"{{api_version}}",
-								"eosdac",
-								"member"
-							],
-							"query": [
-								{
-									"key": "account",
-									"value": "token.worlds",
-									"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
-								}
-							]
-						},
-						"description": "Get member information"
-					},
-					"response": [
-						{
-							"id": "f962df4e-7450-4f12-8e2c-2389044a89e9",
-							"name": "Default Response",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/member?account=elit Duis",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"{{api_version}}",
-										"eosdac",
-										"member"
-									],
-									"query": [
-										{
-											"key": "account",
-											"value": "elit Duis"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"responseTime": null,
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "Get count of members and the agree terms version",
+					"name": "/member_counts - Get count of members and the agree terms version",
 					"id": "2adcc472-69db-4c8d-bcff-72ca35fb4ef3",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -894,8 +1576,8 @@
 					},
 					"response": [
 						{
-							"id": "72e02feb-93a1-4423-a517-e1409504dbc7",
-							"name": "Default Response",
+							"id": "276cd431-b459-476a-b90d-ababcb4a8bdb",
+							"name": "success response",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
@@ -912,28 +1594,49 @@
 									"query": [
 										{
 											"key": "end_block",
-											"value": "40126782"
+											"value": "40126782",
+											"description": "End block (inclusive)"
 										}
 									]
 								}
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": "text",
+							"_postman_previewlanguage": "json",
 							"header": [
 								{
-									"key": "Content-Type",
-									"value": "text/plain"
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "38"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 19 Aug 2022 12:44:06 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
 								}
 							],
 							"cookie": [],
 							"responseTime": null,
-							"body": ""
+							"body": "{\n    \"results\": {\n        \"total\": 20,\n        \"terms_v1\": 20\n    }\n}"
 						}
 					]
 				},
 				{
-					"name": "200 (empty) - Get snapshot of DAC members at a specific block",
+					"name": "/member_snapshot - Get snapshot of DAC members at a specific block",
 					"id": "f5c7d036-a721-4316-9edb-e9eac79d9617",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -947,7 +1650,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/member_snapshot?contract=token.worlds&symbol=4,EYE&block_num=105680200",
+							"raw": "{{base_url}}/{{api_version}}/eosdac/member_snapshot?contract=token.worlds&symbol=4,TESTA",
 							"host": [
 								"{{base_url}}"
 							],
@@ -964,13 +1667,14 @@
 								},
 								{
 									"key": "symbol",
-									"value": "4,EYE",
+									"value": "4,TESTA",
 									"description": "Token Symbol"
 								},
 								{
 									"key": "block_num",
-									"value": "105680200",
-									"description": "Block number (optional) - default: head"
+									"value": "105578904",
+									"description": "Block number (optional) - default: head",
+									"disabled": true
 								}
 							]
 						},
@@ -978,8 +1682,81 @@
 					},
 					"response": [
 						{
+							"id": "6bad2bc3-cd5f-4f92-ba2d-93b48c684f33",
+							"name": "success response (single)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/member_snapshot?contract=token.worlds&symbol=4,TESTA&block_num=105578904",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"member_snapshot"
+									],
+									"query": [
+										{
+											"key": "contract",
+											"value": "token.worlds",
+											"description": "Token Contract"
+										},
+										{
+											"key": "symbol",
+											"value": "4,TESTA",
+											"description": "Token Symbol"
+										},
+										{
+											"key": "block_num",
+											"value": "105578904",
+											"description": "Block number (optional) - default: head"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "122"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Aug 2022 15:23:05 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"results\": [\n        {\n            \"account\": \"suzqu.wam\",\n            \"balance\": [\n                \"0.0000\",\n                \"4,TESTA\"\n            ],\n            \"terms\": 1,\n            \"zero_balance\": true,\n            \"voter\": false\n        }\n    ],\n    \"count\": 1\n}"
+						},
+						{
 							"id": "c1b8d81e-4c36-4c48-a0cf-760171804a52",
-							"name": "success response",
+							"name": "success response (multiple)",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
@@ -1025,76 +1802,7 @@
 					]
 				},
 				{
-					"name": "200 (empty) - List all DACs that this account is a member of",
-					"id": "d73ddc56-a864-4b84-a6a2-27e61e2011f8",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/my_dacs?account=token.worlds",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"{{api_version}}",
-								"eosdac",
-								"my_dacs"
-							],
-							"query": [
-								{
-									"key": "account",
-									"value": "token.worlds",
-									"description": "(Required) Filter by account"
-								}
-							]
-						},
-						"description": "My DACs"
-					},
-					"response": [
-						{
-							"id": "61558f46-3813-4630-acdd-54fca778d6b3",
-							"name": "Default Response",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/my_dacs?account=veniam consectetur",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"{{api_version}}",
-										"eosdac",
-										"my_dacs"
-									],
-									"query": [
-										{
-											"key": "account",
-											"value": "veniam consectetur"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"responseTime": null,
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "Gets counts for all proposals, grouped by status",
+					"name": "/proposals_counts - Gets counts for all proposals, grouped by status",
 					"id": "5b88daf4-cf3e-45f5-8e5f-7a986617846b",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -1103,7 +1811,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/proposals_counts?account=token.worlds",
+							"raw": "{{base_url}}/{{api_version}}/eosdac/proposals_counts?account=dao.worlds",
 							"host": [
 								"{{base_url}}"
 							],
@@ -1115,7 +1823,7 @@
 							"query": [
 								{
 									"key": "account",
-									"value": "token.worlds",
+									"value": "dao.worlds",
 									"description": "Filter by account"
 								}
 							]
@@ -1124,13 +1832,13 @@
 					},
 					"response": [
 						{
-							"id": "6bc2543f-a8f8-48de-b119-5500b47e0482",
-							"name": "Default Response",
+							"id": "089f0d1a-5cb0-4e80-9d33-a18e07c4d61f",
+							"name": "success response",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/proposals_counts?account=veniam consectetur",
+									"raw": "{{base_url}}/{{api_version}}/eosdac/proposals_counts?account=dao.worlds",
 									"host": [
 										"{{base_url}}"
 									],
@@ -1142,202 +1850,49 @@
 									"query": [
 										{
 											"key": "account",
-											"value": "veniam consectetur"
+											"value": "dao.worlds",
+											"description": "Filter by account"
 										}
 									]
 								}
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": "text",
+							"_postman_previewlanguage": "json",
 							"header": [
 								{
-									"key": "Content-Type",
-									"value": "text/plain"
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "11"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 01 Sep 2022 13:16:46 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
 								}
 							],
 							"cookie": [],
 							"responseTime": null,
-							"body": ""
+							"body": "{\n    \"inbox\": 0\n}"
 						}
 					]
 				},
 				{
-					"name": "200 (empty) - Gets a list of worker proposals which require a particular users attention",
-					"id": "6754ce54-238f-4d45-859f-f980480480ab",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/proposals_inbox?account=veniam consectetur&limit=-48760170&skip=96982703",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"{{api_version}}",
-								"eosdac",
-								"proposals_inbox"
-							],
-							"query": [
-								{
-									"key": "account",
-									"value": "veniam consectetur",
-									"description": "(Required) Filter by account"
-								},
-								{
-									"key": "limit",
-									"value": "-48760170",
-									"description": "Limit result count"
-								},
-								{
-									"key": "skip",
-									"value": "96982703",
-									"description": "Skip number of results"
-								}
-							]
-						},
-						"description": "Fetch worker proposals inbox"
-					},
-					"response": [
-						{
-							"id": "df9ab606-5974-4a29-b8ad-ecfa18653c6d",
-							"name": "Default Response",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/proposals_inbox?account=veniam consectetur&limit=-48760170&skip=96982703",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"{{api_version}}",
-										"eosdac",
-										"proposals_inbox"
-									],
-									"query": [
-										{
-											"key": "account",
-											"value": "veniam consectetur"
-										},
-										{
-											"key": "limit",
-											"value": "-48760170"
-										},
-										{
-											"key": "skip",
-											"value": "96982703"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"responseTime": null,
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "200 (empty) - Get referendums",
-					"id": "40c94a9c-3b08-4163-9a13-74f7c388dafc",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/referendums?status=46876837&limit=18747420&skip=0",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"{{api_version}}",
-								"eosdac",
-								"referendums"
-							],
-							"query": [
-								{
-									"key": "status",
-									"value": "46876837",
-									"description": "Status of referendum"
-								},
-								{
-									"key": "limit",
-									"value": "18747420",
-									"description": "Limit number of results"
-								},
-								{
-									"key": "skip",
-									"value": "0",
-									"description": "Skip number of results"
-								}
-							]
-						},
-						"description": "Get referendums"
-					},
-					"response": [
-						{
-							"id": "b728db00-d888-4f95-9cab-6599bd21071a",
-							"name": "Default Response",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/referendums?status=46876837&limit=18747420&skip=96982703",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"{{api_version}}",
-										"eosdac",
-										"referendums"
-									],
-									"query": [
-										{
-											"key": "status",
-											"value": "46876837"
-										},
-										{
-											"key": "limit",
-											"value": "18747420"
-										},
-										{
-											"key": "skip",
-											"value": "96982703"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"responseTime": null,
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "Get current state variables",
+					"name": "/state - Get current state variables",
 					"id": "d5733598-d89c-4007-b2b0-300e4b109dc0",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -1413,8 +1968,104 @@
 					]
 				},
 				{
-					"name": "200 (empty) - Get list of tokens owned by a particular account",
-					"id": "1fbeaf53-b2be-47ca-ac3b-bac46bb2f5bc",
+					"name": "/transfers - Transfers for the token of the current DAC",
+					"id": "6da6132a-176c-43c2-8bc5-d85f33b44fc3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/eosdac/transfers?skip=0&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"eosdac",
+								"transfers"
+							],
+							"query": [
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Transfers"
+					},
+					"response": [
+						{
+							"id": "51499462-d4d3-424f-9e20-ae078d6e8bbe",
+							"name": "success response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/transfers?skip=0&limit=10",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"transfers"
+									],
+									"query": [
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "3777"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Aug 2022 10:15:10 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"results\": [\n        {\n            \"block_num\": 107231882,\n            \"block_timestamp\": \"2021-03-06T18:08:04.000Z\",\n            \"trx_id\": \"83E176C68D2644833C3F7B98D949E170C4D386BAA6DA9AAE786E0CA4B3C49CE2\",\n            \"action\": {\n                \"account\": \"token.worlds\",\n                \"name\": \"transfer\",\n                \"authorization\": null,\n                \"data\": {\n                    \"from\": \"federation\",\n                    \"to\": \"fzyr.wam\",\n                    \"quantity\": \"14.0249 NER\",\n                    \"memo\": \"Voting tokens for stake\"\n                }\n            },\n            \"recv_sequence\": 266869,\n            \"global_sequence\": 1354529117\n        },\n        {\n            \"block_num\": 107231808,\n            \"block_timestamp\": \"2021-03-06T18:07:27.000Z\",\n            \"trx_id\": \"72605078F5BA2BF0E1756A86C39701CA9346BF754BDFB2E64848A6F43DC5BAE4\",\n            \"action\": {\n                \"account\": \"token.worlds\",\n                \"name\": \"transfer\",\n                \"authorization\": null,\n                \"data\": {\n                    \"from\": \"federation\",\n                    \"to\": \"rqtb.wam\",\n                    \"quantity\": \"2.0000 NER\",\n                    \"memo\": \"Voting tokens for stake\"\n                }\n            },\n            \"recv_sequence\": 266867,\n            \"global_sequence\": 1354521811\n        },\n        {\n            \"block_num\": 107231544,\n            \"block_timestamp\": \"2021-03-06T18:05:15.000Z\",\n            \"trx_id\": \"3FBA272B6F707323795CFB543F978413FA7470B5AF4FF37DD4068FE2B08EB4BB\",\n            \"action\": {\n                \"account\": \"token.worlds\",\n                \"name\": \"transfer\",\n                \"authorization\": null,\n                \"data\": {\n                    \"from\": \"federation\",\n                    \"to\": \"aa4qy.wam\",\n                    \"quantity\": \"1.1304 NER\",\n                    \"memo\": \"Voting tokens for stake\"\n                }\n            },\n            \"recv_sequence\": 266861,\n            \"global_sequence\": 1354494654\n        },\n        {\n            \"block_num\": 107231538,\n            \"block_timestamp\": \"2021-03-06T18:05:12.000Z\",\n            \"trx_id\": \"9656A5E4CFDC23E3FB872A90A0574ED674115CB3911FC5B1D69616B92F725D88\",\n            \"action\": {\n                \"account\": \"token.worlds\",\n                \"name\": \"transfer\",\n                \"authorization\": null,\n                \"data\": {\n                    \"from\": \"federation\",\n                    \"to\": \"ot.r2.wam\",\n                    \"quantity\": \"2.5937 NER\",\n                    \"memo\": \"Voting tokens for stake\"\n                }\n            },\n            \"recv_sequence\": 266859,\n            \"global_sequence\": 1354494035\n        },\n        {\n            \"block_num\": 107231533,\n            \"block_timestamp\": \"2021-03-06T18:05:10.000Z\",\n            \"trx_id\": \"73CF083E4B57CB64895983BA4D917FA0E74C36D59D227D43CBD753539F229AD3\",\n            \"action\": {\n                \"account\": \"token.worlds\",\n                \"name\": \"transfer\",\n                \"authorization\": null,\n                \"data\": {\n                    \"from\": \"federation\",\n                    \"to\": \"3wob2.wam\",\n                    \"quantity\": \"4.8602 NER\",\n                    \"memo\": \"Voting tokens for stake\"\n                }\n            },\n            \"recv_sequence\": 266855,\n            \"global_sequence\": 1354493416\n        },\n        {\n            \"block_num\": 107231532,\n            \"block_timestamp\": \"2021-03-06T18:05:09.000Z\",\n            \"trx_id\": \"005975DB0E64807F98F4BF03E1C8F6107428829CFB79F3165FBA0FFF2304F086\",\n            \"action\": {\n                \"account\": \"token.worlds\",\n                \"name\": \"transfer\",\n                \"authorization\": null,\n                \"data\": {\n                    \"from\": \"federation\",\n                    \"to\": \"4orb2.wam\",\n                    \"quantity\": \"1.1617 NER\",\n                    \"memo\": \"Voting tokens for stake\"\n                }\n            },\n            \"recv_sequence\": 266851,\n            \"global_sequence\": 1354493333\n        },\n        {\n            \"block_num\": 107231531,\n            \"block_timestamp\": \"2021-03-06T18:05:09.000Z\",\n            \"trx_id\": \"0E4CC47E8DDA8AC4D7DF3A8F3553D7162C12DBF3A83C99DC0B5F26C61F8897FA\",\n            \"action\": {\n                \"account\": \"token.worlds\",\n                \"name\": \"transfer\",\n                \"authorization\": null,\n                \"data\": {\n                    \"from\": \"federation\",\n                    \"to\": \"botb2.wam\",\n                    \"quantity\": \"0.9334 NER\",\n                    \"memo\": \"Voting tokens for stake\"\n                }\n            },\n            \"recv_sequence\": 266849,\n            \"global_sequence\": 1354493290\n        },\n        {\n            \"block_num\": 107231518,\n            \"block_timestamp\": \"2021-03-06T18:05:02.000Z\",\n            \"trx_id\": \"398B1C3C4DEC58843E348C5FE49B5491D11D5BA1BC1B7C0F3B3AE66805C219EE\",\n            \"action\": {\n                \"account\": \"token.worlds\",\n                \"name\": \"transfer\",\n                \"authorization\": null,\n                \"data\": {\n                    \"from\": \"federation\",\n                    \"to\": \"ng4r2.wam\",\n                    \"quantity\": \"0.8966 NER\",\n                    \"memo\": \"Voting tokens for stake\"\n                }\n            },\n            \"recv_sequence\": 266847,\n            \"global_sequence\": 1354491588\n        },\n        {\n            \"block_num\": 107231288,\n            \"block_timestamp\": \"2021-03-06T18:03:07.000Z\",\n            \"trx_id\": \"2EB0E67EDA2087C5F729971490F709BCD42D5D4CB92498E7A9F9F0E3DD14FE4F\",\n            \"action\": {\n                \"account\": \"token.worlds\",\n                \"name\": \"transfer\",\n                \"authorization\": null,\n                \"data\": {\n                    \"from\": \"federation\",\n                    \"to\": \"r53b2.wam\",\n                    \"quantity\": \"3.1919 NER\",\n                    \"memo\": \"Voting tokens for stake\"\n                }\n            },\n            \"recv_sequence\": 266841,\n            \"global_sequence\": 1354463879\n        },\n        {\n            \"block_num\": 107230989,\n            \"block_timestamp\": \"2021-03-06T18:00:38.000Z\",\n            \"trx_id\": \"4C831E5E8B283D5575C0476FC4EEA9E8FEA9E69DEB701B7CC0ACFA03106E1EAC\",\n            \"action\": {\n                \"account\": \"token.worlds\",\n                \"name\": \"transfer\",\n                \"authorization\": null,\n                \"data\": {\n                    \"from\": \"federation\",\n                    \"to\": \".54qw.wam\",\n                    \"quantity\": \"17.0000 NER\",\n                    \"memo\": \"Voting tokens for stake\"\n                }\n            },\n            \"recv_sequence\": 266839,\n            \"global_sequence\": 1354419425\n        }\n    ],\n    \"count\": 13981\n}"
+						}
+					]
+				},
+				{
+					"name": "500 - /dac_config - Get current DAC config",
+					"id": "67cbf5e3-f51b-4244-b26d-292fad31fc1b",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1427,47 +2078,34 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/tokens_owned?account=ve",
+							"raw": "{{base_url}}/{{api_version}}/eosdac/dac_config",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"{{api_version}}",
 								"eosdac",
-								"tokens_owned"
-							],
-							"query": [
-								{
-									"key": "account",
-									"value": "ve",
-									"description": "(Required) Account to fetch"
-								}
+								"dac_config"
 							]
 						},
-						"description": "Tokens Owned"
+						"description": "Fetch DAC config"
 					},
 					"response": [
 						{
-							"id": "3550c396-7416-46f0-805c-2886d03f854a",
+							"id": "e2d97a8e-d977-4582-a3ee-0c4fe91dadd9",
 							"name": "success response",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/tokens_owned?account=ve",
+									"raw": "{{base_url}}/{{api_version}}/eosdac/dac_config",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
 										"eosdac",
-										"tokens_owned"
-									],
-									"query": [
-										{
-											"key": "account",
-											"value": "ve"
-										}
+										"dac_config"
 									]
 								}
 							},
@@ -1482,13 +2120,13 @@
 							],
 							"cookie": [],
 							"responseTime": null,
-							"body": "{\n  \"results\": [\n    {\n      \"contract\": \"occaecat adipisicing\",\n      \"symbol\": \"enim\",\n      \"precision\": -56377012,\n      \"name\": \"dolor officia ad Excepteur\",\n      \"logo\": \"do minim incididunt officia Lorem\",\n      \"logo_lg\": \"Ut adipisicing ut\"\n    },\n    {\n      \"contract\": \"eu\",\n      \"symbol\": \"magna cillum incididunt sit\",\n      \"precision\": -59250247,\n      \"name\": \"in mollit cillum\",\n      \"logo\": \"cupidatat esse\",\n      \"logo_lg\": \"sed anim esse nulla\"\n    }\n  ],\n  \"count\": -38697721\n}"
+							"body": "{\n  \"auth_threshold_high\": 75154787,\n  \"auth_threshold_med\": 48011938,\n  \"auth_threshold_low\": 995003,\n  \"authaccount\": \"ea mollit\",\n  \"initial_vote_quorum_percent\": -83410349,\n  \"lockup_release_time_delay\": -92853062,\n  \"lockupasset\": \"minim quis voluptate tempor\",\n  \"maxvotes\": 43647485,\n  \"numelected\": 95109651,\n  \"periodlength\": 65006302,\n  \"requested_pay_max\": \"aute id officia incididunt\",\n  \"serviceprovider\": \"sit fugiat\",\n  \"should_pay_via_service_provider\": false,\n  \"tokenholder\": \"voluptate esse in\",\n  \"vote_quorum_percent\": 57191969,\n  \"accounts\": [\n    {\n      \"name\": \"consequat nostrud eu ut\",\n      \"type\": -62182890\n    },\n    {\n      \"name\": \"occaecat ad deserunt in\",\n      \"type\": 77526707\n    }\n  ],\n  \"symbol\": \"dolore sed\"\n}"
 						}
 					]
 				},
 				{
-					"name": "FAILS - Transfers for the token of the current DAC",
-					"id": "6da6132a-176c-43c2-8bc5-d85f33b44fc3",
+					"name": "FAILS - /financial_reports - Given a start and end date (and optional account), will return opening and closing balances as well as income and expenditure",
+					"id": "2a957e5f-ca80-47f7-a686-82bd786eca5a",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1496,189 +2134,64 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/transfers",
+							"raw": "{{base_url}}/{{api_version}}/eosdac/financial_reports?account=token.worlds&start=1600176000000&end=1660176000000",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"{{api_version}}",
 								"eosdac",
-								"transfers"
-							]
-						},
-						"description": "Transfers"
-					},
-					"response": [
-						{
-							"id": "56c14e20-d332-47e6-a65d-f69f3b2803be",
-							"name": "Default Response",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/transfers",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"{{api_version}}",
-										"eosdac",
-										"transfers"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"responseTime": null,
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "200 (empty) - Get voters for a particular candidate",
-					"id": "2ac428a9-7897-4f7f-b630-b66f32ee0cee",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/voters?candidate=Excepteur qui off",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"{{api_version}}",
-								"eosdac",
-								"voters"
-							],
-							"query": [
-								{
-									"key": "candidate",
-									"value": "Excepteur qui off",
-									"description": "(Required) Filter by candidate account"
-								}
-							]
-						},
-						"description": "Get Voters"
-					},
-					"response": [
-						{
-							"id": "bfea6876-0640-48bf-ab72-756f00cdb34e",
-							"name": "Default Response",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/voters?candidate=Excepteur qui off",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"{{api_version}}",
-										"eosdac",
-										"voters"
-									],
-									"query": [
-										{
-											"key": "candidate",
-											"value": "Excepteur qui off"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"responseTime": null,
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "200 (empty) - Get timeline of votes for a particular account",
-					"id": "debed586-a5c3-4d20-8092-efb3d4a9c952",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/votes_timeline?account=eyeke.world&start_block=105740200&end_block=105740215",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"{{api_version}}",
-								"eosdac",
-								"votes_timeline"
+								"financial_reports"
 							],
 							"query": [
 								{
 									"key": "account",
-									"value": "eyeke.world",
-									"description": "(Required) Account to fetch"
+									"value": "token.worlds",
+									"description": "Account to fetch"
 								},
 								{
-									"key": "start_block",
-									"value": "105740200",
-									"description": "Start block (inclusive)"
+									"key": "start",
+									"value": "1600176000000",
+									"description": "(Required) Start Date"
 								},
 								{
-									"key": "end_block",
-									"value": "105740215",
-									"description": "End block (inclusive)"
+									"key": "end",
+									"value": "1660176000000",
+									"description": "(Required) End Date"
 								}
 							]
 						},
-						"description": "Votes Timeline"
+						"description": "Financial Reports"
 					},
 					"response": [
 						{
-							"id": "3719598f-cf1e-4135-b4af-52c00b171209",
+							"id": "b806e105-f59a-45bc-97c5-b2e18cb3fe9f",
 							"name": "Default Response",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/votes_timeline?account=id mollit&start_block=-73993191&end_block=40126782",
+									"raw": "{{base_url}}/{{api_version}}/eosdac/financial_reports?account=ve&start=9397674&end=80543471",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
 										"eosdac",
-										"votes_timeline"
+										"financial_reports"
 									],
 									"query": [
 										{
 											"key": "account",
-											"value": "id mollit"
+											"value": "ve"
 										},
 										{
-											"key": "start_block",
-											"value": "-73993191"
+											"key": "start",
+											"value": "9397674"
 										},
 										{
-											"key": "end_block",
-											"value": "40126782"
+											"key": "end",
+											"value": "80543471"
 										}
 									]
 								}
