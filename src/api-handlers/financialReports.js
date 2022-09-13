@@ -4,7 +4,6 @@ const {eosTableAtBlock} = require('../eos-table')
 const MongoLong = require('mongodb').Long;
 
 async function financialReports(fastify, request) {
-    // console.log(request)
     return new Promise(async (resolve, reject) => {
         const dac_config = await request.dac_config();
         const db = fastify.mongo.db;
@@ -51,10 +50,8 @@ async function financialReports(fastify, request) {
             const count = await transfers_res_from.count();
 
             const append_fn = (row) => {
-                // console.log(row)
                 const [, symbol] = row.action.data.quantity.split(' ');
                 if (token.symbols.includes(symbol)) {
-                    // console.log(row);
                     const ref = `${token.contract}:${symbol}`;
                     if (typeof output[ref].transactions === 'undefined'){
                         output[ref].transactions = [];
@@ -78,57 +75,9 @@ async function financialReports(fastify, request) {
                     }
                 });
             });
-
         }
-
 
         return;
-
-        const query = {'action.name': 'transfer', 'block_timestamp': {$gte: start, $lte: end}};
-        resolve(query);
-        if (start_block) {
-            if (!('block_num' in query)) {
-                query.block_num = {}
-            }
-            query.block_num['$gte'] = new MongoLong(start_block)
-        }
-        if (end_block) {
-            if (!('block_num' in query)) {
-                query.block_num = {}
-            }
-            query.block_num['$lte'] = new MongoLong(end_block)
-        }
-
-
-        collection.find(query, {sort: {block_num: 1}}, async (err, res) => {
-            // console.log("action", res.action.data)
-            if (err) {
-                reject(err)
-            } else if (res) {
-                const timeline = [];
-                if (!await res.count()) {
-                    let zero_bal = `0 ${symbol}`;
-                    timeline.push({block_num:0, balance:zero_bal});
-                    resolve(timeline);
-                } else {
-                    res.forEach((row) => {
-                        const [bal, sym] = row.data.balance.split(' ');
-                        if (symbol === sym) {
-                            timeline.push({block_num: row.block_num, balance: row.data.balance})
-                        }
-                    }, async () => {
-                        const info = await fastify.eos.rpc.get_info();
-                        const lib = info.last_irreversible_block_num;
-
-                        const timeline_last = {block_num:lib, balance:timeline[timeline.length-1].balance};
-                        timeline.push(timeline_last);
-
-                        resolve(timeline)
-                    })
-                }
-
-            }
-        })
     })
 }
 

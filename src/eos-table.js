@@ -1,6 +1,4 @@
 const MongoLong = require('mongodb').Long;
-const connectMongo = require('./connections/mongo');
-const {loadConfig} = require('./functions');
 
 async function eosTableAtBlock({db, code, table, scope = '', skip = 0, limit = 100, data_query = {}, block_num = -1, block_timestamp = null, exclude_scope = false}) {
     return new Promise(async (resolve, reject) => {
