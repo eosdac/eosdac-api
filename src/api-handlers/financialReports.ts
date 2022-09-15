@@ -20,8 +20,20 @@ async function financialReports(fastify, request) {
 		for (let t = 0; t < tokens.length; t++) {
 			const token = tokens[t];
 
-			const opening_balances = await eosTableAtBlock({ code: token.contract, table: 'accounts', scope: account, block_timestamp: start, db });
-			const closing_balances = await eosTableAtBlock({ code: token.contract, table: 'accounts', scope: account, block_timestamp: end, db });
+			const opening_balances: any = await eosTableAtBlock({
+				code: token.contract,
+				table: 'accounts',
+				scope: account,
+				block_timestamp: start,
+				db,
+			});
+			const closing_balances: any = await eosTableAtBlock({
+				code: token.contract,
+				table: 'accounts',
+				scope: account,
+				block_timestamp: end,
+				db,
+			});
 
 			for (let s = 0; s < token.symbols.length; s++) {
 				const symbol = token.symbols[s];

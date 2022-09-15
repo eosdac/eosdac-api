@@ -1,10 +1,12 @@
-const fp = require('fastify-plugin');
+import fp = require('fastify-plugin');
+
 import { loadConfig } from './functions';
+import { DacDirectory } from './dac-directory';
+
 const tokenInfo = require('../tokens.json');
-const DacDirectory = require('./dac-directory');
 
 module.exports = fp(
-	(fastify, options, next) => {
+	(fastify: any, options, next) => {
 		fastify.decorate('dac_name_cache', new Map());
 		fastify.decorate('dac_cache_get', function (dac_name) {
 			return this.dac_name_cache.get(dac_name);

@@ -20,7 +20,7 @@ async function memberCounts(fastify, request) {
 			primary_key: 'sender',
 		};
 
-		const table_iter = new eosTableIter(cust_req);
+		const table_iter: any = new eosTableIter(cust_req);
 		const results = new Map();
 		results.set('total', 0);
 		for await (const row of table_iter) {

@@ -10,8 +10,8 @@ export const logger = (service = 'undefined-service', config) => {
 			new winston.transports.Console({
 				format: winston.format.combine(
 					winston.format.simple(),
-					winston.format.colorize(),
-				)
+					winston.format.colorize()
+				),
 			}),
 			new winston.transports.File({
 				filename: `logs/${service}_debug.log`,

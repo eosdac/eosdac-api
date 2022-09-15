@@ -1,4 +1,4 @@
-const fp = require('fastify-plugin');
+import fp = require('fastify-plugin');
 
 module.exports = fp(
 	(fastify, options, next) => {

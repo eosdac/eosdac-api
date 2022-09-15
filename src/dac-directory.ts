@@ -1,11 +1,11 @@
-const { Api, JsonRpc } = require('@jafri/eosjs2');
+import { Api, JsonRpc } from '@jafri/eosjs2';
+import fetch from 'node-fetch';
 import { TextDecoder, TextEncoder } from 'text-encoding';
-const fetch = require('node-fetch');
-const { eosTableIter } = require('./eos-table');
 
 import { logger } from './connections/logger';
+import { eosTableIter } from './eos-table';
 
-class DacDirectory {
+export class DacDirectory {
 	interested_queue: Map<any, any>;
 	config: any;
 	db: any;
@@ -101,7 +101,7 @@ class DacDirectory {
 				});
 			});
 		} else {
-			const table_iter = new eosTableIter(query_data);
+			const table_iter: any = new eosTableIter(query_data);
 
 			for await (const row of table_iter) {
 				// console.log(row);
@@ -168,5 +168,3 @@ class DacDirectory {
 		return this.interested_contracts.has(value);
 	}
 }
-
-module.exports = DacDirectory;
