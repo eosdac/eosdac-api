@@ -22,11 +22,11 @@ async function getMemberType(account, dacName, db) {
 	return member_type;
 }
 
-async function getProfiles(db, dac_config, dacId, accounts, legacy = false) {
+export async function getProfiles(db, dac_config, dacId, accounts, legacy = false) {
 	const collection = db.collection('actions');
 	const cust_contract = dac_config.accounts.get(2);
 
-	const query = {
+	const query: any = {
 		'action.account': cust_contract,
 		'action.name': 'stprofile',
 		'action.data.dac_id': dacId,
@@ -113,5 +113,3 @@ async function getProfiles(db, dac_config, dacId, accounts, legacy = false) {
 
 	return result;
 }
-
-module.exports = { getProfiles };

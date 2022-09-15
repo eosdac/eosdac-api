@@ -1,9 +1,27 @@
 const { Api, JsonRpc } = require('@jafri/eosjs2');
-const { TextDecoder, TextEncoder } = require('text-encoding');
+import { TextDecoder, TextEncoder } from 'text-encoding';
 const fetch = require('node-fetch');
 const { eosTableIter } = require('./eos-table');
 
+import { logger } from './connections/logger';
+
 class DacDirectory {
+	interested_queue: Map<any, any>;
+	config: any;
+	db: any;
+	mode: string;
+	dac_id: string;
+	interested_contracts: Set<any>;
+	_auth_accounts: Map<any, any>;
+	_msig_contracts: Map<any, any>;
+	_custodian_contracts: Map<any, any>;
+	_proposals_contracts: Map<any, any>;
+	_token_contracts: Map<any, any>;
+	_referendum_contracts: Map<any, any>;
+	logger: any;
+	rpc: any;
+	api: any;
+
 	constructor({ config, db }) {
 		this.interested_queue = new Map();
 		this.config = config;
@@ -18,10 +36,7 @@ class DacDirectory {
 		this._token_contracts = new Map();
 		this._referendum_contracts = new Map();
 
-		this.logger = require('./connections/logger')(
-			'dacdirectory',
-			config.logger
-		);
+		this.logger = logger('dacdirectory', this.config.logger);
 
 		this.rpc = new JsonRpc(config.eos.endpoint, { fetch });
 		this.api = new Api({
@@ -61,7 +76,7 @@ class DacDirectory {
 		this.logger.info(`Reloading dacdirectory`);
 
 		let res;
-		const query_data = {
+		const query_data: any = {
 			api: this.api,
 			code: this.config.eos.dacDirectoryContract,
 			scope: this.config.eos.dacDirectoryContract,

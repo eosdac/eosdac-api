@@ -7,7 +7,10 @@ const path = require('path');
 
 const openApi = require('./open-api');
 const config = require('./functions').loadConfig();
-const logger = require('./connections/logger')('eosdac-api', config.logger);
+
+import logger = require('./connections/logger');
+logger('eosdac-api', config.logger)
+
 
 const buildAPIServer = async () => {
     const api = fastify({

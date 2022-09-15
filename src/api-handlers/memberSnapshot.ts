@@ -49,7 +49,7 @@ async function memberSnapshot(fastify, request) {
 		const members = new Map();
 
 		while (has_more) {
-			const members_res = await eosTableAtBlock(members_match);
+			const members_res: any = await eosTableAtBlock(members_match);
 
 			members_res.results.forEach(member => {
 				// console.log(member.data);
@@ -93,7 +93,7 @@ async function memberSnapshot(fastify, request) {
 		}
 
 		while (has_more) {
-			const balances_res = await eosTableAtBlock(balances_match);
+			const balances_res: any = await eosTableAtBlock(balances_match);
 
 			balances_res.results.forEach(balance => {
 				// console.log(balance);
@@ -137,7 +137,7 @@ async function memberSnapshot(fastify, request) {
 		// voter_match.data_query = {voter};
 
 		while (has_more) {
-			const votes_res = await eosTableAtBlock(voter_match);
+			const votes_res: any = await eosTableAtBlock(voter_match);
 
 			votes_res.results.forEach(voter_row => {
 				if (voter_row.data.candidates.length) {
@@ -180,7 +180,7 @@ async function memberSnapshot(fastify, request) {
 		if (block_num) {
 			candidates_match.block_num = { $lte: new MongoLong(block_num) };
 		}
-		const candidates_res = await eosTableAtBlock(candidates_match);
+		const candidates_res: any = await eosTableAtBlock(candidates_match);
 		candidates_res.results.forEach(custodian => {
 			// console.log(custodian.data.candidate_name);
 			if (members.has(custodian.data.candidate_name)) {
