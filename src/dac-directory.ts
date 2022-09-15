@@ -103,7 +103,7 @@ class DacDirectory {
 		} else {
 			const table_iter = new eosTableIter(query_data);
 
-			for await (let row of table_iter) {
+			for await (const row of table_iter) {
 				// console.log(row);
 				row.accounts.forEach(acnt => {
 					this.add_account(acnt, row.dac_id);

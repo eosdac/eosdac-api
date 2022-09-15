@@ -42,4 +42,3 @@ export const logger = (service = 'undefined-service', config) => {
 
 	return _l;
 };
-

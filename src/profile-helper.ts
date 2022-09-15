@@ -22,7 +22,13 @@ async function getMemberType(account, dacName, db) {
 	return member_type;
 }
 
-export async function getProfiles(db, dac_config, dacId, accounts, legacy = false) {
+export async function getProfiles(
+	db,
+	dac_config,
+	dacId,
+	accounts,
+	legacy = false
+) {
 	const collection = db.collection('actions');
 	const cust_contract = dac_config.accounts.get(2);
 
