@@ -2,7 +2,9 @@
 
 process.title = 'eosdac-api';
 
-import * as fastify from 'fastify';
+import fastify, { FastifyInstance } from 'fastify';
+import fastifyOAS = require('fastify-oas');
+import { IncomingMessage, Server, ServerResponse } from 'http';
 
 const openApi = require('./open-api');
 const config = require('./functions').loadConfig();
@@ -11,11 +13,13 @@ import { logger } from './connections/logger';
 logger('eosdac-api', config.logger);
 
 export const buildAPIServer = async () => {
-	const api: any = fastify({
-		ignoreTrailingSlash: true,
-		trustProxy: true,
-		logger,
-	});
+	const api: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify(
+		{
+			ignoreTrailingSlash: true,
+			trustProxy: true,
+			logger: true,
+		}
+	);
 
 	const prefix = '/v1/eosdac';
 
@@ -40,7 +44,7 @@ export const buildAPIServer = async () => {
 	api.register(require('./api-handlers/voters'), { prefix });
 	api.register(require('./api-handlers/votesTimeline'), { prefix });
 
-	api.register(require('fastify-oas'), openApi.options);
+	api.register(fastifyOAS, openApi.options);
 
 	const mongo_url = `${config.mongo.url}/${config.mongo.dbName}`;
 	api.register(require('fastify-mongodb'), {
@@ -50,7 +54,6 @@ export const buildAPIServer = async () => {
 	api.register(require('./fastify-eos'), config);
 	api.register(require('./fastify-dac'), {});
 	api.register(require('./fastify-config'), config);
-	// api.register(require('./fastify-cache'), {});
 
 	api.register(require('fastify-cors'), {
 		allowedHeaders: 'Content-Type,X-DAC-Name',

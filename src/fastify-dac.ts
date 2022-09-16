@@ -1,4 +1,4 @@
-import fp = require('fastify-plugin');
+const fp = require('fastify-plugin');
 
 import { loadConfig } from './functions';
 import { DacDirectory } from './dac-directory';

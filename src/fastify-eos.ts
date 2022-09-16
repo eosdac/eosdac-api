@@ -1,6 +1,6 @@
 import { Api, JsonRpc } from '@jafri/eosjs2';
 
-import fp = require('fastify-plugin');
+const fp = require('fastify-plugin');
 import fetch from 'node-fetch';
 import { TextDecoder, TextEncoder } from 'text-encoding';
 
