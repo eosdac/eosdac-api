@@ -1,7 +1,8 @@
-import { createApiTestEnvironment } from '../environments';
+import * as fixtures from '../fixtures/votes_timeline.fixture';
 
 import { HTTP_METHOD, HTTP_STATUS } from '../common';
-import * as fixtures from '../fixtures/votes_timeline.fixture';
+
+import { createApiTestEnvironment } from '../environments';
 
 const environment = createApiTestEnvironment();
 environment.initialize();

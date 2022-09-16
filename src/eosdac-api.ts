@@ -3,13 +3,15 @@
 process.title = 'eosdac-api';
 
 import fastify, { FastifyInstance } from 'fastify';
-import fastifyOAS = require('fastify-oas');
 import { IncomingMessage, Server, ServerResponse } from 'http';
+
+import { logger } from './connections/logger';
+
+import fastifyOAS = require('fastify-oas');
 
 const openApi = require('./open-api');
 const config = require('./functions').loadConfig();
 
-import { logger } from './connections/logger';
 logger('eosdac-api', config.logger);
 
 export const buildAPIServer = async () => {

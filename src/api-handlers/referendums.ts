@@ -1,6 +1,5 @@
-import { referendumsSchema } from '../schemas';
-
 import { loadConfig } from '../functions';
+import { referendumsSchema } from '../schemas';
 
 async function getReferendums(fastify, request) {
 	return new Promise(async (resolve, reject) => {

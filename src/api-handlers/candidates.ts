@@ -1,11 +1,9 @@
-import { candidatesSchema } from '../schemas';
-
+import { Api, JsonRpc } from '@jafri/eosjs2';
 import { TextDecoder, TextEncoder } from 'text-encoding';
 
-import { Api, JsonRpc } from '@jafri/eosjs2';
+import { candidatesSchema } from '../schemas';
 import fetch from 'node-fetch';
 import { getProfiles } from '../profile-helper';
-
 import { loadConfig } from '../functions';
 
 async function getCandidates(fastify, request) {

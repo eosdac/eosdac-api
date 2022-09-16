@@ -1,7 +1,7 @@
-import { getProfileSchema } from '../schemas';
-import { NotFound } from 'http-errors';
 import { getProfiles } from '../profile-helper';
+import { getProfileSchema } from '../schemas';
 import { loadDacConfig } from '../functions';
+import { NotFound } from 'http-errors';
 
 async function getProfile(fastify, request) {
 	const {

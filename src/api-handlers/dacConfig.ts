@@ -1,9 +1,8 @@
-import { dacConfigSchema } from '../schemas';
-
-import { TextDecoder, TextEncoder } from 'text-encoding';
 import { Api, JsonRpc } from '@jafri/eosjs2';
-import fetch from 'node-fetch';
+import { TextDecoder, TextEncoder } from 'text-encoding';
 
+import { dacConfigSchema } from '../schemas';
+import fetch from 'node-fetch';
 import { loadConfig } from '../functions';
 
 async function getDacConfig(fastify, request) {

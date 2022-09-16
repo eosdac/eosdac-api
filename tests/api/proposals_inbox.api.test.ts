@@ -1,7 +1,8 @@
-import { createApiTestEnvironment } from '../environments';
+import * as fixtures from '../fixtures/proposals_inbox.fixture';
 
 import { HTTP_METHOD, HTTP_STATUS } from '../common';
-import * as fixtures from '../fixtures/proposals_inbox.fixture';
+
+import { createApiTestEnvironment } from '../environments';
 
 const environment = createApiTestEnvironment();
 environment.initialize();

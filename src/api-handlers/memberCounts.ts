@@ -1,6 +1,5 @@
-import { memberCountsSchema } from '../schemas';
-
 import { eosTableIter } from '../eos-table';
+import { memberCountsSchema } from '../schemas';
 
 async function memberCounts(fastify, request) {
 	// console.log(request)

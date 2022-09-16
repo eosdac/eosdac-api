@@ -1,6 +1,5 @@
-import { memberSnapshotSchema } from '../schemas';
 import { eosTableAtBlock } from '../eos-table';
-
+import { memberSnapshotSchema } from '../schemas';
 import { Long as MongoLong } from 'mongodb';
 
 async function memberSnapshot(fastify, request) {

@@ -1,9 +1,9 @@
 import { Api, JsonRpc } from '@jafri/eosjs2';
-import fetch from 'node-fetch';
 import { TextDecoder, TextEncoder } from 'text-encoding';
 
-import { logger } from './connections/logger';
 import { eosTableIter } from './eos-table';
+import fetch from 'node-fetch';
+import { logger } from './connections/logger';
 
 export class DacDirectory {
 	interested_queue: Map<any, any>;

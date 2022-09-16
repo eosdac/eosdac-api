@@ -1,5 +1,5 @@
-import { financialReportsSchema } from '../schemas';
 import { eosTableAtBlock } from '../eos-table';
+import { financialReportsSchema } from '../schemas';
 
 async function financialReports(fastify, request) {
 	return new Promise(async (resolve, reject) => {
@@ -11,7 +11,10 @@ async function financialReports(fastify, request) {
 		const start = new Date(request.query.start);
 		const end = new Date(request.query.end - 1);
 
-		const tokens = [{ contract: 'eosio.token', symbols: ['EOS', 'JUNGLE'] }, { contract: 'kasdactokens', symbols: ['KASDAC', 'IOIO'] }];
+		const tokens = [
+			{ contract: 'eosio.token', symbols: ['EOS', 'JUNGLE'] },
+			{ contract: 'kasdactokens', symbols: ['KASDAC', 'IOIO'] },
+		];
 
 		const output = {};
 
@@ -41,8 +44,12 @@ async function financialReports(fastify, request) {
 				if (!output[ref]) {
 					output[ref] = {};
 				}
-				const opening_row = opening_balances.results.filter(b => b.data.balance.indexOf(symbol) > -1)[0];
-				const closing_row = closing_balances.results.filter(b => b.data.balance.indexOf(symbol) > -1)[0];
+				const opening_row = opening_balances.results.filter(
+					b => b.data.balance.indexOf(symbol) > -1
+				)[0];
+				const closing_row = closing_balances.results.filter(
+					b => b.data.balance.indexOf(symbol) > -1
+				)[0];
 				if (opening_row && closing_row) {
 					output[ref].opening_balance = opening_row.data.balance;
 					output[ref].closing_balance = closing_row.data.balance;
@@ -52,14 +59,28 @@ async function financialReports(fastify, request) {
 				}
 			}
 
-			const transfers_query_from = { 'action.account': token.contract, 'action.name': 'transfer', 'action.data.from': account, 'block_timestamp': { $gte: start, $lte: end } };
-			const transfers_res_from = await actions_collection.find(transfers_query_from);
-			const transfers_query_to = { 'action.account': token.contract, 'action.name': 'transfer', 'action.data.to': account, 'block_timestamp': { $gte: start, $lte: end } };
-			const transfers_res_to = await actions_collection.find(transfers_query_to);
+			const transfers_query_from = {
+				'action.account': token.contract,
+				'action.name': 'transfer',
+				'action.data.from': account,
+				block_timestamp: { $gte: start, $lte: end },
+			};
+			const transfers_res_from = await actions_collection.find(
+				transfers_query_from
+			);
+			const transfers_query_to = {
+				'action.account': token.contract,
+				'action.name': 'transfer',
+				'action.data.to': account,
+				block_timestamp: { $gte: start, $lte: end },
+			};
+			const transfers_res_to = await actions_collection.find(
+				transfers_query_to
+			);
 
 			const count = await transfers_res_from.count();
 
-			const append_fn = (row) => {
+			const append_fn = row => {
 				const [, symbol] = row.action.data.quantity.split(' ');
 				if (token.symbols.includes(symbol)) {
 					const ref = `${token.contract}:${symbol}`;
@@ -75,11 +96,12 @@ async function financialReports(fastify, request) {
 				transfers_res_to.forEach(append_fn, () => {
 					token_res_count++;
 					if (token_res_count >= tokens.length) {
-						const out_results = Object.values(output)
-							.map((r: any) => {
-								r.transactions.sort((a, b) => a.block_num < b.block_num ? -1 : 1);
-								return r;
-							});
+						const out_results = Object.values(output).map((r: any) => {
+							r.transactions.sort((a, b) =>
+								a.block_num < b.block_num ? -1 : 1
+							);
+							return r;
+						});
 
 						resolve(out_results);
 					}
@@ -88,7 +110,7 @@ async function financialReports(fastify, request) {
 		}
 
 		return;
-	})
+	});
 }
 
 module.exports = function (fastify, opts, next) {

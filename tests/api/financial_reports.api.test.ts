@@ -1,6 +1,6 @@
-import { createApiTestEnvironment } from '../environments';
-
 import { HTTP_METHOD, HTTP_STATUS } from '../common';
+
+import { createApiTestEnvironment } from '../environments';
 
 const environment = createApiTestEnvironment();
 environment.initialize();

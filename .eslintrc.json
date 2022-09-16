@@ -16,5 +16,13 @@
     "plugins": [
         "@typescript-eslint"
     ],
-    "rules": {}
+    "rules": {
+        "sort-imports": [
+            "warn",
+            {
+                "ignoreCase": true
+            }
+        ],
+        "eol-last": 2
+    }
 }

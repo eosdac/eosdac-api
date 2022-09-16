@@ -1,5 +1,4 @@
 import { balanceTimelineSchema } from '../schemas';
-
 import { Long as MongoLong } from 'mongodb';
 
 async function balanceTimeline(fastify, request) {

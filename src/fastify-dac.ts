@@ -1,7 +1,7 @@
 const fp = require('fastify-plugin');
 
-import { loadConfig } from './functions';
 import { DacDirectory } from './dac-directory';
+import { loadConfig } from './functions';
 
 const tokenInfo = require('../tokens.json');
 

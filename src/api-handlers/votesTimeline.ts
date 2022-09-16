@@ -1,7 +1,7 @@
 import assert = require('assert');
-import { votesTimelineSchema } from '../schemas';
 
 import { Long as MongoLong } from 'mongodb';
+import { votesTimelineSchema } from '../schemas';
 
 async function votesTimeline(fastify, request) {
 	// console.log(request)
