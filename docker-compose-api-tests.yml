@@ -1,6 +1,7 @@
 version: '3.7'
 services:
   api-tests-runner:
+    container_name: api-tests-runner
     platform: linux/amd64
     build:
       context: .

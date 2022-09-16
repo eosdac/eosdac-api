@@ -12,82 +12,13 @@ services:
         - ghcr.io/alien-worlds/eosdac_api
     environment:
       CONFIG: '${CONFIG}'
-      SERVER_PORT: '8800' 
+      SERVER_PORT: '8800'
       SERVER_ADDR: '0.0.0.0'
     restart: on-failure
     ports:
       - '8800:8800'
     volumes:
       - eosdac-api:/tmp/
-
-  processor:
-    image: ghcr.io/alien-worlds/eosdac_processor
-    platform: linux/amd64
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        CONFIG: '${CONFIG}'
-      cache_from:
-        - ghcr.io/alien-worlds/eosdac_processor
-    environment:
-      CONFIG: '${CONFIG}'
-    restart: on-failure
-    volumes:
-      - eosdac-api:/tmp/
-
-  blockrange:
-    image: ghcr.io/alien-worlds/eosdac_blockrange
-    platform: linux/amd64
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        CONFIG: '${CONFIG}'
-      cache_from:
-        - ghcr.io/alien-worlds/eosdac_blockrange
-    environment:
-      CONFIG: '${CONFIG}'
-    restart: on-failure
-    volumes:
-      - eosdac-api:/tmp/
-
-  filler:
-    image: ghcr.io/alien-worlds/eosdac_filler
-    platform: linux/amd64
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        CONFIG: '${CONFIG}'
-      cache_from:
-        - ghcr.io/alien-worlds/eosdac_filler
-    environment:
-      CONFIG: '${CONFIG}'
-      FILLER_FLAGS: '-r'
-    restart: on-failure
-   
-    volumes:
-      - eosdac-api:/tmp/
-
-  ws:
-    image: ghcr.io/alien-worlds/eosdac_ws
-    platform: linux/amd64
-    
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        CONFIG: '${CONFIG}'
-      cache_from:
-        - ghcr.io/alien-worlds/eosdac_ws
-    environment:
-      CONFIG: '${CONFIG}'
-    restart: on-failure
-    volumes:
-      - eosdac-api:/tmp/
-    ports:
-      - '3030:3030'
 
 networks:
   default:
