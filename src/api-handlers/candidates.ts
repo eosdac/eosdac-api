@@ -55,8 +55,6 @@ async function getCandidates(fastify, request) {
 
 		if (candidate_res.rows.length) {
 			const candidates = candidate_res.rows;
-			// console.log(candidates)
-
 			const active = candidates.filter(a => a.is_active);
 			active.forEach(cand => {
 				cand.is_custodian = custodians_map.has(cand.candidate_name);

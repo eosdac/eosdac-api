@@ -6,8 +6,6 @@ import fetch from 'node-fetch';
 import { loadConfig } from '../functions';
 
 async function getDacConfig(fastify, request) {
-	// console.log(request)
-
 	return new Promise(async (resolve, reject) => {
 		const config = loadConfig();
 

@@ -2,7 +2,6 @@ import { eosTableIter } from '../eos-table';
 import { memberCountsSchema } from '../schemas';
 
 async function memberCounts(fastify, request) {
-	// console.log(request)
 	return new Promise(async (resolve, reject) => {
 		const api = fastify.eos.api;
 

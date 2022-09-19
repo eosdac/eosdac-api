@@ -27,7 +27,7 @@ async function getProposals(fastify, request) {
 		if (proposer) {
 			query.proposer = proposer;
 		}
-		// console.log('WP QUERY', query);
+
 		try {
 			if (id) {
 				const id_res = await collection.findOne({

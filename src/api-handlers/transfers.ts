@@ -1,8 +1,6 @@
 import { transfersSchema } from '../schemas';
 
 async function transfers(fastify, request) {
-	// console.log(request)
-
 	return new Promise(async (resolve, reject) => {
 		const db = fastify.mongo.db;
 		const collection = db.collection('actions');

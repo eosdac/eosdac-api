@@ -3,11 +3,9 @@ import { memberSnapshotSchema } from '../schemas';
 import { Long as MongoLong } from 'mongodb';
 
 async function memberSnapshot(fastify, request) {
-	// console.log(request)
 	return new Promise(async (resolve, reject) => {
 		const db = fastify.mongo.db;
 		const dac_config = await request.dac_config();
-		// const dac_id = 'eosdac';
 		const dac_id = request.dac();
 
 		const contract = request.query.contract || dac_config.symbol.contract;
@@ -41,7 +39,6 @@ async function memberSnapshot(fastify, request) {
 			exclude_scope: true,
 		};
 		if (block_num) {
-			console.log(`BLOCK : ${block_num}`);
 			members_match.block_num = block_num;
 		}
 
@@ -51,7 +48,6 @@ async function memberSnapshot(fastify, request) {
 			const members_res: any = await eosTableAtBlock(members_match);
 
 			members_res.results.forEach(member => {
-				// console.log(member.data);
 				const zero_bal = '0.' + '0'.repeat(precision);
 				members.set(member.data.sender, {
 					terms: member.data.agreedtermsversion,
@@ -66,7 +62,6 @@ async function memberSnapshot(fastify, request) {
 			});
 
 			if (members_res.count <= limit + members_match.skip) {
-				console.log(`DO NOT HAVE MORE`);
 				has_more = false;
 			} else {
 				has_more = true;
@@ -95,7 +90,6 @@ async function memberSnapshot(fastify, request) {
 			const balances_res: any = await eosTableAtBlock(balances_match);
 
 			balances_res.results.forEach(balance => {
-				// console.log(balance);
 				if (members.has(balance.scope)) {
 					const member_data = members.get(balance.scope);
 					member_data.balance = balance.data.balance.split(' ');
@@ -104,7 +98,6 @@ async function memberSnapshot(fastify, request) {
 					}
 					members.set(balance.scope, member_data);
 				}
-				// balances.set(member.data.sender, {terms: member.data.agreedtermsversion, balance: null, block_num: member.block_num});
 			});
 
 			fastify.log.info(`${balances_res.count} balances found`, { dac_id });
@@ -133,7 +126,6 @@ async function memberSnapshot(fastify, request) {
 		if (block_num) {
 			voter_match.block_num = { $lte: new MongoLong(block_num) };
 		}
-		// voter_match.data_query = {voter};
 
 		while (has_more) {
 			const votes_res: any = await eosTableAtBlock(voter_match);
@@ -155,11 +147,8 @@ async function memberSnapshot(fastify, request) {
 			fastify.log.info(`Skip to balance ${voter_match.skip}`, { dac_id });
 		}
 
-		// console.log(voters);
-
 		// Check if each member is voting
 		for (const k of members) {
-			//     // console.log(k[0]);
 			const voter = k[0];
 			const voter_data = k[1];
 			if (voters.has(voter)) {
@@ -181,7 +170,6 @@ async function memberSnapshot(fastify, request) {
 		}
 		const candidates_res: any = await eosTableAtBlock(candidates_match);
 		candidates_res.results.forEach(custodian => {
-			// console.log(custodian.data.candidate_name);
 			if (members.has(custodian.data.candidate_name)) {
 				const member_data = members.get(custodian.data.candidate_name);
 				const stake = custodian.data.locked_tokens.split(' ');
@@ -200,11 +188,9 @@ async function memberSnapshot(fastify, request) {
 		// Convert members from Map to array and then sort
 		const members_arr = [];
 		members.forEach((member_data, account, c) => {
-			// console.log(account, member_data, c);
 			member_data.account = account;
 			members_arr.push(member_data);
 		});
-		// console.log(members_arr);
 
 		let sorter;
 		const balance_sorter = (a, b) => {

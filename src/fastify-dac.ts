@@ -39,7 +39,6 @@ module.exports = fp(
 					upper_bound: dac_name,
 				});
 
-				// console.log(res);
 				if (res.rows.length) {
 					const row = res.rows[0];
 					if (row.dac_id === dac_name) {

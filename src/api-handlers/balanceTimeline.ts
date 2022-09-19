@@ -2,7 +2,6 @@ import { balanceTimelineSchema } from '../schemas';
 import { Long as MongoLong } from 'mongodb';
 
 async function balanceTimeline(fastify, request) {
-	// console.log(request)
 	return new Promise(async (resolve, reject) => {
 		const dac_config = await request.dac_config();
 		const db = fastify.mongo.db;
@@ -36,7 +35,6 @@ async function balanceTimeline(fastify, request) {
 		}
 
 		collection.find(query, { sort: { block_num: 1 } }, async (err, res) => {
-			// console.log("action", res.action.data)
 			if (err) {
 				reject(err);
 			} else if (res) {

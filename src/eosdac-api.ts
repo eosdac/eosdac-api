@@ -65,8 +65,7 @@ export const buildAPIServer = async () => {
 	api.ready().then(
 		async () => {
 			console.log(
-				`Started API server with config ${process.env.CONFIG} on ${
-					process.env.SERVER_ADDR || '127.0.0.1'
+				`Started API server with config ${process.env.CONFIG} on ${process.env.SERVER_ADDR || '127.0.0.1'
 				}:${process.env.SERVER_PORT}`
 			);
 			await api.oas();
