@@ -7,11 +7,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        CONFIG: '${CONFIG}'
+        NODE_ENV: '${NODE_ENV}'
       cache_from:
         - ghcr.io/alien-worlds/eosdac_api
     environment:
-      CONFIG: '${CONFIG}'
+      NODE_ENV: '${NODE_ENV}'
       SERVER_PORT: '8800'
       SERVER_ADDR: '0.0.0.0'
     restart: on-failure
@@ -22,7 +22,7 @@ services:
 
 networks:
   default:
-    external: true
+    external: false
     name: lamington
 
 volumes:

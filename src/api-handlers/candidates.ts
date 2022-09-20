@@ -2,19 +2,17 @@ import { Api, JsonRpc } from '@jafri/eosjs2';
 import { TextDecoder, TextEncoder } from 'text-encoding';
 
 import { candidatesSchema } from '../schemas';
+import { config } from '../config';
 import fetch from 'node-fetch';
 import { getProfiles } from '../profile-helper';
-import { loadConfig } from '../functions';
 
 async function getCandidates(fastify, request) {
 	return new Promise(async (resolve, reject) => {
-		const config = loadConfig();
-
 		const rpc = new JsonRpc(config.eos.endpoint, { fetch });
 		const api = new Api({
 			rpc,
 			signatureProvider: null,
-			chainId: config.chainId,
+			chainId: config.eos.chainId,
 			textDecoder: new TextDecoder(),
 			textEncoder: new TextEncoder(),
 		});

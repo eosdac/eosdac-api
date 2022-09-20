@@ -5,12 +5,12 @@ process.title = 'eosdac-api';
 import fastify, { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
+import { config } from './config';
 import { logger } from './connections/logger';
 
 import fastifyOAS = require('fastify-oas');
 
 const openApi = require('./open-api');
-const config = require('./functions').loadConfig();
 
 logger('eosdac-api', config.logger);
 
@@ -65,8 +65,9 @@ export const buildAPIServer = async () => {
 	api.ready().then(
 		async () => {
 			console.log(
-				`Started API server with config ${process.env.CONFIG} on ${process.env.SERVER_ADDR || '127.0.0.1'
-				}:${process.env.SERVER_PORT}`
+				`Started API server with config ${config.environment} on ${
+					config.host || '127.0.0.1'
+				}:${config.port}`
 			);
 			await api.oas();
 		},
@@ -77,18 +78,3 @@ export const buildAPIServer = async () => {
 
 	return api;
 };
-
-export const startAPIServer = async () => {
-	try {
-		const api = await buildAPIServer();
-		await api.listen(
-			parseInt(process.env.SERVER_PORT),
-			process.env.SERVER_ADDR
-		);
-	} catch (err) {
-		console.log(err);
-		process.exit(1);
-	}
-};
-
-startAPIServer();

@@ -140,7 +140,7 @@ export class eosTableIter {
 						if (this.current_set.length) {
 							req.lower_bound =
 								this.current_set[this.current_set.length - this.greed_factor][
-								this.primary_key
+									this.primary_key
 								];
 						}
 

@@ -6,12 +6,12 @@ services:
     build:
       context: .
       args:
-        CONFIG: '${CONFIG}'
+        NODE_ENV: '${NODE_ENV}'
       target: api-tests-runner
       dockerfile: Dockerfile.api.tests
     command: [ 'sh', '-c', 'yarn test:api' ]
     environment:
-      CONFIG: '${CONFIG}'
+      NODE_ENV: '${NODE_ENV}'
       SERVER_PORT: '8800'
       SERVER_ADDR: '0.0.0.0'
     depends_on:

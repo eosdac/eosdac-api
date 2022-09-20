@@ -1,27 +1,14 @@
-export function loadConfig() {
-	const config_name = process.env.CONFIG ? process.env.CONFIG : '';
-	if (!config_name) {
-		throw new Error(
-			`Config not specified, please provide CONFIG environmental variable`
-		);
-	}
-	const config = require(`../${config_name}.config`);
-
-	config.name = config_name;
-
-	return config;
-}
+import { config } from './config';
 
 export const loadDacConfig = async (fastify, dacId) => {
-	const global_config = loadConfig();
 	const dac_config_cache = fastify.dac_cache_get(dacId);
 	if (dac_config_cache) {
 		fastify.log.info(`Returning cached dac info`);
 		return dac_config_cache;
 	} else {
 		const res = await fastify.eos.rpc.get_table_rows({
-			code: global_config.eos.dacDirectoryContract,
-			scope: global_config.eos.dacDirectoryContract,
+			code: config.eos.dacDirectoryContract,
+			scope: config.eos.dacDirectoryContract,
 			table: 'dacs',
 			lower_bound: dacId,
 			upper_bound: dacId,
