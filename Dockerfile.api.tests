@@ -13,15 +13,12 @@ FROM node:17-alpine3.12 AS api-tests-runner
 
 RUN apk add --no-cache --virtual build-dependencies python2 g++ make
 
-ARG NODE_ENV
-ENV NODE_ENV=$NODE_ENV
-
 RUN apk add curl
 
 RUN mkdir -p /var/www/api
 
 COPY . /var/www/api
-COPY .env-test /var/www/api/.env-${NODE_ENV}
+COPY .env-test /var/www/api/.env-test
 
 WORKDIR /var/www/api
 

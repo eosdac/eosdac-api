@@ -7,7 +7,7 @@
   "scripts": {
     "api": "node -r ts-node/register -r tsconfig-paths/register src/index.ts",
     "api:dev": "tsc-watch --onSuccess \"node -r ts-node/register -r tsconfig-paths/register src/eosdac-api.ts\"",
-    "test:api": "jest --config=jest.config.api.ts --forceExit",
+    "test:api": "jest --config=jest.config.api.ts --forceExit --runInBand",
     "clean": "rm -rf ./dist",
     "build": "yarn clean && tsc",
     "lint": "eslint \"src/**/*\" \"tests/**/*\"",
