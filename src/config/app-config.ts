@@ -1,4 +1,4 @@
-import { Config, EOSConfig, LoggerConfig, MongoConfig } from './config.types';
+import { Config, DocsConfig, EOSConfig, LoggerConfig, MongoConfig } from './config.types';
 
 export default class AppConfig implements Config {
 	constructor(
@@ -20,6 +20,12 @@ export default class AppConfig implements Config {
 			dbName: process.env.MONGO_DB_NAME,
 		},
 
+		public readonly docs: DocsConfig = {
+			host: process.env.DOCS_HOST,
+			routePrefix: process.env.DOCS_ROUTE_PREFIX,
+			exposeRoute: Boolean(process.env.DOCS_EXPOSE_ROUTE),
+		},
+
 		public readonly logger: LoggerConfig = {
 			level: process.env.LOGGER_LEVEL,
 			environment: process.env.LOGGER_ENVIRONMENT,
@@ -27,5 +33,5 @@ export default class AppConfig implements Config {
 				apiKey: process.env.LOGGER_DATADOG_API_KEY,
 			},
 		}
-	) {}
+	) { }
 }

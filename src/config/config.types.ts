@@ -4,6 +4,7 @@ export type Config = {
 	mongo: MongoConfig;
 	eos: EOSConfig;
 	logger: LoggerConfig;
+	docs: DocsConfig;
 };
 
 export type MongoConfig = {
@@ -28,4 +29,10 @@ export type LoggerConfig = {
 
 export type DataDogConfig = {
 	apiKey: string;
+};
+
+export type DocsConfig = {
+	host: string;
+	routePrefix: string;
+	exposeRoute: boolean;
 };
