@@ -11,7 +11,20 @@
         "allowJs": true,
         "noImplicitAny": false,
         "baseUrl": ".",
-        "paths": {}
+        "paths": {
+            "@config": [
+                "src/config/index"
+            ],
+            "@config/types": [
+                "src/config/config.types"
+            ],
+            "@common/*": [
+                "src/common/*"
+            ],
+            "@core/*": [
+                "src/core/*"
+            ]
+        }
     },
     "include": [
         "src/**/*",
