@@ -16,5 +16,4 @@ export const getProposalsSchema = require('./get_proposals'),
 	votersSchema = require('./voters'),
 	myDacsSchema = require('./my_dacs'),
 	referendumsSchema = require('./referendums'),
-	financialReportsSchema = require('./financial_reports'),
-	stateSchema = require('./state');
+	financialReportsSchema = require('./financial_reports');

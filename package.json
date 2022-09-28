@@ -18,6 +18,8 @@
     "format": "yarn prettier:fix && yarn lint:fix"
   },
   "dependencies": {
+    "@alien-worlds/api-core": "0.0.11",
+    "@alien-worlds/eosdac-api-common": "^0.0.6",
     "@eosdacio/eosio-statereceiver": "^1.0.4",
     "@jafri/eosjs2": "^20.0.1-e34c16e.170",
     "@shelf/winston-datadog-logs-transport": "^1.0.7",
@@ -38,6 +40,7 @@
     "node-fetch": "^2.2.0",
     "node-ipc": "^9.1.1",
     "path": "^0.12.7",
+    "reflect-metadata": "^0.1.13",
     "text-encoding": "^0.6.4",
     "websocket": "^1.0.30",
     "winston": "^3.2.1",

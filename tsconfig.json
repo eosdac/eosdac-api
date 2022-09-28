@@ -10,6 +10,7 @@
         "outDir": "./dist",
         "allowJs": true,
         "noImplicitAny": false,
+        "experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
             "@config": [
@@ -20,9 +21,6 @@
             ],
             "@common/*": [
                 "src/common/*"
-            ],
-            "@core/*": [
-                "src/core/*"
             ]
         }
     },

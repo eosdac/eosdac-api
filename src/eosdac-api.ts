@@ -6,7 +6,12 @@ import fastify, { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
 import { config } from './config';
+import { Container } from 'inversify';
+import { FastifyRoute } from './fastify.route';
+import { GetStateRoute } from './endpoints/state/routes/state.route';
 import { logger } from './connections/logger';
+import { setupEndpointDependencies } from './endpoints/api.ioc.config';
+import { StateController } from './endpoints/state/domain/state.controller';
 
 import fastifyOAS = require('fastify-oas');
 
@@ -40,13 +45,26 @@ export const buildAPIServer = async () => {
 	api.register(require('./api-handlers/proposalsCounts'), { prefix });
 	api.register(require('./api-handlers/proposalsInbox'), { prefix });
 	api.register(require('./api-handlers/referendums'), { prefix });
-	api.register(require('./api-handlers/state'), { prefix });
 	api.register(require('./api-handlers/tokensOwned'), { prefix });
 	api.register(require('./api-handlers/transfers'), { prefix });
 	api.register(require('./api-handlers/voters'), { prefix });
 	api.register(require('./api-handlers/votesTimeline'), { prefix });
 
 	api.register(fastifyOAS, openApi.options);
+
+	// Set IOC
+	const apiIoc = await setupEndpointDependencies(new Container(), config);
+
+	// controllers
+	const stateController: StateController = apiIoc.get<StateController>(
+		StateController.Token
+	);
+
+	// Mount routes
+	FastifyRoute.mount(
+		api,
+		GetStateRoute.create(stateController.getState.bind(stateController))
+	);
 
 	const mongo_url = `${config.mongo.url}/${config.mongo.dbName}`;
 	api.register(require('fastify-mongodb'), {

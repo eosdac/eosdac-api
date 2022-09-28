@@ -1,4 +1,10 @@
-import { Config, DocsConfig, EOSConfig, LoggerConfig, MongoConfig } from './config.types';
+import {
+	Config,
+	DocsConfig,
+	EOSConfig,
+	LoggerConfig,
+	MongoConfig,
+} from './config.types';
 
 export default class AppConfig implements Config {
 	constructor(
@@ -33,5 +39,5 @@ export default class AppConfig implements Config {
 				apiKey: process.env.LOGGER_DATADOG_API_KEY,
 			},
 		}
-	) { }
+	) {}
 }
