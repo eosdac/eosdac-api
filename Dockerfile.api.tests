@@ -17,6 +17,9 @@ RUN apk add curl
 
 RUN mkdir -p /var/www/api
 
+ARG GITHUB_TOKEN
+ENV GITHUB_TOKEN=${GITHUB_TOKEN}
+
 COPY . /var/www/api
 COPY .env-test /var/www/api/.env-test
 

@@ -7,7 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NODE_ENV: '${NODE_ENV}'
+        - NODE_ENV=${NODE_ENV}
+        - GITHUB_TOKEN=${GITHUB_TOKEN}
       cache_from:
         - ghcr.io/alien-worlds/eosdac_api
     environment:
