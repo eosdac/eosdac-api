@@ -11,10 +11,10 @@
     debug "^4.3.4"
     safe-buffer "~5.1.2"
 
-"@alien-worlds/api-core@0.0.11", "@alien-worlds/api-core@^0.0.11":
-  version "0.0.11"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/api-core/0.0.11/b0c0932ea03a9fa44b13027c0eaa708784533560#b0c0932ea03a9fa44b13027c0eaa708784533560"
-  integrity sha512-Lxr3+ISHSDBa790xx5n33rxdB6rZ8g+G04LvuvT6hWOhznp+S57aKB+BffMMuEYkXm7XwSCJFl1USgibbGMcKQ==
+"@alien-worlds/api-core@0.0.19", "@alien-worlds/api-core@^0.0.19":
+  version "0.0.19"
+  resolved "https://npm.pkg.github.com/download/@alien-worlds/api-core/0.0.19/a1ee97abdd3a0d79c2970b5d00a595da27c4ef48#a1ee97abdd3a0d79c2970b5d00a595da27c4ef48"
+  integrity sha512-Nir8J59fcIA5c1q31DByP/I6vJYrRx/YBAiM/Z3JjsvJ2VupjRkrR3XEoDAgOzBD3uLR8ZiKPZ3o31opIAVe4A==
   dependencies:
     amqplib "^0.10.3"
     eosjs "^22.1.0"
@@ -22,12 +22,12 @@
     mongodb "^4.9.1"
     reflect-metadata "^0.1.13"
 
-"@alien-worlds/eosdac-api-common@^0.0.6":
-  version "0.0.6"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/eosdac-api-common/0.0.6/2bb5c7aa6b129bbfde8463e79ce0bbd0b4b71042#2bb5c7aa6b129bbfde8463e79ce0bbd0b4b71042"
-  integrity sha512-TIYGqHSSV8JsJ1qWmMbcTt4y9YUkiNxauoIwBoA+10TRFkvIcTRC/BzT/1nVD7xWfj+4XSOI1Bwe61urc7LJ8w==
+"@alien-worlds/eosdac-api-common@0.0.12":
+  version "0.0.12"
+  resolved "https://npm.pkg.github.com/download/@alien-worlds/eosdac-api-common/0.0.12/a04bd27ea68a3ec9a345f628c1ae3ff2a18f3f70#a04bd27ea68a3ec9a345f628c1ae3ff2a18f3f70"
+  integrity sha512-qIj2p2Sm1NRUjeLRxtI+IUukXS6oYbRWoOoIXJ+6/+fE5MWDQXvhcGq1PnoVZmOFcB0fLYTLEaNyGHKrku1/9w==
   dependencies:
-    "@alien-worlds/api-core" "^0.0.11"
+    "@alien-worlds/api-core" "^0.0.19"
     crypto "^1.0.1"
     eosjs "^22.1.0"
     inversify "^6.0.1"

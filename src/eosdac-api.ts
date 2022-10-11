@@ -8,8 +8,10 @@ import { IncomingMessage, Server, ServerResponse } from 'http';
 import { config } from './config';
 import { Container } from 'inversify';
 import { FastifyRoute } from './fastify.route';
+import { GetProposalsCountsRoute } from './endpoints/proposals-counts/routes/proposals-counts.route';
 import { GetStateRoute } from './endpoints/state/routes/state.route';
 import { logger } from './connections/logger';
+import { ProposalsCountsController } from './endpoints/proposals-counts/domain/proposals-counts.controller';
 import { setupEndpointDependencies } from './endpoints/api.ioc.config';
 import { StateController } from './endpoints/state/domain/state.controller';
 
@@ -42,7 +44,6 @@ export const buildAPIServer = async () => {
 	api.register(require('./api-handlers/memberCounts'), { prefix });
 	api.register(require('./api-handlers/memberSnapshot'), { prefix });
 	api.register(require('./api-handlers/myDacs'), { prefix });
-	api.register(require('./api-handlers/proposalsCounts'), { prefix });
 	api.register(require('./api-handlers/proposalsInbox'), { prefix });
 	api.register(require('./api-handlers/referendums'), { prefix });
 	api.register(require('./api-handlers/tokensOwned'), { prefix });
@@ -60,10 +61,20 @@ export const buildAPIServer = async () => {
 		StateController.Token
 	);
 
+	const proposalsCountsController: ProposalsCountsController =
+		apiIoc.get<ProposalsCountsController>(ProposalsCountsController.Token);
+
 	// Mount routes
 	FastifyRoute.mount(
 		api,
 		GetStateRoute.create(stateController.getState.bind(stateController))
+	);
+
+	FastifyRoute.mount(
+		api,
+		GetProposalsCountsRoute.create(
+			proposalsCountsController.proposalsCounts.bind(proposalsCountsController)
+		)
 	);
 
 	const mongo_url = `${config.mongo.url}/${config.mongo.dbName}`;

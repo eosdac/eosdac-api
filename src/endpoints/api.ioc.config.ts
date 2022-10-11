@@ -1,10 +1,15 @@
 import { AsyncContainerModule, Container } from 'inversify';
+import {
+	bindStateRepository,
+	bindWorkerProposalRepository,
+} from '@alien-worlds/eosdac-api-common';
 
 import AppConfig from 'src/config/app-config';
-import { bindStateRepository } from '@alien-worlds/eosdac-api-common';
 import { GetCurrentBlockUseCase } from './state/domain/use-cases/get-current-block.use-case';
+import { GetProposalsUseCase } from './proposals-counts/domain/use-cases/get-proposals.use-case';
 import { MongoClient } from 'mongodb';
 import { MongoSource } from '@alien-worlds/api-core';
+import { ProposalsCountsController } from './proposals-counts/domain/proposals-counts.controller';
 import { StateController } from './state/domain/state.controller';
 
 /*imports*/
@@ -38,6 +43,17 @@ export const setupEndpointDependencies = async (
 		bind<StateController>(StateController.Token).to(StateController);
 		bind<GetCurrentBlockUseCase>(GetCurrentBlockUseCase.Token).to(
 			GetCurrentBlockUseCase
+		);
+
+		/**
+		 * WORKER PROPOSALS
+		 */
+		bindWorkerProposalRepository(container, mongoSource);
+		bind<ProposalsCountsController>(ProposalsCountsController.Token).to(
+			ProposalsCountsController
+		);
+		bind<GetProposalsUseCase>(GetProposalsUseCase.Token).to(
+			GetProposalsUseCase
 		);
 	});
 
