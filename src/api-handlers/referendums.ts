@@ -1,11 +1,7 @@
 import { referendumsSchema } from '../schemas';
 
-import { loadConfig } from '../functions';
-
 async function getReferendums(fastify, request) {
 	return new Promise(async (resolve, reject) => {
-		const config = loadConfig();
-
 		const db = fastify.mongo.db;
 		const dac_id = request.dac();
 

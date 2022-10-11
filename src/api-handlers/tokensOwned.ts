@@ -1,7 +1,6 @@
 import { tokensOwnedSchema } from '../schemas';
 
 async function tokensOwned(fastify, request) {
-	// console.log(request)
 	return new Promise(async (resolve, reject) => {
 		const db = fastify.mongo.db;
 		const collection = db.collection('tokens');
@@ -15,7 +14,6 @@ async function tokensOwned(fastify, request) {
 		const res = await collection.find(query);
 		res.forEach(
 			row => {
-				// console.log(row);
 				const ti = token_info.get(`${row.code}:${row.symbol}`);
 
 				const token_data = {
@@ -36,7 +34,6 @@ async function tokensOwned(fastify, request) {
 				tokens_res.push(token_data);
 			},
 			() => {
-				// console.log(tokens_res);
 				resolve(tokens_res);
 			}
 		);

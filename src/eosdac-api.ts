@@ -3,13 +3,20 @@
 process.title = 'eosdac-api';
 
 import fastify, { FastifyInstance } from 'fastify';
-import fastifyOAS = require('fastify-oas');
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
-const openApi = require('./open-api');
-const config = require('./functions').loadConfig();
-
+import { config } from './config';
+import { Container } from 'inversify';
+import { FastifyRoute } from './fastify.route';
+import { GetStateRoute } from './endpoints/state/routes/state.route';
 import { logger } from './connections/logger';
+import { setupEndpointDependencies } from './endpoints/api.ioc.config';
+import { StateController } from './endpoints/state/domain/state.controller';
+
+import fastifyOAS = require('fastify-oas');
+
+const openApi = require('./open-api');
+
 logger('eosdac-api', config.logger);
 
 export const buildAPIServer = async () => {
@@ -38,13 +45,26 @@ export const buildAPIServer = async () => {
 	api.register(require('./api-handlers/proposalsCounts'), { prefix });
 	api.register(require('./api-handlers/proposalsInbox'), { prefix });
 	api.register(require('./api-handlers/referendums'), { prefix });
-	api.register(require('./api-handlers/state'), { prefix });
 	api.register(require('./api-handlers/tokensOwned'), { prefix });
 	api.register(require('./api-handlers/transfers'), { prefix });
 	api.register(require('./api-handlers/voters'), { prefix });
 	api.register(require('./api-handlers/votesTimeline'), { prefix });
 
 	api.register(fastifyOAS, openApi.options);
+
+	// Set IOC
+	const apiIoc = await setupEndpointDependencies(new Container(), config);
+
+	// controllers
+	const stateController: StateController = apiIoc.get<StateController>(
+		StateController.Token
+	);
+
+	// Mount routes
+	FastifyRoute.mount(
+		api,
+		GetStateRoute.create(stateController.getState.bind(stateController))
+	);
 
 	const mongo_url = `${config.mongo.url}/${config.mongo.dbName}`;
 	api.register(require('fastify-mongodb'), {
@@ -63,9 +83,9 @@ export const buildAPIServer = async () => {
 	api.ready().then(
 		async () => {
 			console.log(
-				`Started API server with config ${process.env.CONFIG} on ${
-					process.env.SERVER_ADDR || '127.0.0.1'
-				}:${process.env.SERVER_PORT}`
+				`Started API server with config ${config.environment} on ${
+					config.host || '127.0.0.1'
+				}:${config.port}`
 			);
 			await api.oas();
 		},
@@ -76,18 +96,3 @@ export const buildAPIServer = async () => {
 
 	return api;
 };
-
-export const startAPIServer = async () => {
-	try {
-		const api = await buildAPIServer();
-		await api.listen(
-			parseInt(process.env.SERVER_PORT),
-			process.env.SERVER_ADDR
-		);
-	} catch (err) {
-		console.log(err);
-		process.exit(1);
-	}
-};
-
-startAPIServer();

@@ -1,10 +1,9 @@
 import assert = require('assert');
-import { votesTimelineSchema } from '../schemas';
 
 import { Long as MongoLong } from 'mongodb';
+import { votesTimelineSchema } from '../schemas';
 
 async function votesTimeline(fastify, request) {
-	// console.log(request)
 	return new Promise(async (resolve, reject) => {
 		const dac_config = await request.dac_config();
 		const dac_id = request.dac();
@@ -35,10 +34,6 @@ async function votesTimeline(fastify, request) {
 			const info_res = await api.rpc.get_info();
 			end_block = info_res.head_block_num;
 		}
-
-		console.log(
-			`Start: ${start_block}, End: ${end_block}, End timestamp: ${end_block_timestamp}`
-		);
 
 		const accounts = account.split(',');
 
@@ -71,7 +66,6 @@ async function votesTimeline(fastify, request) {
 			query.block_num['$lte'] = new MongoLong(end_block);
 		}
 
-		// console.log(query)
 		const range_size = 60 * 60 * 24 * 2; // one day in blocks
 
 		const boundaries = [];
@@ -121,7 +115,6 @@ async function votesTimeline(fastify, request) {
 		const res = await collection.aggregate(pipeline);
 		res.forEach(
 			row => {
-				// console.log(row);
 				if (row._id.block !== 'out_of_range') {
 					const cand = row._id.name;
 

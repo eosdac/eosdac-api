@@ -1,10 +1,7 @@
 import { dacInfoSchema } from '../schemas';
-import { loadConfig } from '../functions';
 
 async function getDacConfig(fastify, request) {
 	return new Promise(async (resolve, reject) => {
-		const config = loadConfig();
-
 		const db = fastify.mongo.db;
 		const collection = db.collection('dacdirectory');
 		const dac_id = request.query.dac_id;
@@ -22,24 +19,15 @@ async function getDacConfig(fastify, request) {
 				`You must supply either dac_id or symbol_code and symbol_contract`
 			);
 		}
-		console.log(query);
 
 		const res = await collection.findOne(query);
 		if (res) {
 			delete res._id;
 
-			console.log(res);
-
 			resolve({ results: [res], count: 1 });
 		} else {
 			resolve({ results: [], count: 0 });
 		}
-
-		// res.forEach((row) => {
-		//     out.push(row);
-		// }, () => {
-		//     resolve(out);
-		// });
 	});
 }
 

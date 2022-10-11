@@ -1,22 +1,17 @@
-import { dacConfigSchema } from '../schemas';
-
-import { TextDecoder, TextEncoder } from 'text-encoding';
 import { Api, JsonRpc } from '@jafri/eosjs2';
+import { TextDecoder, TextEncoder } from 'text-encoding';
+
+import { config } from '../config';
+import { dacConfigSchema } from '../schemas';
 import fetch from 'node-fetch';
 
-import { loadConfig } from '../functions';
-
 async function getDacConfig(fastify, request) {
-	// console.log(request)
-
 	return new Promise(async (resolve, reject) => {
-		const config = loadConfig();
-
 		const rpc = new JsonRpc(config.eos.endpoint, { fetch });
 		const api = new Api({
 			rpc,
 			signatureProvider: null,
-			chainId: config.chainId,
+			chainId: config.eos.chainId,
 			textDecoder: new TextDecoder(),
 			textEncoder: new TextEncoder(),
 		});

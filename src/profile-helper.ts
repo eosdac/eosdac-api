@@ -69,7 +69,6 @@ export async function getProfiles(
 	const found_accounts = [];
 	const result = await res.next();
 	result.results = result.results.map(row => {
-		// console.log(row.profile)
 		if (typeof row.profile === 'string') {
 			try {
 				row.profile = JSON.parse(row.profile);
@@ -108,9 +107,7 @@ export async function getProfiles(
 		const data = result.results[r];
 		data.member_type = await getMemberType(data.account, dacId, db);
 
-		// console.log(data);
 		result.results[r] = data;
-		// console.log(data);
 	}
 
 	if (result.count.length) {

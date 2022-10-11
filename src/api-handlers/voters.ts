@@ -1,20 +1,14 @@
 import { votersSchema } from '../schemas';
 
 async function voters(fastify, request) {
-	// console.log(request)
-
 	return new Promise(async (resolve, reject) => {
 		const dac_config = await request.dac_config();
-		// console.log(dac_config);
-		//console.log(dac_directory._custodian_contracts);
 		const dac_id = request.dac();
 
-		const api = fastify.eos.api;
 		const db = fastify.mongo.db;
 		const collection = db.collection('voters');
 
 		const custodian_contract = dac_config.accounts.get(2);
-		// const custodian_contract = 'daccustodian';
 
 		const candidate = request.query.candidate;
 

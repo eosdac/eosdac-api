@@ -53,7 +53,6 @@ async function getMember(fastify, request) {
 	const found_accounts = [];
 	const result = await res.next();
 	result.results = result.results.map(row => {
-		// console.log(row.profile)
 		if (typeof row.profile === 'string') {
 			row.profile = JSON.parse(row.profile);
 		}
@@ -80,8 +79,6 @@ async function getMember(fastify, request) {
 			});
 		}
 	});
-
-	// console.log(missing_accounts)
 
 	if (result.count.length) {
 		result.count = result.results.length;

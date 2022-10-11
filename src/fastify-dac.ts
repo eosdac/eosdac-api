@@ -1,6 +1,6 @@
 const fp = require('fastify-plugin');
 
-import { loadConfig } from './functions';
+import { config } from './config';
 import { DacDirectory } from './dac-directory';
 
 const tokenInfo = require('../tokens.json');
@@ -12,19 +12,15 @@ module.exports = fp(
 			return this.dac_name_cache.get(dac_name);
 		});
 		fastify.decorateRequest('dac', function () {
-			const config = loadConfig();
 			return this.headers['x-dac-name'] || config.eos.legacyDacs[0];
 		});
 		fastify.decorateRequest('dac_directory', async function () {
-			const config = loadConfig();
 			const dac_directory = new DacDirectory({ config, db: fastify.db });
 			await dac_directory.reload();
 
 			return dac_directory;
 		});
 		fastify.decorateRequest('dac_config', async function () {
-			const global_config = loadConfig();
-
 			const dac_name = this.dac();
 			const dac_config_cache = fastify.dac_cache_get(dac_name);
 			if (dac_config_cache) {
@@ -32,14 +28,13 @@ module.exports = fp(
 				return dac_config_cache;
 			} else {
 				const res = await fastify.eos.rpc.get_table_rows({
-					code: global_config.eos.dacDirectoryContract,
-					scope: global_config.eos.dacDirectoryContract,
+					code: config.eos.dacDirectoryContract,
+					scope: config.eos.dacDirectoryContract,
 					table: 'dacs',
 					lower_bound: dac_name,
 					upper_bound: dac_name,
 				});
 
-				// console.log(res);
 				if (res.rows.length) {
 					const row = res.rows[0];
 					if (row.dac_id === dac_name) {

@@ -36,7 +36,6 @@ export async function eosTableAtBlock({
 		}
 
 		const second_match = { present: 1 };
-		// console.log(match)
 
 		for (const col in data_query) {
 			second_match['data.' + col] = data_query[col];
@@ -59,7 +58,6 @@ export async function eosTableAtBlock({
 			},
 			{ $match: second_match },
 			{ $sort: { block_num: -1 } },
-			// { '$group': { _id: null, count: { '$sum':1 }, results: { '$push': '$$ROOT' }}}
 			{
 				$facet: {
 					results: [{ $skip: skip }, { $limit: limit }],
@@ -75,18 +73,14 @@ export async function eosTableAtBlock({
 			}
 
 			results.forEach(doc => {
-				// console.log(doc);
 				doc.results = doc.results.map(result => {
 					delete result._id;
 					delete result.present;
 
 					return result;
 				});
-				// console.log('COUNT', doc.count)
 				doc.count = doc.count.length ? doc.count[0].count : 0;
 				resolve(doc);
-				// console.log("DOC", doc.results)
-				// ret_data.push({block_num:doc.block_num, data:doc.data})
 			});
 		};
 

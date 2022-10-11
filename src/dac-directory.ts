@@ -1,9 +1,9 @@
 import { Api, JsonRpc } from '@jafri/eosjs2';
-import fetch from 'node-fetch';
 import { TextDecoder, TextEncoder } from 'text-encoding';
 
-import { logger } from './connections/logger';
 import { eosTableIter } from './eos-table';
+import fetch from 'node-fetch';
+import { logger } from './connections/logger';
 
 export class DacDirectory {
 	interested_queue: Map<any, any>;
@@ -104,19 +104,16 @@ export class DacDirectory {
 			const table_iter: any = new eosTableIter(query_data);
 
 			for await (const row of table_iter) {
-				// console.log(row);
 				row.accounts.forEach(acnt => {
 					this.add_account(acnt, row.dac_id);
 				});
 				// add the token contract
-				// console.log(`Adding ${row.symbol.contract}`);
 				this.add_account({ value: row.symbol.contract, key: 4 }, row.dac_id);
 			}
 		}
 	}
 
 	add_account(acnt, dac_id) {
-		// console.log(`Adding ${acnt} to set`);
 		this.interested_contracts.add(acnt.value);
 
 		if (acnt.key === 3) {

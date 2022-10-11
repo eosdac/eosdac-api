@@ -1,22 +1,18 @@
-import { candidatesSchema } from '../schemas';
-
+import { Api, JsonRpc } from '@jafri/eosjs2';
 import { TextDecoder, TextEncoder } from 'text-encoding';
 
-import { Api, JsonRpc } from '@jafri/eosjs2';
+import { candidatesSchema } from '../schemas';
+import { config } from '../config';
 import fetch from 'node-fetch';
 import { getProfiles } from '../profile-helper';
 
-import { loadConfig } from '../functions';
-
 async function getCandidates(fastify, request) {
 	return new Promise(async (resolve, reject) => {
-		const config = loadConfig();
-
 		const rpc = new JsonRpc(config.eos.endpoint, { fetch });
 		const api = new Api({
 			rpc,
 			signatureProvider: null,
-			chainId: config.chainId,
+			chainId: config.eos.chainId,
 			textDecoder: new TextDecoder(),
 			textEncoder: new TextEncoder(),
 		});
@@ -57,8 +53,6 @@ async function getCandidates(fastify, request) {
 
 		if (candidate_res.rows.length) {
 			const candidates = candidate_res.rows;
-			// console.log(candidates)
-
 			const active = candidates.filter(a => a.is_active);
 			active.forEach(cand => {
 				cand.is_custodian = custodians_map.has(cand.candidate_name);

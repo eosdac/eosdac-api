@@ -1,11 +1,8 @@
 import { getMsigProposalsSchema } from '../schemas';
 
 async function getMsigProposals(fastify, request) {
-	// console.log(request)
-
 	return new Promise(async (resolve, reject) => {
 		const dac_config = await request.dac_config();
-		//console.log(dac_directory._custodian_contracts);
 		const dac_id = request.dac();
 
 		const api = fastify.eos.api;
@@ -55,7 +52,6 @@ async function getMsigProposals(fastify, request) {
 		}
 
 		try {
-			console.log(`getMsigProposals query: ${JSON.stringify(query, null, 2)}`);
 			const res = collection
 				.find(query)
 				.sort({ block_num: -1 })
@@ -74,7 +70,6 @@ async function getMsigProposals(fastify, request) {
 				} else {
 					res.forEach(
 						msig => {
-							console.log(`msig: ${JSON.stringify(msig, null, 2)}`);
 							delete msig._id;
 							let custodians;
 
@@ -84,9 +79,6 @@ async function getMsigProposals(fastify, request) {
 							} else {
 								custodians = msig.custodians;
 							}
-
-							// msig.requested_approvals = msig.requested_approvals.filter((req) => custodians.includes(req.actor));
-							// msig.provided_approvals = msig.provided_approvals.filter((pro) => custodians.includes(pro.actor));
 
 							if (status === 2) {
 								// cancelled
