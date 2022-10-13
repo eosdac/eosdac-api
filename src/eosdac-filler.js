@@ -302,5 +302,5 @@ commander
     .parse(process.argv);
 
 
-const fm = new FillManager(commander);
+const fm = new FillManager(commander.opts());
 fm.run();

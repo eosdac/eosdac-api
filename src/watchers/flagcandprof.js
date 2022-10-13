@@ -4,6 +4,10 @@ const config = loadConfig();
 
 class FlagsHandler {
 
+    constructor() {
+        this.logger = require('../connections/logger')('watcher-multisig', config.logger);
+    }
+
     async action({doc, dac_directory, db}) {
         const {
             action: {
