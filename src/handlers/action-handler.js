@@ -144,6 +144,10 @@ class ActionHandler {
         if (account === this.config.eos.msigContract){
             return true;
         }
+        
+        if (account === this.config.eos.custodianContract && name === 'flagcandprof'){
+            return true;
+        }
 
         if (account === this.config.eos.dacDirectoryContract) {
             return true;
