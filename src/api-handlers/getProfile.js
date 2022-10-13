@@ -25,7 +25,7 @@ async function getProfile(fastify, request) {
     const blockedAccounts = await getBlockedAccounts(db, dacId, accounts);
     const result = { results: [], count: profiles.count };
 
-    profiles.forEach(profile => {
+    profiles.results.forEach(profile => {
         const { account } = profile;
         if (blockedAccounts.includes(account)) {
             result.results.push(getRedactedCandidateResult(account));
@@ -40,7 +40,7 @@ async function getProfile(fastify, request) {
 
 const getRedactedCandidateResult = (account) => ({
   account,
-  error:{
+  error: {
     name: 'Redacted Candidate',
     body: `Candidate "${account}" profile has been flagged for supplying inappropriate content.`
   }
