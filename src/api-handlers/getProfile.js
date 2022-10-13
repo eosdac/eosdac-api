@@ -1,6 +1,7 @@
-const {getProfileSchema} = require('../schemas');
-const {NotFound} = require('http-errors');
-const {getProfiles} = require('../profile-helper.js');
+const { getProfileSchema } = require('../schemas');
+const { NotFound } = require('http-errors');
+const { getProfiles } = require('../profile-helper.js');
+const { getBlockedAccounts } = require('../flags-helper.js');
 const { loadDacConfig } = require('../functions');
 
 async function getProfile(fastify, request) {
@@ -20,11 +21,30 @@ async function getProfile(fastify, request) {
         legacy = true;
     }
 
-    const result = getProfiles(db, dacConfig, dacId, accounts, legacy);
+    const profiles = await getProfiles(db, dacConfig, dacId, accounts, legacy);
+    const blockedAccounts = await getBlockedAccounts(db, dacId, accounts);
+    const result = { results: [], count: profiles.count };
 
+    profiles.forEach(profile => {
+        const { account } = profile;
+        if (blockedAccounts.includes(account)) {
+            result.results.push(getRedactedCandidateResult(account));
+        } else {
+            result.results.push(profile);
+        }
 
-    return result
+    });
+
+    return result;
 }
+
+const getRedactedCandidateResult = (account) => ({
+  account,
+  error:{
+    name: 'Redacted Candidate',
+    body: `Candidate "${account}" profile has been flagged for supplying inappropriate content.`
+  }
+});
 
 
 module.exports = function (fastify, opts, next) {
