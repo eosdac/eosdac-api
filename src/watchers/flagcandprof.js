@@ -34,15 +34,21 @@ class FlagsHandler {
             };
 
             const collection = db.collection('flags');
-            collection.insertOne(flagDocument).then(() => {
-                this.logger.info('Flag save completed');
+            await collection.updateOne(
+                flagDocument, 
+                {
+                  $setOnInsert: flagDocument
+                },
+                {upsert: true}
+            ).then((result) => {
+                if (result.upsertedCount) {
+                  this.logger.info('Flag save complete');
+                } else if(result.matchedCount) {
+                  this.logger.info('Flag already exists');
+                }
             }).catch((e) => {
-            if (e.code === 11000) {
-                this.logger.info('Flag save failed - duplicate');
-            } else {
                 this.logger.error('Flag save failed', {e});
-            }
-        });
+          });
         }
     }
     async delta({doc, dac_directory, db}) {}
