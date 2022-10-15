@@ -213,7 +213,7 @@ class Connection {
       this.currentArgs = {
         start_block_num: 0,
         end_block_num: 0xffffffff,
-        max_messages_in_flight: 5,
+        max_messages_in_flight: 1,
         have_positions: [],
         irreversible_only: false,
         fetch_block: false,

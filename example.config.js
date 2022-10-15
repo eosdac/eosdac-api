@@ -1,4 +1,5 @@
 module.exports = {
+    fillerChunkSize: 5000,
     fillClusterSize: 4,
     clusterSize: 10,
     mongo: {

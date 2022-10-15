@@ -85,7 +85,7 @@ class FillManager {
                 this.logger.info(`Replaying from ${this.start_block} in parallel mode`);
 
 
-                let chunk_size = 10000;
+                let chunk_size = this.config.fillerChunkSize || 5000;
                 const range = lib - this.start_block;
 
                 if (chunk_size > (range / this.config.fillClusterSize)) {
