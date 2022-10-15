@@ -1,7 +1,7 @@
 const { getProfileSchema } = require('../schemas');
 const { NotFound } = require('http-errors');
 const { getProfiles } = require('../profile-helper.js');
-const { getBlockedAccounts } = require('../flags-helper.js');
+const { getAccountFlags } = require('../flags-helper.js');
 const { loadDacConfig } = require('../functions');
 
 async function getProfile(fastify, request) {
@@ -22,17 +22,18 @@ async function getProfile(fastify, request) {
     }
 
     const profiles = await getProfiles(db, dacConfig, dacId, accounts, legacy);
-    const blockedAccounts = await getBlockedAccounts(db, dacId, accounts);
+    const flags = await getAccountFlags(db, dacId, accounts);
     const result = { results: [], count: profiles.count };
 
     profiles.results.forEach(profile => {
         const { account } = profile;
-        if (blockedAccounts.includes(account)) {
+        const flag = flags.find(flag => flag.account === account);
+
+        if (flag && flag.block) {
             result.results.push(getRedactedCandidateResult(account));
         } else {
             result.results.push(profile);
         }
-
     });
 
     return result;
