@@ -34,6 +34,12 @@ class FlagsHandler {
             };
 
             const collection = db.collection('flags');
+            await collection.createIndex({
+                "block_num" : 1,
+                "block" : 1,
+                "cand" : 1,
+                "dac_id" : 1
+            }, { background:true });
             await collection.updateOne(
                 flagDocument, 
                 {
