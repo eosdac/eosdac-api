@@ -146,10 +146,10 @@ class FillManager {
                 // this.br.start()
             } else {
                 //queue.process('block_range', 1, this.processBlockRange.bind(this))
-                if (!this.populate_only) {
-                    this.logger.info(`Listening to queue for block_range`);
-                    this.amq.listen('block_range', this.processBlockRange.bind(this));
-                } 
+                // if (!this.populate_only) {
+                //     this.logger.info(`Listening to queue for block_range`);
+                //     this.amq.listen('block_range', this.processBlockRange.bind(this));
+                // } 
             }
 
         } else if (this.test_block) {
