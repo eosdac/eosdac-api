@@ -8,7 +8,7 @@ const Int64BE = require('int64-buffer').Int64BE;
 const DacDirectory = require('./dac-directory');
 
 const {ActionHandler, TraceHandler, DeltaHandler} = require('./handlers');
-const StateReceiver = require('@eosdacio/eosio-statereceiver');
+const StateReceiver = require('./state-receiver');
 
 const Amq = require('./connections/amq');
 const cluster = require('cluster');

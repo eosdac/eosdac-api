@@ -1,5 +1,6 @@
 module.exports = {
     // redisPrefix: 'q',
+    fillerChunkSize: 5000,
     fillClusterSize: 10,
     clusterSize: 6,
     // redis: {

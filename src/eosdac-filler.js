@@ -85,7 +85,7 @@ class FillManager {
                 this.logger.info(`Replaying from ${this.start_block} in parallel mode`);
 
 
-                let chunk_size = 10000;
+                let chunk_size = this.config.fillerChunkSize || 5000;
                 const range = lib - this.start_block;
 
                 if (chunk_size > (range / this.config.fillClusterSize)) {
@@ -146,10 +146,10 @@ class FillManager {
                 // this.br.start()
             } else {
                 //queue.process('block_range', 1, this.processBlockRange.bind(this))
-                if (!this.populate_only) {
-                    this.logger.info(`Listening to queue for block_range`);
-                    this.amq.listen('block_range', this.processBlockRange.bind(this));
-                } 
+                // if (!this.populate_only) {
+                //     this.logger.info(`Listening to queue for block_range`);
+                //     this.amq.listen('block_range', this.processBlockRange.bind(this));
+                // } 
             }
 
         } else if (this.test_block) {
@@ -302,5 +302,5 @@ commander
     .parse(process.argv);
 
 
-const fm = new FillManager(commander);
+const fm = new FillManager(commander.opts());
 fm.run();
