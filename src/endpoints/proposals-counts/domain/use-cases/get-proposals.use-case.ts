@@ -1,5 +1,8 @@
 import { Result, UseCase } from '@alien-worlds/api-core';
-import { WorkerProposal, WorkerProposalRepository } from '@alien-worlds/eosdac-api-common';
+import {
+	WorkerProposal,
+	WorkerProposalRepository,
+} from '@alien-worlds/eosdac-api-common';
 import { inject, injectable } from 'inversify';
 
 import { ProposalsCountsInput } from '../models/proposals-counts.input';
@@ -17,7 +20,7 @@ export class GetProposalsUseCase implements UseCase<WorkerProposal[]> {
 		/*injections*/
 		@inject(WorkerProposalRepository.Token)
 		private workerProposalRepository: WorkerProposalRepository
-	) { }
+	) {}
 
 	/**
 	 * @async

@@ -1,5 +1,4 @@
 export const getProposalsSchema = require('./get_proposals'),
-	proposalsInboxSchema = require('./proposals_inbox'),
 	getMsigProposalsSchema = require('./get_msig_proposals'),
 	getProfileSchema = require('./get_profile'),
 	balanceTimelineSchema = require('./balance_timeline'),
