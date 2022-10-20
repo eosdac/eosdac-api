@@ -15,6 +15,7 @@ import { ProposalsCountsInput } from '../../models/proposals-counts.input';
 
 const workerProposalRepository = {
 	find: jest.fn(),
+	count: jest.fn(),
 };
 
 let container: Container;

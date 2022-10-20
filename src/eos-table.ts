@@ -1,4 +1,4 @@
-import { Long as MongoLong } from 'mongodb';
+import { Long as MongoLong } from '@alien-worlds/api-core';
 
 export async function eosTableAtBlock({
 	db,

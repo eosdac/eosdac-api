@@ -1,5 +1,9 @@
-import { Filter, FindOptions } from 'mongodb';
-import { MongoFindQueryParams, QueryModel } from '@alien-worlds/api-core';
+import {
+	Filter,
+	FindOptions,
+	MongoFindQueryParams,
+	QueryModel,
+} from '@alien-worlds/api-core';
 
 import { ProposalsCountsRequestDto } from '../../data/dtos/proposals-counts.dto';
 

@@ -1,4 +1,4 @@
-import { Long } from 'mongodb';
+import { Long } from '@alien-worlds/api-core';
 
 /**
  * Remove undefined properties and empty objects.

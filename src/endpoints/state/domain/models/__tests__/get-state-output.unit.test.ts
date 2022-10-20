@@ -1,7 +1,7 @@
 import { State, StateDocument } from '@alien-worlds/eosdac-api-common';
 
 import { GetStateOutput } from '../get-state-output';
-import { Long } from 'mongodb';
+import { Long } from '@alien-worlds/api-core';
 
 const stateDocument: StateDocument = {
 	name: 'currentBlock',
