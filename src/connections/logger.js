@@ -1,10 +1,14 @@
 const winston = require('winston');
 // const DatadogTransport = require('winston-datadog');
 const DatadogTransport = require('@shelf/winston-datadog-logs-transport');
+const { loadConfig } = require('../functions');
 
 const logger = ((service='undefined-service', config) => {
+
+    const level = config?.level || 'debug';
+
     const _l = winston.createLogger({
-        level: 'debug',
+        level,
         format: winston.format.json(),
         defaultMeta: { service },
         transports: [
