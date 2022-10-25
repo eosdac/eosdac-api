@@ -1,6 +1,6 @@
 import { eosTableAtBlock } from '../eos-table';
 import { memberSnapshotSchema } from '../schemas';
-import { Long as MongoLong } from 'mongodb';
+import { Long as MongoLong } from '@alien-worlds/api-core';
 
 async function memberSnapshot(fastify, request) {
 	return new Promise(async (resolve, reject) => {

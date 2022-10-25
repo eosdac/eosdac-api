@@ -19,7 +19,7 @@ export class ProposalsCountsController {
 	constructor(
 		@inject(GetProposalsUseCase.Token)
 		private getProposalsUseCase: GetProposalsUseCase /*injections*/
-	) { }
+	) {}
 
 	/*methods*/
 

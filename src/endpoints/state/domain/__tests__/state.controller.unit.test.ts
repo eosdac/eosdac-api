@@ -2,8 +2,7 @@ import 'reflect-metadata';
 
 import { State, StateDocument } from '@alien-worlds/eosdac-api-common';
 import { Container } from 'inversify';
-import { Failure } from '@alien-worlds/api-core';
-import { Long } from 'mongodb';
+import { Failure, Long } from '@alien-worlds/api-core';
 import { GetCurrentBlockUseCase } from '../use-cases/get-current-block.use-case';
 import { StateController } from '../state.controller';
 

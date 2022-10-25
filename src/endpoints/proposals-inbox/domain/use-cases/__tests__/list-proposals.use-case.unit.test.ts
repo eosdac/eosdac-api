@@ -7,8 +7,8 @@ import {
 } from '@alien-worlds/eosdac-api-common';
 
 import { Container } from 'inversify';
-import { GetProposalsUseCase } from '../get-proposals.use-case';
-import { ProposalsCountsInput } from '../../models/proposals-counts.input';
+import { ListProposalsUseCase } from '../list-proposals.use-case';
+import { ProposalsInboxInput } from '../../models/proposals-inbox.input';
 
 /*imports*/
 /*mocks*/
@@ -19,8 +19,13 @@ const workerProposalRepository = {
 };
 
 let container: Container;
-let useCase: GetProposalsUseCase;
-const input: ProposalsCountsInput = { account: 'string' };
+let useCase: ListProposalsUseCase;
+const input: ProposalsInboxInput = {
+	account: 'string',
+	dacId: 'string',
+	skip: 0,
+	limit: 100,
+};
 
 describe('Get Proposals Unit tests', () => {
 	beforeAll(() => {
@@ -30,12 +35,12 @@ describe('Get Proposals Unit tests', () => {
 			.bind<WorkerProposalRepository>(WorkerProposalRepository.Token)
 			.toConstantValue(workerProposalRepository);
 		container
-			.bind<GetProposalsUseCase>(GetProposalsUseCase.Token)
-			.to(GetProposalsUseCase);
+			.bind<ListProposalsUseCase>(ListProposalsUseCase.Token)
+			.to(ListProposalsUseCase);
 	});
 
 	beforeEach(() => {
-		useCase = container.get<GetProposalsUseCase>(GetProposalsUseCase.Token);
+		useCase = container.get<ListProposalsUseCase>(ListProposalsUseCase.Token);
 	});
 
 	afterAll(() => {
@@ -44,7 +49,7 @@ describe('Get Proposals Unit tests', () => {
 	});
 
 	it('"Token" should be set', () => {
-		expect(GetProposalsUseCase.Token).not.toBeNull();
+		expect(ListProposalsUseCase.Token).not.toBeNull();
 	});
 
 	it('Should return a failure when ...', async () => {

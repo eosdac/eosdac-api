@@ -1,17 +1,19 @@
-import 'reflect-metadata';
+import { Long } from '@alien-worlds/api-core';
 import {
 	State,
 	StateDocument,
 	StateRepository,
 } from '@alien-worlds/eosdac-api-common';
 import { Container } from 'inversify';
+
 import { GetCurrentBlockUseCase } from '../get-current-block.use-case';
-import { Long } from 'mongodb';
+
+import 'reflect-metadata';
 
 /*imports*/
 /*mocks*/
 
-const stateRepository = {
+const stateRepository: any = {
 	getCurrentBlock: jest.fn(),
 };
 

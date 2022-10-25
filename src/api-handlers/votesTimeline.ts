@@ -1,6 +1,6 @@
 import assert = require('assert');
 
-import { Long as MongoLong } from 'mongodb';
+import { Long as MongoLong } from '@alien-worlds/api-core';
 import { votesTimelineSchema } from '../schemas';
 
 async function votesTimeline(fastify, request) {

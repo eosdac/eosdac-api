@@ -12,6 +12,8 @@ import { GetProposalsCountsRoute } from './endpoints/proposals-counts/routes/pro
 import { GetStateRoute } from './endpoints/state/routes/state.route';
 import { logger } from './connections/logger';
 import { ProposalsCountsController } from './endpoints/proposals-counts/domain/proposals-counts.controller';
+import { ProposalsInboxController } from './endpoints/proposals-inbox/domain/proposals-inbox.controller';
+import { ProposalsInboxRoute } from './endpoints/proposals-inbox/routes/proposals-inbox.route';
 import { setupEndpointDependencies } from './endpoints/api.ioc.config';
 import { StateController } from './endpoints/state/domain/state.controller';
 
@@ -44,7 +46,6 @@ export const buildAPIServer = async () => {
 	api.register(require('./api-handlers/memberCounts'), { prefix });
 	api.register(require('./api-handlers/memberSnapshot'), { prefix });
 	api.register(require('./api-handlers/myDacs'), { prefix });
-	api.register(require('./api-handlers/proposalsInbox'), { prefix });
 	api.register(require('./api-handlers/referendums'), { prefix });
 	api.register(require('./api-handlers/tokensOwned'), { prefix });
 	api.register(require('./api-handlers/transfers'), { prefix });
@@ -64,6 +65,9 @@ export const buildAPIServer = async () => {
 	const proposalsCountsController: ProposalsCountsController =
 		apiIoc.get<ProposalsCountsController>(ProposalsCountsController.Token);
 
+	const proposalsInboxController: ProposalsInboxController =
+		apiIoc.get<ProposalsInboxController>(ProposalsInboxController.Token);
+
 	// Mount routes
 	FastifyRoute.mount(
 		api,
@@ -74,6 +78,13 @@ export const buildAPIServer = async () => {
 		api,
 		GetProposalsCountsRoute.create(
 			proposalsCountsController.proposalsCounts.bind(proposalsCountsController)
+		)
+	);
+
+	FastifyRoute.mount(
+		api,
+		ProposalsInboxRoute.create(
+			proposalsInboxController.proposalsInbox.bind(proposalsInboxController)
 		)
 	);
 

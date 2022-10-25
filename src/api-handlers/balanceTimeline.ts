@@ -1,5 +1,5 @@
 import { balanceTimelineSchema } from '../schemas';
-import { Long as MongoLong } from 'mongodb';
+import { Long as MongoLong } from '@alien-worlds/api-core';
 
 async function balanceTimeline(fastify, request) {
 	return new Promise(async (resolve, reject) => {
