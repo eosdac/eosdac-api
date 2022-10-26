@@ -5,6 +5,7 @@ export type Config = {
 	eos: EOSConfig;
 	logger: LoggerConfig;
 	docs: DocsConfig;
+	dac: DACConfig;
 };
 
 export type MongoConfig = {
@@ -35,4 +36,8 @@ export type DocsConfig = {
 	host: string;
 	routePrefix: string;
 	exposeRoute: boolean;
+};
+
+export type DACConfig = {
+	nameCache: Map<string, any>;
 };

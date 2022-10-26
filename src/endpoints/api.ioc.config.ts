@@ -1,14 +1,20 @@
 import { AsyncContainerModule, Container } from 'inversify';
 import {
+	bindActionRepository,
+	bindDacSmartContractRepository,
+	bindFlagRepository,
 	bindStateRepository,
 	bindWorkerProposalRepository,
 } from '@alien-worlds/eosdac-api-common';
-import { MongoClient, MongoSource } from '@alien-worlds/api-core';
+import { EosJsRpcSource, MongoClient, MongoSource } from '@alien-worlds/api-core';
 
 import AppConfig from 'src/config/app-config';
 import { GetCurrentBlockUseCase } from './state/domain/use-cases/get-current-block.use-case';
+import { GetProfilesUseCase } from './profile/domain/use-cases/get-profiles.use-case';
 import { GetProposalsUseCase } from './proposals-counts/domain/use-cases/get-proposals.use-case';
+import { IsProfileFlaggedUseCase } from './profile/domain/use-cases/is-profile-flagged.use-case';
 import { ListProposalsUseCase } from './proposals-inbox/domain/use-cases/list-proposals.use-case';
+import { ProfileController } from './profile/domain/profile.controller';
 import { ProposalsCountsController } from './proposals-counts/domain/proposals-counts.controller';
 import { ProposalsInboxController } from './proposals-inbox/domain/proposals-inbox.controller';
 import { StateController } from './state/domain/state.controller';
@@ -42,28 +48,35 @@ export const setupEndpointDependencies = async (
 		 */
 		bindStateRepository(container, mongoSource);
 		bind<StateController>(StateController.Token).to(StateController);
-		bind<GetCurrentBlockUseCase>(GetCurrentBlockUseCase.Token).to(
-			GetCurrentBlockUseCase
-		);
+		bind<GetCurrentBlockUseCase>(GetCurrentBlockUseCase.Token).to(GetCurrentBlockUseCase);
 
 		/**
 		 * WORKER PROPOSALS
 		 */
 		bindWorkerProposalRepository(container, mongoSource);
 
-		bind<ProposalsCountsController>(ProposalsCountsController.Token).to(
-			ProposalsCountsController
-		);
-		bind<GetProposalsUseCase>(GetProposalsUseCase.Token).to(
-			GetProposalsUseCase
-		);
+		bind<ProposalsCountsController>(ProposalsCountsController.Token).to(ProposalsCountsController);
+		bind<GetProposalsUseCase>(GetProposalsUseCase.Token).to(GetProposalsUseCase);
 
-		bind<ProposalsInboxController>(ProposalsInboxController.Token).to(
-			ProposalsInboxController
-		);
-		bind<ListProposalsUseCase>(ListProposalsUseCase.Token).to(
-			ListProposalsUseCase
-		);
+		bind<ProposalsInboxController>(ProposalsInboxController.Token).to(ProposalsInboxController);
+		bind<ListProposalsUseCase>(ListProposalsUseCase.Token).to(ListProposalsUseCase);
+
+		/**
+		 * FLAGS
+		 */
+		bindFlagRepository(container, mongoSource);
+
+		/**
+		 * ACTIONS
+		 */
+		bindActionRepository(container, mongoSource);
+		bindDacSmartContractRepository(container, new EosJsRpcSource(config.eos.endpoint), config.eos.dacDirectoryContract);
+
+		bind<ProfileController>(ProfileController.Token).to(ProfileController);
+		bind<GetProfilesUseCase>(GetProfilesUseCase.Token).to(GetProfilesUseCase);
+		bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token).to(IsProfileFlaggedUseCase);
+
+
 	});
 
 	await container.loadAsync(bindings);
