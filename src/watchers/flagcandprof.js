@@ -47,7 +47,6 @@ class FlagsHandler {
                 },
                 {upsert: true}
             ).then((result) => {
-                console.log('Flag:', flagDocument)
                 if (result.upsertedCount) {
                   this.logger.info(`Flag save complete`);
                 } else if(result.matchedCount) {
