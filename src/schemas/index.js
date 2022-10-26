@@ -10,6 +10,7 @@ module.exports = {
     dacConfigSchema: require('./dac_config'),
     dacInfoSchema: require('./dac_info'),
     candidatesSchema: require('./candidates'),
+    getPlanetCandidatesSchema: require('./get_planet_candidates'),
     memberSchema: require('./member'),
     memberCountsSchema: require('./member_counts'),
     tokensOwnedSchema: require('./tokens_owned'),

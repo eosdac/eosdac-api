@@ -1,14 +1,15 @@
-const {candidatesSchema} = require('../schemas');
+const {candidatesSchema, getPlanetCandidatesSchema} = require('../schemas');
 
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc} = require('@jafri/eosjs2');
 const fetch = require('node-fetch');
-const {getProfiles} = require('../profile-helper.js');
+const { getProfiles } = require('../profile-helper.js');
 
-const {loadConfig} = require('../functions');
+const {loadConfig, loadDacConfig} = require('../functions');
+const { getMemberTerms, getSignedMemberTerms } = require('../memberterms-helper');
+const { buildCandidateFullProfile, getVotedCandidates, getCandidatesProfiles, getCandidates } = require('../candidates-helper');
 
-
-async function getCandidates(fastify, request) {
+async function getActiveCandidates(fastify, request) {
 
     return new Promise(async (resolve, reject) => {
         const config = loadConfig();
@@ -90,12 +91,61 @@ async function getCandidates(fastify, request) {
 
 }
 
+async function getPlanetCandidates(fastify, request) {
+    const {
+        query: { walletId },
+        params: { dacId },
+    } = request;
+    const config = loadConfig();
+    const logger = require('../connections/logger')('candidates', config.logger);
+    const dacConfig = await loadDacConfig(fastify, dacId);
+    const api = new Api({
+        rpc: new JsonRpc(config.eos.endpoint, {fetch}),
+        signatureProvider: null,
+        chainId: config.chainId,
+        textDecoder: new TextDecoder(),
+        textEncoder: new TextEncoder(),
+    });
+    const db = fastify.mongo.db;
+    //
+    const candidates = await getCandidates(logger, api, dacId);
+    const votedCandidates = await getVotedCandidates(logger, api, dacId, walletId);
+
+    if (candidates.length === 0) {
+        return [];
+    }
+
+    const profiles = await getCandidatesProfiles(
+        logger,
+        db,
+        dacConfig,
+        dacId,
+        candidates.map(candidate => candidate.candidate_name),
+    );
+    const terms = await getMemberTerms(logger, api, dacId, 1);
+    const signed = await getSignedMemberTerms(logger, api, dacId, walletId);
+
+    console.log({terms, signed})
+
+    return candidates.map(
+        candidate => buildCandidateFullProfile(dacId, candidate, profiles.results, terms, signed, votedCandidates)
+    );
+};
 
 module.exports = function (fastify, opts, next) {
     fastify.get('/candidates', {
         schema: candidatesSchema.GET
     }, async (request, reply) => {
-        reply.send(await getCandidates(fastify, request));
+        reply.send(await getActiveCandidates(fastify, request));
+    });
+    next()
+};
+
+module.exports = function (fastify, opts, next) {
+    fastify.get('/:dacId/candidates', {
+        schema: getPlanetCandidatesSchema.GET
+    }, async (request, reply) => {
+        reply.send(await getPlanetCandidates(fastify, request));
     });
     next()
 };
