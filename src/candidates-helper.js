@@ -84,7 +84,6 @@ const buildCandidateFullProfile = (
     isActive,
     totalVotes,
     voteDecay,
-    votePower,
     ...profile?.profile,
     agreedTermVersion,
     currentPlanetMemberTermsSignedValid: agreedTermVersion === terms.version,
