@@ -108,7 +108,7 @@ async function getPlanetCandidates(fastify, request) {
     });
     const db = fastify.mongo.db;
     //
-    const candidates = await getCandidates(logger, api, dacId);
+    const candidates = await getCandidates(logger, api, dacId, 100);
     const votedCandidates = await getVotedCandidates(logger, api, dacId, walletId);
 
     if (candidates.length === 0) {

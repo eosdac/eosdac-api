@@ -1,15 +1,12 @@
 const { getProfiles } = require("./profile-helper");
 
-const getCandidates = async (logger, api, dacId, limit) => {
+const getCandidates = async (logger, api, dacId, limit = 100) => {
   try {  
     const query = {
         scope: dacId.toLowerCase(),
         code: 'dao.worlds',
         table: 'candidates',
-      }
-
-      if (limit) {
-        query.limit = limit;
+        limit,
       }
 
       const result = await api.rpc.get_table_rows(query)
