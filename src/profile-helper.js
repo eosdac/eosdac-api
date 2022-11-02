@@ -1,3 +1,5 @@
+const { getAccountFlags } = require("./flags-helper");
+
 const null_profile = {
     description: "",
     email: "",
@@ -22,7 +24,7 @@ async function getMemberType(account, dacName, db){
     return member_type;
 }
 
-async function getProfiles(db, dac_config, dacId, accounts, legacy = false) {
+async function getProfilesData(db, dac_config, dacId, accounts, legacy = false) {
     const collection = db.collection('actions');
     const cust_contract = dac_config.accounts.get(2);
 
@@ -108,6 +110,33 @@ async function getProfiles(db, dac_config, dacId, accounts, legacy = false) {
     if (result.count.length) {
         result.count = result.results.length
     }
+
+    return result;
+}
+
+const getRedactedCandidateResult = (account) => ({
+    account,
+    error: {
+      name: 'Redacted Candidate',
+      body: `Candidate "${account}" profile has been flagged for supplying inappropriate content.`
+    }
+  });
+
+async function getProfiles(db, dac_config, dacId, accounts, legacy = false) {
+    const profiles = await getProfilesData(db, dac_config, dacId, accounts, legacy);
+    const flags = await getAccountFlags(db, dacId, accounts);
+    const result = { results: [], count: profiles.count };
+
+    profiles.results.forEach(profile => {
+        const { account } = profile;
+        const flag = flags.find(flag => flag.account === account);
+
+        if (flag && flag.block) {
+            result.results.push(getRedactedCandidateResult(account));
+        } else {
+            result.results.push(profile);
+        }
+    });
 
     return result;
 }
