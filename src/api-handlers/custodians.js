@@ -26,7 +26,8 @@ async function getPlanetCustodians(fastify, request) {
     });
     const db = fastify.mongo.db;
     //
-    const custodians = await getCustodians(logger, api, dacId, 5);
+    const custodiansLimit = 5;
+    const custodians = await getCustodians(logger, api, dacId, custodiansLimit);
 
     if (custodians.length === 0) {
         return [];

@@ -108,7 +108,8 @@ async function getPlanetCandidates(fastify, request) {
     });
     const db = fastify.mongo.db;
     //
-    const candidates = await getCandidates(logger, api, dacId, 100);
+    const candidatesLimit = 100;
+    const candidates = await getCandidates(logger, api, dacId, candidatesLimit);
     const votedCandidates = await getVotedCandidates(logger, api, dacId, walletId);
 
     if (candidates.length === 0) {
@@ -122,10 +123,9 @@ async function getPlanetCandidates(fastify, request) {
         dacId,
         candidates.map(candidate => candidate.candidate_name),
     );
-    const terms = await getMemberTerms(logger, api, dacId, 1);
+    const termsLimit = 1;
+    const terms = await getMemberTerms(logger, api, dacId, termsLimit);
     const signed = await getSignedMemberTerms(logger, api, dacId, walletId);
-
-    console.log({terms, signed})
 
     return candidates.map(
         candidate => buildCandidateFullProfile(dacId, candidate, profiles.results, terms, signed, votedCandidates)
