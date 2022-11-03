@@ -28,8 +28,8 @@ const getVotedCandidates = async (logger, api, dacId, walletId) => {
         limit: 1,
     }
 
-      const result = await api.rpc.get_table_rows(query)
-      return result.rows;
+      const result = await api.rpc.get_table_rows(query);
+      return (result.rows.length) ? result.rows[0].candidates : [];
   } catch (error) {
     logger.error(`Cannot fetch voted candidates`, error);
     return [];
