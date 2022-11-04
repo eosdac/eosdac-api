@@ -125,11 +125,14 @@ async function getPlanetCandidates(fastify, request) {
     );
     const termsLimit = 1;
     const terms = await getMemberTerms(logger, api, dacId, termsLimit);
-    const signed = await getSignedMemberTerms(logger, api, dacId, walletId);
+    const result = [];
 
-    return candidates.map(
-        candidate => buildCandidateFullProfile(dacId, candidate, profiles.results, terms, signed, votedCandidates)
-    );
+    for (const candidate of candidates) {
+        const signed = await getSignedMemberTerms(logger, api, dacId, candidate.candidate_name);
+        result.push(buildCandidateFullProfile(dacId, candidate, profiles.results, terms, signed, votedCandidates));
+    }
+
+    return result;
 };
 
 module.exports = function (fastify, opts, next) {
