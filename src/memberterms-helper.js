@@ -1,3 +1,5 @@
+const getAllTableRows = require("./connections/rpc");
+
 const getMemberTerms = async (logger, api, dacId, limit = 1) => {
   try {
     const query = {
@@ -16,23 +18,18 @@ const getMemberTerms = async (logger, api, dacId, limit = 1) => {
   }
 };
 
-const getSignedMemberTerms = async (logger, api, dacId, walletId) => {
+const getSignedMemberTerms = async (logger, api, dacId, accounts) => {
+  const result = new Map();
     try {
-      const query = {
-        code: 'token.worlds',
-        scope: dacId,
-        table: 'members',
-        lower_bound: walletId,
-        upper_bound: walletId,
-        limit: 1,
+      const rows = await getAllTableRows(api, 'token.worlds', dacId, 'members', 'sender')
+      for (const account of accounts) {
+        const row = rows.find(row => row.sender === account);
+        result.set(account, row || { agreedtermsversion: 1, sender: account });
       }
-  
-      const result = await api.rpc.get_table_rows(query)
-      return result.rows[0] || { agreedtermsversion: 1, sender: walletId };
     } catch (error) {
       logger.error(`Cannot fetch signed member terms`, error);
-      return { agreedtermsversion: 1, sender: walletId };
     }
+  return result;
 };
 
 module.exports = { getMemberTerms, getSignedMemberTerms }
