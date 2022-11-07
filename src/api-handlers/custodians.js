@@ -1,4 +1,4 @@
-const {candidatesSchema, getPlanetCandidatesSchema} = require('../schemas');
+const { getPlanetCustodiansSchema} = require('../schemas');
 
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc} = require('@jafri/eosjs2');
@@ -11,7 +11,6 @@ const { getCandidatesProfiles } = require('../candidates-helper');
 
 async function getPlanetCustodians(fastify, request) {
     const {
-        query: { walletId },
         params: { dacId },
     } = request;
     const config = loadConfig();
@@ -55,7 +54,7 @@ async function getPlanetCustodians(fastify, request) {
 
 module.exports = function (fastify, opts, next) {
     fastify.get('/:dacId/custodians', {
-        schema: getPlanetCandidatesSchema.GET
+        schema: getPlanetCustodiansSchema.GET
     }, async (request, reply) => {
         reply.send(await getPlanetCustodians(fastify, request));
     });
