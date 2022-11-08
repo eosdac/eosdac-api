@@ -1,4 +1,4 @@
-const {candidatesSchema, getPlanetCandidatesSchema} = require('../schemas');
+const { getPlanetCustodiansSchema} = require('../schemas');
 
 const {TextDecoder, TextEncoder} = require('text-encoding');
 const {Api, JsonRpc} = require('@jafri/eosjs2');
@@ -11,7 +11,6 @@ const { getCandidatesProfiles } = require('../candidates-helper');
 
 async function getPlanetCustodians(fastify, request) {
     const {
-        query: { walletId },
         params: { dacId },
     } = request;
     const config = loadConfig();
@@ -32,27 +31,30 @@ async function getPlanetCustodians(fastify, request) {
     if (custodians.length === 0) {
         return [];
     }
-
+    const accounts = custodians.map(custodian => custodian.cust_name);
     const profiles = await getCandidatesProfiles(
         logger,
         db,
         dacConfig,
         dacId,
-        custodians.map(custodian => custodian.cust_name),
+        accounts,
     );
-    const terms = await getMemberTerms(logger, api, dacId, 1);
-    const signed = await getSignedMemberTerms(logger, api, dacId, walletId);
+    const termsLimit = 1;
+    const terms = await getMemberTerms(logger, api, dacId, termsLimit);
+    const signedTerms = await getSignedMemberTerms(logger, api, dacId, accounts);
+    const result = [];
+    
+    for (const custodian of custodians) {
+        const signed = signedTerms.get(custodian.cust_name);
+        result.push(buildCustodianFullProfile(dacId, custodian, profiles.results, terms, signed));
+    }
 
-    console.log({terms, signed})
-
-    return custodians.map(
-        custodian => buildCustodianFullProfile(dacId, custodian, profiles.results, terms, signed)
-    );
+    return result;
 };
 
 module.exports = function (fastify, opts, next) {
     fastify.get('/:dacId/custodians', {
-        schema: getPlanetCandidatesSchema.GET
+        schema: getPlanetCustodiansSchema.GET
     }, async (request, reply) => {
         reply.send(await getPlanetCustodians(fastify, request));
     });

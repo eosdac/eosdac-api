@@ -115,20 +115,21 @@ async function getPlanetCandidates(fastify, request) {
     if (candidates.length === 0) {
         return [];
     }
-
+    const accounts = candidates.map(candidate => candidate.candidate_name);
     const profiles = await getCandidatesProfiles(
         logger,
         db,
         dacConfig,
         dacId,
-        candidates.map(candidate => candidate.candidate_name),
+        accounts,
     );
     const termsLimit = 1;
     const terms = await getMemberTerms(logger, api, dacId, termsLimit);
     const result = [];
+    const signedTerms = await getSignedMemberTerms(logger, api, dacId, accounts);
 
     for (const candidate of candidates) {
-        const signed = await getSignedMemberTerms(logger, api, dacId, candidate.candidate_name);
+        const signed = signedTerms.get(candidate.candidate_name);
         result.push(buildCandidateFullProfile(dacId, candidate, profiles.results, terms, signed, votedCandidates));
     }
 
