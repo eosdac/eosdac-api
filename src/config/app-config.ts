@@ -1,5 +1,6 @@
 import {
 	Config,
+	DACConfig,
 	DocsConfig,
 	EOSConfig,
 	LoggerConfig,
@@ -38,6 +39,10 @@ export default class AppConfig implements Config {
 			datadog: {
 				apiKey: process.env.LOGGER_DATADOG_API_KEY,
 			},
+		},
+
+		public readonly dac: DACConfig = {
+			nameCache: new Map(),
 		}
 	) {}
 }

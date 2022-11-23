@@ -8,9 +8,11 @@ import { IncomingMessage, Server, ServerResponse } from 'http';
 import { config } from './config';
 import { Container } from 'inversify';
 import { FastifyRoute } from './fastify.route';
+import { GetProfileRoute } from './endpoints/profile/routes/get-profile.route';
 import { GetProposalsCountsRoute } from './endpoints/proposals-counts/routes/proposals-counts.route';
 import { GetStateRoute } from './endpoints/state/routes/state.route';
 import { logger } from './connections/logger';
+import { ProfileController } from './endpoints/profile/domain/profile.controller';
 import { ProposalsCountsController } from './endpoints/proposals-counts/domain/proposals-counts.controller';
 import { ProposalsInboxController } from './endpoints/proposals-inbox/domain/proposals-inbox.controller';
 import { ProposalsInboxRoute } from './endpoints/proposals-inbox/routes/proposals-inbox.route';
@@ -40,7 +42,6 @@ export const buildAPIServer = async () => {
 	api.register(require('./api-handlers/dacInfo'), { prefix });
 	api.register(require('./api-handlers/financialReports'), { prefix });
 	api.register(require('./api-handlers/getMsigProposals'), { prefix });
-	api.register(require('./api-handlers/getProfile'), { prefix });
 	api.register(require('./api-handlers/getProposals'), { prefix });
 	api.register(require('./api-handlers/member'), { prefix });
 	api.register(require('./api-handlers/memberCounts'), { prefix });
@@ -68,6 +69,9 @@ export const buildAPIServer = async () => {
 	const proposalsInboxController: ProposalsInboxController =
 		apiIoc.get<ProposalsInboxController>(ProposalsInboxController.Token);
 
+	const profileController: ProfileController =
+		apiIoc.get<ProfileController>(ProfileController.Token);
+
 	// Mount routes
 	FastifyRoute.mount(
 		api,
@@ -78,6 +82,13 @@ export const buildAPIServer = async () => {
 		api,
 		GetProposalsCountsRoute.create(
 			proposalsCountsController.proposalsCounts.bind(proposalsCountsController)
+		)
+	);
+
+	FastifyRoute.mount(
+		api,
+		GetProfileRoute.create(
+			profileController.profile.bind(profileController)
 		)
 	);
 
@@ -105,8 +116,7 @@ export const buildAPIServer = async () => {
 	api.ready().then(
 		async () => {
 			console.log(
-				`Started API server with config ${config.environment} on ${
-					config.host || '127.0.0.1'
+				`Started API server with config ${config.environment} on ${config.host || '127.0.0.1'
 				}:${config.port}`
 			);
 			await api.oas();

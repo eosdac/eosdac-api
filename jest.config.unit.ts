@@ -27,7 +27,7 @@ export default {
     '!src/**/*.repository.ts',
     '!src/**/*.service.ts',
     '!src/**/*.enums.ts',
-    '!src/**/*.dtos.ts',
+    '!src/**/*.dto.ts',
     '!src/**/*.types.ts',
     '!src/**/*.route.ts',
     '!src/**/*.ioc.config.ts',
