@@ -411,12 +411,11 @@ class MultisigProposalsHandler {
         const custodian_contract = this.dac_directory._custodian_contracts.get(dac_id);
         
         let scope = dac_id;
-        const cust_table = custodian_contract === 'dao.worlds' ? 'custodians1' : 'custodians';
         const custodian_query = {
             db,
             code: custodian_contract,
             scope,
-            table: cust_table,
+            table: 'custodians1',
             limit:100
         };
         
