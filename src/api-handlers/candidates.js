@@ -34,7 +34,7 @@ async function getActiveCandidates(fastify, request) {
         const candidate_res = await api.rpc.get_table_rows(candidate_query);
 
 
-        const custodian_query = {code:cust_contract, scope:dac_id, table:'custodians', limit:100};
+        const custodian_query = {code:cust_contract, scope:dac_id, table:'custodians1', limit:100};
         const custodian_res = await api.rpc.get_table_rows(custodian_query);
 
         const custodians_map = new Map();

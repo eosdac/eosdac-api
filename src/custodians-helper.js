@@ -3,7 +3,7 @@ const getCustodians = async (logger, api, dacId, limit) => {
     const query = {
         scope: dacId.toLowerCase(),
         code: 'dao.worlds',
-        table: 'custodians',
+        table: 'custodians1',
       }
 
       if (limit) {

@@ -19,7 +19,7 @@ async function getMsigProposals(fastify, request) {
 
         // Get current custodians
         fastify.log.info(`Getting custodians for ${custodian_contract}:${scope}`);
-        const custodian_query = {code:custodian_contract, scope, table:'custodians', limit:100};
+        const custodian_query = {code:custodian_contract, scope, table:'custodians1', limit:100};
         const custodian_res = api.rpc.get_table_rows(custodian_query);
 
         const status = request.query.status;

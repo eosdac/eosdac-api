@@ -415,7 +415,7 @@ class MultisigProposalsHandler {
             db,
             code: custodian_contract,
             scope,
-            table: 'custodians',
+            table: 'custodians1',
             limit:100
         };
         
