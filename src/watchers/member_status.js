@@ -72,7 +72,7 @@ class MemberStatusHandler {
         const cust_res = await eosTableAtBlock({
             db,
             code: 'dacelections',
-            table: 'custodians1',
+            table: 'custodians',
             data_query: cust_data_query
         });
 
@@ -116,7 +116,10 @@ class MemberStatusHandler {
         else if (doc.table === 'candidates'){
             account = doc.data.candidate_name;
         }
-        else if (doc.table === 'custodians1'){
+        else if (
+            (doc.code === 'dao.worlds' && doc.table === 'custodians1') ||
+            doc.code !== 'dao.worlds' && doc.table === 'custodians'
+        ){
             account = doc.data.cust_name;
         }
 

@@ -33,8 +33,8 @@ async function getActiveCandidates(fastify, request) {
         const candidate_query = {code:cust_contract, scope:dac_id, table:'candidates', limit:100, key_type:'i64', index_position:3, reverse:true};
         const candidate_res = await api.rpc.get_table_rows(candidate_query);
 
-
-        const custodian_query = {code:cust_contract, scope:dac_id, table:'custodians1', limit:100};
+        const cust_table = cust_contract === 'dao.worlds' ? 'custodians1' : 'custodians';
+        const custodian_query = {code:cust_contract, scope:dac_id, table:cust_table, limit:100};
         const custodian_res = await api.rpc.get_table_rows(custodian_query);
 
         const custodians_map = new Map();
