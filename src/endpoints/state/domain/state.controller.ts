@@ -1,7 +1,7 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { GetCurrentBlockUseCase } from './use-cases/get-current-block.use-case';
 import { GetStateOutput } from './models/get-state-output';
-import { Result } from '@alien-worlds/api-core';
+import { injectable, Result } from '@alien-worlds/api-core';
 
 /*imports*/
 
@@ -17,7 +17,7 @@ export class StateController {
 	constructor(
 		@inject(GetCurrentBlockUseCase.Token)
 		private getCurrentBlockUseCase: GetCurrentBlockUseCase
-	) /*injections*/ {}
+	) /*injections*/ { }
 
 	/*methods*/
 

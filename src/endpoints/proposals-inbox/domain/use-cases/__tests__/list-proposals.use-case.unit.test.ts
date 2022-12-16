@@ -33,7 +33,7 @@ describe('Get Proposals Unit tests', () => {
 
 		container
 			.bind<WorkerProposalRepository>(WorkerProposalRepository.Token)
-			.toConstantValue(workerProposalRepository);
+			.toConstantValue(workerProposalRepository as any);
 		container
 			.bind<ListProposalsUseCase>(ListProposalsUseCase.Token)
 			.to(ListProposalsUseCase);

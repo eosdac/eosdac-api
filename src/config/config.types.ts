@@ -1,3 +1,5 @@
+import { DacDirectory } from "@alien-worlds/eosdac-api-common";
+
 export type Config = {
 	host: string;
 	port: number;
@@ -39,5 +41,5 @@ export type DocsConfig = {
 };
 
 export type DACConfig = {
-	nameCache: Map<string, any>;
+	nameCache: Map<string, DacDirectory>;
 };

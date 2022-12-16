@@ -1,6 +1,6 @@
-import { Result, UseCase } from '@alien-worlds/api-core';
+import { injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { WorkerProposal, WorkerProposalRepository } from '@alien-worlds/eosdac-api-common';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 
 import { ProposalsInboxInput } from '../models/proposals-inbox.input';
 import { ProposalsInboxQueryModel } from '../models/proposals-inbox.query-model';

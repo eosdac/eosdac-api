@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@alien-worlds/api-core@0.0.33":
-  version "0.0.33"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/api-core/0.0.33/f05d45be6ba4ce48b7ea5c84bb03ae2a119c148f#f05d45be6ba4ce48b7ea5c84bb03ae2a119c148f"
-  integrity sha512-OB0YhCioML3ToytQDW3QUdhnBqg5p5OMQLqUAkCzzCsBPTM3cX/AosDMSuD7qjs7bDa5B2lHpVDB9N8ve4mYRw==
+"@alien-worlds/api-core@0.0.44":
+  version "0.0.44"
+  resolved "https://npm.pkg.github.com/download/@alien-worlds/api-core/0.0.44/0df9c4b4fb381ce2eb3348caddf5d5f0201b6789#0df9c4b4fb381ce2eb3348caddf5d5f0201b6789"
+  integrity sha512-G6ZjChH3AEEG1HeZB5Ie9MbvF1JL7nZdfW2VXJ1MR/cvGRMpCF1zLSGMMF8tEbZPp9/LSG2agllepNCgHsA7+g==
   dependencies:
     "@google-cloud/bigquery" "^6.0.3"
     eosjs "^22.1.0"
@@ -14,12 +14,12 @@
     node-fetch "2"
     reflect-metadata "^0.1.13"
 
-"@alien-worlds/eosdac-api-common@0.0.24":
-  version "0.0.24"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/eosdac-api-common/0.0.24/acd465cf6b74660ba0e5fb93eaf5e3b34db285cb#acd465cf6b74660ba0e5fb93eaf5e3b34db285cb"
-  integrity sha512-8hnkf8dP/9si1vRGw2HaKfcEfy4vc00S670j2LwzBn09WvupvJoVLIUbXaOqiy2s6AzMPtXXwJnUvwHRCxtajw==
+"@alien-worlds/eosdac-api-common@0.0.38":
+  version "0.0.38"
+  resolved "https://npm.pkg.github.com/download/@alien-worlds/eosdac-api-common/0.0.38/ec051c0030d2cf5ee5f97af190b219e1e15518b4#ec051c0030d2cf5ee5f97af190b219e1e15518b4"
+  integrity sha512-FGYssbls5U1Omq3wTnZdSkT2P7wS6PVxOws6tGcFdWiI6IGdWtdnKUog9i4dI6t/wR974iHJgKz2cgclCLpWbg==
   dependencies:
-    "@alien-worlds/api-core" "0.0.33"
+    "@alien-worlds/api-core" "0.0.44"
     crypto "^1.0.1"
     eosjs "^22.1.0"
     inversify "^6.0.1"
@@ -1502,7 +1502,12 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
   integrity sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==
 
-"@types/node@*", "@types/node@^18.7.15":
+"@types/node@*":
+  version "18.11.15"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.15.tgz#de0e1fbd2b22b962d45971431e2ae696643d3f5d"
+  integrity sha512-VkhBbVo2+2oozlkdHXLrb3zjsRkpdnaU2bXmX8Wgle3PUi569eLRaHGlgETQHR7lLL1w7GiG3h9SnePhxNDecw==
+
+"@types/node@^18.7.15":
   version "18.11.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.2.tgz#c59b7641832531264fda3f1ba610362dc9a7dfc8"
   integrity sha512-BWN3M23gLO2jVG8g/XHIRFWiiV4/GckeFIqbU/C4V3xpoBBWSMk4OZomouN0wCkfQFPqgZikyLr7DOYDysIkkw==
@@ -1961,9 +1966,9 @@ big.js@^6.0.0:
   integrity sha512-bCtHMwL9LeDIozFn+oNhhFoq+yQ3BNdnsLSASUxLciOb1vgvpHsIO1dsENiGMgbb4SkP5TrzWzRiLddn8ahVOQ==
 
 bignumber.js@^9.0.0:
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.1.0.tgz#8d340146107fe3a6cb8d40699643c302e8773b62"
-  integrity sha512-4LwHK4nfDOraBCtst+wOWIHbu1vhvAPJK8g8nROd4iuc3PSEjWif/qwbkh8jwCJz6yDBvtU4KPynETgrfh7y3A==
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.1.1.tgz#c4df7dc496bd849d4c9464344c1aa74228b4dac6"
+  integrity sha512-pHm4LsMJ6lzgNGVfZHjMoO8sdoRhOzOH4MLmY65Jg70bpxCKu5iOHNJyfF6OyvYw7t8Fpf35RuzUyqnQsj8Vig==
 
 bitsyntax@~0.1.0:
   version "0.1.0"
@@ -3100,9 +3105,9 @@ gaxios@^5.0.0, gaxios@^5.0.1:
     node-fetch "^2.6.7"
 
 gcp-metadata@^5.0.0:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/gcp-metadata/-/gcp-metadata-5.0.1.tgz#8d1e785ee7fad554bc2a80c1f930c9a9518d2b00"
-  integrity sha512-jiRJ+Fk7e8FH68Z6TLaqwea307OktJpDjmYnU7/li6ziwvVvU2RlrCyQo5vkdeP94chm0kcSCOOszvmuaioq3g==
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/gcp-metadata/-/gcp-metadata-5.1.0.tgz#105768fd493ab6ff9606e0d77cdf0a4d9c1a0180"
+  integrity sha512-QVjouEXvNVG/nde6VZDXXFTB02xQdztaumkWCHUff58qsdCS05/8OPh68fQ2QnArfAzZTwfEc979FHSHsU8EWg==
   dependencies:
     gaxios "^5.0.0"
     json-bigint "^1.0.0"
@@ -4235,7 +4240,15 @@ minimist@^1.2.6:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.7.tgz#daa1c4d91f507390437c6a8bc01078e7000c4d18"
   integrity sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==
 
-mongodb-connection-string-url@^2.5.3, mongodb-connection-string-url@^2.5.4:
+mongodb-connection-string-url@^2.5.3:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/mongodb-connection-string-url/-/mongodb-connection-string-url-2.6.0.tgz#57901bf352372abdde812c81be47b75c6b2ec5cf"
+  integrity sha512-WvTZlI9ab0QYtTYnuMLgobULWhokRjtC7db9LtcVfJ+Hsnyr5eo6ZtNAt3Ly24XZScGMelOcGtm7lSn0332tPQ==
+  dependencies:
+    "@types/whatwg-url" "^8.2.1"
+    whatwg-url "^11.0.0"
+
+mongodb-connection-string-url@^2.5.4:
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/mongodb-connection-string-url/-/mongodb-connection-string-url-2.5.4.tgz#1ee2496f4c4eae64f63c4b2d512aebc89996160a"
   integrity sha512-SeAxuWs0ez3iI3vvmLk/j2y+zHwigTDKQhtdxTgt5ZCOQQS5+HW4g45/Xw5vzzbn7oQXCNQ24Z40AkJsizEy7w==

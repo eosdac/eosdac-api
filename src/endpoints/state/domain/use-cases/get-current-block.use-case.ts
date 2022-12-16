@@ -1,5 +1,5 @@
-import { inject, injectable } from 'inversify';
-import { Result, UseCase } from '@alien-worlds/api-core';
+import { inject } from 'inversify';
+import { injectable, Result, UseCase } from '@alien-worlds/api-core';
 
 import { State, StateRepository } from '@alien-worlds/eosdac-api-common';
 
@@ -15,7 +15,7 @@ export class GetCurrentBlockUseCase implements UseCase<State> {
 		/*injections*/
 		@inject(StateRepository.Token)
 		private stateRepository: StateRepository
-	) {}
+	) { }
 
 	/*methods*/
 
