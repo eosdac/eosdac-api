@@ -1,5 +1,5 @@
-import { Result } from '@alien-worlds/api-core';
-import { inject, injectable } from 'inversify';
+import { injectable, Result } from '@alien-worlds/api-core';
+import { inject } from 'inversify';
 
 import { ProposalsInboxOutput } from '../data/dtos/proposals-inbox.dto';
 import { ProposalsInboxInput } from './models/proposals-inbox.input';

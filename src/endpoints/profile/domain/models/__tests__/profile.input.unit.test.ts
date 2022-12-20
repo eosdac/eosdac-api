@@ -7,7 +7,7 @@ import { ProfileRequestDto } from "../../../data/dtos/profile.dto";
 import { Request } from '@alien-worlds/api-core';
 
 /*mocks*/
-let input = {
+const input = {
 	query: {
 		account: 'string',
 

@@ -25,7 +25,7 @@ const actionRepository = {
 
 let container: Container;
 let useCase: GetProfilesUseCase;
-let useCaseInput: GetProfilesUseCaseInput = {
+const useCaseInput: GetProfilesUseCaseInput = {
   custContract: 'string',
   dacId: 'string',
   accounts: ['awtesteroo12'],
@@ -63,7 +63,7 @@ describe('Get Profile Unit tests', () => {
   });
 
   it('should return Profile', async () => {
-    let actions: Action[] = [
+    const actions: Action[] = [
       Action.fromDocument({
         block_num: Long.ZERO,
         action: {

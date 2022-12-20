@@ -8,6 +8,8 @@ import { IncomingMessage, Server, ServerResponse } from 'http';
 import { config } from './config';
 import { Container } from 'inversify';
 import { FastifyRoute } from './fastify.route';
+import { GetDacsController } from './endpoints/get-dacs/domain/get-dacs.controller';
+import { GetDacsRoute } from './endpoints/get-dacs/routes/dacs.route';
 import { GetProfileRoute } from './endpoints/profile/routes/get-profile.route';
 import { GetProposalsCountsRoute } from './endpoints/proposals-counts/routes/proposals-counts.route';
 import { GetStateRoute } from './endpoints/state/routes/state.route';
@@ -72,6 +74,9 @@ export const buildAPIServer = async () => {
 	const profileController: ProfileController =
 		apiIoc.get<ProfileController>(ProfileController.Token);
 
+	const getDacsController: GetDacsController =
+		apiIoc.get<GetDacsController>(GetDacsController.Token);
+
 	// Mount routes
 	FastifyRoute.mount(
 		api,
@@ -96,6 +101,13 @@ export const buildAPIServer = async () => {
 		api,
 		ProposalsInboxRoute.create(
 			proposalsInboxController.proposalsInbox.bind(proposalsInboxController)
+		)
+	);
+
+	FastifyRoute.mount(
+		api,
+		GetDacsRoute.create(
+			getDacsController.dacs.bind(getDacsController)
 		)
 	);
 

@@ -1,6 +1,6 @@
 
-import { inject, injectable } from 'inversify';
-import { Result, UseCase } from '@alien-worlds/api-core';
+import { inject } from 'inversify';
+import { injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { FlagRepository } from '@alien-worlds/eosdac-api-common';
 import { IsProfileFlaggedUseCaseInput, IsProfileFlaggedUseCaseOutput } from '../../data/dtos/profile.dto';
 import { IsProfileFlaggedQueryModel } from '../models/is-profile-flagged.query-model';

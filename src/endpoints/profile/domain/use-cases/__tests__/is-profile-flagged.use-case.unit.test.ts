@@ -13,11 +13,11 @@ import { IsProfileFlaggedUseCase } from '../is-profile-flagged.use-case';
 
 let container: Container;
 let useCase: IsProfileFlaggedUseCase;
-let useCaseInput: IsProfileFlaggedUseCaseInput = {
+const useCaseInput: IsProfileFlaggedUseCaseInput = {
   dacId: 'string',
   accounts: ['awtesteroo12'],
 }
-let flagRepository = {
+const flagRepository = {
   update: jest.fn(),
   updateMany: jest.fn(),
   add: jest.fn(),

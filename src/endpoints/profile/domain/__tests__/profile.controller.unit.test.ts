@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 
+import { DacsTableRow, IndexWorldsContractService } from '@alien-worlds/eosdac-api-common';
+
 import { Container } from 'inversify';
-import { DacSmartContractRepository } from '@alien-worlds/eosdac-api-common';
 import { GetProfilesUseCase } from '../use-cases/get-profiles.use-case';
 import { IsProfileFlaggedUseCase } from '../use-cases/is-profile-flagged.use-case';
 import { ProfileController } from '../profile.controller';
@@ -21,9 +22,8 @@ const isProfileFlaggedUseCase = {
 
 let container: Container;
 let controller: ProfileController;
-let dacSmartContractRepository = {
-	getOne: jest.fn(),
-	getMany: jest.fn(),
+const indexWorldsContractService = {
+	fetchDacs: jest.fn(),
 };
 const input: ProfileInput = {
 	accounts: ['string'],
@@ -41,8 +41,8 @@ describe('Profile Controller Unit tests', () => {
 			.bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token)
 			.toConstantValue(isProfileFlaggedUseCase as any);
 		container
-			.bind<DacSmartContractRepository>(DacSmartContractRepository.Token)
-			.toConstantValue(dacSmartContractRepository);
+			.bind<IndexWorldsContractService>(IndexWorldsContractService.Token)
+			.toConstantValue(indexWorldsContractService as any);
 		container
 			.bind<ProfileController>(ProfileController.Token)
 			.to(ProfileController);
@@ -64,14 +64,15 @@ describe('Profile Controller Unit tests', () => {
 	});
 
 	it('Should execute GetProfilesUseCase', async () => {
-		dacSmartContractRepository.getOne.mockResolvedValue(Result.withContent({
+		indexWorldsContractService.fetchDacs.mockResolvedValue(Result.withContent([<DacsTableRow>{
 			accounts: [
-				{ key: 0, value: 'testdaca.dac' },
-				{ key: 1, value: 'testdaca.dac' },
 				{ key: 2, value: 'dao.worlds' },
-				{ key: 3, value: 'testadacdacc' },
 			],
-		}))
+			symbol: {
+				sym: 'EYE',
+			},
+			refs: [],
+		}]))
 		await controller.profile(input);
 
 		expect(getProfilesUseCase.execute).toBeCalled();

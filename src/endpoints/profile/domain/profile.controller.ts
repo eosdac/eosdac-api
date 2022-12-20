@@ -1,7 +1,7 @@
-import { Failure, Result } from '@alien-worlds/api-core';
-import { DacSmartContractRepository } from '@alien-worlds/eosdac-api-common';
+import { Failure, injectable, Result } from '@alien-worlds/api-core';
+import { DacDirectory, IndexWorldsContractService } from '@alien-worlds/eosdac-api-common';
 import { config } from '@config';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 
 import { ProfileOutput } from '../data/dtos/profile.dto';
 import { Profile } from './entities/profile';
@@ -22,8 +22,8 @@ export class ProfileController {
 
 	constructor(
 		/*injections*/
-		@inject(DacSmartContractRepository.Token)
-		private dacSmartContractRepository: DacSmartContractRepository,
+		@inject(IndexWorldsContractService.Token)
+		private indexWorldsContractService: IndexWorldsContractService,
 
 		@inject(GetProfilesUseCase.Token)
 		private getProfilesUseCase: GetProfilesUseCase,
@@ -41,12 +41,12 @@ export class ProfileController {
 	public async profile(
 		input: ProfileInput
 	): Promise<Result<ProfileOutput, Error>> {
-		let results: Profile[] = [];
+		const results: Profile[] = [];
 		const dacConfig = await this.loadDacConfig(input.dacId);
 		if (!dacConfig) {
 			return Result.withFailure(Failure.withMessage("unable to load dac config"));
 		}
-		const custContract = dacConfig.accounts[2].value
+		const custContract = dacConfig.accounts.custodian;
 
 		const { content: profiles, failure: getProfilesFailure } =
 			await this.getProfilesUseCase.execute({
@@ -97,10 +97,15 @@ export class ProfileController {
 			console.info(`Returning cached dac info`);
 			return dac_config_cache;
 		} else {
-			const result = await this.dacSmartContractRepository.getOne(dacId)
+			const result = await this.indexWorldsContractService.fetchDacs({
+				scope: config.eos.dacDirectoryContract,
+				limit: 1,
+				lower_bound: dacId,
+				upper_bound: dacId,
+			})
 
-			if (!result.isFailure && result.content) {
-				const dacConfig = result.content;
+			if (!result.isFailure && result.content && result.content.length) {
+				const dacConfig = DacDirectory.fromTableRow(result.content[0]);
 				config.dac.nameCache.set(dacId, dacConfig)
 
 				return dacConfig

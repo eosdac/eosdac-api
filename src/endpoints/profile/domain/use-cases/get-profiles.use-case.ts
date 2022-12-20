@@ -1,6 +1,6 @@
-import { Long, Result, UseCase } from '@alien-worlds/api-core';
+import { injectable, Long, Result, UseCase } from '@alien-worlds/api-core';
 import { ActionRepository } from '@alien-worlds/eosdac-api-common';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 
 import { GetProfilesUseCaseInput } from '../../data/dtos/profile.dto';
 import { Profile } from '../entities/profile';
@@ -24,7 +24,7 @@ export class GetProfilesUseCase implements UseCase<Profile[]> {
    * @returns {Promise<Result<Profile[]>>}
    */
   public async execute(input: GetProfilesUseCaseInput): Promise<Result<Profile[]>> {
-    let queryModel = ProfileQueryModel.create({
+    const queryModel = ProfileQueryModel.create({
       custContract: input.custContract,
       dacId: input.dacId,
       accounts: input.accounts,

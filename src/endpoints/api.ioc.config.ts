@@ -1,15 +1,24 @@
 import { AsyncContainerModule, Container } from 'inversify';
 import {
 	bindActionRepository,
-	bindDacSmartContractRepository,
-	bindFlagRepository,
-	bindStateRepository,
-	bindWorkerProposalRepository,
+	setupAlienWorldsContractService,
+	setupDacDirectoryRepository,
+	setupDaoWorldsContractService,
+	setupFlagRepository,
+	setupIndexWorldsContractService,
+	setupStateRepository,
+	setupTokenWorldsContractService,
+	setupWorkerProposalRepository,
 } from '@alien-worlds/eosdac-api-common';
 import { EosJsRpcSource, MongoClient, MongoSource } from '@alien-worlds/api-core';
 
 import AppConfig from 'src/config/app-config';
+import { GetAllDacsUseCase } from './get-dacs/domain/use-cases/get-all-dacs.use-case';
 import { GetCurrentBlockUseCase } from './state/domain/use-cases/get-current-block.use-case';
+import { GetDacInfoUseCase } from './get-dacs/domain/use-cases/get-dac-info.use-case';
+import { GetDacsController } from './get-dacs/domain/get-dacs.controller';
+import { GetDacTokensUseCase } from './get-dacs/domain/use-cases/get-dac-tokens.use-case';
+import { GetDacTreasuryUseCase } from './get-dacs/domain/use-cases/get-dac-treasury.use-case';
 import { GetProfilesUseCase } from './profile/domain/use-cases/get-profiles.use-case';
 import { GetProposalsUseCase } from './proposals-counts/domain/use-cases/get-proposals.use-case';
 import { IsProfileFlaggedUseCase } from './profile/domain/use-cases/is-profile-flagged.use-case';
@@ -41,42 +50,65 @@ export const setupEndpointDependencies = async (
 		const db = client.db(dbName);
 		const mongoSource = new MongoSource(db);
 
+		const eosJsRpcSource = new EosJsRpcSource(config.eos.endpoint)
+
+		/**
+		 * SMART CONTRACT SERVICES
+		 */
+
+		await setupIndexWorldsContractService(eosJsRpcSource, container)
+		await setupAlienWorldsContractService(eosJsRpcSource, container)
+		await setupDaoWorldsContractService(eosJsRpcSource, container)
+		await setupTokenWorldsContractService(eosJsRpcSource, container)
+
+		/**
+		 * REPOSITORIES
+		 */
+
+		await setupStateRepository(mongoSource, container);
+		await setupWorkerProposalRepository(mongoSource, container)
+		await setupFlagRepository(mongoSource, container)
+		await bindActionRepository(mongoSource, container);
+		await setupDacDirectoryRepository(mongoSource, eosJsRpcSource, container)
+
+
 		/*bindings*/
+
 
 		/**
 		 * STATE
 		 */
-		bindStateRepository(container, mongoSource);
 		bind<StateController>(StateController.Token).to(StateController);
 		bind<GetCurrentBlockUseCase>(GetCurrentBlockUseCase.Token).to(GetCurrentBlockUseCase);
+
 
 		/**
 		 * WORKER PROPOSALS
 		 */
-		bindWorkerProposalRepository(container, mongoSource);
-
 		bind<ProposalsCountsController>(ProposalsCountsController.Token).to(ProposalsCountsController);
 		bind<GetProposalsUseCase>(GetProposalsUseCase.Token).to(GetProposalsUseCase);
 
 		bind<ProposalsInboxController>(ProposalsInboxController.Token).to(ProposalsInboxController);
 		bind<ListProposalsUseCase>(ListProposalsUseCase.Token).to(ListProposalsUseCase);
 
-		/**
-		 * FLAGS
-		 */
-		bindFlagRepository(container, mongoSource);
 
 		/**
 		 * ACTIONS
 		 */
-		bindActionRepository(container, mongoSource);
-		bindDacSmartContractRepository(container, new EosJsRpcSource(config.eos.endpoint), config.eos.dacDirectoryContract);
 
 		bind<ProfileController>(ProfileController.Token).to(ProfileController);
 		bind<GetProfilesUseCase>(GetProfilesUseCase.Token).to(GetProfilesUseCase);
 		bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token).to(IsProfileFlaggedUseCase);
 
+		/**
+		 * DACS
+		 */
 
+		bind<GetDacsController>(GetDacsController.Token).to(GetDacsController);
+		bind<GetAllDacsUseCase>(GetAllDacsUseCase.Token).to(GetAllDacsUseCase);
+		bind<GetDacTreasuryUseCase>(GetDacTreasuryUseCase.Token).to(GetDacTreasuryUseCase);
+		bind<GetDacInfoUseCase>(GetDacInfoUseCase.Token).to(GetDacInfoUseCase);
+		bind<GetDacTokensUseCase>(GetDacTokensUseCase.Token).to(GetDacTokensUseCase);
 	});
 
 	await container.loadAsync(bindings);

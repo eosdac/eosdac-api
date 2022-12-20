@@ -1,5 +1,5 @@
-import { Result } from '@alien-worlds/api-core';
-import { inject, injectable } from 'inversify';
+import { injectable, Result } from '@alien-worlds/api-core';
+import { inject } from 'inversify';
 
 import { ProposalsCountOutput } from '../data/dtos/proposals-counts.dto';
 import { ProposalsCountsInput } from './models/proposals-counts.input';
@@ -19,7 +19,7 @@ export class ProposalsCountsController {
 	constructor(
 		@inject(GetProposalsUseCase.Token)
 		private getProposalsUseCase: GetProposalsUseCase /*injections*/
-	) {}
+	) { }
 
 	/*methods*/
 
