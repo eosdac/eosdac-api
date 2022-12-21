@@ -15,6 +15,7 @@ const indexWorldsContractService = {
 };
 
 const input: GetDacsInput = {
+  dacId: 'string',
   scope: 'string',
   limit: 1,
 }

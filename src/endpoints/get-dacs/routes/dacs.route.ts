@@ -1,4 +1,4 @@
-import { GetRoute, Request, Result, RouteHandler } from '@alien-worlds/api-core';
+import { GetRoute, Request, Result, RouteHandler, SmartContractDataNotFoundError } from '@alien-worlds/api-core';
 
 import { GetDacOutput } from '../domain/models/get-dac.output';
 import { GetDacsInput } from '../domain/models/dacs.input';
@@ -50,8 +50,10 @@ export const parseResultToControllerOutput = (
     const { failure: { error } } = result;
     if (error) {
       return {
-        status: 500,
-        body: GetDacsOutput.create().toJson(),
+        status: (error instanceof SmartContractDataNotFoundError) ? 404 : 500,
+        body: {
+          error: error.message,
+        },
       };
     }
   }

@@ -5,11 +5,11 @@ export class GetDacsOutput {
 	public static create(
 		results?: GetDacOutput[],
 	): GetDacsOutput {
-		return new GetDacsOutput(results, results.length);
+		return new GetDacsOutput(results, results ? results.length : 0);
 	}
 
 	private constructor(
-		public readonly results: GetDacOutput[],
+		public readonly results: GetDacOutput[] = [],
 		public readonly count: number
 	) { }
 
