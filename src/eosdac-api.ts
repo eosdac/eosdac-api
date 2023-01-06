@@ -13,6 +13,7 @@ import { GetDacsRoute } from './endpoints/get-dacs/routes/dacs.route';
 import { GetProfileRoute } from './endpoints/profile/routes/get-profile.route';
 import { GetProposalsCountsRoute } from './endpoints/proposals-counts/routes/proposals-counts.route';
 import { GetStateRoute } from './endpoints/state/routes/state.route';
+import { GetVotingHistoryRoute } from './endpoints/voting-history/routes/voting-history.route';
 import { logger } from './connections/logger';
 import { ProfileController } from './endpoints/profile/domain/profile.controller';
 import { ProposalsCountsController } from './endpoints/proposals-counts/domain/proposals-counts.controller';
@@ -20,6 +21,7 @@ import { ProposalsInboxController } from './endpoints/proposals-inbox/domain/pro
 import { ProposalsInboxRoute } from './endpoints/proposals-inbox/routes/proposals-inbox.route';
 import { setupEndpointDependencies } from './endpoints/api.ioc.config';
 import { StateController } from './endpoints/state/domain/state.controller';
+import { VotingHistoryController } from './endpoints/voting-history/domain/voting-history.controller';
 
 import fastifyOAS = require('fastify-oas');
 
@@ -77,6 +79,9 @@ export const buildAPIServer = async () => {
 	const getDacsController: GetDacsController =
 		apiIoc.get<GetDacsController>(GetDacsController.Token);
 
+	const votingHistoryController: VotingHistoryController =
+		apiIoc.get<VotingHistoryController>(VotingHistoryController.Token);
+
 	// Mount routes
 	FastifyRoute.mount(
 		api,
@@ -108,6 +113,13 @@ export const buildAPIServer = async () => {
 		api,
 		GetDacsRoute.create(
 			getDacsController.dacs.bind(getDacsController)
+		)
+	);
+
+	FastifyRoute.mount(
+		api,
+		GetVotingHistoryRoute.create(
+			votingHistoryController.votingHistory.bind(votingHistoryController)
 		)
 	);
 
