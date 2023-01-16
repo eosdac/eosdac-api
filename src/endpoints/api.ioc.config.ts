@@ -21,12 +21,15 @@ import { GetDacTokensUseCase } from './get-dacs/domain/use-cases/get-dac-tokens.
 import { GetDacTreasuryUseCase } from './get-dacs/domain/use-cases/get-dac-treasury.use-case';
 import { GetProfilesUseCase } from './profile/domain/use-cases/get-profiles.use-case';
 import { GetProposalsUseCase } from './proposals-counts/domain/use-cases/get-proposals.use-case';
+import { GetUserVotingHistoryUseCase } from './voting-history/domain/use-cases/get-user-voting-history.use-case';
 import { IsProfileFlaggedUseCase } from './profile/domain/use-cases/is-profile-flagged.use-case';
 import { ListProposalsUseCase } from './proposals-inbox/domain/use-cases/list-proposals.use-case';
 import { ProfileController } from './profile/domain/profile.controller';
 import { ProposalsCountsController } from './proposals-counts/domain/proposals-counts.controller';
 import { ProposalsInboxController } from './proposals-inbox/domain/proposals-inbox.controller';
+import { setupUserVotingHistoryRepository } from './voting-history';
 import { StateController } from './state/domain/state.controller';
+import { VotingHistoryController } from './voting-history/domain/voting-history.controller';
 
 /*imports*/
 
@@ -70,6 +73,7 @@ export const setupEndpointDependencies = async (
 		await setupFlagRepository(mongoSource, container)
 		await bindActionRepository(mongoSource, container);
 		await setupDacDirectoryRepository(mongoSource, eosJsRpcSource, container)
+		await setupUserVotingHistoryRepository(mongoSource, container)
 
 
 		/*bindings*/
@@ -109,6 +113,12 @@ export const setupEndpointDependencies = async (
 		bind<GetDacTreasuryUseCase>(GetDacTreasuryUseCase.Token).to(GetDacTreasuryUseCase);
 		bind<GetDacInfoUseCase>(GetDacInfoUseCase.Token).to(GetDacInfoUseCase);
 		bind<GetDacTokensUseCase>(GetDacTokensUseCase.Token).to(GetDacTokensUseCase);
+
+		/**
+		 * VOTING HISTORY
+		 */
+		bind<VotingHistoryController>(VotingHistoryController.Token).to(VotingHistoryController);
+		bind<GetUserVotingHistoryUseCase>(GetUserVotingHistoryUseCase.Token).to(GetUserVotingHistoryUseCase);
 	});
 
 	await container.loadAsync(bindings);
