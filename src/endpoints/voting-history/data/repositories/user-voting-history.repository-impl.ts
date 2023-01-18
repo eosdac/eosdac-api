@@ -24,44 +24,18 @@ export class UserVotingHistoryRepositoryImpl extends RepositoryImpl<
   async find(
     model: VotingHistoryQueryModel
   ): Promise<Result<UserVote[], Error>> {
-    const output: UserVote[] = [];
+    let userVotes: UserVote[] = [];
 
     const { filter, options } = model.toQueryParams();
-    const fetchLastEntryFromPrevPage = options.skip > 0;
 
-    const actionsRes = await (await this.actions.find(filter, options)).toArray();
+    const actionsRes = await (await this.actions.find(filter, {
+      ...options,
+      skip: 0,
+      limit: Number.MAX_VALUE,
+    })).toArray();
 
-    /*
-     * fetch previous entry to calculate Voting Action 
-     * of the first entry in response especially when we do pagination
-     */
-    let lastEntry;
-    if (fetchLastEntryFromPrevPage) {
-      lastEntry = await this.actions.findOne(filter, {
-        ...options,
-        skip: options.skip - 1,
-        limit: 1,
-      });
-    }
-
-    for (let i = 0; i < actionsRes.length; i++) {
-      const vote = actionsRes[i];
+    actionsRes.forEach((vote) => {
       const actionData = vote.action.data;
-
-      let prevVotedCandidates: string[] = [];
-
-      /*
-       * when doing pagination and calculating Voting Action
-       * for the first entry, we want to use the last entry 
-       * from previous page. 
-       * Otherwise, the previous entry is already available
-       * in the actionsRes array.
-       */
-      if (i == 0 && fetchLastEntryFromPrevPage) {
-        prevVotedCandidates = lastEntry.action.data.newvotes;
-      } else if (i > 0) {
-        prevVotedCandidates = actionsRes[i - 1].action.data.newvotes;
-      }
 
       const userVoteDoc: UserVotingHistoryDocument = {
         _id: vote._id,
@@ -74,22 +48,44 @@ export class UserVotingHistoryRepositoryImpl extends RepositoryImpl<
       };
 
       if (actionData.newvotes && actionData.newvotes.length > 0) {
-        for await (const candidate of actionData.newvotes) {
+        for (const candidate of actionData.newvotes) {
           const userVote = UserVote.fromDocument({
             ...userVoteDoc,
             candidate,
-            action: this.getVotingAction(candidate, prevVotedCandidates),
-            candidate_vote_power: await this.getCandidateVotingPower(vote.action.account, candidate, vote.block_timestamp),
           });
 
-          output.push(userVote)
+          userVotes.push(userVote)
         }
       } else {
-        output.push(UserVote.fromDocument(userVoteDoc));
+        userVotes.push(UserVote.fromDocument(userVoteDoc));
       }
+    })
+
+    userVotes = userVotes.slice(options.skip, options.skip + options.limit)
+
+    const resultPromises = userVotes.map(async (entry) => {
+      return UserVote.fromDocument({
+        ...entry.toDocument(),
+        action: this.getVotingAction(entry.candidate, this.getPreviouslyVotedCandidates(entry, actionsRes)),
+        candidate_vote_power: await this.getCandidateVotingPower(entry.dacId, entry.candidate, entry.voteTimestamp),
+      })
+    })
+
+    return Result.withContent(await Promise.all(resultPromises))
+  }
+
+  private getPreviouslyVotedCandidates(vote: UserVote, allMatchingVotes: any): string[] {
+    let prevCandidates: string[] = [];
+
+    const index = allMatchingVotes.findIndex(v => {
+      return vote.voteTimestamp.getTime() == new Date(v.action?.data?.vote_time_stamp).getTime()
+    });
+
+    if (index > 0) {
+      prevCandidates = allMatchingVotes[index - 1].action.data.newvotes
     }
 
-    return Result.withContent(output)
+    return prevCandidates;
   }
 
   private getVotingAction(newCandidate: string, prevVotedCandidates: string[]): VoteAction {
