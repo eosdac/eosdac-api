@@ -5,6 +5,7 @@
         ]
     },
     "compilerOptions": {
+        "resolveJsonModule": true,
         "target": "ESNext",
         "module": "CommonJS",
         "outDir": "./dist",
@@ -15,9 +16,6 @@
         "paths": {
             "@config": [
                 "src/config/index"
-            ],
-            "@config/types": [
-                "src/config/config.types"
             ],
             "@common/*": [
                 "src/common/*"
