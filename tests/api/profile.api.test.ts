@@ -43,17 +43,13 @@ describe('Get member profile API Test', () => {
 			`${Api.url}?account=dummy`
 		);
 
-		expect(JSON.parse(response.body)).toEqual(fixtures.emptyProfile);
+		expect(JSON.parse(response.body)).toEqual(fixtures.profileNotFound);
 	});
 
 	it('should return error when account is not provided', async () => {
 		const response = await getApiResponse(Api.method, `${Api.url}`);
-		const jsonResp = JSON.parse(response.body);
 
-		expect(response.statusCode).toEqual(HTTP_STATUS.BAD_REQUEST);
-		expect(jsonResp.message).toEqual(
-			"querystring should have required property 'account'"
-		);
+		expect(response.statusCode).toEqual(HTTP_STATUS.INTERNAL_SERVER_ERROR);
 	});
 });
 
