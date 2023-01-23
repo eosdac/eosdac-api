@@ -6,7 +6,7 @@ COPY tests/seed/*.seed.json /
 CMD mongoimport --host db --db eosdac --collection actions --type json --file /actions.seed.json --jsonArray --drop && \
     mongoimport --host db --db eosdac --collection contract_rows --type json --file /contract_rows.seed.json --jsonArray --drop && \
     mongoimport --host db --db eosdac --collection state --type json --file /state.seed.json --jsonArray --drop && \
-    mongoimport --host db --db eosdac --collection workerproposals --type json --file /workerproposals.seed.json --jsonArray --drop
+    mongoimport --host db --db eosdac --collection worker_proposals --type json --file /worker_proposals.seed.json --jsonArray --drop
 
 
 FROM node:17-alpine3.12 AS api-tests-runner
