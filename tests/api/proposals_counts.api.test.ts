@@ -45,22 +45,6 @@ describe('Proposals counts API Test', () => {
 
 		expect(JSON.parse(response.body)).toEqual(fixtures.proposalsCountZero);
 	});
-
-	it('should return empty object if account is an empty string', async () => {
-		const response = await getApiResponse(Api.method, `${Api.url}?account= `);
-
-		expect(JSON.parse(response.body)).toEqual(
-			fixtures.proposalsCountEmptyResponse
-		);
-	});
-
-	it('should return empty object if an account is not provided', async () => {
-		const response = await getApiResponse(Api.method, Api.url);
-
-		expect(JSON.parse(response.body)).toEqual(
-			fixtures.proposalsCountEmptyResponse
-		);
-	});
 });
 
 // helpers

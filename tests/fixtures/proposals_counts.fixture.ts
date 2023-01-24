@@ -1,9 +1,9 @@
 export const proposalsCountZero = {
-	inbox: 0,
+	count: 0,
 };
 
 export const proposalsCountNonZero = {
-	inbox: 2,
+	count: 2,
 };
 
 export const proposalsCountEmptyResponse = {};
