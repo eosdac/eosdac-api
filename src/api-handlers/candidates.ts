@@ -38,7 +38,7 @@ async function getCandidates(fastify, request) {
 		const custodian_query = {
 			code: cust_contract,
 			scope: dac_id,
-			table: 'custodians',
+			table: 'custodians1',
 			limit: 100,
 		};
 		const custodian_res = await api.rpc.get_table_rows(custodian_query);
