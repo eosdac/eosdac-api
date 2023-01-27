@@ -34,42 +34,40 @@ async function balanceTimeline(fastify, request) {
 			query.block_num['$lte'] = new MongoLong(end_block);
 		}
 
-		collection.find(query, { sort: { block_num: 1 } }, async (err, res) => {
-			if (err) {
-				reject(err);
-			} else if (res) {
-				const timeline = [];
-				if (!(await res.count())) {
-					const zero_bal = `0 ${symbol}`;
-					timeline.push({ block_num: 0, balance: zero_bal });
-					resolve(timeline);
-				} else {
-					res.forEach(
-						row => {
-							const [bal, sym] = row.data.balance.split(' ');
-							if (symbol === sym) {
-								timeline.push({
-									block_num: row.block_num,
-									balance: row.data.balance,
-								});
-							}
-						},
-						async () => {
-							const info = await fastify.eos.rpc.get_info();
-							const lib = info.last_irreversible_block_num;
+		const res = await collection.find(query, { sort: { block_num: 1 } });
 
-							const timeline_last = {
-								block_num: lib,
-								balance: timeline[timeline.length - 1].balance,
-							};
-							timeline.push(timeline_last);
-
-							resolve(timeline);
+		if (res) {
+			const timeline = [];
+			if (!(await res.count())) {
+				const zero_bal = `0 ${symbol}`;
+				timeline.push({ block_num: 0, balance: zero_bal });
+				resolve(timeline);
+			} else {
+				res.forEach(
+					row => {
+						const [bal, sym] = row.data.balance.split(' ');
+						if (symbol === sym) {
+							timeline.push({
+								block_num: row.block_num,
+								balance: row.data.balance,
+							});
 						}
-					);
-				}
+					},
+					async () => {
+						const info = await fastify.eos.rpc.get_info();
+						const lib = info.last_irreversible_block_num;
+
+						const timeline_last = {
+							block_num: lib,
+							balance: timeline[timeline.length - 1].balance,
+						};
+						timeline.push(timeline_last);
+
+						resolve(timeline);
+					}
+				);
 			}
-		});
+		}
 	});
 }
 
