@@ -14,7 +14,7 @@ const Api = {
 };
 
 const Data = {
-	DacId: 'dao.worlds',
+	DacId: 'nerix',
 	Voter: '.w2fo.wam',
 	Skip: '0',
 	Limit: '100',

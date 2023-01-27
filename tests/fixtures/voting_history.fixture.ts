@@ -3,7 +3,7 @@ export const votingHistoryEmptyResponse = { results: [], count: 0 };
 export const votingHistorySuccessResponse = {
     results: [
         {
-            dacId: 'dao.worlds',
+            dacId: 'nerix',
             voter: '.w2fo.wam',
             voteTimestamp: '2021-02-27T04:18:56.000Z',
             candidate: 'a52qw.wam',
@@ -11,7 +11,7 @@ export const votingHistorySuccessResponse = {
             action: 'voted'
         },
         {
-            dacId: 'dao.worlds',
+            dacId: 'nerix',
             voter: '.w2fo.wam',
             voteTimestamp: '2021-02-27T04:18:56.000Z',
             candidate: 'b52qw.wam',
@@ -25,7 +25,7 @@ export const votingHistorySuccessResponse = {
 export const votingHistorySkipResponse = {
     results: [
         {
-            dacId: 'dao.worlds',
+            dacId: 'nerix',
             voter: '.w2fo.wam',
             voteTimestamp: '2021-02-27T04:18:56.000Z',
             candidate: 'b52qw.wam',
@@ -39,7 +39,7 @@ export const votingHistorySkipResponse = {
 export const votingHistoryLimitResponse = {
     results: [
         {
-            dacId: 'dao.worlds',
+            dacId: 'nerix',
             voter: '.w2fo.wam',
             voteTimestamp: '2021-02-27T04:18:56.000Z',
             candidate: 'a52qw.wam',
