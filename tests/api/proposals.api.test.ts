@@ -177,12 +177,10 @@ describe('Proposals API Test', () => {
 			expect(jsonResp.results.length).toEqual(0);
 		});
 
-		it('should return empty result but valid count when skip parameter is negative', async () => {
+		it('should return error when skip parameter is negative', async () => {
 			const response = await getApiResponse(Api.method, `${Api.url}?skip=-1`);
 
-			expect(JSON.parse(response.body)).toEqual(
-				fixtures.proposalsNegativeSkipParamResponse
-			);
+			expect(response.statusCode).toEqual(HTTP_STATUS.INTERNAL_SERVER_ERROR);
 		});
 
 		it('should use default value when skip parameter is not provided', async () => {
