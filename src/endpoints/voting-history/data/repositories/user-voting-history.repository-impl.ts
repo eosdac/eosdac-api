@@ -39,7 +39,7 @@ export class UserVotingHistoryRepositoryImpl extends RepositoryImpl<
 
       const userVoteDoc: UserVotingHistoryDocument = {
         _id: vote._id,
-        dac_id: vote.action.account,
+        dac_id: actionData.dac_id,
         vote_timestamp: vote.block_timestamp,
         voter: actionData.voter || '',
         candidate: '',
