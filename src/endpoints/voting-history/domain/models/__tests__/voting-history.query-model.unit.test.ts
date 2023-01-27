@@ -16,8 +16,9 @@ describe('VotingHistoryQueryModel Unit tests', () => {
 
 		expect(model.toQueryParams()).toEqual({
 			filter: {
-				'action.account': input.dacId,
+				'action.account': 'dao.worlds',
 				'action.name': 'votecust',
+				'action.data.dac_id': input.dacId,
 				'action.data.voter': input.voter
 			},
 			options: {

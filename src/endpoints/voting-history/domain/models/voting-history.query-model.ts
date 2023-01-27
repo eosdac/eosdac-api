@@ -41,8 +41,9 @@ export class VotingHistoryQueryModel extends QueryModel {
 		const { dacId, voter, skip, limit } = this;
 
 		const filter: Filter<UserVotingHistoryDocument> = {
-			'action.account': dacId,
+			'action.account': 'dao.worlds',
 			'action.name': 'votecust',
+			'action.data.dac_id': dacId,
 			'action.data.voter': voter
 		};
 
