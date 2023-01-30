@@ -221,5 +221,31 @@
 		},
 		"data_hash": "3089db8a88b2c7d0930ef44f0c96675678efde31",
 		"present": 1
+	},
+	{
+		"block_num": 105578905,
+		"block_timestamp": {
+			"$date": {
+				"$numberLong": "1582604336000"
+			}
+		},
+		"code": "dao.worlds",
+		"scope": "nerix",
+		"table": "candidates",
+		"payer": "a52qw.wam",
+		"data": {
+			"candidate_name": "a52qw.wam",
+			"requestedpay": "0.0000 TLM",
+			"locked_tokens": "0.0000 NER",
+			"total_votes": "0",
+			"is_active": 1,
+			"custodian_end_time_stamp": "1970-01-01T00:00:00.000",
+			"total_vote_power": 123
+		},
+		"primary_key": {
+			"$numberLong": "1164362298461794871"
+		},
+		"data_hash": "b37be8561f4e5c9fda14a8e422c9c135b1792460",
+		"present": 1
 	}
 ]

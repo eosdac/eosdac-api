@@ -1,155 +1,89 @@
 export const candidatesResponse = {
 	results: [
 		{
-			candidate_name: 'tzgai.wam',
-			profile: {
-				givenName: '',
-				familyName: '',
-				image: '',
-				description: '',
-			},
-			custodian_end_time_stamp: null,
+			candidate_name: '51mqs.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
+			is_active: true,
+			is_custodian: true,
+			requestedpay: '0.0000 TLM'
+		},
+		{
+			candidate_name: 'a.d3u.c.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
+			is_active: true,
+			is_custodian: true,
+			requestedpay: '0.0000 TLM'
+		},
+		{
+			candidate_name: '5thba.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
+			is_active: true,
+			is_custodian: true,
+			requestedpay: '0.0000 TLM'
+		},
+		{
+			candidate_name: 'c353u.c.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
+			is_active: true,
+			is_custodian: true,
+			requestedpay: '0.0000 TLM'
+		},
+		{
+			candidate_name: 't1dbe.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
+			is_active: true,
+			is_custodian: true,
+			requestedpay: '0.0000 TLM'
+		},
+		{
+			candidate_name: 'cabba.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
 			is_active: true,
 			is_custodian: false,
-			locked_tokens: '0.0000 EYE',
-			requestedpay: '0.0000 TLM',
-			total_votes: 0,
+			requestedpay: '0.0000 TLM'
+		},
+		{
+			candidate_name: 'cairc.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
+			is_active: true,
+			is_custodian: false,
+			requestedpay: '0.0000 TLM'
+		},
+		{
+			candidate_name: 'rnjgk.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
+			is_active: true,
+			is_custodian: false,
+			requestedpay: '0.0000 TLM'
 		},
 		{
 			candidate_name: 'neyau.wam',
-			profile: {
-				givenName: '',
-				familyName: '',
-				image: '',
-				description: '',
-			},
-			custodian_end_time_stamp: null,
+			profile: { givenName: '', familyName: '', image: '', description: '' },
 			is_active: true,
 			is_custodian: false,
-			locked_tokens: '0.0000 EYE',
-			requestedpay: '0.0000 TLM',
-			total_votes: 0,
+			requestedpay: '0.0000 TLM'
 		},
 		{
-			candidate_name: 'mntqu.wam',
-			profile: {
-				givenName: '',
-				familyName: '',
-				image: '',
-				description: '',
-			},
-			custodian_end_time_stamp: null,
+			candidate_name: 'c1iba.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
 			is_active: true,
 			is_custodian: false,
-			locked_tokens: '0.0000 EYE',
-			requestedpay: '0.0000 TLM',
-			total_votes: 0,
+			requestedpay: '0.0000 TLM'
 		},
 		{
-			candidate_name: 'gsoaw.wam',
-			profile: {
-				givenName: '',
-				familyName: '',
-				image: '',
-				description: '',
-			},
-			custodian_end_time_stamp: null,
+			candidate_name: 'n1saq.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
 			is_active: true,
 			is_custodian: false,
-			locked_tokens: '0.0000 EYE',
-			requestedpay: '0.0000 TLM',
-			total_votes: 0,
+			requestedpay: '0.0000 TLM'
 		},
 		{
-			candidate_name: 'fydr.wam',
-			profile: {
-				givenName: '',
-				familyName: '',
-				image: '',
-				description: '',
-			},
-			custodian_end_time_stamp: null,
+			candidate_name: 'gmoau.wam',
+			profile: { givenName: '', familyName: '', image: '', description: '' },
 			is_active: true,
 			is_custodian: false,
-			locked_tokens: '0.0000 EYE',
-			requestedpay: '0.0000 TLM',
-			total_votes: 0,
-		},
-		{
-			candidate_name: 'ee1qm.wam',
-			profile: {
-				givenName: '',
-				familyName: '',
-				image: '',
-				description: '',
-			},
-			custodian_end_time_stamp: null,
-			is_active: true,
-			is_custodian: false,
-			locked_tokens: '0.0000 EYE',
-			requestedpay: '0.0000 TLM',
-			total_votes: 0,
-		},
-		{
-			candidate_name: 'ecfoa.wam',
-			profile: {
-				givenName: '',
-				familyName: '',
-				image: '',
-				description: '',
-			},
-			custodian_end_time_stamp: null,
-			is_active: true,
-			is_custodian: false,
-			locked_tokens: '0.0000 EYE',
-			requestedpay: '0.0000 TLM',
-			total_votes: 0,
-		},
-		{
-			candidate_name: 'bfdau.wam',
-			profile: {
-				givenName: '',
-				familyName: '',
-				image: '',
-				description: '',
-			},
-			custodian_end_time_stamp: null,
-			is_active: true,
-			is_custodian: false,
-			locked_tokens: '0.0000 EYE',
-			requestedpay: '0.0000 TLM',
-			total_votes: 0,
-		},
-		{
-			candidate_name: 'anyo.cabal',
-			profile: {
-				givenName: '',
-				familyName: '',
-				image: '',
-				description: '',
-			},
-			custodian_end_time_stamp: null,
-			is_active: true,
-			is_custodian: false,
-			locked_tokens: '0.0000 EYE',
-			requestedpay: '0.0000 TLM',
-			total_votes: 0,
-		},
-		{
-			candidate_name: 'ahwqw.wam',
-			profile: {
-				givenName: '',
-				familyName: '',
-				image: '',
-				description: '',
-			},
-			custodian_end_time_stamp: null,
-			is_active: true,
-			is_custodian: false,
-			locked_tokens: '0.0000 EYE',
-			requestedpay: '0.0000 TLM',
-			total_votes: 0,
-		},
+			requestedpay: '0.0000 TLM'
+		}
 	],
-	count: 10,
+	count: 12
 };

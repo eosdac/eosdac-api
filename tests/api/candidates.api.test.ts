@@ -123,7 +123,7 @@ describe('Candidates API Test', () => {
 			);
 
 			const jsonResponse = JSON.parse(response.body);
-			expect(jsonResponse.results[0].candidate_name).toEqual('ahwqw.wam');
+			expect(jsonResponse.results[0].candidate_name).toEqual('gmoau.wam');
 			expect(jsonResponse.results.length).toEqual(1);
 		});
 

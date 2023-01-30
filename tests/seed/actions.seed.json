@@ -115,5 +115,40 @@
 		},
 		"recv_sequence": 266855,
 		"global_sequence": 1354493416
+	},
+	{
+		"block_num": {
+			"$numberLong": "105578908"
+		},
+		"block_timestamp": {
+			"$date": {
+				"$numberLong": "1614399536000"
+			}
+		},
+		"trx_id": "591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666C",
+		"action": {
+			"account": "dao.worlds",
+			"name": "votecust",
+			"authorization": null,
+			"data": {
+				"voter": ".w2fo.wam",
+				"vote_time_stamp": {
+					"$date": {
+						"$numberLong": "1614399536000"
+					}
+				},
+				"newvotes": [
+					"a52qw.wam",
+					"b52qw.wam"
+				],
+				"dac_id": "nerix"
+			}
+		},
+		"recv_sequence": {
+			"$numberLong": "114341"
+		},
+		"global_sequence": {
+			"$numberLong": "1247940154"
+		}
 	}
 ]

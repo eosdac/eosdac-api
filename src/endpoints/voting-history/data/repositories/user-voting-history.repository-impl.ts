@@ -104,7 +104,8 @@ export class UserVotingHistoryRepositoryImpl extends RepositoryImpl<
     let votingPower = 0;
 
     const query = {
-      code: dacId,
+      code: 'dao.worlds',
+      scope: dacId,
       "table": "candidates",
       "data.candidate_name": candidateName,
       "block_timestamp": {

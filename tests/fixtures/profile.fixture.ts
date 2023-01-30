@@ -1,9 +1,8 @@
 export const profileResponse = {
 	results: [
 		{
+			block_num: '105578904',
 			account: 'suzqu.wam',
-			block_num: 105578904,
-			member_type: 0,
 			profile: {
 				description: 'I am squanching in here',
 				familyName: 'Squanch',
@@ -16,12 +15,15 @@ export const profileResponse = {
 	count: 1,
 };
 
+export const profileNotFound = {
+	error: "profile not found",
+};
+
 export const emptyProfile = {
 	results: [
 		{
 			account: 'dummy',
 			block_num: 0,
-			member_type: 0,
 			profile: {
 				description: '',
 				email: '',

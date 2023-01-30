@@ -66,12 +66,7 @@ export async function eosTableAtBlock({
 			},
 		];
 
-		const filter = (err, results) => {
-			if (err) {
-				reject(err);
-				return;
-			}
-
+		const filter = (results) => {
 			results.forEach(doc => {
 				doc.results = doc.results.map(result => {
 					delete result._id;
@@ -85,7 +80,7 @@ export async function eosTableAtBlock({
 		};
 
 		try {
-			col.aggregate(pipeline, { allowDiskUse: true }, filter);
+			filter(await col.aggregate(pipeline, { allowDiskUse: true }));
 		} catch (e) {
 			console.error(e);
 		}
@@ -140,7 +135,7 @@ export class eosTableIter {
 						if (this.current_set.length) {
 							req.lower_bound =
 								this.current_set[this.current_set.length - this.greed_factor][
-									this.primary_key
+								this.primary_key
 								];
 						}
 
