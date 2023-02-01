@@ -1,15 +1,20 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 process.title = 'eosdac-api';
 
 import fastify, { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
+import { CandidatesController } from './endpoints/candidates/domain/candidates.controller';
 import { CandidatesVotersHistoryController } from './endpoints/candidates-voters-history/domain/candidates-voters-history.controller';
 import { config } from './config';
 import { Container } from 'inversify';
+import { CustodiansController } from './endpoints/custodians/domain/custodians.controller';
 import { FastifyRoute } from './fastify.route';
+import { GetCandidatesRoute } from './endpoints/candidates/routes/get-candidates.route';
 import { GetCandidatesVotersHistoryRoute } from './endpoints/candidates-voters-history/routes/candidates-voters-history.route';
+import { GetCustodiansRoute } from './endpoints/custodians/routes/get-custodians.route';
 import { GetDacsController } from './endpoints/get-dacs/domain/get-dacs.controller';
 import { GetDacsRoute } from './endpoints/get-dacs/routes/dacs.route';
 import { GetProfileRoute } from './endpoints/profile/routes/get-profile.route';
@@ -24,8 +29,9 @@ import { ProposalsInboxRoute } from './endpoints/proposals-inbox/routes/proposal
 import { setupEndpointDependencies } from './endpoints/api.ioc.config';
 import { StateController } from './endpoints/state/domain/state.controller';
 import { VotingHistoryController } from './endpoints/voting-history/domain/voting-history.controller';
-
 import fastifyOAS = require('fastify-oas');
+
+
 
 const openApi = require('./open-api');
 
@@ -40,24 +46,23 @@ export const buildAPIServer = async () => {
 		}
 	);
 
-	const prefix = '/v1/eosdac';
-
-	api.register(require('./api-handlers/balanceTimeline'), { prefix });
-	api.register(require('./api-handlers/candidates'), { prefix });
-	api.register(require('./api-handlers/dacConfig'), { prefix });
-	api.register(require('./api-handlers/dacInfo'), { prefix });
-	api.register(require('./api-handlers/financialReports'), { prefix });
-	api.register(require('./api-handlers/getMsigProposals'), { prefix });
-	api.register(require('./api-handlers/getProposals'), { prefix });
-	api.register(require('./api-handlers/member'), { prefix });
-	api.register(require('./api-handlers/memberCounts'), { prefix });
-	api.register(require('./api-handlers/memberSnapshot'), { prefix });
-	api.register(require('./api-handlers/myDacs'), { prefix });
-	api.register(require('./api-handlers/referendums'), { prefix });
-	api.register(require('./api-handlers/tokensOwned'), { prefix });
-	api.register(require('./api-handlers/transfers'), { prefix });
-	api.register(require('./api-handlers/voters'), { prefix });
-	api.register(require('./api-handlers/votesTimeline'), { prefix });
+	// const prefix = '/v1/eosdac';
+	// api.register(require('./api-handlers/balanceTimeline'), { prefix });
+	// api.register(require('./api-handlers/candidates'), { prefix });
+	// api.register(require('./api-handlers/dacConfig'), { prefix });
+	// api.register(require('./api-handlers/dacInfo'), { prefix });
+	// api.register(require('./api-handlers/financialReports'), { prefix });
+	// api.register(require('./api-handlers/getMsigProposals'), { prefix });
+	// api.register(require('./api-handlers/getProposals'), { prefix });
+	// api.register(require('./api-handlers/member'), { prefix });
+	// api.register(require('./api-handlers/memberCounts'), { prefix });
+	// api.register(require('./api-handlers/memberSnapshot'), { prefix });
+	// api.register(require('./api-handlers/myDacs'), { prefix });
+	// api.register(require('./api-handlers/referendums'), { prefix });
+	// api.register(require('./api-handlers/tokensOwned'), { prefix });
+	// api.register(require('./api-handlers/transfers'), { prefix });
+	// api.register(require('./api-handlers/voters'), { prefix });
+	// api.register(require('./api-handlers/votesTimeline'), { prefix });
 
 	api.register(fastifyOAS, openApi.options);
 
@@ -75,17 +80,25 @@ export const buildAPIServer = async () => {
 	const proposalsInboxController: ProposalsInboxController =
 		apiIoc.get<ProposalsInboxController>(ProposalsInboxController.Token);
 
-	const profileController: ProfileController =
-		apiIoc.get<ProfileController>(ProfileController.Token);
+	const profileController: ProfileController = apiIoc.get<ProfileController>(
+		ProfileController.Token
+	);
 
-	const getDacsController: GetDacsController =
-		apiIoc.get<GetDacsController>(GetDacsController.Token);
+	const getDacsController: GetDacsController = apiIoc.get<GetDacsController>(
+		GetDacsController.Token
+	);
 
 	const votingHistoryController: VotingHistoryController =
 		apiIoc.get<VotingHistoryController>(VotingHistoryController.Token);
 
 	const candidatesVotersHistoryController: CandidatesVotersHistoryController =
 		apiIoc.get<CandidatesVotersHistoryController>(CandidatesVotersHistoryController.Token);
+
+	const candidatesController: CandidatesController =
+		apiIoc.get<CandidatesController>(CandidatesController.Token);
+
+	const custodiansController: CustodiansController =
+		apiIoc.get<CustodiansController>(CustodiansController.Token);
 
 	// Mount routes
 	FastifyRoute.mount(
@@ -102,9 +115,7 @@ export const buildAPIServer = async () => {
 
 	FastifyRoute.mount(
 		api,
-		GetProfileRoute.create(
-			profileController.profile.bind(profileController)
-		)
+		GetProfileRoute.create(profileController.profile.bind(profileController))
 	);
 
 	FastifyRoute.mount(
@@ -116,9 +127,7 @@ export const buildAPIServer = async () => {
 
 	FastifyRoute.mount(
 		api,
-		GetDacsRoute.create(
-			getDacsController.dacs.bind(getDacsController)
-		)
+		GetDacsRoute.create(getDacsController.dacs.bind(getDacsController))
 	);
 
 	FastifyRoute.mount(
@@ -135,10 +144,24 @@ export const buildAPIServer = async () => {
 		)
 	);
 
-	const mongo_url = `${config.mongo.url}/${config.mongo.dbName}`;
-	api.register(require('fastify-mongodb'), {
-		url: mongo_url,
-	});
+	FastifyRoute.mount(
+		api,
+		GetCandidatesRoute.create(
+			candidatesController.list.bind(candidatesController)
+		)
+	);
+
+	FastifyRoute.mount(
+		api,
+		GetCustodiansRoute.create(
+			custodiansController.list.bind(custodiansController)
+		)
+	);
+
+	// const mongo_url = `${config.mongo.url}/${config.mongo.dbName}`;
+	// api.register(require('fastify-mongodb'), {
+	// 	url: mongo_url,
+	// });
 
 	api.register(require('./fastify-eos'), config);
 	api.register(require('./fastify-dac'), {});
