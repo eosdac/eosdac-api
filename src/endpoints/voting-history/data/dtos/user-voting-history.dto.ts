@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId } from "@alien-worlds/api-core";
 
 export enum VoteAction {
 	Voted = 'voted',
