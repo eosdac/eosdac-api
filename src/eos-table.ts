@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-async-promise-executor */
 import { Long as MongoLong } from '@alien-worlds/api-core';
 
 export async function eosTableAtBlock({
