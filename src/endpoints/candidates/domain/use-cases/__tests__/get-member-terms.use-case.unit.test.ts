@@ -3,7 +3,7 @@
 import { Container } from 'inversify';
 import { Failure, Result } from '@alien-worlds/api-core';
 import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
-import { MemberTerms } from '@alien-worlds/eosdac-api-common';
+import { TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 describe('GetMemberTermsUseCase', () => {
 	let container: Container;
@@ -40,7 +40,7 @@ describe('GetMemberTermsUseCase', () => {
 			])
 		);
 		const result = await useCase.execute('dac');
-		expect(result.content).toBeInstanceOf(MemberTerms);
+		expect(result.content).toBeInstanceOf(TokenWorldsContract.Deltas.Entities.MemberTerms);
 	});
 
 	it('should return a failure if the service fails', async () => {

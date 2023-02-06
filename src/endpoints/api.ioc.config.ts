@@ -1,20 +1,6 @@
+import { AlienWorldsContract, DaoWorldsContract, IndexWorldsContract, setupContractActionRepository, setupDacDirectoryRepository, setupFlagRepository, setupUserVotingHistoryRepository, TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { AsyncContainerModule, Container } from 'inversify';
-import {
-	bindActionRepository,
-	setupAlienWorldsContractService,
-	setupDacDirectoryRepository,
-	setupDaoWorldsContractService,
-	setupFlagRepository,
-	setupIndexWorldsContractService,
-	setupStateRepository,
-	setupTokenWorldsContractService,
-	setupWorkerProposalRepository,
-} from '@alien-worlds/eosdac-api-common';
-import {
-	EosJsRpcSource,
-	MongoClient,
-	MongoSource,
-} from '@alien-worlds/api-core';
+import { EosJsRpcSource, MongoDB, MongoSource } from '@alien-worlds/api-core';
 
 import AppConfig from 'src/config/app-config';
 import { CandidatesController } from './candidates/domain/candidates.controller';
@@ -39,7 +25,6 @@ import { IsProfileFlaggedUseCase } from './profile/domain/use-cases/is-profile-f
 import { ListCandidateProfilesUseCase } from './candidates/domain/use-cases/list-candidate-profiles.use-case';
 import { ListCustodianProfilesUseCase } from './custodians/domain/use-cases/list-custodian-profiles.use-case';
 import { ProfileController } from './profile/domain/profile.controller';
-import { setupUserVotingHistoryRepository } from './voting-history';
 import { setupVotingWeightRepository } from './candidates-voters-history/ioc.config';
 import { VotingHistoryController } from './voting-history/domain/voting-history.controller';
 
@@ -56,7 +41,7 @@ export const setupEndpointDependencies = async (
 		 * MONGO
 		 */
 		const { url, dbName } = config.mongo;
-		const client = new MongoClient(url);
+		const client = new MongoDB.MongoClient(url);
 
 		/**
 		 * MONGO DB (source & repositories)
@@ -71,22 +56,34 @@ export const setupEndpointDependencies = async (
 		 * SMART CONTRACT SERVICES
 		 */
 
-		await setupIndexWorldsContractService(eosJsRpcSource, container);
-		await setupAlienWorldsContractService(eosJsRpcSource, container);
-		await setupDaoWorldsContractService(eosJsRpcSource, container);
-		await setupTokenWorldsContractService(eosJsRpcSource, container);
+		await IndexWorldsContract.Services.Ioc.setupIndexWorldsContractService(
+			eosJsRpcSource,
+			container
+		);
+		await AlienWorldsContract.Services.Ioc.setupAlienWorldsContractService(
+			eosJsRpcSource,
+			container
+		);
+		await DaoWorldsContract.Services.Ioc.setupDaoWorldsContractService(
+			eosJsRpcSource,
+			container
+		);
+		await TokenWorldsContract.Services.Ioc.setupTokenWorldsContractService(
+			eosJsRpcSource,
+			container
+		);
 
 		/**
 		 * REPOSITORIES
 		 */
 
-		await setupStateRepository(mongoSource, container);
-		await setupWorkerProposalRepository(mongoSource, container);
 		await setupFlagRepository(mongoSource, container);
-		await bindActionRepository(mongoSource, container);
 		await setupDacDirectoryRepository(mongoSource, eosJsRpcSource, container)
 		await setupUserVotingHistoryRepository(mongoSource, container)
 		await setupVotingWeightRepository(mongoSource, container);
+		await setupContractActionRepository(mongoSource, container);
+
+
 		/*bindings*/
 
 		/**

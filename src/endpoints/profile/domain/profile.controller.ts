@@ -1,5 +1,8 @@
 import { Failure, injectable, Result } from '@alien-worlds/api-core';
-import { DacDirectory, IndexWorldsContractService } from '@alien-worlds/eosdac-api-common';
+import {
+	DacDirectory,
+	IndexWorldsContract,
+} from '@alien-worlds/eosdac-api-common';
 import { config } from '@config';
 import { inject } from 'inversify';
 
@@ -22,15 +25,15 @@ export class ProfileController {
 
 	constructor(
 		/*injections*/
-		@inject(IndexWorldsContractService.Token)
-		private indexWorldsContractService: IndexWorldsContractService,
+		@inject(IndexWorldsContract.Services.IndexWorldsContractService.Token)
+		private indexWorldsContractService: IndexWorldsContract.Services.IndexWorldsContractService,
 
 		@inject(GetProfilesUseCase.Token)
 		private getProfilesUseCase: GetProfilesUseCase,
 
 		@inject(IsProfileFlaggedUseCase.Token)
 		private isProfileFlaggedUseCase: IsProfileFlaggedUseCase
-	) { }
+	) {}
 
 	/*methods*/
 
@@ -44,7 +47,9 @@ export class ProfileController {
 		const results: Profile[] = [];
 		const dacConfig = await this.loadDacConfig(input.dacId);
 		if (!dacConfig) {
-			return Result.withFailure(Failure.withMessage("unable to load dac config"));
+			return Result.withFailure(
+				Failure.withMessage('unable to load dac config')
+			);
 		}
 		const custContract = dacConfig.accounts.custodian;
 
@@ -62,7 +67,7 @@ export class ProfileController {
 		const { content: flags } = await this.isProfileFlaggedUseCase.execute({
 			dacId: input.dacId,
 			accounts: input.accounts,
-		})
+		});
 
 		profiles.forEach(profile => {
 			const { account } = profile;
@@ -77,8 +82,7 @@ export class ProfileController {
 
 			if (isFlagged) {
 				results.push(this.getRedactedCandidateResult(account));
-			}
-			else {
+			} else {
 				results.push(profile);
 			}
 		});
@@ -89,26 +93,25 @@ export class ProfileController {
 		});
 	}
 
-
-	private loadDacConfig = async (dacId) => {
+	private loadDacConfig = async dacId => {
 		const dac_config_cache = config.dac.nameCache.get(dacId);
 
 		if (dac_config_cache) {
 			console.info(`Returning cached dac info`);
 			return dac_config_cache;
 		} else {
-			const result = await this.indexWorldsContractService.fetchDacs({
+			const result = await this.indexWorldsContractService.fetchDac({
 				scope: config.eos.dacDirectoryContract,
 				limit: 1,
 				lower_bound: dacId,
 				upper_bound: dacId,
-			})
+			});
 
 			if (!result.isFailure && result.content && result.content.length) {
-				const dacConfig = DacDirectory.fromTableRow(result.content[0]);
-				config.dac.nameCache.set(dacId, dacConfig)
+				const dacConfig = DacDirectory.fromStruct(result.content[0]);
+				config.dac.nameCache.set(dacId, dacConfig);
 
-				return dacConfig
+				return dacConfig;
 			}
 
 			console.warn(`Could not find dac with ID ${dacId}`);
@@ -119,7 +122,7 @@ export class ProfileController {
 	private getRedactedCandidateResult = (account): Profile => {
 		return Profile.createErrorProfile(account, {
 			name: 'Redacted Candidate',
-			body: `Candidate "${account}" profile has been flagged for supplying inappropriate content.`
-		})
-	}
+			body: `Candidate "${account}" profile has been flagged for supplying inappropriate content.`,
+		});
+	};
 }

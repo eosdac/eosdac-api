@@ -2,19 +2,18 @@
 
 // Unit test code
 import { anything, instance, mock, verify, when } from 'ts-mockito';
-import {
-	TokenWorldsContractService,
-	TokenWorldsContractServiceImpl,
-} from '@alien-worlds/eosdac-api-common';
+import { TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { Failure } from '@alien-worlds/api-core';
 import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
 
 describe('GetMembersAgreedTermsUseCase', () => {
 	let getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase;
-	let tokenWorldsContractService: TokenWorldsContractService;
+	let tokenWorldsContractService: TokenWorldsContract.Services.TokenWorldsContractService;
 
 	beforeEach(() => {
-		tokenWorldsContractService = mock(TokenWorldsContractServiceImpl);
+		tokenWorldsContractService = mock(
+			TokenWorldsContract.Services.TokenWorldsContractServiceImpl
+		);
 		getMembersAgreedTermsUseCase = new GetMembersAgreedTermsUseCase(
 			instance(tokenWorldsContractService)
 		);
@@ -71,7 +70,7 @@ describe('GetMembersAgreedTermsUseCase', () => {
 // 	let useCase: GetMemberTermsUseCase;
 
 // 	const mockService = {
-// 		fetchMemberTerms: jest.fn(),
+// 		fetchMembersTerms: jest.fn(),
 // 	};
 
 // 	beforeAll(() => {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Custodian } from '@alien-worlds/eosdac-api-common';
+import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { Profile } from '../../../../profile/domain/entities/profile';
 import { CustodianProfile } from '../../entities/custodian-profile';
 import { GetCustodiansOutput } from '../get-custodians.output';
@@ -7,12 +7,12 @@ import { GetCustodiansOutput } from '../get-custodians.output';
 describe('GetCustodiansOutput', () => {
 	let dacId: string;
 	const custodians = [
-		Custodian.fromTableRow({
+		DaoWorldsContract.Deltas.Entities.Custodian.fromStruct({
 			cust_name: 'custodian1',
 			requestedpay: 'test',
 			total_vote_power: 1,
 		}),
-		Custodian.fromTableRow({
+		DaoWorldsContract.Deltas.Entities.Custodian.fromStruct({
 			cust_name: 'custodian2',
 			requestedpay: 'test',
 			total_vote_power: 1,
@@ -61,7 +61,7 @@ describe('GetCustodiansOutput', () => {
 
 		expect(result.results[0]).toBeInstanceOf(CustodianProfile);
 		expect(result.results[0].walletId).toBeDefined();
-		expect(result.results[0].requestedPay).toBeDefined();
+		expect(result.results[0].requestedPayment).toBeDefined();
 		expect(result.results[0].votePower).toBeDefined();
 		expect(result.results[0].profile).toBeDefined();
 		expect(result.results[0].agreedTermVersion).toBeDefined();

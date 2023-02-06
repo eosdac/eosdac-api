@@ -1,6 +1,6 @@
 import { GetRoute, Request, Result, RouteHandler } from '@alien-worlds/api-core';
+import { UserVote } from '@alien-worlds/eosdac-api-common';
 
-import { UserVote } from '../domain/entities/user-vote';
 import { VotingHistoryInput } from '../domain/models/voting-history.input';
 import { VotingHistoryOutput } from '../domain/models/voting-history.output';
 

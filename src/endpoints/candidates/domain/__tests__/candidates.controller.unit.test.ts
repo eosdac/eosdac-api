@@ -1,9 +1,5 @@
 import 'reflect-metadata';
 
-import {
-	DacsTableRow,
-	IndexWorldsContractService,
-} from '@alien-worlds/eosdac-api-common';
 import { config } from '@config';
 import { Failure, Result } from '@alien-worlds/api-core';
 import { CandidatesController } from '../candidates.controller';
@@ -11,6 +7,7 @@ import { Container } from 'inversify';
 import { GetCandidatesInput } from '../models/get-candidates.input';
 import { ListCandidateProfilesUseCase } from '../use-cases/list-candidate-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
+import { IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 /*imports*/
 
@@ -38,7 +35,9 @@ describe('Candidate Controller Unit tests', () => {
 		container = new Container();
 		/*bindings*/
 		container
-			.bind<IndexWorldsContractService>(IndexWorldsContractService.Token)
+			.bind<IndexWorldsContract.Services.IndexWorldsContractService>(
+				IndexWorldsContract.Services.IndexWorldsContractService.Token
+			)
 			.toConstantValue(indexWorldsContractService as any);
 		container
 			.bind<ListCandidateProfilesUseCase>(ListCandidateProfilesUseCase.Token)
@@ -54,7 +53,7 @@ describe('Candidate Controller Unit tests', () => {
 		);
 		indexWorldsContractService.fetchDacs.mockResolvedValue(
 			Result.withContent([
-				<DacsTableRow>{
+				<IndexWorldsContract.Deltas.Types.DacsStruct>{
 					accounts: [{ key: 2, value: 'dao.worlds' }],
 					symbol: {
 						sym: 'EYE',

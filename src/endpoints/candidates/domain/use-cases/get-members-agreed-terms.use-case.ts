@@ -1,5 +1,5 @@
 import { injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { TokenWorldsContractService } from '@alien-worlds/eosdac-api-common';
+import { TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { inject } from 'inversify';
 
 /*imports*/
@@ -15,8 +15,8 @@ export class GetMembersAgreedTermsUseCase
 
 	constructor(
 		/*injections*/
-		@inject(TokenWorldsContractService.Token)
-		private service: TokenWorldsContractService
+		@inject(TokenWorldsContract.Services.TokenWorldsContractService.Token)
+		private service: TokenWorldsContract.Services.TokenWorldsContractService
 	) {}
 
 	/**
@@ -30,6 +30,7 @@ export class GetMembersAgreedTermsUseCase
 		const list = new Map();
 		const { content: rows, failure } = await this.service.fetchMembers({
 			scope: dacId.toLowerCase(),
+			code: 'token.worlds',
 		});
 		if (failure) {
 			return Result.withFailure(failure);

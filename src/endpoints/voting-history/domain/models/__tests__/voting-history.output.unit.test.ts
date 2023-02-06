@@ -1,4 +1,4 @@
-import { UserVote } from '../../entities/user-vote';
+import { UserVote } from '@alien-worlds/eosdac-api-common';
 import { VoteAction } from '../../../data/dtos/user-voting-history.dto';
 import { VotingHistoryOutput } from '../voting-history.output';
 

@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-	Candidate,
-	MemberTerms,
-	TokenWorldsMemberTermsTableRow,
+	DaoWorldsContract,
+	TokenWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
 import { CandidateProfile } from '../../entities/candidate-profile';
 import { GetCandidatesOutput } from '../get-candidates.output';
@@ -10,9 +9,9 @@ import { Profile } from '../../../../profile/domain/entities/profile';
 
 describe('GetCandidatesOutput', () => {
 	let dacId: string;
-	let candidates: Candidate[];
+	let candidates: DaoWorldsContract.Deltas.Entities.Candidate[];
 	let profiles: Profile[];
-	let terms: TokenWorldsMemberTermsTableRow;
+	let terms: TokenWorldsContract.Deltas.Entities.MemberTerms;
 	let agreedTerms: Map<string, number>;
 	let votedCandidates: string[];
 	let candidateProfiles: CandidateProfile[];
@@ -20,7 +19,7 @@ describe('GetCandidatesOutput', () => {
 	beforeEach(() => {
 		dacId = 'dacId';
 		candidates = [
-			Candidate.fromTableRow({
+			DaoWorldsContract.Deltas.Entities.Candidate.fromStruct({
 				is_active: 1,
 				candidate_name: 'candidate1',
 				requestedpay: 'test',
@@ -30,7 +29,7 @@ describe('GetCandidatesOutput', () => {
 				gap_filler: 1,
 				total_vote_power: 1,
 			}),
-			Candidate.fromTableRow({
+			DaoWorldsContract.Deltas.Entities.Candidate.fromStruct({
 				is_active: 1,
 				candidate_name: 'candidate2',
 				requestedpay: 'test',
@@ -59,7 +58,7 @@ describe('GetCandidatesOutput', () => {
 				},
 			} as any),
 		] as any;
-		terms = { rest: { version: 1 } } as any;
+		terms = { version: 1n } as any;
 		agreedTerms = new Map<string, number>();
 		agreedTerms.set('candidate1', 1);
 		votedCandidates = ['candidate1'];
@@ -68,7 +67,9 @@ describe('GetCandidatesOutput', () => {
 				dacId,
 				candidates[0],
 				profiles[0],
-				MemberTerms.fromTableRow(terms),
+				TokenWorldsContract.Deltas.Entities.MemberTerms.fromStruct(
+					terms as any
+				),
 				1,
 				votedCandidates
 			),
@@ -76,7 +77,9 @@ describe('GetCandidatesOutput', () => {
 				dacId,
 				candidates[1],
 				profiles[1],
-				MemberTerms.fromTableRow(terms),
+				TokenWorldsContract.Deltas.Entities.MemberTerms.fromStruct(
+					terms as any
+				),
 				1,
 				votedCandidates
 			),

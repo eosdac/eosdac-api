@@ -1,6 +1,6 @@
 import {
 	DacDirectory,
-	IndexWorldsContractService,
+	IndexWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
 import { Failure, injectable, Result } from '@alien-worlds/api-core';
 import { config } from '@config';
@@ -23,8 +23,8 @@ export class CandidatesController {
 
 	constructor(
 		/*injections*/
-		@inject(IndexWorldsContractService.Token)
-		private indexWorldsContractService: IndexWorldsContractService,
+		@inject(IndexWorldsContract.Services.IndexWorldsContractService.Token)
+		private indexWorldsContractService: IndexWorldsContract.Services.IndexWorldsContractService,
 
 		@inject(ListCandidateProfilesUseCase.Token)
 		private listCandidateProfilesUseCase: ListCandidateProfilesUseCase
@@ -67,7 +67,7 @@ export class CandidatesController {
 			console.info(`Returning cached dac info`);
 			return dac_config_cache;
 		} else {
-			const result = await this.indexWorldsContractService.fetchDacs({
+			const result = await this.indexWorldsContractService.fetchDac({
 				scope: config.eos.dacDirectoryContract,
 				limit: 1,
 				lower_bound: dacId,
@@ -79,7 +79,7 @@ export class CandidatesController {
 				return null;
 			}
 
-			const dacConfig = DacDirectory.fromTableRow(result.content[0]);
+			const dacConfig = DacDirectory.fromStruct(result.content[0]);
 			config.dac.nameCache.set(dacId, dacConfig);
 
 			return dacConfig;

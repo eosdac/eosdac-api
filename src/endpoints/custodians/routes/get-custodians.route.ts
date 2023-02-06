@@ -50,6 +50,7 @@ export const parseRequestToControllerInput = (
 export const parseResultToControllerOutput = (
 	result: Result<GetCustodiansOutput>
 ) => {
+	console.log('>>>>>', result);
 	if (result.isFailure) {
 		const {
 			failure: { error },

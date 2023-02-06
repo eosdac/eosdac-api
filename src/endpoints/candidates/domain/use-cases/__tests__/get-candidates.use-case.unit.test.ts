@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Unit Test Code
 import { Failure } from '@alien-worlds/api-core';
-import { Candidate } from '@alien-worlds/eosdac-api-common';
+import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { Container } from 'inversify';
 import { GetCandidatesUseCase } from '../get-candidates.use-case';
+
+const Entities = DaoWorldsContract.Deltas.Entities;
 
 describe('GetCandidatesUseCase', () => {
 	let container: Container;
@@ -33,15 +35,16 @@ describe('GetCandidatesUseCase', () => {
 	it('should return a list of candidates', async () => {
 		const dacId = 'testdac';
 		mockService.fetchCandidates.mockResolvedValue({
-			content: [Candidate.fromTableRow({})],
+			content: [Entities.Candidate.fromStruct({})],
 		});
 		const result = await useCase.execute(dacId);
 
 		expect(result.content).toBeInstanceOf(Array);
 
-		const candidate = result.content[0] as Candidate;
+		const candidate = result
+			.content[0] as DaoWorldsContract.Deltas.Entities.Candidate;
 
-		expect(candidate).toBeInstanceOf(Candidate);
+		expect(candidate).toBeInstanceOf(Entities.Candidate);
 	});
 
 	it('should return an empty array if no candidates are found', async () => {

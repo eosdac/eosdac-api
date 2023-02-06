@@ -1,4 +1,8 @@
-import { Custodian, MemberTerms } from '@alien-worlds/eosdac-api-common';
+import {
+	DaoWorldsContract,
+	RequestedPayment,
+	TokenWorldsContract,
+} from '@alien-worlds/eosdac-api-common';
 import { Profile } from '../../../profile/domain/entities/profile';
 
 /*imports*/
@@ -16,19 +20,19 @@ export class CustodianProfile {
 	 */
 	public static create(
 		dacId: string,
-		custodian: Custodian,
+		custodian: DaoWorldsContract.Deltas.Entities.Custodian,
 		profile: Profile,
-		memberTerms: MemberTerms,
+		memberTerms: TokenWorldsContract.Deltas.Entities.MemberTerms,
 		agreedTermsVersion: number
 	): CustodianProfile {
-		const { name, requestedPay, totalVotePower } = custodian;
+		const { name, requestedPayment, totalVotePower } = custodian;
 
 		const { version } = memberTerms.rest as { version: number };
 		const votePower = totalVotePower / 10000n;
 
 		return new CustodianProfile(
 			name,
-			requestedPay,
+			requestedPayment,
 			Number(votePower),
 			profile.profile,
 			agreedTermsVersion,
@@ -45,7 +49,7 @@ export class CustodianProfile {
 	 */
 	private constructor(
 		public readonly walletId: string,
-		public readonly requestedPay: string,
+		public readonly requestedPayment: RequestedPayment,
 		public readonly votePower: number,
 		public readonly profile: unknown,
 		public readonly agreedTermVersion: number,
@@ -58,7 +62,7 @@ export class CustodianProfile {
 	public toJson() {
 		const {
 			walletId,
-			requestedPay,
+			requestedPayment,
 			votePower,
 			profile,
 			agreedTermVersion,
@@ -70,7 +74,7 @@ export class CustodianProfile {
 
 		return {
 			walletId,
-			requestedpay: requestedPay,
+			requestedpay: `${requestedPayment.value} ${requestedPayment.symbol}`,
 			votePower,
 			profile,
 			agreedTermVersion,

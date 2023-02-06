@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Unit Test Code
 import { Container } from 'inversify';
-import { Custodian } from '@alien-worlds/eosdac-api-common';
+import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { Failure } from '@alien-worlds/api-core';
 import { GetCustodiansUseCase } from '../get-custodians.use-case';
 
@@ -48,9 +48,12 @@ describe('GetCustodiansUseCase', () => {
 
 		expect(result.content).toBeInstanceOf(Array);
 
-		const candidate = result.content[0] as Custodian;
+		const candidate = result
+			.content[0] as DaoWorldsContract.Deltas.Entities.Custodian;
 
-		expect(candidate).toBeInstanceOf(Custodian);
+		expect(candidate).toBeInstanceOf(
+			DaoWorldsContract.Deltas.Entities.Custodian
+		);
 	});
 
 	it('should return an empty array if no candidates are found', async () => {

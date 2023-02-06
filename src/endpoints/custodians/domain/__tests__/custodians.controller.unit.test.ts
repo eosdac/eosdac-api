@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
-import {
-	DacsTableRow,
-	IndexWorldsContractService,
-} from '@alien-worlds/eosdac-api-common';
+import { IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { config } from '@config';
 import { Failure, Result } from '@alien-worlds/api-core';
 import { CustodiansController } from '../custodians.controller';
@@ -38,7 +35,9 @@ describe('Candidate Controller Unit tests', () => {
 		container = new Container();
 		/*bindings*/
 		container
-			.bind<IndexWorldsContractService>(IndexWorldsContractService.Token)
+			.bind<IndexWorldsContract.Services.IndexWorldsContractService>(
+				IndexWorldsContract.Services.IndexWorldsContractService.Token
+			)
 			.toConstantValue(indexWorldsContractService as any);
 		container
 			.bind<ListCustodianProfilesUseCase>(ListCustodianProfilesUseCase.Token)
@@ -54,7 +53,7 @@ describe('Candidate Controller Unit tests', () => {
 		);
 		indexWorldsContractService.fetchDacs.mockResolvedValue(
 			Result.withContent([
-				<DacsTableRow>{
+				<IndexWorldsContract.Deltas.Types.DacsStruct>{
 					accounts: [{ key: 2, value: 'dao.worlds' }],
 					symbol: {
 						sym: 'EYE',

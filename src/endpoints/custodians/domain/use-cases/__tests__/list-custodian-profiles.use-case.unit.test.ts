@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
-import { DacDirectory, DacsTableRow } from '@alien-worlds/eosdac-api-common';
+import { DacDirectory, IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { Failure, Result } from '@alien-worlds/api-core';
 import { Container } from 'inversify';
 import { GetCustodiansUseCase } from '../get-custodians.use-case';
@@ -29,7 +29,7 @@ const getMemberTermsUseCase = {
 const getMembersAgreedTermsUseCase = {
 	execute: jest.fn(),
 };
-const dacConfig = DacDirectory.fromTableRow(<DacsTableRow>{
+const dacConfig = DacDirectory.fromStruct(<IndexWorldsContract.Deltas.Types.DacsStruct>{
 	accounts: [{ key: 2, value: 'dao.worlds' }],
 	symbol: {
 		sym: 'EYE',

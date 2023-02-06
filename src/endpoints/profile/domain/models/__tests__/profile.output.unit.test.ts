@@ -1,5 +1,4 @@
-import { DeserializedAction } from '@alien-worlds/eosdac-api-common';
-import { Long } from '@alien-worlds/api-core';
+import { MongoDB } from '@alien-worlds/api-core';
 import { Profile } from '../../entities/profile';
 import { ProfileOutput } from '../profile.output';
 
@@ -7,15 +6,15 @@ import { ProfileOutput } from '../profile.output';
 /*mocks*/
 const workerProposals: Profile[] = [
 	Profile.fromDto({
-		action: <DeserializedAction>{
+		action: {
 			data: {
 				cand: 'string',
 				profile: `{"givenName":"awtesteroo12 name",
 							"familyName":"awtesteroo12Family Name",
 							"image":"image-url","description":"string"}`,
 			},
-		},
-		block_num: Long.ZERO,
+		} as any,
+		block_num: MongoDB.Long.ZERO,
 	}),
 ];
 

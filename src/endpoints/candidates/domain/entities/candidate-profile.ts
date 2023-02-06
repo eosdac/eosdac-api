@@ -1,4 +1,8 @@
-import { Candidate, MemberTerms } from '@alien-worlds/eosdac-api-common';
+import {
+	DaoWorldsContract,
+	RequestedPayment,
+	TokenWorldsContract,
+} from '@alien-worlds/eosdac-api-common';
 import { Profile } from './../../../profile/domain/entities/profile';
 
 /*imports*/
@@ -12,21 +16,20 @@ export class CandidateProfile {
 	 *
 	 * @static
 	 * @public
-	 * @param {ActionDocument} dto
-	 * @returns {Candidate}
+	 * @returns {CandidateProfile}
 	 */
 	public static create(
 		dacId: string,
-		candidate: Candidate,
+		candidate: DaoWorldsContract.Deltas.Entities.Candidate,
 		profile: Profile,
-		memberTerms: MemberTerms,
+		memberTerms: TokenWorldsContract.Deltas.Entities.MemberTerms,
 		agreedTermsVersion: number,
 		votedCandidates: string[]
 	): CandidateProfile {
 		const {
 			name,
-			requestedPay,
-			totalVotes,
+			requestedPayment,
+			votersCount,
 			rest: candidateRest,
 			isActive,
 			avgVoteTimestamp,
@@ -50,12 +53,12 @@ export class CandidateProfile {
 
 		return new CandidateProfile(
 			name,
-			requestedPay,
+			requestedPayment,
 			votePower,
 			rank,
 			gap_filler,
 			isActive,
-			totalVotes,
+			votersCount,
 			voteDecay,
 			profile.profile,
 			agreedTermsVersion,
@@ -74,7 +77,7 @@ export class CandidateProfile {
 	 */
 	private constructor(
 		public readonly walletId: string,
-		public readonly requestedPay: string,
+		public readonly requestedPay: RequestedPayment,
 		public readonly votePower: number,
 		public readonly rank: number,
 		public readonly gapFiller: number,
