@@ -14,10 +14,10 @@
     node-fetch "2"
     reflect-metadata "^0.1.13"
 
-"@alien-worlds/eosdac-api-common@^0.0.60":
-  version "0.0.60"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/eosdac-api-common/0.0.60/d0888d1aefe69b0ee6efcd2789fe1595337dd848#d0888d1aefe69b0ee6efcd2789fe1595337dd848"
-  integrity sha512-8Yckly91uNUkO3pWh4wt1tGwcSfs14j8VLNZiUl97jmTtQwTMKXjh3dLQRdgyWCzRyfIDOcditmRJOFgnrXO7g==
+"@alien-worlds/eosdac-api-common@0.0.63":
+  version "0.0.63"
+  resolved "https://npm.pkg.github.com/download/@alien-worlds/eosdac-api-common/0.0.63/03bbcee25a314ad0ef9d0c33689d922da978cef5#03bbcee25a314ad0ef9d0c33689d922da978cef5"
+  integrity sha512-ynCA2wDofytGOOgLRj2sJnRu7mEuOgMoV23uMpGItGYwXuz0+JyNvyAqz9ECdVzibFIfDLbGaJv4gLe7umoVUQ==
   dependencies:
     "@alien-worlds/api-core" "^0.0.60"
     crypto "^1.0.1"
