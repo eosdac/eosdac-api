@@ -21,7 +21,7 @@ const mockedConfig = config as jest.Mocked<typeof config>;
 let container: Container;
 let controller: CustodiansController;
 const indexWorldsContractService = {
-	fetchDacs: jest.fn(),
+	fetchDac: jest.fn(),
 };
 const listCandidateProfilesUseCase = {
 	execute: jest.fn(),
@@ -51,7 +51,7 @@ describe('Candidate Controller Unit tests', () => {
 		controller = container.get<CustodiansController>(
 			CustodiansController.Token
 		);
-		indexWorldsContractService.fetchDacs.mockResolvedValue(
+		indexWorldsContractService.fetchDac.mockResolvedValue(
 			Result.withContent([
 				<IndexWorldsContract.Deltas.Types.DacsStruct>{
 					accounts: [{ key: 2, value: 'dao.worlds' }],
@@ -83,7 +83,7 @@ describe('Candidate Controller Unit tests', () => {
 
 	it('Should result with LoadDacConfigError when dac config could not be loaded', async () => {
 		mockedConfig.dac.nameCache.get = () => null;
-		indexWorldsContractService.fetchDacs.mockResolvedValue(
+		indexWorldsContractService.fetchDac.mockResolvedValue(
 			Result.withFailure(Failure.withMessage('error'))
 		);
 		const result = await controller.list(input);

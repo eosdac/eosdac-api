@@ -10,7 +10,7 @@ import {
 import { Container } from 'inversify';
 import { GetProfilesUseCase } from '../get-profiles.use-case';
 import { GetProfilesUseCaseInput } from 'src/endpoints/profile/data/dtos/profile.dto';
-import { ContractActionRepository } from '@alien-worlds/eosdac-api-common';
+import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 /*imports*/
 /*mocks*/
@@ -85,7 +85,7 @@ describe('Get Profile Unit tests', () => {
 			},
 		};
 		const actions: ContractAction[] = [
-			ContractAction.fromDocument(input, () => ({ toDocument: () => input })),
+			ContractAction.fromDocument(input, DaoWorldsContract.Actions.Entities.SetProfile.fromDocument),
 		];
 
 		actionRepository.aggregate.mockResolvedValue(Result.withContent(actions));

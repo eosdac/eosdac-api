@@ -10,7 +10,7 @@ import 'reflect-metadata';
 /*mocks*/
 
 const alienWorldsContractService = {
-	fetchAccounts: jest.fn(),
+	fetchAccount: jest.fn(),
 };
 
 let container: Container;
@@ -45,7 +45,7 @@ describe('Get Dac Treasury Unit tests', () => {
 	});
 
 	it('Should return a failure when alien.worlds contract service fails', async () => {
-		alienWorldsContractService.fetchAccounts.mockResolvedValueOnce(
+		alienWorldsContractService.fetchAccount.mockResolvedValueOnce(
 			Result.withFailure(Failure.fromError(null))
 		);
 
@@ -54,7 +54,7 @@ describe('Get Dac Treasury Unit tests', () => {
 	});
 
 	it('should return AlienWorldsAccount', async () => {
-		alienWorldsContractService.fetchAccounts.mockResolvedValueOnce(
+		alienWorldsContractService.fetchAccount.mockResolvedValueOnce(
 			Result.withContent([
 				<AlienWorldsContract.Deltas.Types.AccountsStruct>{
 					balance: '12237582.5498 TLM',

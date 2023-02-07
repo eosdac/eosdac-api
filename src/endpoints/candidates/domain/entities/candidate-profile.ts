@@ -30,15 +30,12 @@ export class CandidateProfile {
 			name,
 			requestedPayment,
 			votersCount,
-			rest: candidateRest,
 			isActive,
 			avgVoteTimestamp,
+			rank,
+			totalVotePower,
+			gapFiller,
 		} = candidate;
-		const { gap_filler, rank, total_vote_power } = candidateRest as {
-			gap_filler: number;
-			rank: number;
-			total_vote_power: number;
-		};
 
 		const { version } = memberTerms.rest as { version: number };
 
@@ -49,14 +46,14 @@ export class CandidateProfile {
 							(3600 * 24 * 1000)
 				)
 				: null;
-		const votePower = +total_vote_power / 10000;
+		const votePower = totalVotePower / 10000n;
 
 		return new CandidateProfile(
 			name,
 			requestedPayment,
 			votePower,
 			rank,
-			gap_filler,
+			gapFiller,
 			isActive,
 			votersCount,
 			voteDecay,
@@ -78,9 +75,9 @@ export class CandidateProfile {
 	private constructor(
 		public readonly walletId: string,
 		public readonly requestedPay: RequestedPayment,
-		public readonly votePower: number,
-		public readonly rank: number,
-		public readonly gapFiller: number,
+		public readonly votePower: bigint,
+		public readonly rank: bigint,
+		public readonly gapFiller: bigint,
 		public readonly isActive: boolean,
 		public readonly totalVotes: number,
 		public readonly voteDecay: number,
@@ -116,10 +113,10 @@ export class CandidateProfile {
 
 		return {
 			walletId,
-			requestedpay: requestedPay,
-			votePower,
-			rank,
-			gapFiller,
+			requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
+			votePower: Number(votePower),
+			rank: Number(rank),
+			gapFiller: Number(gapFiller),
 			isActive,
 			totalVotes,
 			voteDecay,

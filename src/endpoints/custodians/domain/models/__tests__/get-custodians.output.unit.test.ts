@@ -11,11 +11,13 @@ describe('GetCustodiansOutput', () => {
 			cust_name: 'custodian1',
 			requestedpay: 'test',
 			total_vote_power: 1,
+			rank: 1,
 		}),
 		DaoWorldsContract.Deltas.Entities.Custodian.fromStruct({
 			cust_name: 'custodian2',
 			requestedpay: 'test',
 			total_vote_power: 1,
+			rank: 1,
 		}),
 	] as any;
 	const profiles = [

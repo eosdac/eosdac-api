@@ -12,7 +12,7 @@ describe('GetCandidatesUseCase', () => {
 	let useCase: GetCandidatesUseCase;
 
 	const mockService = {
-		fetchCandidates: jest.fn(),
+		fetchCandidate: jest.fn(),
 	};
 
 	beforeAll(() => {
@@ -34,8 +34,17 @@ describe('GetCandidatesUseCase', () => {
 
 	it('should return a list of candidates', async () => {
 		const dacId = 'testdac';
-		mockService.fetchCandidates.mockResolvedValue({
-			content: [Entities.Candidate.fromStruct({})],
+		mockService.fetchCandidate.mockResolvedValue({
+			content: [
+				{
+					requestedpay: '10000 TLM',
+					total_vote_power: 1,
+					rank: 1,
+					gap_filler: 1,
+					is_active: true,
+					avg_vote_timestamp: new Date()
+				},
+			],
 		});
 		const result = await useCase.execute(dacId);
 
@@ -49,7 +58,7 @@ describe('GetCandidatesUseCase', () => {
 
 	it('should return an empty array if no candidates are found', async () => {
 		const dacId = 'emptydac';
-		mockService.fetchCandidates.mockResolvedValue({
+		mockService.fetchCandidate.mockResolvedValue({
 			content: [],
 		});
 		const result = await useCase.execute(dacId);
@@ -59,7 +68,7 @@ describe('GetCandidatesUseCase', () => {
 
 	it('should return a failure if the service fails', async () => {
 		const dacId = 'faileddac';
-		mockService.fetchCandidates.mockResolvedValue({
+		mockService.fetchCandidate.mockResolvedValue({
 			failure: Failure.withMessage('error'),
 		});
 		const result = await useCase.execute(dacId);

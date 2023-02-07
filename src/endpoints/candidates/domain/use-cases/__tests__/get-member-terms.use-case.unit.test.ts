@@ -33,6 +33,7 @@ describe('GetMemberTermsUseCase', () => {
 		mockService.fetchMemberTerms.mockResolvedValue(
 			Result.withContent([
 				{
+					version: 1,
 					terms: '1',
 					hash: '10539818110539828',
 					dac_id: 'sample.dac',

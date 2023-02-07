@@ -10,7 +10,7 @@ describe('GetCustodiansUseCase', () => {
 	let useCase: GetCustodiansUseCase;
 
 	const mockService = {
-		fetchCustodians: jest.fn(),
+		fetchCustodian: jest.fn(),
 	};
 
 	beforeAll(() => {
@@ -32,11 +32,11 @@ describe('GetCustodiansUseCase', () => {
 
 	it('should return a list of custodians', async () => {
 		const dacId = 'testdac';
-		mockService.fetchCustodians.mockResolvedValue({
+		mockService.fetchCustodian.mockResolvedValue({
 			content: [
 				{
 					cust_name: 'custodian1',
-					requestedpay: 1,
+					requestedpay: '10000000 TLM',
 					total_vote_power: 1,
 					rank: 1,
 					number_voters: 1,
@@ -58,7 +58,7 @@ describe('GetCustodiansUseCase', () => {
 
 	it('should return an empty array if no candidates are found', async () => {
 		const dacId = 'emptydac';
-		mockService.fetchCustodians.mockResolvedValue({
+		mockService.fetchCustodian.mockResolvedValue({
 			content: [],
 		});
 		const result = await useCase.execute(dacId);
@@ -68,7 +68,7 @@ describe('GetCustodiansUseCase', () => {
 
 	it('should return a failure if the service fails', async () => {
 		const dacId = 'faileddac';
-		mockService.fetchCustodians.mockResolvedValue({
+		mockService.fetchCustodian.mockResolvedValue({
 			failure: Failure.withMessage('error'),
 		});
 		const result = await useCase.execute(dacId);

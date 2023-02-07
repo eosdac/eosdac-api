@@ -14,7 +14,7 @@ import 'reflect-metadata';
 /*mocks*/
 
 const indexWorldsContractService = {
-	fetchDacs: jest.fn(),
+	fetchDac: jest.fn(),
 };
 
 const input: GetDacsInput = {
@@ -54,7 +54,7 @@ describe('Get All Dacs Unit tests', () => {
 	});
 
 	it('Should return a failure when index.worlds contract service fails', async () => {
-		indexWorldsContractService.fetchDacs.mockResolvedValueOnce(
+		indexWorldsContractService.fetchDac.mockResolvedValueOnce(
 			Result.withFailure(Failure.fromError(null))
 		);
 
@@ -63,7 +63,7 @@ describe('Get All Dacs Unit tests', () => {
 	});
 
 	it('should return an array of DacDirectory', async () => {
-		indexWorldsContractService.fetchDacs.mockResolvedValueOnce(
+		indexWorldsContractService.fetchDac.mockResolvedValueOnce(
 			Result.withContent([
 				<IndexWorldsContract.Deltas.Types.DacsStruct>{
 					accounts: [{ key: 2, value: 'dao.worlds' }],

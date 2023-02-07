@@ -10,7 +10,7 @@ import 'reflect-metadata';
 /*mocks*/
 
 const tokenWorldsContractService = {
-	fetchStats: jest.fn(),
+	fetchStat: jest.fn(),
 };
 
 let container: Container;
@@ -44,7 +44,7 @@ describe('Get Dac Tokens Unit tests', () => {
 	});
 
 	it('Should return a failure when token.worlds contract service fails', async () => {
-		tokenWorldsContractService.fetchStats.mockResolvedValueOnce(
+		tokenWorldsContractService.fetchStat.mockResolvedValueOnce(
 			Result.withFailure(Failure.fromError(null))
 		);
 
@@ -53,13 +53,13 @@ describe('Get Dac Tokens Unit tests', () => {
 	});
 
 	it('should return an array of Stat', async () => {
-		tokenWorldsContractService.fetchStats.mockResolvedValueOnce(
+		tokenWorldsContractService.fetchStat.mockResolvedValueOnce(
 			Result.withContent([
 				<TokenWorldsContract.Deltas.Types.StatStruct>{
 					supply: '1660485.1217 EYE',
-					maxSupply: '10000000000.0000 EYE',
+					max_supply: '10000000000.0000 EYE',
 					issuer: 'federation',
-					transferLocked: false,
+					transfer_locked: false,
 				},
 			])
 		);

@@ -66,9 +66,9 @@ const getDacTokensUseCase = {
 		Result.withContent([
 			TokenWorldsContract.Deltas.Entities.Stat.fromStruct({
 				supply: '1660485.1217 EYE',
-				maxSupply: '10000000000.0000 EYE',
+				max_supply: '10000000000.0000 EYE',
 				issuer: 'federation',
-				transferLocked: false,
+				transfer_locked: false,
 			}),
 		])
 	),

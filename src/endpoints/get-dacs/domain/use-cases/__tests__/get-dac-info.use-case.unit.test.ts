@@ -53,13 +53,10 @@ describe('Get Dac Info Unit tests', () => {
 	});
 
 	it('should return an array of DacGlobals', async () => {
-		daoWorldsContractService.fetchDacGlobals.mockResolvedValueOnce(
+		daoWorldsContractService.fetchDacGlobals.mockResolvedValue(
 			Result.withContent([
-				<DaoWorldsContract.Deltas.Types.DacGlobalStruct>{
-					supply: '1660485.1217 EYE',
-					maxSupply: '10000000000.0000 EYE',
-					issuer: 'federation',
-					transferLocked: false,
+				<DaoWorldsContract.Deltas.Types.DacglobalsStruct>{
+					data: [{ key: 'some_key', value: [] }],
 				},
 			])
 		);

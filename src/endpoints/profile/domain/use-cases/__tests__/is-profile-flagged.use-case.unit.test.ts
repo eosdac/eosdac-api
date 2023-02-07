@@ -2,8 +2,7 @@ import 'reflect-metadata';
 
 import { DaoWorldsContract, FlagRepository } from '@alien-worlds/eosdac-api-common';
 import { Failure, Result } from '@alien-worlds/api-core';
-import { Flag, FlagRepository } from '@alien-worlds/eosdac-api-common';
-import { IsProfileFlaggedUseCaseInput, IsProfileFlaggedUseCaseOutput } from 'src/endpoints/profile/data/dtos/profile.dto';
+import { IsProfileFlaggedUseCaseInput } from 'src/endpoints/profile/data/dtos/profile.dto';
 
 import { Container } from 'inversify';
 import { IsProfileFlaggedUseCase } from '../is-profile-flagged.use-case';
@@ -67,7 +66,7 @@ describe('Is Profile Flagged Unit tests', () => {
 
 	it('should return Array', async () => {
 		const content = [
-			FlagCandidateProfile.fromStruct({
+			DaoWorldsContract.Actions.Entities.FlagCandidateProfile.fromStruct({
 				cand: 'cand',
 				reason: '',
 				reporter: '',
