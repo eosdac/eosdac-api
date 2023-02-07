@@ -247,5 +247,51 @@
 		},
 		"data_hash": "b37be8561f4e5c9fda14a8e422c9c135b1792460",
 		"present": 1
+	},
+	{
+		"block_num": {
+			"$numberLong": "187613855"
+		},
+		"block_timestamp": {
+			"$date": {
+				"$numberLong": "1614313136000"
+			}
+		},
+		"code": "stkvt.worlds",
+		"scope": "nerix",
+		"table": "weights",
+		"primary_key": {
+			"$numberLong": "4623126812282335799"
+		},
+		"payer": "stkvt.worlds",
+		"data": {
+			"voter": ".w2fo.wam",
+			"weight": "4976640000",
+			"weight_quorum": "50000000"
+		},
+		"present": 1
+	},
+	{
+		"block_num": {
+			"$numberLong": "187613856"
+		},
+		"block_timestamp": {
+			"$date": {
+				"$numberLong": "1614313135000"
+			}
+		},
+		"code": "stkvt.worlds",
+		"scope": "nerix",
+		"table": "weights",
+		"primary_key": {
+			"$numberLong": "4623126812282335799"
+		},
+		"payer": "stkvt.worlds",
+		"data": {
+			"voter": "tl2aw.wam",
+			"weight": "65555555",
+			"weight_quorum": "50000000"
+		},
+		"present": 1
 	}
 ]
