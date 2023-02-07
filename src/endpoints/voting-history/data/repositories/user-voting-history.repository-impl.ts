@@ -78,7 +78,7 @@ export class UserVotingHistoryRepositoryImpl extends RepositoryImpl<
     let prevCandidates: string[] = [];
 
     const index = allMatchingVotes.findIndex(v => {
-      return vote.voteTimestamp.getTime() == new Date(v.action?.data?.vote_time_stamp).getTime()
+      return vote.voteTimestamp.getTime() == new Date(v.block_timestamp).getTime()
     });
 
     if (index > 0) {
