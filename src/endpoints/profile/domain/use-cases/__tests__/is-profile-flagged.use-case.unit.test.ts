@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 
+import { DaoWorldsContract, FlagRepository } from '@alien-worlds/eosdac-api-common';
 import { Failure, Result } from '@alien-worlds/api-core';
-import { Flag, FlagRepository } from '@alien-worlds/eosdac-api-common';
-import { IsProfileFlaggedUseCaseInput, IsProfileFlaggedUseCaseOutput } from 'src/endpoints/profile/data/dtos/profile.dto';
 
 import { Container } from 'inversify';
 import { IsProfileFlaggedUseCase } from '../is-profile-flagged.use-case';
+import { IsProfileFlaggedUseCaseInput } from 'src/endpoints/profile/data/dtos/profile.dto';
 
 /*imports*/
 /*mocks*/
@@ -62,7 +62,11 @@ describe('Is Profile Flagged Unit tests', () => {
   });
 
   it('should return Array', async () => {
-    const content = [Flag.create('id', true, '123', 'cand', 'dacId', '', '')]
+    const content = [DaoWorldsContract.Actions.Entities.FlagCandidateProfile.fromStruct({
+      cand: 'cand',
+      dac_id: 'dacId',
+      block: true,
+    })]
     flagRepository.aggregate.mockResolvedValue(Result.withContent(content))
     const result = await useCase.execute(useCaseInput);
     expect(result.content).toBeInstanceOf(Array);

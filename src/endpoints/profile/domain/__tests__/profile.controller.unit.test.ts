@@ -23,7 +23,7 @@ const isProfileFlaggedUseCase = {
 let container: Container;
 let controller: ProfileController;
 const indexWorldsContractService = {
-	fetchDacs: jest.fn(),
+	fetchDac: jest.fn(),
 };
 const input: ProfileInput = {
 	accounts: ['string'],
@@ -64,7 +64,7 @@ describe('Profile Controller Unit tests', () => {
 	});
 
 	it('Should execute GetProfilesUseCase', async () => {
-		indexWorldsContractService.fetchDacs.mockResolvedValue(
+		indexWorldsContractService.fetchDac.mockResolvedValue(
 			Result.withContent([
 				<IndexWorldsContract.Deltas.Types.DacsStruct>{
 					accounts: [{ key: 2, value: 'dao.worlds' }],

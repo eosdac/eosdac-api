@@ -1,9 +1,4 @@
-import {
-	AlienWorldsContract,
-	DacDirectory,
-	DaoWorldsContract,
-	TokenWorldsContract,
-} from '@alien-worlds/eosdac-api-common';
+import { AlienWorldsContract, DacDirectory, DaoWorldsContract, TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 import { GetDacOutput } from '../get-dac.output';
 import { GetDacsOutput } from '../get-dacs.output';
@@ -16,9 +11,21 @@ const dacDir = DacDirectory.fromStruct({
 	symbol: { sym: 'EYE', contract: '' },
 	refs: [],
 });
-const dacTreasury = AlienWorldsContract.Deltas.Entities.Account.fromStruct({});
-const dacGlobals = DaoWorldsContract.Deltas.Entities.DacGlobals.fromStruct({});
-const dacStats = TokenWorldsContract.Deltas.Entities.Stat.fromStruct({});
+
+const dacTreasury = AlienWorldsContract.Deltas.Entities.Account.fromStruct({
+	balance: 'string'
+});
+
+const dacGlobals = DaoWorldsContract.Deltas.Entities.DacGlobals.fromStruct({
+	data: [],
+});
+
+const dacStats = TokenWorldsContract.Deltas.Entities.Stat.fromStruct({
+	supply: 'string',
+	max_supply: 'string',
+	issuer: 'string',
+	transfer_locked: false,
+});
 
 describe('GetDacsOutput Unit tests', () => {
 	it('"GetDacsOutput.create" should create instance', async () => {
