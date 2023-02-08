@@ -5,9 +5,11 @@ process.title = 'eosdac-api';
 import fastify, { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
+import { CandidatesVotersHistoryController } from './endpoints/candidates-voters-history/domain/candidates-voters-history.controller';
 import { config } from './config';
 import { Container } from 'inversify';
 import { FastifyRoute } from './fastify.route';
+import { GetCandidatesVotersHistoryRoute } from './endpoints/candidates-voters-history/routes/candidates-voters-history.route';
 import { GetDacsController } from './endpoints/get-dacs/domain/get-dacs.controller';
 import { GetDacsRoute } from './endpoints/get-dacs/routes/dacs.route';
 import { GetProfileRoute } from './endpoints/profile/routes/get-profile.route';
@@ -82,6 +84,9 @@ export const buildAPIServer = async () => {
 	const votingHistoryController: VotingHistoryController =
 		apiIoc.get<VotingHistoryController>(VotingHistoryController.Token);
 
+	const candidatesVotersHistoryController: CandidatesVotersHistoryController =
+		apiIoc.get<CandidatesVotersHistoryController>(CandidatesVotersHistoryController.Token);
+
 	// Mount routes
 	FastifyRoute.mount(
 		api,
@@ -120,6 +125,13 @@ export const buildAPIServer = async () => {
 		api,
 		GetVotingHistoryRoute.create(
 			votingHistoryController.votingHistory.bind(votingHistoryController)
+		)
+	);
+
+	FastifyRoute.mount(
+		api,
+		GetCandidatesVotersHistoryRoute.create(
+			candidatesVotersHistoryController.candidatesVotersHistory.bind(candidatesVotersHistoryController)
 		)
 	);
 

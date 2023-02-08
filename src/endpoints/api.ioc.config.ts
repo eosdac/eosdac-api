@@ -13,7 +13,10 @@ import {
 import { EosJsRpcSource, MongoClient, MongoSource } from '@alien-worlds/api-core';
 
 import AppConfig from 'src/config/app-config';
+import { CandidatesVotersHistoryController } from './candidates-voters-history/domain/candidates-voters-history.controller';
+import { CountVotersHistoryUseCase } from './candidates-voters-history/domain/use-cases/count-voters-history.use-case';
 import { GetAllDacsUseCase } from './get-dacs/domain/use-cases/get-all-dacs.use-case';
+import { GetCandidatesVotersHistoryUseCase } from './candidates-voters-history/domain/use-cases/get-candidates-voters-history.use-case';
 import { GetCurrentBlockUseCase } from './state/domain/use-cases/get-current-block.use-case';
 import { GetDacInfoUseCase } from './get-dacs/domain/use-cases/get-dac-info.use-case';
 import { GetDacsController } from './get-dacs/domain/get-dacs.controller';
@@ -22,12 +25,14 @@ import { GetDacTreasuryUseCase } from './get-dacs/domain/use-cases/get-dac-treas
 import { GetProfilesUseCase } from './profile/domain/use-cases/get-profiles.use-case';
 import { GetProposalsUseCase } from './proposals-counts/domain/use-cases/get-proposals.use-case';
 import { GetUserVotingHistoryUseCase } from './voting-history/domain/use-cases/get-user-voting-history.use-case';
+import { GetVotingPowerUseCase } from './candidates-voters-history/domain/use-cases/get-voting-power.use-case';
 import { IsProfileFlaggedUseCase } from './profile/domain/use-cases/is-profile-flagged.use-case';
 import { ListProposalsUseCase } from './proposals-inbox/domain/use-cases/list-proposals.use-case';
 import { ProfileController } from './profile/domain/profile.controller';
 import { ProposalsCountsController } from './proposals-counts/domain/proposals-counts.controller';
 import { ProposalsInboxController } from './proposals-inbox/domain/proposals-inbox.controller';
 import { setupUserVotingHistoryRepository } from './voting-history';
+import { setupVotingWeightRepository } from './candidates-voters-history/ioc.config';
 import { StateController } from './state/domain/state.controller';
 import { VotingHistoryController } from './voting-history/domain/voting-history.controller';
 
@@ -74,8 +79,7 @@ export const setupEndpointDependencies = async (
 		await bindActionRepository(mongoSource, container);
 		await setupDacDirectoryRepository(mongoSource, eosJsRpcSource, container)
 		await setupUserVotingHistoryRepository(mongoSource, container)
-
-
+		await setupVotingWeightRepository(mongoSource, container);
 		/*bindings*/
 
 
@@ -119,6 +123,11 @@ export const setupEndpointDependencies = async (
 		 */
 		bind<VotingHistoryController>(VotingHistoryController.Token).to(VotingHistoryController);
 		bind<GetUserVotingHistoryUseCase>(GetUserVotingHistoryUseCase.Token).to(GetUserVotingHistoryUseCase);
+
+		bind<CandidatesVotersHistoryController>(CandidatesVotersHistoryController.Token).to(CandidatesVotersHistoryController);
+		bind<GetCandidatesVotersHistoryUseCase>(GetCandidatesVotersHistoryUseCase.Token).to(GetCandidatesVotersHistoryUseCase);
+		bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token).to(CountVotersHistoryUseCase);
+		bind<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token).to(GetVotingPowerUseCase);
 	});
 
 	await container.loadAsync(bindings);
