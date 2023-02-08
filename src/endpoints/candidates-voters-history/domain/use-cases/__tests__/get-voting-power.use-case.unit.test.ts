@@ -1,12 +1,12 @@
-import { Failure, Long, Result } from '@alien-worlds/api-core';
-import { Container } from 'inversify';
-import { CandidatesVotersHistoryOutputItem } from 'src/endpoints/candidates-voters-history/data/dtos/candidates-voters-history.dto';
+import 'reflect-metadata';
 
+import { Failure, MongoDB, Result } from '@alien-worlds/api-core';
+
+import { CandidatesVotersHistoryOutputItem } from 'src/endpoints/candidates-voters-history/data/dtos/candidates-voters-history.dto';
+import { Container } from 'inversify';
+import { GetVotingPowerUseCase } from '../get-voting-power.use-case';
 import { VoteWeight } from '../../entities/vote-weight';
 import { VotingWeightRepository } from '../../repositories/voting-weight.repository';
-import { GetVotingPowerUseCase } from '../get-voting-power.use-case';
-
-import 'reflect-metadata';
 
 /*imports*/
 /*mocks*/
@@ -61,8 +61,8 @@ describe('Get Voting Power Unit tests', () => {
     it('should return Number', async () => {
         votingWeightRepository.findOne.mockResolvedValue(Result.withContent(VoteWeight.fromDocument({
             voter: 'voter',
-            weight: Long.ONE,
-            weight_quorum: Long.ZERO,
+            weight: MongoDB.Long.ONE,
+            weight_quorum: MongoDB.Long.ZERO,
         })))
 
         const result = await useCase.execute(data);

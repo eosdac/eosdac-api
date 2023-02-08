@@ -1,5 +1,5 @@
 import { Failure, Result } from '@alien-worlds/api-core';
-import { ActionRepository } from '@alien-worlds/eosdac-api-common';
+import { ContractActionRepository } from '@alien-worlds/eosdac-api-common';
 import { Container } from 'inversify';
 
 import { CandidatesVotersHistoryInput } from '../../models/candidates-voters-history.input';
@@ -20,7 +20,7 @@ const input: CandidatesVotersHistoryInput = CandidatesVotersHistoryInput.fromReq
     limit: 20,
 })
 
-const actionRepository = {
+const contractActionRepository = {
     count: jest.fn(),
 };
 
@@ -29,8 +29,8 @@ describe('Count Voters History Unit tests', () => {
         container = new Container();
 
         container
-            .bind<ActionRepository>(ActionRepository.Token)
-            .toConstantValue(actionRepository as any);
+            .bind<ContractActionRepository>(ContractActionRepository.Token)
+            .toConstantValue(contractActionRepository as any);
 
         container
             .bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token)
@@ -51,14 +51,14 @@ describe('Count Voters History Unit tests', () => {
     });
 
     it('Should return a failure when action repository fails', async () => {
-        actionRepository.count.mockResolvedValue(Result.withFailure(Failure.fromError("error")))
+        contractActionRepository.count.mockResolvedValue(Result.withFailure(Failure.fromError("error")))
 
         const result = await useCase.execute(input);
         expect(result.isFailure).toBeTruthy();
     });
 
     it('should return Number', async () => {
-        actionRepository.count.mockResolvedValue(Result.withContent(1))
+        contractActionRepository.count.mockResolvedValue(Result.withContent(1))
 
         const result = await useCase.execute(input);
         expect(result.content).toBe(1);

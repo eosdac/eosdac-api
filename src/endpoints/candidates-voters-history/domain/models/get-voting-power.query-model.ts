@@ -1,4 +1,4 @@
-import { Filter, FindOptions, MongoFindQueryParams, QueryModel } from '@alien-worlds/api-core';
+import { MongoDB, MongoFindQueryParams, QueryModel } from '@alien-worlds/api-core';
 
 /*imports*/
 
@@ -27,13 +27,13 @@ export class GetVotingPowerQueryModel extends QueryModel {
   public toQueryParams(): MongoFindQueryParams<unknown> {
     const { voter, voteTimestamp } = this;
 
-    const filter: Filter<unknown> = {
+    const filter: MongoDB.Filter<unknown> = {
       code: "stkvt.worlds",
       table: "weights",
       "data.voter": voter,
       "block_timestamp": { $lt: voteTimestamp }
     };
-    const options: FindOptions = {
+    const options: MongoDB.FindOptions = {
       sort: { "block_timestamp": -1 },
       limit: 1,
     };

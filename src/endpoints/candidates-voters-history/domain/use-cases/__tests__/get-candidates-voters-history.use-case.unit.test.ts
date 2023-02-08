@@ -1,5 +1,5 @@
-import { Failure, Long, Result } from '@alien-worlds/api-core';
-import { Action, ActionRepository } from '@alien-worlds/eosdac-api-common';
+import { ContractAction, Failure, MongoDB, Result } from '@alien-worlds/api-core';
+import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { Container } from 'inversify';
 
 import { CandidatesVotersHistoryInput } from '../../models/candidates-voters-history.input';
@@ -10,7 +10,7 @@ import 'reflect-metadata';
 /*imports*/
 /*mocks*/
 
-const actionRepository = {
+const contractActionRepository = {
     aggregate: jest.fn(),
 };
 
@@ -23,9 +23,9 @@ const input: CandidatesVotersHistoryInput = CandidatesVotersHistoryInput.fromReq
     limit: 20,
 })
 
-const actions: Action[] = [
-    Action.fromDocument({
-        block_num: Long.ZERO,
+const actions: ContractAction[] = [
+    ContractAction.fromDocument({
+        block_num: MongoDB.Long.ZERO,
         action: {
             authorization: null,
             account: "dao.worlds",
@@ -36,7 +36,7 @@ const actions: Action[] = [
                 dac_id: "testa"
             }
         }
-    })
+    }, DaoWorldsContract.Actions.Entities.SetProfile.fromDocument)
 ]
 
 describe('Get User Voting History Unit tests', () => {
@@ -44,8 +44,8 @@ describe('Get User Voting History Unit tests', () => {
         container = new Container();
 
         container
-            .bind<ActionRepository>(ActionRepository.Token)
-            .toConstantValue(actionRepository as any);
+            .bind<ContractActionRepository>(ContractActionRepository.Token)
+            .toConstantValue(contractActionRepository as any);
         container
             .bind<GetCandidatesVotersHistoryUseCase>(GetCandidatesVotersHistoryUseCase.Token)
             .to(GetCandidatesVotersHistoryUseCase);
@@ -65,13 +65,13 @@ describe('Get User Voting History Unit tests', () => {
     });
 
     it('Should return a failure when action repository fails', async () => {
-        actionRepository.aggregate.mockResolvedValue(Result.withFailure(Failure.fromError("error")))
+        contractActionRepository.aggregate.mockResolvedValue(Result.withFailure(Failure.fromError("error")))
         const result = await useCase.execute(input);
         expect(result.isFailure).toBeTruthy();
     });
 
     it('should return UserVote', async () => {
-        actionRepository.aggregate.mockResolvedValue(Result.withContent(actions))
+        contractActionRepository.aggregate.mockResolvedValue(Result.withContent(actions))
         const result = await useCase.execute(input);
         expect(result.content).toBeInstanceOf(Array);
     });

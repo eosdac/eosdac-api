@@ -1,4 +1,5 @@
-import { Long, parseToBigInt } from '@alien-worlds/api-core';
+import { MongoDB, parseToBigInt } from '@alien-worlds/api-core';
+
 import { VoteWeightDocument, VoteWeightTableRow } from '../../data/dtos/weights.dto';
 
 /**
@@ -49,8 +50,8 @@ export class VoteWeight {
 
     const document: VoteWeightDocument = {
       voter,
-      weight: Long.fromBigInt(weight),
-      weight_quorum: Long.fromBigInt(weightQuorum),
+      weight: MongoDB.Long.fromBigInt(weight),
+      weight_quorum: MongoDB.Long.fromBigInt(weightQuorum),
       ...rest,
     };
 

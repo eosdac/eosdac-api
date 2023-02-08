@@ -1,7 +1,8 @@
-import { Filter, FindOptions, MongoFindQueryParams, QueryModel } from '@alien-worlds/api-core';
+import { MongoDB, MongoFindQueryParams, QueryModel } from '@alien-worlds/api-core';
 
-import { ActionDocument } from '@alien-worlds/eosdac-api-common';
 import { CandidatesVotersHistoryInput } from './candidates-voters-history.input';
+import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
+
 /*imports*/
 
 /**
@@ -27,17 +28,17 @@ export class CountVotersHistoryQueryModel extends QueryModel {
     super();
   }
 
-  public toQueryParams(): MongoFindQueryParams<ActionDocument> {
+  public toQueryParams(): MongoFindQueryParams<DaoWorldsContract.Actions.Types.VotecustDocument> {
     const { dacId, candidateId } = this;
 
-    const filter: Filter<ActionDocument> = {
+    const filter: MongoDB.Filter<DaoWorldsContract.Actions.Types.VotecustDocument> = {
       'action.account': 'dao.worlds',
       'action.name': 'votecust',
       'action.data.dac_id': dacId,
       'action.data.newvotes': candidateId
     };
 
-    const options: FindOptions = {};
+    const options: MongoDB.FindOptions = {};
 
     return { filter, options };
   }
