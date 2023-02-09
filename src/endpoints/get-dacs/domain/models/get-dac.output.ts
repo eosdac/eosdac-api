@@ -1,9 +1,4 @@
-import {
-	AlienWorldsContract,
-	DacDirectory,
-	DaoWorldsContract,
-	TokenWorldsContract,
-} from '@alien-worlds/eosdac-api-common';
+import { AlienWorldsContract, DacDirectory, DaoWorldsContract, TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 import { removeUndefinedProperties } from '@alien-worlds/api-core';
 
@@ -22,7 +17,7 @@ export class GetDacOutput {
 		public readonly dacTreasury: AlienWorldsContract.Deltas.Entities.Account,
 		public readonly dacGlobals: DaoWorldsContract.Deltas.Entities.DacGlobals,
 		public readonly dacStats: TokenWorldsContract.Deltas.Entities.Stat
-	) {}
+	) { }
 
 	public toJson() {
 		const { dacDirectory, dacTreasury, dacGlobals, dacStats } = this;
@@ -47,21 +42,21 @@ export class GetDacOutput {
 
 		if (dacTreasury) {
 			result.dacTreasury = {
-				balance: dacTreasury.balance,
+				balance: dacTreasury.balance.toStruct()
 			};
 		}
 
 		if (dacStats) {
 			result.dacStats = {
-				supply: dacStats.supply,
-				maxSupply: dacStats.maxSupply,
+				supply: dacStats.supply.toStruct(),
+				maxSupply: dacStats.maxSupply.toStruct(),
 				issuer: dacStats.issuer,
 				transferLocked: dacStats.transferLocked,
 			};
 		}
 
 		if (dacGlobals) {
-			result.dacGlobals = dacGlobals.data;
+			result.dacGlobals = dacGlobals.data.map(dg => dg.toStruct());
 		}
 
 		return removeUndefinedProperties(result);

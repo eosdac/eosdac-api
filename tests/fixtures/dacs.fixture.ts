@@ -23,10 +23,10 @@ export const dacsSuccessResponse = {
                 activation: 'newperiodctl',
                 spendings: 'eyeke.dac'
             },
-            dacTreasury: { balance: '11581719.4980 TLM' },
+            dacTreasury: { balance: '10628669.3835 TLM' },
             dacStats: {
-                supply: '2030847.6880 EYE',
-                maxSupply: '10000000000.0000 EYE',
+                supply: '2192823.6176 EYE',
+                maxSupply: '10000000000 EYE',
                 issuer: 'federation',
                 transferLocked: false
             },
@@ -38,11 +38,11 @@ export const dacsSuccessResponse = {
                 { key: 'initial_vote_quorum_percent', value: ['uint32', 2] },
                 {
                     key: 'lastclaimbudgettime',
-                    value: ['time_point_sec', '2023-01-05T18:55:42']
+                    value: ['time_point_sec', '2023-02-05T17:38:00']
                 },
                 {
                     key: 'lastperiodtime',
-                    value: ['time_point_sec', '2023-01-05T16:20:48']
+                    value: ['time_point_sec', '2023-02-05T12:00:31']
                 },
                 { key: 'lockup_release_time_delay', value: ['uint32', 1] },
                 {
@@ -74,11 +74,11 @@ export const dacsSuccessResponse = {
                 },
                 {
                     key: 'total_votes_on_candidates',
-                    value: ['int64', '67403072595']
+                    value: ['int64', '64816332523']
                 },
                 {
                     key: 'total_weight_of_votes',
-                    value: ['int64', '13746056781']
+                    value: ['int64', '13304106126']
                 },
                 { key: 'vote_quorum_percent', value: ['uint32', 1] }
             ]
