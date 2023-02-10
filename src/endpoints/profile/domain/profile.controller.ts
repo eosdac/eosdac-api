@@ -1,16 +1,15 @@
-import { Failure, injectable, Result } from '@alien-worlds/api-core';
 import {
 	DacDirectory,
 	IndexWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
+import { Failure, injectable, Result } from '@alien-worlds/api-core';
 import { config } from '@config';
+import { GetProfilesUseCase } from './use-cases/get-profiles.use-case';
 import { inject } from 'inversify';
-
-import { ProfileOutput } from '../data/dtos/profile.dto';
+import { IsProfileFlaggedUseCase } from './use-cases/is-profile-flagged.use-case';
 import { Profile } from './entities/profile';
 import { ProfileInput } from './models/profile.input';
-import { GetProfilesUseCase } from './use-cases/get-profiles.use-case';
-import { IsProfileFlaggedUseCase } from './use-cases/is-profile-flagged.use-case';
+import { ProfileOutput } from '../data/dtos/profile.dto';
 
 /*imports*/
 
@@ -33,7 +32,7 @@ export class ProfileController {
 
 		@inject(IsProfileFlaggedUseCase.Token)
 		private isProfileFlaggedUseCase: IsProfileFlaggedUseCase
-	) {}
+	) { }
 
 	/*methods*/
 
@@ -70,20 +69,20 @@ export class ProfileController {
 		});
 
 		profiles.forEach(profile => {
-			const { account } = profile;
+			const { candidate } = profile.action.data;
 			let isFlagged = false;
 
 			if (flags && flags.length) {
-				const flag = flags.find(flag => flag.account === account);
+				const flag = flags.find(flag => flag.candidate === candidate);
 				if (flag && flag.block) {
 					isFlagged = true;
 				}
 			}
 
 			if (isFlagged) {
-				results.push(this.getRedactedCandidateResult(account));
+				results.push(this.getRedactedCandidateResult(candidate));
 			} else {
-				results.push(profile);
+				results.push(Profile.fromDto(profile.toDocument()));
 			}
 		});
 

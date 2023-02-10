@@ -1,12 +1,7 @@
-import {
-	ContractActionRepository,
-	DaoWorldsContract,
-} from '@alien-worlds/eosdac-api-common';
-import { injectable, MongoDB, Result, UseCase } from '@alien-worlds/api-core';
+import { ContractAction, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { GetProfilesUseCaseInput } from '../../data/dtos/profile.dto';
 import { inject } from 'inversify';
-
-import { Profile } from '../entities/profile';
 import { ProfileQueryModel } from '../models/profile.query-model';
 
 /*imports*/
@@ -14,17 +9,21 @@ import { ProfileQueryModel } from '../models/profile.query-model';
  * @class
  */
 @injectable()
-export class GetProfilesUseCase implements UseCase<Profile[]> {
+export class GetProfilesUseCase implements UseCase<
+	ContractAction<
+		DaoWorldsContract.Actions.Entities.SetProfile,
+		DaoWorldsContract.Actions.Types.StprofileDocument
+	>[]> {
 	public static Token = 'GET_PROFILES_USE_CASE';
 
 	constructor(
 		/*injections*/
 		@inject(ContractActionRepository.Token)
-		private actionRepository: ContractActionRepository<
+		private contractActionRepository: ContractActionRepository<
 			DaoWorldsContract.Actions.Entities.SetProfile,
 			DaoWorldsContract.Actions.Types.StprofileDocument
 		>
-	) {}
+	) { }
 
 	/**
 	 * @async
@@ -32,29 +31,22 @@ export class GetProfilesUseCase implements UseCase<Profile[]> {
 	 */
 	public async execute(
 		input: GetProfilesUseCaseInput
-	): Promise<Result<Profile[]>> {
+	): Promise<Result<ContractAction<
+		DaoWorldsContract.Actions.Entities.SetProfile,
+		DaoWorldsContract.Actions.Types.StprofileDocument
+	>[]>> {
 		const queryModel = ProfileQueryModel.create({
 			custContract: input.custContract,
 			dacId: input.dacId,
 			accounts: input.accounts,
 		});
 
-		const actionsRes = await this.actionRepository.aggregate(queryModel);
+		const actionsRes = await this.contractActionRepository.aggregate(queryModel);
 		if (actionsRes.isFailure) {
 			return Result.withFailure(actionsRes.failure);
 		}
 
-		const profiles = actionsRes.content.map(action => {
-			const data = action.action.data;
-
-			return Profile.fromDto({
-				action: action.action,
-				profile: data.profile,
-				block_num: MongoDB.Long.fromBigInt(action.blockNumber),
-			});
-		});
-
-		return Result.withContent(profiles);
+		return Result.withContent(actionsRes.content);
 	}
 
 	/*methods*/

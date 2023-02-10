@@ -47,11 +47,13 @@ export class ProfileQueryModel extends QueryModel {
 			{ $sort: { block_num: -1 } },
 			{
 				$group: {
-					_id: { cand: '$action.data.cand' },
+					_id: "$action.data.cand",
 					block_num: { $first: '$block_num' },
 					profile: { $first: '$action.data.profile' },
 					account: { $first: '$action.data.cand' },
 					action: { $first: '$action' },
+					recv_sequence: { $first: '$recv_sequence' },
+					global_sequence: { $first: '$global_sequence' },
 				},
 			},
 			{ $sort: { block_num: -1 } },

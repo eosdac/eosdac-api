@@ -1,17 +1,16 @@
 
-import { inject } from 'inversify';
+import { DaoWorldsContract, FlagRepository } from '@alien-worlds/eosdac-api-common';
 import { injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { FlagRepository } from '@alien-worlds/eosdac-api-common';
-import { IsProfileFlaggedUseCaseInput, IsProfileFlaggedUseCaseOutput } from '../../data/dtos/profile.dto';
+import { inject } from 'inversify';
 import { IsProfileFlaggedQueryModel } from '../models/is-profile-flagged.query-model';
-
+import { IsProfileFlaggedUseCaseInput } from '../../data/dtos/profile.dto';
 
 /*imports*/
 /**
  * @class
  */
 @injectable()
-export class IsProfileFlaggedUseCase implements UseCase<IsProfileFlaggedUseCaseOutput[]> {
+export class IsProfileFlaggedUseCase implements UseCase<DaoWorldsContract.Actions.Entities.FlagCandidateProfile[]> {
   public static Token = 'IS_PROFILE_FLAGGED_USE_CASE';
 
   constructor(/*injections*/
@@ -23,8 +22,10 @@ export class IsProfileFlaggedUseCase implements UseCase<IsProfileFlaggedUseCaseO
    * @async
    * @returns {Promise<Result<IsProfileFlaggedUseCaseOutput[]>>}
    */
-  public async execute(input: IsProfileFlaggedUseCaseInput): Promise<Result<IsProfileFlaggedUseCaseOutput[]>> {
-    let output: IsProfileFlaggedUseCaseOutput[]
+  public async execute(input: IsProfileFlaggedUseCaseInput):
+    Promise<Result<DaoWorldsContract.Actions.Entities.FlagCandidateProfile[]>> {
+    let output: DaoWorldsContract.Actions.Entities.FlagCandidateProfile[]
+
     if (input.accounts.length > 0) {
       const queryModel = IsProfileFlaggedQueryModel.create({
         dacId: input.dacId,
@@ -36,12 +37,7 @@ export class IsProfileFlaggedUseCase implements UseCase<IsProfileFlaggedUseCaseO
         return Result.withFailure(result.failure)
       }
 
-      output = result.content.map(doc => {
-        return {
-          account: doc.candidate,
-          block: doc.block,
-        }
-      })
+      output = result.content;
     }
 
     return Result.withContent(output)

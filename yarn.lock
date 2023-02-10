@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@alien-worlds/api-core@0.0.62", "@alien-worlds/api-core@^0.0.62":
-  version "0.0.62"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/api-core/0.0.62/16df6d632806c340c6f98939cf70c881094f5599#16df6d632806c340c6f98939cf70c881094f5599"
-  integrity sha512-/XfdHPWR7Z0gP8D3RLQwR5uZDgrPu880JonEhtWsVltNfRTXtoqOQd1v036DmWfS30YmYdMEgBJHxH6aXIaDqg==
+"@alien-worlds/api-core@0.0.63":
+  version "0.0.63"
+  resolved "https://npm.pkg.github.com/download/@alien-worlds/api-core/0.0.63/658ac5f9b72d3de418f8306afa223f1a2a7d78eb#658ac5f9b72d3de418f8306afa223f1a2a7d78eb"
+  integrity sha512-4H23qM+2oGfcxZD/hpkkIGPuSB2Y/UKL/rIlDhHJjqdXUxENTv9JoMbfPFwKOEbaVKICIdFD8LOJSer0+RjL5Q==
   dependencies:
     "@google-cloud/bigquery" "^6.0.3"
     eosjs "^22.1.0"
@@ -14,12 +14,12 @@
     node-fetch "2"
     reflect-metadata "^0.1.13"
 
-"@alien-worlds/eosdac-api-common@0.0.69":
-  version "0.0.69"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/eosdac-api-common/0.0.69/2045b2afd9be1c2949482e399c9a3856822eaa17#2045b2afd9be1c2949482e399c9a3856822eaa17"
-  integrity sha512-9G1oiH1MZHF16RiIXaoNklkLc7wyO1o8mRAj7G7SRRx2k/MDIHbE2UDSjOT6YXT865fTkYchOP8zFJJWJrdaow==
+"@alien-worlds/eosdac-api-common@0.0.70":
+  version "0.0.70"
+  resolved "https://npm.pkg.github.com/download/@alien-worlds/eosdac-api-common/0.0.70/59a9ee1a21adaa2b5411ab0097d7fb8b4648b454#59a9ee1a21adaa2b5411ab0097d7fb8b4648b454"
+  integrity sha512-zUQDJC2PtD5u3x5CHccGdKT72zhDakIVTuQpdf4y8BiEEezj0uMfsqjRf7iVuEW3La2GzMZTof2fqwEXmexL6Q==
   dependencies:
-    "@alien-worlds/api-core" "^0.0.62"
+    "@alien-worlds/api-core" "0.0.63"
     crypto "^1.0.1"
     eosjs "^22.1.0"
     inversify "^6.0.1"

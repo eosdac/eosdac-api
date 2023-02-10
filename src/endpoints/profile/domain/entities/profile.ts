@@ -1,6 +1,7 @@
-import { ActionDataProfile, ProfileError } from '../../data/dtos/profile.dto';
+import { ContractActionDocument, MongoDB } from '@alien-worlds/api-core';
 
-import { MongoDB, ContractActionDocument } from '@alien-worlds/api-core';
+import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
+import { ProfileError } from '../../data/dtos/profile.dto';
 import { ProfileItem } from './profile-item';
 import { removeUndefinedProperties } from '@common/utils/dto.utils';
 
@@ -58,18 +59,16 @@ export class Profile {
    * @param {ContractActionDocument} dto
    * @returns {Profile}
    */
-  public static fromDto(dto: ContractActionDocument): Profile {
-    const { block_num, action, account } = dto;
-
-
-    const actionData = action.data as ActionDataProfile
+  public static fromDto(dto: ContractActionDocument<DaoWorldsContract.Actions.Types.StprofileDocument>): Profile {
+    const { block_num, action } = dto;
+    const { profile, cand } = action.data;
 
     let profileJson;
-    if (typeof actionData.profile === 'string') {
-      profileJson = JSON.parse(actionData.profile);
+    if (typeof profile === 'string') {
+      profileJson = JSON.parse(profile);
     }
 
-    return new Profile(actionData.cand, action.account, action.name, block_num.toString(), ProfileItem.fromDto(profileJson))
+    return new Profile(cand, action.account, action.name, block_num.toString(), ProfileItem.fromDto(profileJson))
   }
 
   public static createErrorProfile(account: string, error: ProfileError): Profile {
