@@ -1,12 +1,13 @@
-import { injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { CandidateProfile } from '../entities/candidate-profile';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { DacDirectory } from '@alien-worlds/eosdac-api-common';
-import { GetCandidatesUseCase } from './get-candidates.use-case';
-import { GetMembersAgreedTermsUseCase } from './get-members-agreed-terms.use-case';
-import { GetMemberTermsUseCase } from './get-member-terms.use-case';
+import { Profile } from 'src/endpoints/profile/domain/entities/profile';
+
 import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
+import { CandidateProfile } from '../entities/candidate-profile';
+import { GetCandidatesUseCase } from './get-candidates.use-case';
+import { GetMemberTermsUseCase } from './get-member-terms.use-case';
+import { GetMembersAgreedTermsUseCase } from './get-members-agreed-terms.use-case';
 import { GetVotedCandidateIdsUseCase } from './get-voted-candidate-ids.use-case';
-import { inject } from 'inversify';
 
 /*imports*/
 /**
@@ -30,7 +31,7 @@ export class ListCandidateProfilesUseCase
 		private getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase,
 		@inject(GetVotedCandidateIdsUseCase.Token)
 		private getVotedCandidateIdsUseCase: GetVotedCandidateIdsUseCase
-	) {}
+	) { }
 
 	/**
 	 * @async
@@ -84,14 +85,14 @@ export class ListCandidateProfilesUseCase
 		const result: CandidateProfile[] = [];
 
 		for (const candidate of candidates) {
-			const profile = profiles.find(item => item.account === candidate.name);
+			const profile = profiles.find(item => item.action.data.candidate === candidate.name);
 			const agreedTermsVersion = agreedTerms.get(candidate.name);
 
 			result.push(
 				CandidateProfile.create(
 					dacId,
 					candidate,
-					profile,
+					Profile.fromDto(profile.toDocument()),
 					terms,
 					agreedTermsVersion,
 					votedCandidates
