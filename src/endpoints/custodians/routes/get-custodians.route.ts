@@ -1,12 +1,8 @@
-import {
-	GetRoute,
-	Request,
-	Result,
-	RouteHandler,
-} from '@alien-worlds/api-core';
+import { GetRoute, Request, Result, RouteHandler } from '@alien-worlds/api-core';
+
+import { GetCustodiansRequestDto } from '../data/dtos/custodian.dto';
 import { GetCustodiansInput } from '../domain/models/get-custodians.input';
 import { GetCustodiansOutput } from '../domain/models/get-custodians.output';
-import { GetCustodiansRequestDto } from '../data/dtos/custodian.dto';
 
 /*imports*/
 
@@ -50,7 +46,6 @@ export const parseRequestToControllerInput = (
 export const parseResultToControllerOutput = (
 	result: Result<GetCustodiansOutput>
 ) => {
-	console.log('>>>>>', result);
 	if (result.isFailure) {
 		const {
 			failure: { error },

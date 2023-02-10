@@ -1,11 +1,12 @@
-import { injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { CustodianProfile } from '../entities/custodian-profile';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { DacDirectory } from '@alien-worlds/eosdac-api-common';
-import { GetCustodiansUseCase } from './get-custodians.use-case';
-import { GetMembersAgreedTermsUseCase } from './../../../candidates/domain/use-cases/get-members-agreed-terms.use-case';
-import { GetMemberTermsUseCase } from './../../../candidates/domain/use-cases/get-member-terms.use-case';
+import { Profile } from 'src/endpoints/profile/domain/entities/profile';
+
 import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
-import { inject } from 'inversify';
+import { CustodianProfile } from '../entities/custodian-profile';
+import { GetMemberTermsUseCase } from './../../../candidates/domain/use-cases/get-member-terms.use-case';
+import { GetMembersAgreedTermsUseCase } from './../../../candidates/domain/use-cases/get-members-agreed-terms.use-case';
+import { GetCustodiansUseCase } from './get-custodians.use-case';
 
 /*imports*/
 /**
@@ -27,7 +28,7 @@ export class ListCustodianProfilesUseCase
 		private getMemberTermsUseCase: GetMemberTermsUseCase,
 		@inject(GetMembersAgreedTermsUseCase.Token)
 		private getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase
-	) {}
+	) { }
 
 	/**
 	 * @async
@@ -74,14 +75,14 @@ export class ListCustodianProfilesUseCase
 		const result: CustodianProfile[] = [];
 
 		for (const custodian of custodians) {
-			const profile = profiles.find(item => item.account === custodian.name);
+			const profile = profiles.find(item => item.id === custodian.name);
 			const agreedTermsVersion = agreedTerms.get(custodian.name);
 
 			result.push(
 				CustodianProfile.create(
 					dacId,
 					custodian,
-					profile,
+					Profile.fromDto(profile.toDocument()),
 					terms,
 					agreedTermsVersion
 				)
