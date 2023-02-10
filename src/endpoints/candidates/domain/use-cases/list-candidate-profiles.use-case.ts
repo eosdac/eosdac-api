@@ -57,6 +57,7 @@ export class ListCandidateProfilesUseCase
 		if (getVotedCandidateIdsFailure) {
 			return Result.withFailure(getVotedCandidateIdsFailure);
 		}
+
 		const { content: profiles, failure: getProfilesFailure } =
 			await this.getProfilesUseCase.execute({
 				custContract: dacConfig.accounts.custodian,
@@ -85,7 +86,7 @@ export class ListCandidateProfilesUseCase
 		const result: CandidateProfile[] = [];
 
 		for (const candidate of candidates) {
-			const profile = profiles.find(item => item.action.data.candidate === candidate.name);
+			const profile = profiles.find(item => item.id === candidate.name);
 			const agreedTermsVersion = agreedTerms.get(candidate.name);
 
 			result.push(

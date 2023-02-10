@@ -1,5 +1,5 @@
-import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { inject } from 'inversify';
 
 /*imports*/
@@ -14,15 +14,15 @@ export class GetVotedCandidateIdsUseCase implements UseCase<string[]> {
 		/*injections*/
 		@inject(DaoWorldsContract.Services.DaoWorldsContractService.Token)
 		private service: DaoWorldsContract.Services.DaoWorldsContractService
-	) {}
+	) { }
 
 	/**
 	 * @async
 	 * @returns {Promise<Result<string[]>>}
 	 */
 	public async execute(
-		walletId: string,
-		dacId: string
+		dacId: string,
+		walletId: string
 	): Promise<Result<string[]>> {
 		const { content: rows, failure } = await this.service.fetchVote({
 			scope: dacId.toLowerCase(),
