@@ -1,4 +1,4 @@
-import { CandidatesVotersHistoryControllerOutput } from 'src/endpoints/candidates-voters-history/data/dtos/candidates-voters-history.dto';
+import { CandidatesVotersHistoryControllerOutput } from '../../../../candidates-voters-history/data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryOutput } from '../candidates-voters-history.output';
 
 /*imports*/

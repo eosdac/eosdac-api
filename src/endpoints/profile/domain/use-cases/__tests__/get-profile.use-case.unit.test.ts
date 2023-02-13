@@ -6,11 +6,11 @@ import {
 	MongoDB,
 	Result,
 } from '@alien-worlds/api-core';
+import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 import { Container } from 'inversify';
 import { GetProfilesUseCase } from '../get-profiles.use-case';
-import { GetProfilesUseCaseInput } from 'src/endpoints/profile/data/dtos/profile.dto';
-import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
+import { GetProfilesUseCaseInput } from '../../../../profile/data/dtos/profile.dto';
 
 /*imports*/
 /*mocks*/

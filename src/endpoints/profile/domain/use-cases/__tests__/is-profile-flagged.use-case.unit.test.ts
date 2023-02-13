@@ -2,10 +2,10 @@ import 'reflect-metadata';
 
 import { DaoWorldsContract, FlagRepository } from '@alien-worlds/eosdac-api-common';
 import { Failure, Result } from '@alien-worlds/api-core';
-import { IsProfileFlaggedUseCaseInput } from 'src/endpoints/profile/data/dtos/profile.dto';
 
 import { Container } from 'inversify';
 import { IsProfileFlaggedUseCase } from '../is-profile-flagged.use-case';
+import { IsProfileFlaggedUseCaseInput } from '../../../../profile/data/dtos/profile.dto';
 
 /*imports*/
 /*mocks*/

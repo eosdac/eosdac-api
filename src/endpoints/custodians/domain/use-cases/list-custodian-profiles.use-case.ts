@@ -1,6 +1,6 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { DacDirectory } from '@alien-worlds/eosdac-api-common';
-import { Profile } from 'src/endpoints/profile/domain/entities/profile';
+import { Profile } from '../../../profile/domain/entities/profile';
 
 import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
 import { CustodianProfile } from '../entities/custodian-profile';
