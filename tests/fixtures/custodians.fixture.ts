@@ -1,5 +1,3 @@
-export const custodiansEmptyResponse = [];
-
 export const custodiansSuccessResponse = [
 	{
 		walletId: 'anyo.cabal',
