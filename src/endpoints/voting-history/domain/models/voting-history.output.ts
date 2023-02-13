@@ -38,7 +38,7 @@ export class VotingHistoryOutput {
 			voter,
 			voteTimestamp,
 			candidate,
-			candidateVotePower,
+			candidateVotePower: candidateVotePower.toString(),
 			action,
 		};
 

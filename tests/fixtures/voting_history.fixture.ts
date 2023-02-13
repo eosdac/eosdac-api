@@ -7,7 +7,7 @@ export const votingHistorySuccessResponse = {
             voter: '.w2fo.wam',
             voteTimestamp: '2021-02-27T04:18:56.000Z',
             candidate: 'a52qw.wam',
-            candidateVotePower: 123,
+            candidateVotePower: '123',
             action: 'voted'
         },
         {
@@ -15,7 +15,7 @@ export const votingHistorySuccessResponse = {
             voter: '.w2fo.wam',
             voteTimestamp: '2021-02-27T04:18:56.000Z',
             candidate: 'b52qw.wam',
-            candidateVotePower: 0,
+            candidateVotePower: '0',
             action: 'voted'
         }
     ],
@@ -29,7 +29,7 @@ export const votingHistorySkipResponse = {
             voter: '.w2fo.wam',
             voteTimestamp: '2021-02-27T04:18:56.000Z',
             candidate: 'b52qw.wam',
-            candidateVotePower: 0,
+            candidateVotePower: '0',
             action: 'voted'
         }
     ],
@@ -43,7 +43,7 @@ export const votingHistoryLimitResponse = {
             voter: '.w2fo.wam',
             voteTimestamp: '2021-02-27T04:18:56.000Z',
             candidate: 'a52qw.wam',
-            candidateVotePower: 123,
+            candidateVotePower: '123',
             action: 'voted'
         }
     ],
