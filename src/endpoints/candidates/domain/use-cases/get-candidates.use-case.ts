@@ -44,7 +44,9 @@ export class GetCandidatesUseCase
 			return Result.withContent([]);
 		}
 
-		const candidates = rows.map(row => Candidate.fromStruct(row));
+		const filteredRows = rows.filter(row=> row.is_active)
+
+		const candidates = filteredRows.map(row => Candidate.fromStruct(row));
 
 		return Result.withContent(candidates);
 	}
