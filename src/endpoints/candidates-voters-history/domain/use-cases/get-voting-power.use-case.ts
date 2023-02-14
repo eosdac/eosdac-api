@@ -1,5 +1,4 @@
-import { Result, UseCase } from '@alien-worlds/api-core';
-import { inject, injectable } from 'inversify';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 
 import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
 import { GetVotingPowerQueryModel } from '../models/get-voting-power.query-model';

@@ -1,15 +1,13 @@
-import { Result } from '@alien-worlds/api-core';
-import { Container } from 'inversify';
+import 'reflect-metadata';
 
-import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
+import { Container, Result } from '@alien-worlds/api-core';
+
 import { CandidatesVotersHistoryController } from '../candidates-voters-history.controller';
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
-import { CandidatesVotersHistoryOutput } from '../models/candidates-voters-history.output';
+import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
 import { CountVotersHistoryUseCase } from '../use-cases/count-voters-history.use-case';
 import { GetCandidatesVotersHistoryUseCase } from '../use-cases/get-candidates-voters-history.use-case';
 import { GetVotingPowerUseCase } from '../use-cases/get-voting-power.use-case';
-
-import 'reflect-metadata';
 
 /*imports*/
 

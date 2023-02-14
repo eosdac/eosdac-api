@@ -2,11 +2,10 @@ import {
 	DacDirectory,
 	IndexWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
-import { Failure, injectable, Result } from '@alien-worlds/api-core';
+import { Failure, inject, injectable, Result } from '@alien-worlds/api-core';
 import { config } from '@config';
 import { GetCustodiansInput } from './models/get-custodians.input';
 import { GetCustodiansOutput } from './models/get-custodians.output';
-import { inject } from 'inversify';
 import { ListCustodianProfilesUseCase } from './use-cases/list-custodian-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
 
@@ -28,7 +27,7 @@ export class CustodiansController {
 
 		@inject(ListCustodianProfilesUseCase.Token)
 		private listCustodianProfilesUseCase: ListCustodianProfilesUseCase
-	) {}
+	) { }
 
 	/*methods*/
 

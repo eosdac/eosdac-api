@@ -1,13 +1,12 @@
 import 'reflect-metadata';
 
-import { config } from '@config';
-import { Failure, Result } from '@alien-worlds/api-core';
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 import { CandidatesController } from '../candidates.controller';
-import { Container } from 'inversify';
+import { config } from '@config';
 import { GetCandidatesInput } from '../models/get-candidates.input';
+import { IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { ListCandidateProfilesUseCase } from '../use-cases/list-candidate-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
-import { IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 /*imports*/
 

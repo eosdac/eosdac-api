@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Unit Test Code
-import { Container } from 'inversify';
+import { Container, Failure } from '@alien-worlds/api-core';
+
 import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { Failure } from '@alien-worlds/api-core';
 import { GetCustodiansUseCase } from '../get-custodians.use-case';
 
 describe('GetCustodiansUseCase', () => {

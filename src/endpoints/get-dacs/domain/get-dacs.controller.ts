@@ -1,11 +1,10 @@
-import { injectable, Result } from '@alien-worlds/api-core';
+import { inject, injectable, Result } from '@alien-worlds/api-core';
 import { AlienWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { inject } from 'inversify';
 
-import { GetDacsInput } from './models/dacs.input';
-import { GetDacOutput } from './models/get-dac.output';
 import { GetAllDacsUseCase } from './use-cases/get-all-dacs.use-case';
 import { GetDacInfoUseCase } from './use-cases/get-dac-info.use-case';
+import { GetDacOutput } from './models/get-dac.output';
+import { GetDacsInput } from './models/dacs.input';
 import { GetDacTokensUseCase } from './use-cases/get-dac-tokens.use-case';
 import { GetDacTreasuryUseCase } from './use-cases/get-dac-treasury.use-case';
 
@@ -30,7 +29,7 @@ export class GetDacsController {
 		private getDacInfoUseCase: GetDacInfoUseCase,
 		@inject(GetDacTokensUseCase.Token)
 		private getDacTokensUseCase: GetDacTokensUseCase
-	) {}
+	) { }
 
 	/*methods*/
 

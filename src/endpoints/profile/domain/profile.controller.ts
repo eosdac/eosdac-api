@@ -2,10 +2,9 @@ import {
 	DacDirectory,
 	IndexWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
-import { Failure, injectable, Result } from '@alien-worlds/api-core';
+import { Failure, inject, injectable, Result } from '@alien-worlds/api-core';
 import { config } from '@config';
 import { GetProfilesUseCase } from './use-cases/get-profiles.use-case';
-import { inject } from 'inversify';
 import { IsProfileFlaggedUseCase } from './use-cases/is-profile-flagged.use-case';
 import { Profile } from './entities/profile';
 import { ProfileInput } from './models/profile.input';

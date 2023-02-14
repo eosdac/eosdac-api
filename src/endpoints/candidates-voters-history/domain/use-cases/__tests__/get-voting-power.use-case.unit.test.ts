@@ -1,9 +1,8 @@
 import 'reflect-metadata';
 
-import { Failure, MongoDB, Result } from '@alien-worlds/api-core';
+import { Container, Failure, MongoDB, Result } from '@alien-worlds/api-core';
 
 import { CandidatesVotersHistoryOutputItem } from '../../../../candidates-voters-history/data/dtos/candidates-voters-history.dto';
-import { Container } from 'inversify';
 import { GetVotingPowerUseCase } from '../get-voting-power.use-case';
 import { VoteWeight } from '../../entities/vote-weight';
 import { VotingWeightRepository } from '../../repositories/voting-weight.repository';

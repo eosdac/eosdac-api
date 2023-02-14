@@ -1,10 +1,9 @@
-import { Failure, Result } from '@alien-worlds/api-core';
-import { TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { Container } from 'inversify';
+import 'reflect-metadata';
+
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { GetDacTokensUseCase } from '../get-dac-tokens.use-case';
-
-import 'reflect-metadata';
+import { TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 /*imports*/
 /*mocks*/

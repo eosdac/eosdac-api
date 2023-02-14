@@ -1,14 +1,13 @@
 import 'reflect-metadata';
 
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 import { DacDirectory, IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { Failure, Result } from '@alien-worlds/api-core';
-import { Container } from 'inversify';
 import { GetCandidatesUseCase } from '../get-candidates.use-case';
+import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../../profile/domain/use-cases/get-profiles.use-case';
 import { GetVotedCandidateIdsUseCase } from '../get-voted-candidate-ids.use-case';
 import { ListCandidateProfilesUseCase } from '../list-candidate-profiles.use-case';
-import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
 
 /*imports*/
 

@@ -1,9 +1,8 @@
 import 'reflect-metadata';
 
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 import { DaoWorldsContract, FlagRepository } from '@alien-worlds/eosdac-api-common';
-import { Failure, Result } from '@alien-worlds/api-core';
 
-import { Container } from 'inversify';
 import { IsProfileFlaggedUseCase } from '../is-profile-flagged.use-case';
 import { IsProfileFlaggedUseCaseInput } from '../../../../profile/data/dtos/profile.dto';
 

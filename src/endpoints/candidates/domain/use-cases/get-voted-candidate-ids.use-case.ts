@@ -1,6 +1,5 @@
-import { injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { inject } from 'inversify';
 
 /*imports*/
 /**
