@@ -1,4 +1,4 @@
-exports.options = {
+export default {
 	routePrefix: '/v1/eosdac/docs',
 	exposeRoute: true,
 	swagger: {
