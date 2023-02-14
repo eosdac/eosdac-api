@@ -1,39 +1,45 @@
-import { inject, } from 'inversify';
+import { inject } from 'inversify';
 import { injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { AlienWorldsAccount, AlienWorldsContractService } from '@alien-worlds/eosdac-api-common';
+import { AlienWorldsContract } from '@alien-worlds/eosdac-api-common';
 /*imports*/
 /**
  * @class
  */
 @injectable()
-export class GetDacTreasuryUseCase implements UseCase<AlienWorldsAccount> {
-  public static Token = 'GET_DAC_TREASURY_USE_CASE';
+export class GetDacTreasuryUseCase
+	implements UseCase<AlienWorldsContract.Deltas.Entities.Account>
+{
+	public static Token = 'GET_DAC_TREASURY_USE_CASE';
 
-  constructor(/*injections*/
-    @inject(AlienWorldsContractService.Token)
-    private alienWorldsContractService: AlienWorldsContractService
-  ) { }
+	constructor(
+		/*injections*/
+		@inject(AlienWorldsContract.Services.AlienWorldsContractService.Token)
+		private alienWorldsContractService: AlienWorldsContract.Services.AlienWorldsContractService
+	) {}
 
-  /**
-   * @async
-   * @returns {Promise<Result<AlienWorldsAccount>>}
-   */
-  public async execute(account: string): Promise<Result<AlienWorldsAccount>> {
-    const { content: accounts, failure: fetchAccountsFailure } =
-      await this.alienWorldsContractService.fetchAccounts({
-        scope: account,
-        limit: 1,
-      })
+	/**
+	 * @async
+	 * @returns {Promise<Result<AlienWorldsContract.Deltas.Entities.Account>>}
+	 */
+	public async execute(
+		account: string
+	): Promise<Result<AlienWorldsContract.Deltas.Entities.Account>> {
+		const { content: accounts, failure: fetchAccountsFailure } =
+			await this.alienWorldsContractService.fetchAccount({
+				scope: account,
+				limit: 1,
+			});
 
-    if (fetchAccountsFailure) {
-      return Result.withFailure(fetchAccountsFailure);
-    }
+		if (fetchAccountsFailure) {
+			return Result.withFailure(fetchAccountsFailure);
+		}
 
-    if (accounts && accounts.length) {
-      return Result.withContent(AlienWorldsAccount.fromTableRow(accounts[0]))
-    }
-  }
+		if (accounts && accounts.length) {
+			return Result.withContent(
+				AlienWorldsContract.Deltas.Entities.Account.fromStruct(accounts[0])
+			);
+		}
+	}
 
-  /*methods*/
+	/*methods*/
 }
-

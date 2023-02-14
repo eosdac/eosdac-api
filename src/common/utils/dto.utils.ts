@@ -1,4 +1,4 @@
-import { Long } from '@alien-worlds/api-core';
+import { MongoDB } from '@alien-worlds/api-core';
 
 /**
  * Remove undefined properties and empty objects.
@@ -41,7 +41,7 @@ export const removeUndefinedProperties = <T>(input: unknown): T => {
  * @returns {bigint}
  */
 export const parseToBigInt = (value: unknown): bigint => {
-	if (value instanceof Long) {
+	if (value instanceof MongoDB.Long) {
 		return value.toBigInt();
 	}
 	return BigInt(value as string | number | bigint | boolean);

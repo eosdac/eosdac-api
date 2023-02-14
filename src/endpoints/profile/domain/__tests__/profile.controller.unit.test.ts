@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { DacsTableRow, IndexWorldsContractService } from '@alien-worlds/eosdac-api-common';
+import { IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 import { Container } from 'inversify';
 import { GetProfilesUseCase } from '../use-cases/get-profiles.use-case';
@@ -18,16 +18,16 @@ const getProfilesUseCase = {
 
 const isProfileFlaggedUseCase = {
 	execute: jest.fn(() => Result.withContent(1)),
-}
+};
 
 let container: Container;
 let controller: ProfileController;
 const indexWorldsContractService = {
-	fetchDacs: jest.fn(),
+	fetchDac: jest.fn(),
 };
 const input: ProfileInput = {
 	accounts: ['string'],
-	dacId: 'string'
+	dacId: 'string',
 };
 
 describe('Profile Controller Unit tests', () => {
@@ -41,7 +41,9 @@ describe('Profile Controller Unit tests', () => {
 			.bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token)
 			.toConstantValue(isProfileFlaggedUseCase as any);
 		container
-			.bind<IndexWorldsContractService>(IndexWorldsContractService.Token)
+			.bind<IndexWorldsContract.Services.IndexWorldsContractService>(
+				IndexWorldsContract.Services.IndexWorldsContractService.Token
+			)
 			.toConstantValue(indexWorldsContractService as any);
 		container
 			.bind<ProfileController>(ProfileController.Token)
@@ -49,9 +51,7 @@ describe('Profile Controller Unit tests', () => {
 	});
 
 	beforeEach(() => {
-		controller = container.get<ProfileController>(
-			ProfileController.Token
-		);
+		controller = container.get<ProfileController>(ProfileController.Token);
 	});
 
 	afterAll(() => {
@@ -64,15 +64,17 @@ describe('Profile Controller Unit tests', () => {
 	});
 
 	it('Should execute GetProfilesUseCase', async () => {
-		indexWorldsContractService.fetchDacs.mockResolvedValue(Result.withContent([<DacsTableRow>{
-			accounts: [
-				{ key: 2, value: 'dao.worlds' },
-			],
-			symbol: {
-				sym: 'EYE',
-			},
-			refs: [],
-		}]))
+		indexWorldsContractService.fetchDac.mockResolvedValue(
+			Result.withContent([
+				<IndexWorldsContract.Deltas.Types.DacsStruct>{
+					accounts: [{ key: 2, value: 'dao.worlds' }],
+					symbol: {
+						sym: 'EYE',
+					},
+					refs: [],
+				},
+			])
+		);
 		await controller.profile(input);
 
 		expect(getProfilesUseCase.execute).toBeCalled();

@@ -1,9 +1,7 @@
-import { injectable, Long, Result, UseCase } from '@alien-worlds/api-core';
-import { ActionRepository } from '@alien-worlds/eosdac-api-common';
-import { inject } from 'inversify';
-
+import { ContractAction, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { GetProfilesUseCaseInput } from '../../data/dtos/profile.dto';
-import { Profile } from '../entities/profile';
+import { inject } from 'inversify';
 import { ProfileQueryModel } from '../models/profile.query-model';
 
 /*imports*/
@@ -11,42 +9,45 @@ import { ProfileQueryModel } from '../models/profile.query-model';
  * @class
  */
 @injectable()
-export class GetProfilesUseCase implements UseCase<Profile[]> {
-  public static Token = 'GET_PROFILES_USE_CASE';
+export class GetProfilesUseCase implements UseCase<
+	ContractAction<
+		DaoWorldsContract.Actions.Entities.SetProfile,
+		DaoWorldsContract.Actions.Types.StprofileDocument
+	>[]> {
+	public static Token = 'GET_PROFILES_USE_CASE';
 
-  constructor(/*injections*/
-    @inject(ActionRepository.Token)
-    private actionRepository: ActionRepository
-  ) { }
+	constructor(
+		/*injections*/
+		@inject(ContractActionRepository.Token)
+		private contractActionRepository: ContractActionRepository<
+			DaoWorldsContract.Actions.Entities.SetProfile,
+			DaoWorldsContract.Actions.Types.StprofileDocument
+		>
+	) { }
 
-  /**
-   * @async
-   * @returns {Promise<Result<Profile[]>>}
-   */
-  public async execute(input: GetProfilesUseCaseInput): Promise<Result<Profile[]>> {
-    const queryModel = ProfileQueryModel.create({
-      custContract: input.custContract,
-      dacId: input.dacId,
-      accounts: input.accounts,
-    });
+	/**
+	 * @async
+	 * @returns {Promise<Result<Profile[]>>}
+	 */
+	public async execute(
+		input: GetProfilesUseCaseInput
+	): Promise<Result<ContractAction<
+		DaoWorldsContract.Actions.Entities.SetProfile,
+		DaoWorldsContract.Actions.Types.StprofileDocument
+	>[]>> {
+		const queryModel = ProfileQueryModel.create({
+			custContract: input.custContract,
+			dacId: input.dacId,
+			accounts: input.accounts,
+		});
 
-    const actionsRes = await this.actionRepository.aggregate(queryModel);
-    if (actionsRes.isFailure) {
-      return Result.withFailure(actionsRes.failure)
-    }
+		const actionsRes = await this.contractActionRepository.aggregate(queryModel);
+		if (actionsRes.isFailure) {
+			return Result.withFailure(actionsRes.failure);
+		}
 
-    const profiles = actionsRes.content.map(action => {
-      const data: any = action.deserializedAction.data;
+		return Result.withContent(actionsRes.content);
+	}
 
-      return Profile.fromDto({
-        action: action.deserializedAction,
-        profile: data.profile,
-        block_num: Long.fromBigInt(action.blockNumber),
-      })
-    });
-
-    return Result.withContent(profiles)
-  }
-
-  /*methods*/
+	/*methods*/
 }

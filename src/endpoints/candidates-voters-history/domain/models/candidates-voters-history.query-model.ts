@@ -1,4 +1,4 @@
-import { AggregateOptions, MongoAggregateParams, QueryModel } from '@alien-worlds/api-core';
+import { MongoAggregateParams, MongoDB, QueryModel } from '@alien-worlds/api-core';
 
 import { CandidatesVotersHistoryInput } from './candidates-voters-history.input';
 
@@ -50,7 +50,7 @@ export class CandidatesVotersHistoryQueryModel extends QueryModel {
 			},
 		];
 
-		const options: AggregateOptions = {};
+		const options: MongoDB.AggregateOptions = {};
 
 		return { pipeline, options };
 	}

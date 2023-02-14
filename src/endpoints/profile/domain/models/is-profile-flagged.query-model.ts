@@ -1,4 +1,4 @@
-import { AggregateOptions, MongoAggregateParams, QueryModel } from '@alien-worlds/api-core';
+import { MongoDB, MongoAggregateParams, QueryModel } from '@alien-worlds/api-core';
 
 import { IsProfileFlaggedUseCaseInput } from '../../data/dtos/profile.dto';
 
@@ -42,7 +42,7 @@ export class IsProfileFlaggedQueryModel extends QueryModel {
       },
     ];
 
-    const options: AggregateOptions = {};
+    const options: MongoDB.AggregateOptions = {};
 
     return { pipeline, options };
   }

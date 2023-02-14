@@ -1,14 +1,14 @@
-import { Collection, CollectionSource, Mapper, MongoSource, RepositoryImpl, Result } from '@alien-worlds/api-core';
+import { CollectionSource, Mapper, MongoDB, MongoSource, RepositoryImpl, Result } from '@alien-worlds/api-core';
 
-import { VoteWeight } from '../../domain/entities/vote-weight';
 import { GetVotingPowerQueryModel } from '../../domain/models/get-voting-power.query-model';
+import { VoteWeight } from '../../domain/entities/vote-weight';
 import { VoteWeightDocument } from '../dtos/weights.dto';
 
 export class VotingWeightRepositoryImpl extends RepositoryImpl<
   VoteWeight,
   VoteWeightDocument
 > {
-  private contractRows: Collection;
+  private contractRows: MongoDB.Collection;
 
   constructor(
     source: CollectionSource<VoteWeightDocument>,

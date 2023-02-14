@@ -1,4 +1,5 @@
-import { UserVote } from '../../entities/user-vote';
+import { MongoDB } from '@alien-worlds/api-core';
+import { UserVote } from '@alien-worlds/eosdac-api-common';
 import { VoteAction } from '../../../data/dtos/user-voting-history.dto';
 import { VotingHistoryOutput } from '../voting-history.output';
 
@@ -11,7 +12,7 @@ const userVotes: UserVote[] = [
 		vote_timestamp: new Date(),
 		action: VoteAction.Voted,
 		candidate: 'string',
-		candidate_vote_power: 0,
+		candidate_vote_power: MongoDB.Long.ZERO,
 	})
 ];
 

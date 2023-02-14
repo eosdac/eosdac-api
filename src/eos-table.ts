@@ -1,4 +1,7 @@
-import { Long as MongoLong } from '@alien-worlds/api-core';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-async-promise-executor */
+import { MongoDB } from '@alien-worlds/api-core';
 
 export async function eosTableAtBlock({
 	db,
@@ -29,7 +32,7 @@ export async function eosTableAtBlock({
 			pipeline_id.scope = '$scope';
 		}
 		if (block_num > -1) {
-			match.block_num = { $lte: MongoLong.fromString(block_num + '') };
+			match.block_num = { $lte: MongoDB.Long.fromString(block_num + '') };
 		}
 		if (block_timestamp) {
 			match.block_timestamp = { $lte: block_timestamp };

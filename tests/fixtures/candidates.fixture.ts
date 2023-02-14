@@ -1,89 +1,24 @@
-export const candidatesResponse = {
-	results: [
-		{
-			candidate_name: '51mqs.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: true,
-			requestedpay: '0.0000 TLM'
+export const candidatesSuccessResponse = [
+	{
+		"walletId": "1vjju.wam",
+		"requestedpay": "0 TLM",
+		"votePower": 7040,
+		"rank": 6693890,
+		"gapFiller": 0,
+		"isActive": false,
+		"totalVotes": 6,
+		"voteDecay": 99,
+		"profile": {
+			"description": "Selamlar Kaşif Dostlarım.\n\nTürkiye olarak oyunda sözümüzün olması için oy vermeyi ihmal etmeyelim. \n\nOy verdiğiniz için teşekkür ederim",
+			"givenName": "Akif_TR ☾☆",
+			"image": "https://twitter.com/Akif09876"
 		},
-		{
-			candidate_name: 'a.d3u.c.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: true,
-			requestedpay: '0.0000 TLM'
-		},
-		{
-			candidate_name: '5thba.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: true,
-			requestedpay: '0.0000 TLM'
-		},
-		{
-			candidate_name: 'c353u.c.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: true,
-			requestedpay: '0.0000 TLM'
-		},
-		{
-			candidate_name: 't1dbe.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: true,
-			requestedpay: '0.0000 TLM'
-		},
-		{
-			candidate_name: 'cabba.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: false,
-			requestedpay: '0.0000 TLM'
-		},
-		{
-			candidate_name: 'cairc.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: false,
-			requestedpay: '0.0000 TLM'
-		},
-		{
-			candidate_name: 'rnjgk.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: false,
-			requestedpay: '0.0000 TLM'
-		},
-		{
-			candidate_name: 'neyau.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: false,
-			requestedpay: '0.0000 TLM'
-		},
-		{
-			candidate_name: 'c1iba.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: false,
-			requestedpay: '0.0000 TLM'
-		},
-		{
-			candidate_name: 'n1saq.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: false,
-			requestedpay: '0.0000 TLM'
-		},
-		{
-			candidate_name: 'gmoau.wam',
-			profile: { givenName: '', familyName: '', image: '', description: '' },
-			is_active: true,
-			is_custodian: false,
-			requestedpay: '0.0000 TLM'
-		}
-	],
-	count: 12
-};
+		"agreedTermVersion": 3,
+		"currentPlanetMemberTermsSignedValid": false,
+		"isFlagged": false,
+		"isSelected": false,
+		"isVoted": false,
+		"isVoteAdded": false,
+		"planetName": "nerix"
+	}
+];

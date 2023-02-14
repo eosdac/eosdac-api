@@ -1,9 +1,9 @@
-import { Long } from '@alien-worlds/api-core';
+import { MongoDB } from "@alien-worlds/api-core";
 
 export type VoteWeightDocument = {
   voter?: string;
-  weight?: Long;
-  weight_quorum?: Long;
+  weight?: MongoDB.Long;
+  weight_quorum?: MongoDB.Long;
   [key: string]: unknown;
 };
 

@@ -1,5 +1,5 @@
 import { removeUndefinedProperties } from '@alien-worlds/api-core';
-import { UserVote } from '../entities/user-vote';
+import { UserVote } from '@alien-worlds/eosdac-api-common';
 import { VotingHistoryOutputItem } from '../../data/dtos/user-voting-history.dto';
 
 export class VotingHistoryOutput {
@@ -38,7 +38,7 @@ export class VotingHistoryOutput {
 			voter,
 			voteTimestamp,
 			candidate,
-			candidateVotePower,
+			candidateVotePower: candidateVotePower.toString(),
 			action,
 		};
 

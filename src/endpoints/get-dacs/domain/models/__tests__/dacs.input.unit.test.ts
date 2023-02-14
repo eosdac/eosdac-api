@@ -3,7 +3,7 @@
 /*imports*/
 
 import { GetDacsInput } from "../dacs.input";
-import { GetDacsRequestDto } from "src/endpoints/get-dacs/data/dtos/dacs.dto";
+import { GetDacsRequestDto } from "../../../../get-dacs/data/dtos/dacs.dto";
 import { Request } from '@alien-worlds/api-core';
 
 /*mocks*/

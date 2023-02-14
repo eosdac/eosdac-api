@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const fp = require('fastify-plugin');
 
 import { config } from './config';
@@ -6,7 +7,7 @@ import { DacDirectory } from './dac-directory';
 const tokenInfo = require('../tokens.json');
 
 module.exports = fp(
-	(fastify: any, options, next) => {
+	(fastify, options, next) => {
 		fastify.decorate('dac_name_cache', new Map());
 		fastify.decorate('dac_cache_get', function (dac_name) {
 			return this.dac_name_cache.get(dac_name);

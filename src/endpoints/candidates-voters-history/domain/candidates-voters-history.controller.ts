@@ -2,8 +2,8 @@ import { inject, injectable, Result } from '@alien-worlds/api-core';
 
 import { CandidatesVotersHistoryControllerOutput } from '../data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryInput } from './models/candidates-voters-history.input';
-import { GetCandidatesVotersHistoryUseCase } from './use-cases/get-candidates-voters-history.use-case';
 import { CountVotersHistoryUseCase } from './use-cases/count-voters-history.use-case';
+import { GetCandidatesVotersHistoryUseCase } from './use-cases/get-candidates-voters-history.use-case';
 import { GetVotingPowerUseCase } from './use-cases/get-voting-power.use-case';
 
 /*imports*/

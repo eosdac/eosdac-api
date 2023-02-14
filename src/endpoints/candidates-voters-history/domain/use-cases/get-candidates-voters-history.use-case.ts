@@ -1,5 +1,5 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { ActionRepository } from '@alien-worlds/eosdac-api-common';
+import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
@@ -15,8 +15,8 @@ export class GetCandidatesVotersHistoryUseCase implements UseCase<CandidatesVote
   public static Token = 'GET_CANDIDATES_VOTERS_HISTORY_USE_CASE';
 
   constructor(/*injections*/
-    @inject(ActionRepository.Token)
-    private actionRepository: ActionRepository
+    @inject(ContractActionRepository.Token)
+    private contractActionRepository: ContractActionRepository
   ) { }
 
   /**
@@ -26,23 +26,23 @@ export class GetCandidatesVotersHistoryUseCase implements UseCase<CandidatesVote
   public async execute(input: CandidatesVotersHistoryInput): Promise<Result<CandidatesVotersHistoryOutputItem[], Error>> {
     const queryModel = CandidatesVotersHistoryQueryModel.create(input);
 
-    const allMatchingActionsRes = await this.actionRepository.aggregate(queryModel);
+    const allMatchingActionsRes = await this.contractActionRepository.aggregate(queryModel);
     if (allMatchingActionsRes.isFailure) {
       return Result.withFailure(allMatchingActionsRes.failure);
     }
 
     const paginatedActions = allMatchingActionsRes.content.slice(input.skip, input.skip + input.limit);
 
-    const output: CandidatesVotersHistoryOutputItem[] = paginatedActions.map(action => {
-      const data: any = action.deserializedAction.data;
+    const output: CandidatesVotersHistoryOutputItem[] = paginatedActions.map(contractAction => {
+      const voteCustData = (contractAction.action.data.toDocument() as DaoWorldsContract.Actions.Types.VotecustDocument);
 
       const item: CandidatesVotersHistoryOutputItem = {
-        voter: data.voter,
+        voter: voteCustData.voter,
         votingPower: 0n,
         candidate: input.candidateId,
-        voteTimestamp: action.blockTimestamp,
-        transactionId: action.transactionId,
-        action: 'votecust',
+        voteTimestamp: contractAction.blockTimestamp,
+        transactionId: contractAction.transactionId,
+        action: DaoWorldsContract.Actions.DaoWorldsActionName.Votecust,
       }
 
       return item;
