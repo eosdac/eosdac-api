@@ -1,14 +1,14 @@
-import { Failure, Result } from '@alien-worlds/api-core';
+import 'reflect-metadata';
+
 import {
 	DacDirectory,
 	IndexWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
+import { Failure, Result } from '@alien-worlds/api-core';
 import { Container } from 'inversify';
 
-import { GetDacsInput } from '../../models/dacs.input';
 import { GetAllDacsUseCase } from '../get-all-dacs.use-case';
-
-import 'reflect-metadata';
+import { GetDacsInput } from '../../models/dacs.input';
 
 /*imports*/
 /*mocks*/
@@ -19,7 +19,6 @@ const indexWorldsContractService = {
 
 const input: GetDacsInput = {
 	dacId: 'string',
-	scope: 'string',
 	limit: 1,
 };
 

@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 
-import { Failure, Result } from '@alien-worlds/api-core';
 import {
 	AlienWorldsContract,
 	DacDirectory,
@@ -8,6 +7,7 @@ import {
 	IndexWorldsContract,
 	TokenWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
+import { Failure, Result } from '@alien-worlds/api-core';
 import { Container } from 'inversify';
 
 import { GetAllDacsUseCase } from '../use-cases/get-all-dacs.use-case';
@@ -41,9 +41,9 @@ const getDacTreasuryUseCase = {
 		Result.withContent([
 			AlienWorldsContract.Deltas.Entities.Account.fromStruct(<
 				AlienWorldsContract.Deltas.Types.AccountsStruct
-			>{
-				balance: 'string',
-			}),
+				>{
+					balance: 'string',
+				}),
 		])
 	),
 };
@@ -76,7 +76,6 @@ const getDacTokensUseCase = {
 
 const input: GetDacsInput = {
 	dacId: 'string',
-	scope: 'string',
 	limit: 1,
 };
 

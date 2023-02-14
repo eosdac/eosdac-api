@@ -9,9 +9,8 @@ import { Request } from '@alien-worlds/api-core';
 /*mocks*/
 const input = {
 	query: {
-		scope: 'scope',
+		dacId: 'nerix',
 		limit: 100,
-
 	},
 };
 
@@ -22,16 +21,16 @@ describe('GetDacsInput Unit tests', () => {
 		expect(fromReq).toBeInstanceOf(GetDacsInput);
 	});
 
-	it('GetDacsInput instance should have proper scope value', async () => {
+	it('GetDacsInput instance should have proper dacId value', async () => {
 		const fromReq = GetDacsInput.fromRequest(input as Request<GetDacsRequestDto>);
 
-		expect(fromReq.scope).toBe('scope')
+		expect(fromReq.dacId).toBe(input.query.dacId)
 	});
 
 	it('GetDacsInput instance should have proper limit value', async () => {
 		const fromReq = GetDacsInput.fromRequest(input as Request<GetDacsRequestDto>);
 
-		expect(fromReq.limit).toBe(100)
+		expect(fromReq.limit).toBe(input.query.limit)
 	});
 
 	/*unit-tests*/
