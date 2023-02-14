@@ -44,7 +44,6 @@ export class GetCandidatesUseCase
 		}
 
 		const filteredRows = rows.filter(row => row.is_active)
-
 		const candidates = filteredRows.map(row => Candidate.fromStruct(row));
 
 		return Result.withContent(candidates);

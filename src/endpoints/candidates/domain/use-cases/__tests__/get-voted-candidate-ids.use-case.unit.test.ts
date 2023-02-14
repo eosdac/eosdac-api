@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Unit Test Code
+import { anything, instance, mock, verify, when } from 'ts-mockito';
+
 import {
 	DaoWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
 import { Failure } from '@alien-worlds/api-core';
-import { anything, instance, mock, verify, when } from 'ts-mockito';
 import { GetVotedCandidateIdsUseCase } from '../get-voted-candidate-ids.use-case';
 
 describe('GetCandidatesUseCase', () => {

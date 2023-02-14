@@ -1,7 +1,7 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { ContractActionRepository } from '@alien-worlds/eosdac-api-common';
 
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
+import { ContractActionRepository } from '@alien-worlds/eosdac-api-common';
 import { CountVotersHistoryQueryModel } from '../models/count-voters-history.query-model';
 
 /*imports*/

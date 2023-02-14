@@ -1,12 +1,11 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { DacDirectory } from '@alien-worlds/eosdac-api-common';
-import { Profile } from '../../../profile/domain/entities/profile';
-
-import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
 import { CustodianProfile } from '../entities/custodian-profile';
-import { GetMemberTermsUseCase } from './../../../candidates/domain/use-cases/get-member-terms.use-case';
-import { GetMembersAgreedTermsUseCase } from './../../../candidates/domain/use-cases/get-members-agreed-terms.use-case';
+import { DacDirectory } from '@alien-worlds/eosdac-api-common';
 import { GetCustodiansUseCase } from './get-custodians.use-case';
+import { GetMembersAgreedTermsUseCase } from './../../../candidates/domain/use-cases/get-members-agreed-terms.use-case';
+import { GetMemberTermsUseCase } from './../../../candidates/domain/use-cases/get-member-terms.use-case';
+import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
+import { Profile } from '../../../profile/domain/entities/profile';
 
 /*imports*/
 /**

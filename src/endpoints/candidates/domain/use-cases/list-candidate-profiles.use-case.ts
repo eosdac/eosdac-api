@@ -1,13 +1,12 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { DacDirectory } from '@alien-worlds/eosdac-api-common';
-import { Profile } from '../../../profile/domain/entities/profile';
-
-import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
 import { CandidateProfile } from '../entities/candidate-profile';
+import { DacDirectory } from '@alien-worlds/eosdac-api-common';
 import { GetCandidatesUseCase } from './get-candidates.use-case';
-import { GetMemberTermsUseCase } from './get-member-terms.use-case';
 import { GetMembersAgreedTermsUseCase } from './get-members-agreed-terms.use-case';
+import { GetMemberTermsUseCase } from './get-member-terms.use-case';
+import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
 import { GetVotedCandidateIdsUseCase } from './get-voted-candidate-ids.use-case';
+import { Profile } from '../../../profile/domain/entities/profile';
 
 /*imports*/
 /**

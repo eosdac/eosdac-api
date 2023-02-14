@@ -1,3 +1,4 @@
+import { DacDirectory, IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
 import {
 	GetTableRowsOptions,
 	inject,
@@ -5,11 +6,6 @@ import {
 	Result,
 	UseCase,
 } from '@alien-worlds/api-core';
-import {
-	DacDirectory,
-	IndexWorldsContract,
-} from '@alien-worlds/eosdac-api-common';
-
 import { GetDacsInput } from '../models/dacs.input';
 
 /*imports*/
@@ -24,7 +20,7 @@ export class GetAllDacsUseCase implements UseCase<DacDirectory[]> {
 		/*injections*/
 		@inject(IndexWorldsContract.Services.IndexWorldsContractService.Token)
 		private indexWorldsContractService: IndexWorldsContract.Services.IndexWorldsContractService
-	) {}
+	) { }
 
 	/**
 	 * @async

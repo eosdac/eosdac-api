@@ -1,8 +1,7 @@
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
-
-import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
+import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryQueryModel } from '../models/candidates-voters-history.query-model';
 
 /*imports*/
