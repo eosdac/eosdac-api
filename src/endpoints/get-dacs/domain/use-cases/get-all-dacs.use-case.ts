@@ -28,7 +28,6 @@ export class GetAllDacsUseCase implements UseCase<DacDirectory[]> {
 	 */
 	public async execute(input: GetDacsInput): Promise<Result<DacDirectory[]>> {
 		const options: GetTableRowsOptions = {
-			scope: input.scope,
 			limit: input.limit,
 		};
 

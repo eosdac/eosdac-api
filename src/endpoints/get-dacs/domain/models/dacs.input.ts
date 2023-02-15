@@ -14,7 +14,6 @@ export class GetDacsInput {
 	): GetDacsInput {
 		return new GetDacsInput(
 			request.query.dacId,
-			request.query.scope,
 			request.query.limit,
 		)
 	}
@@ -23,12 +22,10 @@ export class GetDacsInput {
 	 * @constructor
 	 * @private
 	 * @param {string} dacId
-	 * @param {string} scope
 	 * @param {number} limit
 	 */
 	private constructor(
 		public readonly dacId: string,
-		public readonly scope: string,
 		public readonly limit: number = 10,
 	) { }
 }
