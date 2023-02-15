@@ -81,7 +81,7 @@ export class ListCustodianProfilesUseCase
 				CustodianProfile.create(
 					dacId,
 					custodian,
-					Profile.fromDto(profile.toDocument()),
+					profile ? Profile.fromDto(profile.toDocument()) : null,
 					terms,
 					agreedTermsVersion
 				)

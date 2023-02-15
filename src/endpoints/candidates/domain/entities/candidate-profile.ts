@@ -3,6 +3,7 @@ import {
 	RequestedPayment,
 	TokenWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
+
 import { Profile } from './../../../profile/domain/entities/profile';
 
 /*imports*/
@@ -42,8 +43,8 @@ export class CandidateProfile {
 		const voteDecay =
 			new Date(avgVoteTimestamp).getFullYear() > 1970
 				? Math.ceil(
-						(new Date().getTime() - new Date(avgVoteTimestamp).getTime()) /
-							(3600 * 24 * 1000)
+					(new Date().getTime() - new Date(avgVoteTimestamp).getTime()) /
+					(3600 * 24 * 1000)
 				)
 				: null;
 		const votePower = totalVotePower / 10000n;
@@ -57,10 +58,10 @@ export class CandidateProfile {
 			isActive,
 			votersCount,
 			voteDecay,
-			profile.profile,
+			profile?.profile,
 			agreedTermsVersion,
 			version === agreedTermsVersion,
-			!!profile.error,
+			!!profile?.error,
 			false,
 			votedCandidates.includes(name),
 			false,
@@ -89,7 +90,7 @@ export class CandidateProfile {
 		public readonly isVoted: boolean,
 		public readonly isVoteAdded: boolean,
 		public readonly planetName: string
-	) {}
+	) { }
 
 	public toJson() {
 		const {

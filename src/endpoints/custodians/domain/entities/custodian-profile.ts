@@ -3,6 +3,7 @@ import {
 	RequestedPayment,
 	TokenWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
+
 import { Profile } from '../../../profile/domain/entities/profile';
 
 /*imports*/
@@ -34,10 +35,10 @@ export class CustodianProfile {
 			name,
 			requestedPayment,
 			Number(votePower),
-			profile.profile,
+			profile?.profile,
 			agreedTermsVersion,
 			version === agreedTermsVersion,
-			!!profile.error,
+			!!profile?.error,
 			false,
 			dacId
 		);
@@ -57,7 +58,7 @@ export class CustodianProfile {
 		public readonly isFlagged: boolean,
 		public readonly isSelected: boolean,
 		public readonly planetName: string
-	) {}
+	) { }
 
 	public toJson() {
 		const {

@@ -92,7 +92,7 @@ export class ListCandidateProfilesUseCase
 				CandidateProfile.create(
 					dacId,
 					candidate,
-					Profile.fromDto(profile.toDocument()),
+					profile ? Profile.fromDto(profile.toDocument()) : null,
 					terms,
 					agreedTermsVersion,
 					votedCandidates
