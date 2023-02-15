@@ -1,4 +1,4 @@
-import { MongoDB, MongoAggregateParams, QueryModel } from '@alien-worlds/api-core';
+import { MongoAggregateParams, MongoDB, QueryModel } from '@alien-worlds/api-core';
 
 import { IsProfileFlaggedUseCaseInput } from '../../data/dtos/profile.dto';
 

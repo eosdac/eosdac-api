@@ -1,11 +1,10 @@
-import { ContractAction, Failure, MongoDB, Result } from '@alien-worlds/api-core';
+import 'reflect-metadata';
+
+import { Container, ContractAction, Failure, MongoDB, Result } from '@alien-worlds/api-core';
 import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { Container } from 'inversify';
 
 import { CandidatesVotersHistoryInput } from '../../models/candidates-voters-history.input';
 import { GetCandidatesVotersHistoryUseCase } from '../get-candidates-voters-history.use-case';
-
-import 'reflect-metadata';
 
 /*imports*/
 /*mocks*/

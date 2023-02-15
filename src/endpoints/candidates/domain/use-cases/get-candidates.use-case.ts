@@ -1,6 +1,5 @@
+import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { inject } from 'inversify';
 
 const {
 	Entities: { Candidate },
@@ -20,7 +19,7 @@ export class GetCandidatesUseCase
 		/*injections*/
 		@inject(DaoWorldsContract.Services.DaoWorldsContractService.Token)
 		private service: DaoWorldsContract.Services.DaoWorldsContractService
-	) {}
+	) { }
 
 	/**
 	 * @async
@@ -44,8 +43,7 @@ export class GetCandidatesUseCase
 			return Result.withContent([]);
 		}
 
-		const filteredRows = rows.filter(row=> row.is_active)
-
+		const filteredRows = rows.filter(row => row.is_active)
 		const candidates = filteredRows.map(row => Candidate.fromStruct(row));
 
 		return Result.withContent(candidates);

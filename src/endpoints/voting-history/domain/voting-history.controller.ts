@@ -1,9 +1,7 @@
-import { Result } from '@alien-worlds/api-core';
-import { UserVote } from '@alien-worlds/eosdac-api-common';
-import { inject, injectable } from 'inversify';
-
-import { VotingHistoryInput } from './models/voting-history.input';
+import { inject, injectable, Result } from '@alien-worlds/api-core';
 import { GetUserVotingHistoryUseCase } from './use-cases/get-user-voting-history.use-case';
+import { UserVote } from '@alien-worlds/eosdac-api-common';
+import { VotingHistoryInput } from './models/voting-history.input';
 
 /*imports*/
 
@@ -19,8 +17,7 @@ export class VotingHistoryController {
 	constructor(
 		@inject(GetUserVotingHistoryUseCase.Token)
 		private getUserVotingHistoryUseCase: GetUserVotingHistoryUseCase
-	) /*injections*/
-	{}
+	) /*injections*/ { }
 
 	/*methods*/
 

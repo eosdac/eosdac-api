@@ -1,3 +1,4 @@
+import { DacDirectory, IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
 import {
 	GetTableRowsOptions,
 	inject,
@@ -5,11 +6,6 @@ import {
 	Result,
 	UseCase,
 } from '@alien-worlds/api-core';
-import {
-	DacDirectory,
-	IndexWorldsContract,
-} from '@alien-worlds/eosdac-api-common';
-
 import { GetDacsInput } from '../models/dacs.input';
 
 /*imports*/

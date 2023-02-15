@@ -3,13 +3,16 @@
 
 process.title = 'eosdac-api';
 
+import * as fastifyCORS from 'fastify-cors';
+import * as fastifyOAS from 'fastify-oas';
+
 import fastify, { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
 import { CandidatesController } from './endpoints/candidates/domain/candidates.controller';
 import { CandidatesVotersHistoryController } from './endpoints/candidates-voters-history/domain/candidates-voters-history.controller';
 import { config } from './config';
-import { Container } from 'inversify';
+import { Container } from '@alien-worlds/api-core';
 import { CustodiansController } from './endpoints/custodians/domain/custodians.controller';
 import { FastifyRoute } from './fastify.route';
 import { GetCandidatesRoute } from './endpoints/candidates/routes/get-candidates.route';
@@ -19,16 +22,13 @@ import { GetDacsController } from './endpoints/get-dacs/domain/get-dacs.controll
 import { GetDacsRoute } from './endpoints/get-dacs/routes/dacs.route';
 import { GetProfileRoute } from './endpoints/profile/routes/get-profile.route';
 import { GetVotingHistoryRoute } from './endpoints/voting-history/routes/voting-history.route';
-import { logger } from './connections/logger';
+import { initLogger } from './connections/logger';
+import openApiOptions from './open-api'
 import { ProfileController } from './endpoints/profile/domain/profile.controller';
 import { setupEndpointDependencies } from './endpoints/api.ioc.config';
 import { VotingHistoryController } from './endpoints/voting-history/domain/voting-history.controller';
 
-import fastifyOAS = require('fastify-oas');
-
-const openApi = require('./open-api');
-
-logger('eosdac-api', config.logger);
+initLogger('eosdac-api', config.logger);
 
 export const buildAPIServer = async () => {
 	const api: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify(
@@ -39,7 +39,7 @@ export const buildAPIServer = async () => {
 		}
 	);
 
-	api.register(fastifyOAS, openApi.options);
+	api.register(fastifyOAS, openApiOptions);
 
 	// Set IOC
 	const apiIoc = await setupEndpointDependencies(new Container(), config);
@@ -105,11 +105,7 @@ export const buildAPIServer = async () => {
 		)
 	);
 
-	api.register(require('./fastify-eos'), config);
-	api.register(require('./fastify-dac'), {});
-	api.register(require('./fastify-config'), config);
-
-	api.register(require('fastify-cors'), {
+	api.register(fastifyCORS, {
 		allowedHeaders: 'Content-Type,X-DAC-Name',
 		origin: '*',
 	});

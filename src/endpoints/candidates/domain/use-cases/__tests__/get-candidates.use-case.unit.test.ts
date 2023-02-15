@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Unit Test Code
-import { Failure } from '@alien-worlds/api-core';
+import { Container, Failure } from '@alien-worlds/api-core';
+
 import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { Container } from 'inversify';
 import { GetCandidatesUseCase } from '../get-candidates.use-case';
 
 const Entities = DaoWorldsContract.Deltas.Entities;

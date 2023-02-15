@@ -1,5 +1,4 @@
-import { inject, injectable } from 'inversify';
-import { Result, UseCase } from '@alien-worlds/api-core';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import {
 	UserVote,
 	UserVotingHistoryRepository,
@@ -19,7 +18,7 @@ export class GetUserVotingHistoryUseCase implements UseCase<UserVote[]> {
 		/*injections*/
 		@inject(UserVotingHistoryRepository.Token)
 		private userVotingHistoryRepository: UserVotingHistoryRepository
-	) {}
+	) { }
 
 	/**
 	 * @async

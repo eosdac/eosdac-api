@@ -1,6 +1,5 @@
 import { AlienWorldsContract, DaoWorldsContract, IndexWorldsContract, setupContractActionRepository, setupDacDirectoryRepository, setupFlagRepository, setupUserVotingHistoryRepository, TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { AsyncContainerModule, Container } from 'inversify';
-import { EosJsRpcSource, MongoDB, MongoSource } from '@alien-worlds/api-core';
+import { AsyncContainerModule, Container, EosJsRpcSource, MongoDB, MongoSource } from '@alien-worlds/api-core';
 
 import AppConfig from 'src/config/app-config';
 import { CandidatesController } from './candidates/domain/candidates.controller';

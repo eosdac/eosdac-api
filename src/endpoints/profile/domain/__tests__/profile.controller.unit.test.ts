@@ -1,9 +1,8 @@
 import 'reflect-metadata';
 
-import { IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
-
-import { Container } from 'inversify';
+import { Container } from '@alien-worlds/api-core';
 import { GetProfilesUseCase } from '../use-cases/get-profiles.use-case';
+import { IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { IsProfileFlaggedUseCase } from '../use-cases/is-profile-flagged.use-case';
 import { ProfileController } from '../profile.controller';
 import { ProfileInput } from '../models/profile.input';

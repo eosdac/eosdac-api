@@ -1,10 +1,10 @@
 import {
   connectMongo,
+  Container,
   MongoConfig,
   MongoSource,
 } from '@alien-worlds/api-core';
 
-import { Container } from 'inversify';
 import { VotingWeightMapper } from './data/mappers/voting-weight.mapper';
 import { VotingWeightMongoSource } from './data/data-sources/voting-weight.mongo.source';
 import { VotingWeightRepository } from './domain/repositories/voting-weight.repository';

@@ -10,7 +10,6 @@ RUN apk add curl
 
 RUN mkdir -p /var/www/api
 
-ADD static /var/www/api/static
 ADD scripts /var/www/api/scripts
 ADD src /var/www/api/src
 

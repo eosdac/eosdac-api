@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
-import { IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 import { config } from '@config';
-import { Failure, Result } from '@alien-worlds/api-core';
 import { CustodiansController } from '../custodians.controller';
-import { Container } from 'inversify';
 import { GetCustodiansInput } from '../models/get-custodians.input';
+import { IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { ListCustodianProfilesUseCase } from '../use-cases/list-custodian-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
 

@@ -7,8 +7,7 @@ import {
 	IndexWorldsContract,
 	TokenWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
-import { Failure, Result } from '@alien-worlds/api-core';
-import { Container } from 'inversify';
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { GetAllDacsUseCase } from '../use-cases/get-all-dacs.use-case';
 import { GetDacInfoUseCase } from '../use-cases/get-dac-info.use-case';

@@ -1,6 +1,5 @@
-import { injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { inject } from 'inversify';
 
 /*imports*/
 
@@ -17,7 +16,7 @@ export class GetMembersAgreedTermsUseCase
 		/*injections*/
 		@inject(TokenWorldsContract.Services.TokenWorldsContractService.Token)
 		private service: TokenWorldsContract.Services.TokenWorldsContractService
-	) {}
+	) { }
 
 	/**
 	 * @async

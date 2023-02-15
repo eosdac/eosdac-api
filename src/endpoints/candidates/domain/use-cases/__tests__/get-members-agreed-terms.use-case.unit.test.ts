@@ -2,9 +2,10 @@
 
 // Unit test code
 import { anything, instance, mock, verify, when } from 'ts-mockito';
-import { TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
+
 import { Failure } from '@alien-worlds/api-core';
 import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
+import { TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
 
 describe('GetMembersAgreedTermsUseCase', () => {
 	let getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase;
@@ -60,8 +61,7 @@ describe('GetMembersAgreedTermsUseCase', () => {
 	});
 });
 // Unit Test Code
-// import { Container } from 'inversify';
-// import { Failure } from '@alien-worlds/api-core';
+// import { Container, Failure } from '@alien-worlds/api-core';
 // import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
 // import { MemberTerms } from '@alien-worlds/eosdac-api-common';
 

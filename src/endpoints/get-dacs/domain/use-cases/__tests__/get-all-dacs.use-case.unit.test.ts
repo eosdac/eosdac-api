@@ -1,11 +1,10 @@
 import 'reflect-metadata';
 
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 import {
 	DacDirectory,
 	IndexWorldsContract,
 } from '@alien-worlds/eosdac-api-common';
-import { Failure, Result } from '@alien-worlds/api-core';
-import { Container } from 'inversify';
 
 import { GetAllDacsUseCase } from '../get-all-dacs.use-case';
 import { GetDacsInput } from '../../models/dacs.input';

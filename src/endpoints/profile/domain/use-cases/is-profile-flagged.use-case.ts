@@ -1,7 +1,6 @@
 
 import { DaoWorldsContract, FlagRepository } from '@alien-worlds/eosdac-api-common';
-import { injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { inject } from 'inversify';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { IsProfileFlaggedQueryModel } from '../models/is-profile-flagged.query-model';
 import { IsProfileFlaggedUseCaseInput } from '../../data/dtos/profile.dto';
 

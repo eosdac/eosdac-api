@@ -1,7 +1,7 @@
 import winston = require('winston');
 import DatadogTransport = require('@shelf/winston-datadog-logs-transport');
 
-export const logger = (service = 'undefined-service', config) => {
+export const initLogger = (service = 'undefined-service', config) => {
 	const _l = winston.createLogger({
 		level: 'debug',
 		format: winston.format.json(),

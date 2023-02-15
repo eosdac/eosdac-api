@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 import { DacDirectory, IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { Failure, Result } from '@alien-worlds/api-core';
-import { Container } from 'inversify';
 import { GetCustodiansUseCase } from '../get-custodians.use-case';
 import { GetMembersAgreedTermsUseCase } from '../../../../candidates/domain/use-cases/get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from '../../../../candidates/domain/use-cases/get-member-terms.use-case';

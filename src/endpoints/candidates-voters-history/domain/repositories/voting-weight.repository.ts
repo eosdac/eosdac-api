@@ -1,5 +1,5 @@
-import { injectable } from 'inversify';
-import { Repository } from '@alien-worlds/api-core';
+import { injectable, Repository } from '@alien-worlds/api-core';
+
 import { VoteWeight } from '../entities/vote-weight';
 import { VoteWeightDocument } from '../../data/dtos/weights.dto';
 

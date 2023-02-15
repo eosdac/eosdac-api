@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { Profile } from '../../../../profile/domain/entities/profile';
 import { CustodianProfile } from '../../entities/custodian-profile';
+import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { GetCustodiansOutput } from '../get-custodians.output';
+import { Profile } from '../../../../profile/domain/entities/profile';
 
 describe('GetCustodiansOutput', () => {
 	let dacId: string;

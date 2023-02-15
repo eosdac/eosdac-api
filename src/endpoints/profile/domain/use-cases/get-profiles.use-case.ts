@@ -1,7 +1,6 @@
-import { ContractAction, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { ContractAction, inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { GetProfilesUseCaseInput } from '../../data/dtos/profile.dto';
-import { inject } from 'inversify';
 import { ProfileQueryModel } from '../models/profile.query-model';
 
 /*imports*/
