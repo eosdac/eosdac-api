@@ -11,6 +11,84 @@
 			"name": "v1/eosdac",
 			"item": [
 				{
+					"name": "/health",
+					"id": "f3219965-f2dd-4f78-ae1d-aadfcc1c1356",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/eosdac/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"eosdac",
+								"health"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "2c04c1b6-f0d8-4dad-b547-340fc4b4d54c",
+							"name": "success response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/health",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "81"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Feb 2023 13:51:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2/15/2023, 2:51:55 PM\",\n    \"blockNumber\": \"227377163\"\n}"
+						}
+					]
+				},
+				{
 					"name": "/dacs - List DACs and info",
 					"id": "646c9b81-729d-4f6a-9935-365557f06242",
 					"protocolProfileBehavior": {
