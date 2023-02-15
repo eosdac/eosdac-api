@@ -1,4 +1,13 @@
-import { AlienWorldsContract, DaoWorldsContract, IndexWorldsContract, setupContractActionRepository, setupDacDirectoryRepository, setupFlagRepository, setupUserVotingHistoryRepository, TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
+import {
+	AlienWorldsContract,
+	DaoWorldsContract,
+	IndexWorldsContract,
+	setupContractActionRepository,
+	setupDacDirectoryRepository,
+	setupFlagRepository,
+	setupUserVotingHistoryRepository,
+	TokenWorldsContract
+} from '@alien-worlds/eosdac-api-common';
 import { AsyncContainerModule, Container, EosJsRpcSource, MongoDB, MongoSource } from '@alien-worlds/api-core';
 
 import AppConfig from 'src/config/app-config';
@@ -20,10 +29,13 @@ import { GetProfilesUseCase } from './profile/domain/use-cases/get-profiles.use-
 import { GetUserVotingHistoryUseCase } from './voting-history/domain/use-cases/get-user-voting-history.use-case';
 import { GetVotedCandidateIdsUseCase } from './candidates/domain/use-cases/get-voted-candidate-ids.use-case';
 import { GetVotingPowerUseCase } from './candidates-voters-history/domain/use-cases/get-voting-power.use-case';
+import { HealthController } from './health/domain/health.controller';
+import { HealthUseCase } from './health/domain/use-cases/health.use-case';
 import { IsProfileFlaggedUseCase } from './profile/domain/use-cases/is-profile-flagged.use-case';
 import { ListCandidateProfilesUseCase } from './candidates/domain/use-cases/list-candidate-profiles.use-case';
 import { ListCustodianProfilesUseCase } from './custodians/domain/use-cases/list-custodian-profiles.use-case';
 import { ProfileController } from './profile/domain/profile.controller';
+import { setupStateRepository } from './health';
 import { setupVotingWeightRepository } from './candidates-voters-history/ioc.config';
 import { VotingHistoryController } from './voting-history/domain/voting-history.controller';
 
@@ -81,9 +93,16 @@ export const setupEndpointDependencies = async (
 		await setupUserVotingHistoryRepository(mongoSource, container)
 		await setupVotingWeightRepository(mongoSource, container);
 		await setupContractActionRepository(mongoSource, container);
-
+		await setupStateRepository(mongoSource, container);
 
 		/*bindings*/
+
+		/**
+		 * HEALTH
+		 */
+
+		bind<HealthController>(HealthController.Token).to(HealthController);
+		bind<HealthUseCase>(HealthUseCase.Token).to(HealthUseCase);
 
 		/**
 		 * ACTIONS

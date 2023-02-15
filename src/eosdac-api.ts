@@ -20,8 +20,10 @@ import { GetCandidatesVotersHistoryRoute } from './endpoints/candidates-voters-h
 import { GetCustodiansRoute } from './endpoints/custodians/routes/get-custodians.route';
 import { GetDacsController } from './endpoints/get-dacs/domain/get-dacs.controller';
 import { GetDacsRoute } from './endpoints/get-dacs/routes/dacs.route';
+import { GetHealthRoute } from './endpoints/health/routes/health.route';
 import { GetProfileRoute } from './endpoints/profile/routes/get-profile.route';
 import { GetVotingHistoryRoute } from './endpoints/voting-history/routes/voting-history.route';
+import { HealthController } from './endpoints/health/domain/health.controller';
 import { initLogger } from './connections/logger';
 import openApiOptions from './open-api'
 import { ProfileController } from './endpoints/profile/domain/profile.controller';
@@ -45,6 +47,10 @@ export const buildAPIServer = async () => {
 	const apiIoc = await setupEndpointDependencies(new Container(), config);
 
 	// controllers
+	const healthController: HealthController = apiIoc.get<HealthController>(
+		HealthController.Token
+	);
+
 	const profileController: ProfileController = apiIoc.get<ProfileController>(
 		ProfileController.Token
 	);
@@ -66,6 +72,11 @@ export const buildAPIServer = async () => {
 		apiIoc.get<CustodiansController>(CustodiansController.Token);
 
 	// Mount routes
+
+	FastifyRoute.mount(
+		api,
+		GetHealthRoute.create(healthController.health.bind(healthController))
+	);
 
 	FastifyRoute.mount(
 		api,
