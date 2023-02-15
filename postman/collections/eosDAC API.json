@@ -33,7 +33,7 @@
 					},
 					"response": [
 						{
-							"id": "2c04c1b6-f0d8-4dad-b547-340fc4b4d54c",
+							"id": "094d6053-34b8-40d6-aad6-bf0e5c4086da",
 							"name": "success response",
 							"originalRequest": {
 								"method": "GET",
@@ -68,11 +68,11 @@
 								},
 								{
 									"key": "content-length",
-									"value": "81"
+									"value": "271"
 								},
 								{
 									"key": "Date",
-									"value": "Wed, 15 Feb 2023 13:51:55 GMT"
+									"value": "Wed, 15 Feb 2023 15:51:23 GMT"
 								},
 								{
 									"key": "Connection",
@@ -84,7 +84,61 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2/15/2023, 2:51:55 PM\",\n    \"blockNumber\": \"227377163\"\n}"
+							"body": "{\n    \"status\": \"OK\",\n    \"version\": \"1.0.0\",\n    \"timestamp\": 1676476283861,\n    \"uptimeSeconds\": 3,\n    \"nodeVersion\": \"v17.3.0\",\n    \"dependencies\": {\n        \"@alien-worlds/api-core\": \"0.0.68\",\n        \"@alien-worlds/eosdac-api-common\": \"0.0.76\"\n    },\n    \"database\": {\n        \"status\": \"OK\"\n    },\n    \"blockChainHistory\": {\n        \"currentBlock\": \"227377163\"\n    }\n}"
+						},
+						{
+							"id": "ac5c2d87-bdd6-428b-9414-5b845a125bb2",
+							"name": "fail response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/eosdac/health",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{api_version}}",
+										"eosdac",
+										"health"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "51"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Feb 2023 15:58:17 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"FAIL\",\n    \"error\": \"Current block not found\"\n}"
 						}
 					]
 				},
