@@ -1,3 +1,9 @@
 node_modules
 .DS_Store
-*.log
+
+# Test coverage directory
+coverage
+
+dist
+
+logs

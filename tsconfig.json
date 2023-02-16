@@ -1,0 +1,29 @@
+{
+    "ts-node": {
+        "require": [
+            "tsconfig-paths/register"
+        ]
+    },
+    "compilerOptions": {
+        "resolveJsonModule": true,
+        "target": "ESNext",
+        "module": "CommonJS",
+        "outDir": "./dist",
+        "allowJs": true,
+        "noImplicitAny": false,
+        "experimentalDecorators": true,
+        "baseUrl": ".",
+        "paths": {
+            "@config": [
+                "src/config/index"
+            ],
+            "@common/*": [
+                "src/common/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*",
+        "tests/**/*"
+    ]
+}
