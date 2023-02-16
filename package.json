@@ -18,8 +18,8 @@
     "format": "yarn prettier:fix && yarn lint:fix"
   },
   "dependencies": {
-    "@alien-worlds/api-core": "0.0.68",
-    "@alien-worlds/eosdac-api-common": "0.0.76",
+    "@alien-worlds/api-core": "0.0.69",
+    "@alien-worlds/eosdac-api-common": "0.0.77",
     "@jafri/eosjs2": "^20.0.1-e34c16e.170",
     "@shelf/winston-datadog-logs-transport": "^1.0.7",
     "dotenv": "^16.0.2",
