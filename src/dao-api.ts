@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-process.title = 'eosdac-api';
+process.title = 'dao-api';
 
 import * as fastifyCORS from 'fastify-cors';
 import * as fastifyOAS from 'fastify-oas';
@@ -30,7 +30,7 @@ import { ProfileController } from './endpoints/profile/domain/profile.controller
 import { setupEndpointDependencies } from './endpoints/api.ioc.config';
 import { VotingHistoryController } from './endpoints/voting-history/domain/voting-history.controller';
 
-initLogger('eosdac-api', config.logger);
+initLogger('dao-api', config.logger);
 
 export const buildAPIServer = async () => {
 	const api: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify(
