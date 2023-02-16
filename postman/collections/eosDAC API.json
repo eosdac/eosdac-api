@@ -8,7 +8,7 @@
 	},
 	"item": [
 		{
-			"name": "v1/eosdac",
+			"name": "v1/dao",
 			"item": [
 				{
 					"name": "/health",
@@ -20,13 +20,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/health",
+							"raw": "{{base_url}}/{{api_version}}/dao/health",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"{{api_version}}",
-								"eosdac",
+								"dao",
 								"health"
 							]
 						}
@@ -39,13 +39,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/health",
+									"raw": "{{base_url}}/{{api_version}}/dao/health",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"eosdac",
+										"dao",
 										"health"
 									]
 								}
@@ -93,13 +93,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/health",
+									"raw": "{{base_url}}/{{api_version}}/dao/health",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"eosdac",
+										"dao",
 										"health"
 									]
 								}
@@ -152,13 +152,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/dacs?dacId=eyeke",
+							"raw": "{{base_url}}/{{api_version}}/dao/dacs?dacId=eyeke",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"{{api_version}}",
-								"eosdac",
+								"dao",
 								"dacs"
 							],
 							"query": [
@@ -182,13 +182,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/dacs?limit=5",
+									"raw": "{{base_url}}/{{api_version}}/dao/dacs?limit=5",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"eosdac",
+										"dao",
 										"dacs"
 									],
 									"query": [
@@ -247,13 +247,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/dacs?dacId=eyeke",
+									"raw": "{{base_url}}/{{api_version}}/dao/dacs?dacId=eyeke",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"eosdac",
+										"dao",
 										"dacs"
 									],
 									"query": [
@@ -322,13 +322,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+							"raw": "{{base_url}}/{{api_version}}/dao/:dacId/profile?account=suzqu.wam,mgaqy.wam",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"{{api_version}}",
-								"eosdac",
+								"dao",
 								":dacId",
 								"profile"
 							],
@@ -362,7 +362,7 @@
 									}
 								],
 								"url": {
-									"raw": "https://dao-api-test.alienworlds.io/v1/eosdac/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+									"raw": "https://dao-api-test.alienworlds.io/v1/dao/:dacId/profile?account=suzqu.wam,mgaqy.wam",
 									"protocol": "https",
 									"host": [
 										"dao-api-test",
@@ -371,7 +371,7 @@
 									],
 									"path": [
 										"v1",
-										"eosdac",
+										"dao",
 										":dacId",
 										"profile"
 									],
@@ -436,13 +436,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+									"raw": "{{base_url}}/{{api_version}}/dao/:dacId/profile?account=suzqu.wam,mgaqy.wam",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"eosdac",
+										"dao",
 										":dacId",
 										"profile"
 									],
@@ -511,13 +511,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+									"raw": "{{base_url}}/{{api_version}}/dao/:dacId/profile?account=suzqu.wam,mgaqy.wam",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"eosdac",
+										"dao",
 										":dacId",
 										"profile"
 									],
@@ -635,13 +635,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/:dacId/candidates?walletId=.1uqy.wam",
+							"raw": "{{base_url}}/{{api_version}}/dao/:dacId/candidates?walletId=.1uqy.wam",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"{{api_version}}",
-								"eosdac",
+								"dao",
 								":dacId",
 								"candidates"
 							],
@@ -673,7 +673,7 @@
 									}
 								],
 								"url": {
-									"raw": "https://dao-api-test.alienworlds.io/v1/eosdac/:dacId/candidates?walletId=.1uqy.wam",
+									"raw": "https://dao-api-test.alienworlds.io/v1/dao/:dacId/candidates?walletId=.1uqy.wam",
 									"protocol": "https",
 									"host": [
 										"dao-api-test",
@@ -682,7 +682,7 @@
 									],
 									"path": [
 										"v1",
-										"eosdac",
+										"dao",
 										":dacId",
 										"candidates"
 									],
@@ -754,13 +754,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/:dacId/custodians",
+							"raw": "{{base_url}}/{{api_version}}/dao/:dacId/custodians",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"{{api_version}}",
-								"eosdac",
+								"dao",
 								":dacId",
 								"custodians"
 							],
@@ -786,7 +786,7 @@
 									}
 								],
 								"url": {
-									"raw": "https://dao-api-test.alienworlds.io/v1/eosdac/:dacId/custodians",
+									"raw": "https://dao-api-test.alienworlds.io/v1/dao/:dacId/custodians",
 									"protocol": "https",
 									"host": [
 										"dao-api-test",
@@ -795,7 +795,7 @@
 									],
 									"path": [
 										"v1",
-										"eosdac",
+										"dao",
 										":dacId",
 										"custodians"
 									],
@@ -900,13 +900,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=0&limit=20",
+							"raw": "{{base_url}}/{{api_version}}/dao/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=0&limit=20",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"{{api_version}}",
-								"eosdac",
+								"dao",
 								"candidates_voters_history"
 							],
 							"query": [
@@ -937,7 +937,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://dao-api-test.alienworlds.io/v1/eosdac/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=0&limit=20",
+									"raw": "https://dao-api-test.alienworlds.io/v1/dao/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=0&limit=20",
 									"protocol": "https",
 									"host": [
 										"dao-api-test",
@@ -946,7 +946,7 @@
 									],
 									"path": [
 										"v1",
-										"eosdac",
+										"dao",
 										"candidates_voters_history"
 									],
 									"query": [
@@ -1061,13 +1061,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/{{api_version}}/eosdac/voting_history?dacId=nerix&voter=.1uqy.wam&skip=0&limit=100",
+							"raw": "{{base_url}}/{{api_version}}/dao/voting_history?dacId=nerix&voter=.1uqy.wam&skip=0&limit=100",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"{{api_version}}",
-								"eosdac",
+								"dao",
 								"voting_history"
 							],
 							"query": [
@@ -1098,13 +1098,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/eosdac/voting_history?dacId=nerix&voter=.1uqy.wam&skip=0&limit=100",
+									"raw": "{{base_url}}/{{api_version}}/dao/voting_history?dacId=nerix&voter=.1uqy.wam&skip=0&limit=100",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"eosdac",
+										"dao",
 										"voting_history"
 									],
 									"query": [

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /* istanbul ignore file */
 
-process.title = 'eosdac-api';
+process.title = 'dao-api';
 
-import { buildAPIServer } from './eosdac-api';
+import { buildAPIServer } from './dao-api';
 import { config } from './config';
 
 const start = async () => {

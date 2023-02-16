@@ -21,7 +21,7 @@ export class GetCandidatesRoute extends GetRoute {
 	}
 
 	private constructor(handler: RouteHandler) {
-		super('/v1/eosdac/:dacId/candidates', handler, {
+		super('/v1/dao/:dacId/candidates', handler, {
 			hooks: {
 				pre: parseRequestToControllerInput,
 				post: parseResultToControllerOutput,

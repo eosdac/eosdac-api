@@ -7,7 +7,7 @@ components: {}
 servers:
   - url: https://127.0.0.1/
 paths:
-  /v1/eosdac/balance_timeline:
+  /v1/dao/balance_timeline:
     get:
       responses:
         '200':
@@ -72,7 +72,7 @@ paths:
           schema:
             description: End block (inclusive)
             type: integer
-  /v1/eosdac/candidates:
+  /v1/dao/candidates:
     get:
       responses:
         '200':
@@ -132,7 +132,7 @@ paths:
           schema:
             description: Skip number of results
             type: integer
-  /v1/eosdac/dac_config:
+  /v1/dao/dac_config:
     get:
       responses:
         '200':
@@ -187,7 +187,7 @@ paths:
       description: Fetch DAC config
       tags:
         - v1
-  /v1/eosdac/dac_info:
+  /v1/dao/dac_info:
     get:
       responses:
         '200':
@@ -196,7 +196,7 @@ paths:
       description: Fetch DAC information
       tags:
         - v1
-  /v1/eosdac/financial_reports:
+  /v1/dao/financial_reports:
     get:
       responses:
         '200':
@@ -228,7 +228,7 @@ paths:
           schema:
             description: End Date
             type: integer
-  /v1/eosdac/msig_proposals:
+  /v1/dao/msig_proposals:
     get:
       responses:
         '200':
@@ -275,7 +275,7 @@ paths:
           schema:
             description: Filter by proposal name
             type: string
-  /v1/eosdac/{dacId}/profile:
+  /v1/dao/{dacId}/profile:
     get:
       responses:
         '200':
@@ -349,7 +349,7 @@ paths:
           schema:
             type: string
             description: Organization name
-  /v1/eosdac/proposals:
+  /v1/dao/proposals:
     get:
       responses:
         '200':
@@ -389,7 +389,7 @@ paths:
           schema:
             description: Skip number of results
             type: integer
-  /v1/eosdac/member:
+  /v1/dao/member:
     get:
       responses:
         '200':
@@ -406,7 +406,7 @@ paths:
           schema:
             description: Account to fetch, you can supply multiple accounts by separating them with a comma
             type: string
-  /v1/eosdac/member_counts:
+  /v1/dao/member_counts:
     get:
       responses:
         '200':
@@ -422,7 +422,7 @@ paths:
           schema:
             description: End block (inclusive)
             type: integer
-  /v1/eosdac/member_snapshot:
+  /v1/dao/member_snapshot:
     get:
       responses:
         '200':
@@ -479,7 +479,7 @@ paths:
           schema:
             description: 'Block number (optional) - default: head'
             type: integer
-  /v1/eosdac/my_dacs:
+  /v1/dao/my_dacs:
     get:
       responses:
         '200':
@@ -496,7 +496,7 @@ paths:
           schema:
             description: Filter by account
             type: string
-  /v1/eosdac/proposals_counts:
+  /v1/dao/proposals_counts:
     get:
       responses:
         '200':
@@ -512,7 +512,7 @@ paths:
           schema:
             description: Filter by account
             type: string
-  /v1/eosdac/proposals_inbox:
+  /v1/dao/proposals_inbox:
     get:
       responses:
         '200':
@@ -541,7 +541,7 @@ paths:
           schema:
             description: Skip number of results
             type: integer
-  /v1/eosdac/referendums:
+  /v1/dao/referendums:
     get:
       responses:
         '200':
@@ -569,7 +569,7 @@ paths:
           schema:
             description: Skip number of results
             type: integer
-  /v1/eosdac/state:
+  /v1/dao/state:
     get:
       responses:
         '200':
@@ -578,7 +578,7 @@ paths:
       description: Get State
       tags:
         - v1
-  /v1/eosdac/tokens_owned:
+  /v1/dao/tokens_owned:
     get:
       responses:
         '200':
@@ -627,7 +627,7 @@ paths:
             type: string
             minLength: 1
             maxLength: 12
-  /v1/eosdac/transfers:
+  /v1/dao/transfers:
     get:
       responses:
         '200':
@@ -636,7 +636,7 @@ paths:
       description: Transfers
       tags:
         - v1
-  /v1/eosdac/voters:
+  /v1/dao/voters:
     get:
       responses:
         '200':
@@ -653,7 +653,7 @@ paths:
           schema:
             description: Filter by candidate account
             type: string
-  /v1/eosdac/votes_timeline:
+  /v1/dao/votes_timeline:
     get:
       responses:
         '200':
