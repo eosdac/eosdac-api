@@ -18,7 +18,7 @@ export class GetDacsRoute extends GetRoute {
   }
 
   private constructor(handler: RouteHandler) {
-    super('/v1/eosdac/dacs', handler, {
+    super('/v1/dao/dacs', handler, {
       hooks: {
         pre: parseRequestToControllerInput,
         post: parseResultToControllerOutput,

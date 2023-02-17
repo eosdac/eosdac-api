@@ -35,7 +35,7 @@ The processor will also trigger any registered watchers after processing a state
 
 The API service uses fastify to provide a fast API development platform, it reads data from mongodb.
 
-Once running the api will open the configured port and provide document on http://your.domain/v1/eosdac/docs
+Once running the api will open the configured port and provide document on http://your.domain/v1/dao/docs
 
 ## Settings up a local blockchain for testing (optional)
 
@@ -98,8 +98,8 @@ Connect to the websocket server, eosDAC provides endpoints at the following loca
 This example will connect and request notifications for a particular DAC ID
 
 ```
-const endpoint = 'ws://api.eosdac.io:3030';
-const dac_id = 'eosdac';
+const endpoint = 'ws://api.dao.io:3030';
+const dac_id = 'dao';
 const ws = new WebSocket(endpoint);
 ws.onmessage = (msg) => {
     console.log('Received message', msg.data);

@@ -1,6 +1,6 @@
 import { TestEnvironment, TestHooks } from './test-environment';
 
-import { buildAPIServer } from '../../src/eosdac-api';
+import { buildAPIServer } from '../../src/dao-api';
 import { TestEnvironmentServer } from './api-test-environment';
 
 export class FastifyTestEnvironment implements TestEnvironment {

@@ -2,7 +2,6 @@
   "name": "eosdac-api",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "<michael@eosdac.io>",
   "license": "MIT",
   "scripts": {
     "api": "node -r ts-node/register -r tsconfig-paths/register src/index.ts",

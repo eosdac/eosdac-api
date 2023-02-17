@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-process.title = 'eosdac-api';
+process.title = 'dao-api';
 
 import * as fastifyCORS from 'fastify-cors';
 import * as fastifyOAS from 'fastify-oas';
@@ -12,9 +12,8 @@ import { IncomingMessage, Server, ServerResponse } from 'http';
 import { CandidatesController } from './endpoints/candidates/domain/candidates.controller';
 import { CandidatesVotersHistoryController } from './endpoints/candidates-voters-history/domain/candidates-voters-history.controller';
 import { config } from './config';
-import { Container } from '@alien-worlds/api-core';
+import { Container, Route } from '@alien-worlds/api-core';
 import { CustodiansController } from './endpoints/custodians/domain/custodians.controller';
-import { FastifyRoute } from './fastify.route';
 import { GetCandidatesRoute } from './endpoints/candidates/routes/get-candidates.route';
 import { GetCandidatesVotersHistoryRoute } from './endpoints/candidates-voters-history/routes/candidates-voters-history.route';
 import { GetCustodiansRoute } from './endpoints/custodians/routes/get-custodians.route';
@@ -30,7 +29,7 @@ import { ProfileController } from './endpoints/profile/domain/profile.controller
 import { setupEndpointDependencies } from './endpoints/api.ioc.config';
 import { VotingHistoryController } from './endpoints/voting-history/domain/voting-history.controller';
 
-initLogger('eosdac-api', config.logger);
+initLogger('dao-api', config.logger);
 
 export const buildAPIServer = async () => {
 	const api: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify(
@@ -73,43 +72,43 @@ export const buildAPIServer = async () => {
 
 	// Mount routes
 
-	FastifyRoute.mount(
+	Route.mount(
 		api,
 		GetHealthRoute.create(healthController.health.bind(healthController))
 	);
 
-	FastifyRoute.mount(
+	Route.mount(
 		api,
 		GetProfileRoute.create(profileController.profile.bind(profileController))
 	);
 
-	FastifyRoute.mount(
+	Route.mount(
 		api,
 		GetDacsRoute.create(getDacsController.dacs.bind(getDacsController))
 	);
 
-	FastifyRoute.mount(
+	Route.mount(
 		api,
 		GetVotingHistoryRoute.create(
 			votingHistoryController.votingHistory.bind(votingHistoryController)
 		)
 	);
 
-	FastifyRoute.mount(
+	Route.mount(
 		api,
 		GetCandidatesVotersHistoryRoute.create(
 			candidatesVotersHistoryController.candidatesVotersHistory.bind(candidatesVotersHistoryController)
 		)
 	);
 
-	FastifyRoute.mount(
+	Route.mount(
 		api,
 		GetCandidatesRoute.create(
 			candidatesController.list.bind(candidatesController)
 		)
 	);
 
-	FastifyRoute.mount(
+	Route.mount(
 		api,
 		GetCustodiansRoute.create(
 			custodiansController.list.bind(custodiansController)
