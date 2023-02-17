@@ -17,7 +17,7 @@ export class GetCustodiansRoute extends GetRoute {
 	}
 
 	private constructor(handler: RouteHandler) {
-		super('/v1/dao/:dacId/custodians', handler, {
+		super(['/v1/dao/:dacId/custodians', '/v1/eosdac/:dacId/custodians'], handler, {
 			hooks: {
 				pre: parseRequestToControllerInput,
 				post: parseResultToControllerOutput,

@@ -17,7 +17,7 @@ export class GetCandidatesVotersHistoryRoute extends GetRoute {
   }
 
   private constructor(handler: RouteHandler) {
-    super('/v1/dao/candidates_voters_history', handler, {
+    super(['/v1/dao/candidates_voters_history', '/v1/eosdac/candidates_voters_history'], handler, {
       hooks: {
         pre: parseRequestToControllerInput,
         post: parseResultToControllerOutput,

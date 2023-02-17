@@ -10,7 +10,7 @@ environment.initialize();
 // meta
 const Api = {
 	method: HTTP_METHOD.GET,
-	url: '/v1/dao/dacs',
+	url: '/v1/eosdac/dacs',
 };
 
 const Data = {

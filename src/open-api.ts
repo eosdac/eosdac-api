@@ -1,5 +1,5 @@
 export default {
-	routePrefix: '/v1/dao/docs',
+	routePrefix: '/v1/eosdac/docs',
 	exposeRoute: true,
 	swagger: {
 		info: {

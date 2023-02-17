@@ -15,7 +15,7 @@ export class GetHealthRoute extends GetRoute {
   }
 
   private constructor(handler: RouteHandler) {
-    super('/v1/dao/health', handler, {
+    super(['/v1/dao/health', '/v1/eosdac/health'], handler, {
       hooks: {
         post: parseResultToControllerOutput
       }

@@ -20,7 +20,7 @@ export class GetProfileRoute extends GetRoute {
   }
 
   private constructor(handler: RouteHandler) {
-    super('/v1/dao/:dacId/profile', handler, {
+    super(['/v1/dao/:dacId/profile', '/v1/eosdac/:dacId/profile'], handler, {
       hooks: {
         pre: parseRequestToControllerInput,
         post: parseResultToControllerOutput,
