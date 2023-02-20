@@ -5,6 +5,7 @@
         ]
     },
     "compilerOptions": {
+        "esModuleInterop": true,
         "resolveJsonModule": true,
         "target": "ESNext",
         "module": "CommonJS",
@@ -19,6 +20,9 @@
             ],
             "@common/*": [
                 "src/common/*"
+            ],
+            "@endpoints/*": [
+                "src/endpoints/*"
             ]
         }
     },

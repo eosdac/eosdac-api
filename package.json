@@ -21,6 +21,7 @@
     "@alien-worlds/eosdac-api-common": "0.0.83",
     "@jafri/eosjs2": "^20.0.1-e34c16e.170",
     "@shelf/winston-datadog-logs-transport": "^1.0.7",
+    "ajv": "^8.12.0",
     "dotenv": "^16.0.2",
     "fastify": "^3.25.0",
     "fastify-cors": "^6.0.2",
