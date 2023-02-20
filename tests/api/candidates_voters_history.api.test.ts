@@ -10,7 +10,7 @@ environment.initialize();
 // meta
 const Api = {
 	method: HTTP_METHOD.GET,
-	url: '/v1/dao/candidates_voters_history',
+	url: '/v1/eosdac/candidates_voters_history',
 };
 
 const Data = {

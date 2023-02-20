@@ -15,7 +15,7 @@ const Data = {
 // meta
 const Api = {
 	method: HTTP_METHOD.GET,
-	url: `/v1/dao/${Data.DACId}/profile`,
+	url: `/v1/eosdac/${Data.DACId}/profile`,
 };
 
 describe('Get member profile API Test', () => {

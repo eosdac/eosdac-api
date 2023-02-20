@@ -14,7 +14,7 @@ const Data = {
 // meta
 const Api = {
 	method: HTTP_METHOD.GET,
-	url: `/v1/dao/${Data.DacId}/custodians`,
+	url: `/v1/eosdac/${Data.DacId}/custodians`,
 };
 
 describe('Custodians API Test', () => {
