@@ -1,5 +1,8 @@
-import { GetRoute, Request, Result, RouteHandler, SmartContractDataNotFoundError } from '@alien-worlds/api-core';
+import * as requestSchema from '@endpoints/get-dacs/schemas/dacs.request.schema.json';
 
+import { GetRoute, Request, Result, RouteHandler, SmartContractDataNotFoundError, ValidationResult } from '@alien-worlds/api-core';
+
+import { AjvValidator } from '@src/validator/ajv-validator';
 import { GetDacOutput } from '../domain/models/get-dac.output';
 import { GetDacsInput } from '../domain/models/dacs.input';
 import { GetDacsOutput } from '../domain/models/get-dacs.output';
@@ -19,6 +22,9 @@ export class GetDacsRoute extends GetRoute {
 
   private constructor(handler: RouteHandler) {
     super(['/v1/dao/dacs', '/v1/eosdac/dacs'], handler, {
+      validators: {
+        request: validateRequest,
+      },
       hooks: {
         pre: parseRequestToControllerInput,
         post: parseResultToControllerOutput,
@@ -27,6 +33,14 @@ export class GetDacsRoute extends GetRoute {
   }
 }
 
+/**
+ *
+ * @param {Request} request
+ * @returns {ValidationResult}
+ */
+export const validateRequest = (request: Request<GetDacsRequestDto>): ValidationResult => {
+  return AjvValidator.initialize().validateHttpRequest(requestSchema, request);
+};
 
 /**
  *

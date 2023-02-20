@@ -23,6 +23,9 @@
             ],
             "@endpoints/*": [
                 "src/endpoints/*"
+            ],
+            "@src/*": [
+                "src/*"
             ]
         }
     },
