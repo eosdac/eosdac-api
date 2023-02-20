@@ -31,11 +31,7 @@ export class GetVotedCandidateIdsUseCase implements UseCase<string[]> {
 			upper_bound: walletId,
 		});
 
-		if (failure) {
-			return Result.withFailure(failure);
-		}
-
-		const ids = rows[0].candidates || [];
+		const ids = Array.isArray(rows) && rows[0].candidates ? rows[0].candidates : [];
 
 		return Result.withContent(ids);
 	}
