@@ -118,7 +118,7 @@ export class CandidateProfile {
 			votePower: Number(votePower),
 			rank: Number(rank),
 			gapFiller: Number(gapFiller),
-			isActive,
+			isActive: Number(isActive),
 			totalVotes,
 			voteDecay,
 			profile,

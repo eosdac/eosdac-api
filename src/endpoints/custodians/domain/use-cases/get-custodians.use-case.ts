@@ -31,7 +31,7 @@ export class GetCustodiansUseCase
 			limit,
 		});
 
-		if (Array.isArray(rows) && rows.length === 0) {
+		if (failure) {
 			return Result.withContent([]);
 		}
 

@@ -5,7 +5,7 @@ export const candidatesSuccessResponse = [
 		"votePower": 7040,
 		"rank": 6693890,
 		"gapFiller": 0,
-		"isActive": false,
+		"isActive": 0,
 		"totalVotes": 6,
 		"voteDecay": 99,
 		"profile": {

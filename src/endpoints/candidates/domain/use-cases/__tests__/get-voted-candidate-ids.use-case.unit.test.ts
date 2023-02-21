@@ -49,7 +49,7 @@ describe('GetCandidatesUseCase', () => {
 		verify(daoWorldsContractService.fetchVote(anything())).once();
 	});
 
-	it('should return a failure if an error occurs', async () => {
+	it('should return an empty array if an error occurs', async () => {
 		const dacId = 'nonexistentdacid';
 		const walletId = 'somewalletid';
 
@@ -60,7 +60,7 @@ describe('GetCandidatesUseCase', () => {
 		const result = await useCase.execute(walletId, dacId);
 
 		expect(result).not.toBeNull();
-		expect(result.isFailure).toBeTruthy();
+		expect(result.content).toEqual([]);
 
 		verify(daoWorldsContractService.fetchVote(anything())).once();
 	});
