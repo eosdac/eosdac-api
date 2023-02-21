@@ -1,13 +1,6 @@
+import { Failure, GetTableRowsOptions, inject, injectable, Result, SmartContractDataNotFoundError, UseCase } from '@alien-worlds/api-core';
 import { DacDirectory, IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
-import {
-	Failure,
-	GetTableRowsOptions,
-	inject,
-	injectable,
-	Result,
-	SmartContractDataNotFoundError,
-	UseCase,
-} from '@alien-worlds/api-core';
+
 import { GetDacsInput } from '../models/dacs.input';
 
 /*imports*/
@@ -41,13 +34,16 @@ export class GetAllDacsUseCase implements UseCase<DacDirectory[]> {
 		const { content: dacs, failure: fetchDacsFailure } =
 			await this.indexWorldsContractService.fetchDac(options);
 
-			
 		if (fetchDacsFailure) {
 			return Result.withFailure(fetchDacsFailure);
 		}
-			
+
 		if (dacs.length === 0) {
-			return Result.withFailure(Failure.fromError(new SmartContractDataNotFoundError(options)));
+			return Result.withFailure(Failure.fromError(new SmartContractDataNotFoundError({
+				...options,
+				bound: input.dacId,
+			})));
+
 		}
 
 		return Result.withContent(dacs.map(DacDirectory.fromStruct));
