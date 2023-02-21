@@ -60,7 +60,7 @@ describe('GetCandidatesUseCase', () => {
 		const result = await useCase.execute(walletId, dacId);
 
 		expect(result).not.toBeNull();
-		expect(result.content).toEqual([]);
+		expect(result.content).toBeFalsy();
 
 		verify(daoWorldsContractService.fetchVote(anything())).once();
 	});

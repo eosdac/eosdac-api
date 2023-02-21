@@ -72,6 +72,6 @@ describe('GetCustodiansUseCase', () => {
 			failure: Failure.withMessage('error'),
 		});
 		const result = await useCase.execute(dacId);
-		expect(result.content).toEqual([]);
+		expect(result.content).toBeFalsy();
 	});
 });

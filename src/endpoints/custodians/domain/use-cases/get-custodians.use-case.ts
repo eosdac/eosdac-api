@@ -32,7 +32,7 @@ export class GetCustodiansUseCase
 		});
 
 		if (failure) {
-			return Result.withContent([]);
+			return Result.withFailure(failure);
 		}
 
 		const custodians = rows.map(row =>
