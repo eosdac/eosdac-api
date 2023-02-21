@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { parseToBigInt, removeUndefinedProperties } from '../dto.utils';
+
+import { parseToBigInt, removeUndefinedProperties } from "@alien-worlds/api-core";
 
 describe('"DTO Utils" unit tests', () => {
 	it('Should remove all undefined and empty -objects- properties', () => {

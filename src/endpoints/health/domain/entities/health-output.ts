@@ -1,3 +1,4 @@
+import { removeUndefinedProperties } from '@alien-worlds/api-core';
 import {
   BlockChainHistoryHealthDocument,
   DatabaseHealthDocument,
@@ -5,7 +6,6 @@ import {
   PackagedDependency
 } from '../../data/dtos/health.dto';
 
-import { removeUndefinedProperties } from '@common/utils/dto.utils';
 
 /*imports*/
 /**

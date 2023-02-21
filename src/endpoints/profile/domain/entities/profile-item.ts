@@ -1,5 +1,5 @@
+import { removeUndefinedProperties } from '@alien-worlds/api-core';
 import { ProfileItemDocument } from '../../data/dtos/profile.dto';
-import { removeUndefinedProperties } from '@common/utils/dto.utils';
 /*imports*/
 /**
  * Represents ProfileItem data entity.

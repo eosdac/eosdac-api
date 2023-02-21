@@ -1,9 +1,8 @@
-import { ContractActionDocument, MongoDB } from '@alien-worlds/api-core';
+import { ContractActionDocument, MongoDB, removeUndefinedProperties } from '@alien-worlds/api-core';
 
 import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
 import { ProfileError } from '../../data/dtos/profile.dto';
 import { ProfileItem } from './profile-item';
-import { removeUndefinedProperties } from '@common/utils/dto.utils';
 
 /*imports*/
 /**
