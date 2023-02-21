@@ -8,6 +8,7 @@ import { GetCandidatesInput } from './models/get-candidates.input';
 import { GetCandidatesOutput } from './models/get-candidates.output';
 import { ListCandidateProfilesUseCase } from './use-cases/list-candidate-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
+import { isEmptyArray } from '@common/utils/dto.utils';
 
 /*imports*/
 
@@ -73,7 +74,7 @@ export class CandidatesController {
 				upper_bound: dacId,
 			});
 
-			if (result.isFailure) {
+			if (result.isFailure || isEmptyArray(result.content)) {
 				console.warn(`Could not find dac with ID ${dacId}`);
 				return null;
 			}

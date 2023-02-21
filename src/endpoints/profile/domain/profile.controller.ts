@@ -9,6 +9,7 @@ import { IsProfileFlaggedUseCase } from './use-cases/is-profile-flagged.use-case
 import { Profile } from './entities/profile';
 import { ProfileInput } from './models/profile.input';
 import { ProfileOutput } from '../data/dtos/profile.dto';
+import { isEmptyArray } from '@common/utils/dto.utils';
 
 /*imports*/
 
@@ -105,15 +106,15 @@ export class ProfileController {
 				upper_bound: dacId,
 			});
 
-			if (!result.isFailure && result.content && result.content.length) {
-				const dacConfig = DacDirectory.fromStruct(result.content[0]);
-				config.dac.nameCache.set(dacId, dacConfig);
-
-				return dacConfig;
+			if (result.isFailure || isEmptyArray(result.content)) {
+				console.warn(`Could not find dac with ID ${dacId}`);
+				return null;
 			}
 
-			console.warn(`Could not find dac with ID ${dacId}`);
-			return null;
+			const dacConfig = DacDirectory.fromStruct(result.content[0]);
+			config.dac.nameCache.set(dacId, dacConfig);
+
+			return dacConfig;
 		}
 	};
 

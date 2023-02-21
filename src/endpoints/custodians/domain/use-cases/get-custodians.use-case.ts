@@ -31,8 +31,8 @@ export class GetCustodiansUseCase
 			limit,
 		});
 
-		if (Array.isArray(rows) && rows.length === 0) {
-			return Result.withContent([]);
+		if (failure) {
+			return Result.withFailure(failure);
 		}
 
 		const custodians = rows.map(row =>

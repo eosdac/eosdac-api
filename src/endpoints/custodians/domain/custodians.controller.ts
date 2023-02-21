@@ -8,6 +8,7 @@ import { GetCustodiansInput } from './models/get-custodians.input';
 import { GetCustodiansOutput } from './models/get-custodians.output';
 import { ListCustodianProfilesUseCase } from './use-cases/list-custodian-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
+import { isEmptyArray } from '@common/utils/dto.utils';
 
 /*imports*/
 
@@ -69,7 +70,7 @@ export class CustodiansController {
 				upper_bound: dacId,
 			});
 
-			if (result.isFailure) {
+			if (result.isFailure || isEmptyArray(result.content)) {
 				console.warn(`Could not find dac with ID ${dacId}`);
 				return null;
 			}
