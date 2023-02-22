@@ -38,7 +38,7 @@ describe('GetCustodiansOutput', () => {
 			},
 		} as any),
 	] as any;
-	const terms = { rest: { version: 1 }, text: 'terms' } as any;
+	const terms = { version: 1n, text: 'terms' } as any;
 	let custodianProfiles: CustodianProfile[];
 
 	beforeEach(() => {
