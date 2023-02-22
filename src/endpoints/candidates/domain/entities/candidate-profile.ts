@@ -82,7 +82,7 @@ export class CandidateProfile {
 		public readonly isActive: boolean,
 		public readonly totalVotes: number,
 		public readonly voteDecay: number,
-		public readonly profile: unknown,
+		public readonly profile: object,
 		public readonly agreedTermVersion: number,
 		public readonly currentPlanetMemberTermsSignedValid: boolean,
 		public readonly isFlagged: boolean,
@@ -113,6 +113,7 @@ export class CandidateProfile {
 		} = this;
 
 		return {
+			...profile,
 			walletId,
 			requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
 			votePower: Number(votePower),
@@ -121,7 +122,6 @@ export class CandidateProfile {
 			isActive: Number(isActive),
 			totalVotes,
 			voteDecay,
-			profile,
 			agreedTermVersion,
 			currentPlanetMemberTermsSignedValid,
 			isFlagged,
