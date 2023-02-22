@@ -1,13 +1,12 @@
-import { EntityNotFoundError, GetRoute, Request, Result, RouteHandler } from '@alien-worlds/api-core';
+import { EntityNotFoundError, GetRoute, Request, Result, RouteHandler, ValidationResult } from '@alien-worlds/api-core';
 
+import { AjvValidator } from '@src/validator/ajv-validator';
 import { ProfileInput } from '../domain/models/profile.input';
 import { ProfileOutput } from '../domain/models/profile.output';
 import { ProfileRequestDto } from '../data/dtos/profile.dto';
+import { ProfileRequestSchema } from '../schemas';
 
 /*imports*/
-
-
-
 
 /**
  * @class
@@ -21,6 +20,9 @@ export class GetProfileRoute extends GetRoute {
 
   private constructor(handler: RouteHandler) {
     super(['/v1/dao/:dacId/profile', '/v1/eosdac/:dacId/profile'], handler, {
+      validators: {
+        request: validateRequest,
+      },
       hooks: {
         pre: parseRequestToControllerInput,
         post: parseResultToControllerOutput,
@@ -28,6 +30,15 @@ export class GetProfileRoute extends GetRoute {
     });
   }
 }
+
+/**
+ *
+ * @param {Request} request
+ * @returns {ValidationResult}
+ */
+export const validateRequest = (request: Request<ProfileRequestDto>): ValidationResult => {
+  return AjvValidator.initialize().validateHttpRequest(ProfileRequestSchema, request);
+};
 
 /**
  *
