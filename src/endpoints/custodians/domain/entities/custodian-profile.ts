@@ -73,11 +73,13 @@ export class CustodianProfile {
 			planetName,
 		} = this;
 
+		const p = profile || {};
+
 		return {
 			walletId,
 			requestedpay: `${requestedPayment.value} ${requestedPayment.symbol}`,
 			votePower,
-			...profile,
+			...p,
 			agreedTermVersion,
 			currentPlanetMemberTermsSignedValid,
 			isFlagged,
