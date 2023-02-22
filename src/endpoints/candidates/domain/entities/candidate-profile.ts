@@ -38,7 +38,7 @@ export class CandidateProfile {
 			gapFiller,
 		} = candidate;
 
-		const { version } = memberTerms.rest as { version: number };
+		const { version } = memberTerms;
 
 		const voteDecay =
 			new Date(avgVoteTimestamp).getFullYear() > 1970
@@ -60,7 +60,7 @@ export class CandidateProfile {
 			voteDecay,
 			profile?.profile,
 			agreedTermsVersion,
-			version === agreedTermsVersion,
+			Number(version) === agreedTermsVersion,
 			!!profile?.error,
 			false,
 			votedCandidates.includes(name),

@@ -36,6 +36,7 @@ export class GetMemberTermsUseCase
 			scope: dacId.toLowerCase(),
 			code: 'token.worlds',
 			limit,
+			reverse: true
 		});
 
 		if (failure) {

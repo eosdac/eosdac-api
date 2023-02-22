@@ -28,7 +28,7 @@ export class CustodianProfile {
 	): CustodianProfile {
 		const { name, requestedPayment, totalVotePower } = custodian;
 
-		const { version } = memberTerms.rest as { version: number };
+		const { version } = memberTerms;
 		const votePower = totalVotePower / 10000n;
 
 		return new CustodianProfile(
@@ -37,7 +37,7 @@ export class CustodianProfile {
 			Number(votePower),
 			profile?.profile,
 			agreedTermsVersion,
-			version === agreedTermsVersion,
+			Number(version) === agreedTermsVersion,
 			!!profile?.error,
 			false,
 			dacId
