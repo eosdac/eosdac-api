@@ -1,0 +1,87 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "health.response.schema.json",
+    "title": "/health response schema",
+    "type": "object",
+    "properties": {
+        "status": {
+            "type": "string"
+        },
+        "version": {
+            "$ref": "#/$defs/semanticVerString"
+        },
+        "timestamp": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "uptimeSeconds": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "nodeVersion": {
+            "$ref": "#/$defs/semanticVerStringWithPrefix"
+        },
+        "dependencies": {
+            "type": "object",
+            "properties": {
+                "@alien-worlds/api-core": {
+                    "$ref": "#/$defs/semanticVerString"
+                },
+                "@alien-worlds/eosdac-api-common": {
+                    "$ref": "#/$defs/semanticVerString"
+                }
+            },
+            "required": [
+                "@alien-worlds/api-core",
+                "@alien-worlds/eosdac-api-common"
+            ]
+        },
+        "database": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "minLength": 2
+                }
+            },
+            "required": [
+                "status"
+            ]
+        },
+        "blockChainHistory": {
+            "type": "object",
+            "properties": {
+                "currentBlock": {
+                    "$ref": "#/$defs/stringOfAtleastOneDigit"
+                }
+            },
+            "required": [
+                "currentBlock"
+            ]
+        }
+    },
+    "required": [
+        "status",
+        "version",
+        "timestamp",
+        "uptimeSeconds",
+        "nodeVersion",
+        "dependencies",
+        "database",
+        "blockChainHistory"
+    ],
+    "$defs": {
+        "semanticVerString": {
+            "type": "string",
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+        },
+        "semanticVerStringWithPrefix": {
+            "type": "string",
+            "pattern": "^v(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+        },
+        "stringOfAtleastOneDigit": {
+            "type": "string",
+            "pattern": "^\\d+$"
+        }
+    }
+}
