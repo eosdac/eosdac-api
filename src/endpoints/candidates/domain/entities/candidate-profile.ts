@@ -112,8 +112,10 @@ export class CandidateProfile {
 			planetName,
 		} = this;
 
+		const p = profile || {};
+
 		return {
-			...profile,
+			...p,
 			walletId,
 			requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
 			votePower: Number(votePower),
