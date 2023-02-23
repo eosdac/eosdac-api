@@ -1,5 +1,7 @@
-import { GetRoute, Request, Result, RouteHandler } from '@alien-worlds/api-core';
+import { GetRoute, Request, Result, RouteHandler, ValidationResult } from '@alien-worlds/api-core';
 
+import { AjvValidator } from '@src/validator/ajv-validator';
+import { CustodiansRequestSchema } from '../schemas';
 import { GetCustodiansInput } from '../domain/models/get-custodians.input';
 import { GetCustodiansOutput } from '../domain/models/get-custodians.output';
 import { GetCustodiansRequestDto } from '../data/dtos/custodian.dto';
@@ -18,6 +20,9 @@ export class GetCustodiansRoute extends GetRoute {
 
 	private constructor(handler: RouteHandler) {
 		super(['/v1/dao/:dacId/custodians', '/v1/eosdac/:dacId/custodians'], handler, {
+			validators: {
+				request: validateRequest,
+			},
 			hooks: {
 				pre: parseRequestToControllerInput,
 				post: parseResultToControllerOutput,
@@ -25,6 +30,15 @@ export class GetCustodiansRoute extends GetRoute {
 		});
 	}
 }
+
+/**
+ *
+ * @param {Request} request
+ * @returns {ValidationResult}
+ */
+export const validateRequest = (request: Request<GetCustodiansRequestDto>): ValidationResult => {
+	return AjvValidator.initialize().validateHttpRequest(CustodiansRequestSchema, request);
+};
 
 /**
  *

@@ -1,0 +1,80 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "custodians.response.schema.json",
+    "title": "/:dacId/custodians response schema",
+    "type": "array",
+    "minItems": 0,
+    "items": {
+        "$ref": "#/$defs/custodian"
+    },
+    "$defs": {
+        "custodian": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "familyName": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "givenName": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "walletId": {
+                    "$ref": "#/$defs/walletId"
+                },
+                "requestedpay": {
+                    "type": "string"
+                },
+                "votePower": {
+                    "type": "integer"
+                },
+                "agreedTermVersion": {
+                    "type": "integer"
+                },
+                "currentPlanetMemberTermsSignedValid": {
+                    "type": "boolean"
+                },
+                "isFlagged": {
+                    "type": "boolean"
+                },
+                "isSelected": {
+                    "type": "boolean"
+                },
+                "planetName": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "walletId",
+                "requestedpay",
+                "votePower",
+                "agreedTermVersion",
+                "currentPlanetMemberTermsSignedValid",
+                "isFlagged",
+                "isSelected",
+                "planetName"
+            ]
+        },
+        "walletId": {
+            "type": "string",
+            "minLength": 1
+        }
+    }
+}
