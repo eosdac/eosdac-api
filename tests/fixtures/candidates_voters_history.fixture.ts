@@ -22,9 +22,6 @@ export const candidatesVotingHistorySuccessResponse = {
     total: 2
 };
 
-
-
-
 export const candidatesVotingHistorySkipResponse = {
     results: [
         {
@@ -51,4 +48,14 @@ export const candidatesVotingHistoryLimitResponse = {
         }
     ],
     total: 2
+};
+
+export const missingDacIdErrorResponse = {
+    message: 'bad request',
+    errors: ["/query must have required property 'dacId'"]
+};
+
+export const missingCandidateIdErrorResponse = {
+    message: 'bad request',
+    errors: ["/query must have required property 'candidateId'"]
 };

@@ -1,8 +1,10 @@
-import { EntityNotFoundError, GetRoute, Request, Result, RouteHandler } from '@alien-worlds/api-core';
+import { EntityNotFoundError, GetRoute, Request, Result, RouteHandler, ValidationResult } from '@alien-worlds/api-core';
 
+import { AjvValidator } from '@src/validator/ajv-validator';
 import { CandidatesVotersHistoryControllerOutput } from '../data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryInput } from '../domain/models/candidates-voters-history.input';
 import { CandidatesVotersHistoryOutput } from '../domain/models/candidates-voters-history.output';
+import { CandidatesVotersHistoryRequestSchema } from '../schemas';
 
 /*imports*/
 
@@ -18,6 +20,9 @@ export class GetCandidatesVotersHistoryRoute extends GetRoute {
 
   private constructor(handler: RouteHandler) {
     super(['/v1/dao/candidates_voters_history', '/v1/eosdac/candidates_voters_history'], handler, {
+      validators: {
+        request: validateRequest,
+      },
       hooks: {
         pre: parseRequestToControllerInput,
         post: parseResultToControllerOutput,
@@ -25,6 +30,15 @@ export class GetCandidatesVotersHistoryRoute extends GetRoute {
     });
   }
 }
+
+/**
+ *
+ * @param {Request} request
+ * @returns {ValidationResult}
+ */
+export const validateRequest = (request: Request<CandidatesVotersHistoryInput>): ValidationResult => {
+  return AjvValidator.initialize().validateHttpRequest(CandidatesVotersHistoryRequestSchema, request);
+};
 
 /**
  *
