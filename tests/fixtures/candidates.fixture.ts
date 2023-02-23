@@ -22,3 +22,8 @@ export const candidatesSuccessResponse = [
 		"planetName": "nerix"
 	}
 ];
+
+export const errorQueryParamWalletIdMissing = {
+	message: 'bad request',
+	errors: ["/query must have required property 'walletId'"]
+};
