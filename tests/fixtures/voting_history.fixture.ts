@@ -49,3 +49,13 @@ export const votingHistoryLimitResponse = {
     ],
     count: 1
 };
+
+export const missingDacIdErrorResponse = {
+    message: 'bad request',
+    errors: ["/query must have required property 'dacId'"]
+};
+
+export const missingVoterErrorResponse = {
+    message: 'bad request',
+    errors: ["/query must have required property 'voter'"]
+};

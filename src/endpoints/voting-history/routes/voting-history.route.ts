@@ -1,8 +1,10 @@
-import { GetRoute, Request, Result, RouteHandler } from '@alien-worlds/api-core';
-import { UserVote } from '@alien-worlds/eosdac-api-common';
+import { GetRoute, Request, Result, RouteHandler, ValidationResult } from '@alien-worlds/api-core';
 
+import { AjvValidator } from '@src/validator/ajv-validator';
+import { UserVote } from '@alien-worlds/eosdac-api-common';
 import { VotingHistoryInput } from '../domain/models/voting-history.input';
 import { VotingHistoryOutput } from '../domain/models/voting-history.output';
+import { VotingHistoryRequestSchema } from '../schemas';
 
 /*imports*/
 
@@ -18,6 +20,9 @@ export class GetVotingHistoryRoute extends GetRoute {
 
   private constructor(handler: RouteHandler) {
     super(['/v1/dao/voting_history', '/v1/eosdac/voting_history'], handler, {
+      validators: {
+        request: validateRequest,
+      },
       hooks: {
         pre: parseRequestToControllerInput,
         post: parseResultToControllerOutput,
@@ -25,6 +30,16 @@ export class GetVotingHistoryRoute extends GetRoute {
     });
   }
 }
+
+
+/**
+ *
+ * @param {Request} request
+ * @returns {ValidationResult}
+ */
+export const validateRequest = (request: Request<VotingHistoryInput>): ValidationResult => {
+  return AjvValidator.initialize().validateHttpRequest(VotingHistoryRequestSchema, request);
+};
 
 /**
  *
