@@ -39,13 +39,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/dao/health",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/health",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"dao",
+										"{{prefix}}",
 										"health"
 									]
 								}
@@ -93,13 +93,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/dao/health",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/health",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"dao",
+										"{{prefix}}",
 										"health"
 									]
 								}
@@ -164,11 +164,13 @@
 							"query": [
 								{
 									"key": "dacId",
-									"value": "eyeke"
+									"value": "eyeke",
+									"description": "DAC Id"
 								},
 								{
 									"key": "limit",
 									"value": "5",
+									"description": "Maximum number of results",
 									"disabled": true
 								}
 							]
@@ -182,13 +184,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/dao/dacs?limit=5",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/dacs?limit=5",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"dao",
+										"{{prefix}}",
 										"dacs"
 									],
 									"query": [
@@ -247,13 +249,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/dao/dacs?dacId=eyeke",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/dacs?dacId=eyeke",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"dao",
+										"{{prefix}}",
 										"dacs"
 									],
 									"query": [
@@ -336,14 +338,14 @@
 								{
 									"key": "account",
 									"value": "suzqu.wam,mgaqy.wam",
-									"type": "text",
-									"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
+									"description": "Account(s) to fetch. You can supply multiple accounts by separating them with a comma."
 								}
 							],
 							"variable": [
 								{
 									"key": "dacId",
-									"value": "nerix"
+									"value": "nerix",
+									"description": "DAC Id"
 								}
 							]
 						},
@@ -362,16 +364,13 @@
 									}
 								],
 								"url": {
-									"raw": "https://dao-api-test.alienworlds.io/v1/dao/:dacId/profile?account=suzqu.wam,mgaqy.wam",
-									"protocol": "https",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/:dacId/profile?account=suzqu.wam,mgaqy.wam",
 									"host": [
-										"dao-api-test",
-										"alienworlds",
-										"io"
+										"{{base_url}}"
 									],
 									"path": [
-										"v1",
-										"dao",
+										"{{api_version}}",
+										"{{prefix}}",
 										":dacId",
 										"profile"
 									],
@@ -379,7 +378,6 @@
 										{
 											"key": "account",
 											"value": "suzqu.wam,mgaqy.wam",
-											"type": "text",
 											"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
 										}
 									],
@@ -436,13 +434,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/dao/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/:dacId/profile?account=suzqu.wam,mgaqy.wam",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"dao",
+										"{{prefix}}",
 										":dacId",
 										"profile"
 									],
@@ -450,7 +448,6 @@
 										{
 											"key": "account",
 											"value": "suzqu.wam,mgaqy.wam",
-											"type": "text",
 											"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
 										}
 									],
@@ -511,13 +508,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/dao/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/:dacId/profile?account=suzqu.wam,mgaqy.wam",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"dao",
+										"{{prefix}}",
 										":dacId",
 										"profile"
 									],
@@ -525,7 +522,6 @@
 										{
 											"key": "account",
 											"value": "suzqu.wam,mgaqy.wam",
-											"type": "text",
 											"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
 										}
 									],
@@ -648,13 +644,15 @@
 							"query": [
 								{
 									"key": "walletId",
-									"value": ".1uqy.wam"
+									"value": ".1uqy.wam",
+									"description": "Wallet Id"
 								}
 							],
 							"variable": [
 								{
 									"key": "dacId",
-									"value": "nerix"
+									"value": "nerix",
+									"description": "DAC Id"
 								}
 							]
 						},
@@ -673,16 +671,13 @@
 									}
 								],
 								"url": {
-									"raw": "https://dao-api-test.alienworlds.io/v1/dao/:dacId/candidates?walletId=.1uqy.wam",
-									"protocol": "https",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/:dacId/candidates?walletId=.1uqy.wam",
 									"host": [
-										"dao-api-test",
-										"alienworlds",
-										"io"
+										"{{base_url}}"
 									],
 									"path": [
-										"v1",
-										"dao",
+										"{{api_version}}",
+										"{{prefix}}",
 										":dacId",
 										"candidates"
 									],
@@ -767,7 +762,8 @@
 							"variable": [
 								{
 									"key": "dacId",
-									"value": "nerix"
+									"value": "nerix",
+									"description": "DAC Id"
 								}
 							]
 						},
@@ -786,16 +782,13 @@
 									}
 								],
 								"url": {
-									"raw": "https://dao-api-test.alienworlds.io/v1/dao/:dacId/custodians",
-									"protocol": "https",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/:dacId/custodians",
 									"host": [
-										"dao-api-test",
-										"alienworlds",
-										"io"
+										"{{base_url}}"
 									],
 									"path": [
-										"v1",
-										"dao",
+										"{{api_version}}",
+										"{{prefix}}",
 										":dacId",
 										"custodians"
 									],
@@ -912,19 +905,23 @@
 							"query": [
 								{
 									"key": "dacId",
-									"value": "nerix"
+									"value": "nerix",
+									"description": "DAC Id"
 								},
 								{
 									"key": "candidateId",
-									"value": "51mqs.wam"
+									"value": "51mqs.wam",
+									"description": "Wallet Id of the candidate or custodian for which voters need to be fetched. "
 								},
 								{
 									"key": "skip",
-									"value": "0"
+									"value": "0",
+									"description": "Number of results to skip"
 								},
 								{
 									"key": "limit",
-									"value": "20"
+									"value": "20",
+									"description": "Maximum number of results"
 								}
 							]
 						}
@@ -937,16 +934,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://dao-api-test.alienworlds.io/v1/dao/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=0&limit=20",
-									"protocol": "https",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=0&limit=20",
 									"host": [
-										"dao-api-test",
-										"alienworlds",
-										"io"
+										"{{base_url}}"
 									],
 									"path": [
-										"v1",
-										"dao",
+										"{{api_version}}",
+										"{{prefix}}",
 										"candidates_voters_history"
 									],
 									"query": [
@@ -1073,19 +1067,23 @@
 							"query": [
 								{
 									"key": "dacId",
-									"value": "nerix"
+									"value": "nerix",
+									"description": "DAC Id"
 								},
 								{
 									"key": "voter",
-									"value": ".1uqy.wam"
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of the voter for which history needs to be fetched"
 								},
 								{
 									"key": "skip",
-									"value": "0"
+									"value": "0",
+									"description": "Number of results to skip"
 								},
 								{
 									"key": "limit",
-									"value": "100"
+									"value": "100",
+									"description": "Maximum number of results"
 								}
 							]
 						}
@@ -1098,13 +1096,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/{{api_version}}/dao/voting_history?dacId=nerix&voter=.1uqy.wam&skip=0&limit=100",
+									"raw": "{{base_url}}/{{api_version}}/{{prefix}}/voting_history?dacId=nerix&voter=.1uqy.wam&skip=0&limit=100",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"{{api_version}}",
-										"dao",
+										"{{prefix}}",
 										"voting_history"
 									],
 									"query": [
@@ -1173,7 +1171,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "2d2d0961-6b83-427a-bfcb-c9654185f200",
+				"id": "8ada314f-4d0f-4eb9-aaa9-3f5844d65d6b",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1183,12 +1181,20 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "9aa6dd88-e6ef-4562-8692-b0871a0184df",
+				"id": "d0500f0b-f0f8-4788-8cb9-f0fd19179f54",
 				"type": "text/javascript",
 				"exec": [
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"id": "d6348344-244f-4919-9120-1c4e09a945ff",
+			"key": "prefix",
+			"value": "dao",
+			"type": "string"
 		}
 	]
 }
