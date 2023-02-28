@@ -3,17 +3,16 @@
 
 process.title = 'dao-api';
 
-import * as fastifyCORS from 'fastify-cors';
-import * as fastifyOAS from 'fastify-oas';
-
+import { Container, Route } from '@alien-worlds/api-core';
 import fastify, { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
 import { CandidatesController } from './endpoints/candidates/domain/candidates.controller';
 import { CandidatesVotersHistoryController } from './endpoints/candidates-voters-history/domain/candidates-voters-history.controller';
 import { config } from './config';
-import { Container, Route } from '@alien-worlds/api-core';
 import { CustodiansController } from './endpoints/custodians/domain/custodians.controller';
+import fastifyCORS from 'fastify-cors';
+import fastifyOAS from 'fastify-oas';
 import { GetCandidatesRoute } from './endpoints/candidates/routes/get-candidates.route';
 import { GetCandidatesVotersHistoryRoute } from './endpoints/candidates-voters-history/routes/candidates-voters-history.route';
 import { GetCustodiansRoute } from './endpoints/custodians/routes/get-custodians.route';

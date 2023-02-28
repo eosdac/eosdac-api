@@ -3,7 +3,11 @@ import {
 	Request,
 	Result,
 	RouteHandler,
+	ValidationResult,
 } from '@alien-worlds/api-core';
+
+import { AjvValidator } from '@src/validator/ajv-validator';
+import { CandidatesRequestSchema } from '../schemas';
 import { GetCandidatesInput } from '../domain/models/get-candidates.input';
 import { GetCandidatesOutput } from '../domain/models/get-candidates.output';
 import { GetCandidatesRequestDto } from '../data/dtos/candidate.dto';
@@ -22,6 +26,9 @@ export class GetCandidatesRoute extends GetRoute {
 
 	private constructor(handler: RouteHandler) {
 		super(['/v1/dao/:dacId/candidates', '/v1/eosdac/:dacId/candidates'], handler, {
+			validators: {
+				request: validateRequest,
+			},
 			hooks: {
 				pre: parseRequestToControllerInput,
 				post: parseResultToControllerOutput,
@@ -29,6 +36,15 @@ export class GetCandidatesRoute extends GetRoute {
 		});
 	}
 }
+
+/**
+ *
+ * @param {Request} request
+ * @returns {ValidationResult}
+ */
+export const validateRequest = (request: Request<GetCandidatesRequestDto>): ValidationResult => {
+	return AjvValidator.initialize().validateHttpRequest(CandidatesRequestSchema, request);
+};
 
 /**
  *
