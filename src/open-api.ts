@@ -1,15 +1,13 @@
-export default {
-	routePrefix: '/v1/eosdac/docs',
+import { FastifyStaticSwaggerOptions } from '@fastify/swagger';
+
+const options: FastifyStaticSwaggerOptions = {
+	mode: 'static',
+	routePrefix: '/v1/dao/docs',
 	exposeRoute: true,
-	swagger: {
-		info: {
-			title: 'eosDAC API',
-			description: 'API for running DACs',
-			version: '1.0.0',
-		},
-		host: process.env.HOST_NAME,
-		schemes: ['https'],
-		consumes: ['application/json'],
-		produces: ['application/json'],
+	specification: {
+		path: './docs/dao-api-oas.yaml',
+		baseDir: '',
 	},
 };
+
+export default options;
