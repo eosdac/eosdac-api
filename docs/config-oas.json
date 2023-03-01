@@ -1,0 +1,12 @@
+{
+    "responseHeaders": false,
+    "disabledParams": {
+        "includeQuery": true
+    },
+    "servers": [
+        {
+            "description": "Test server",
+            "url": "https://dao-api-test.alienworlds.io/v1/dao"
+        }
+    ]
+}

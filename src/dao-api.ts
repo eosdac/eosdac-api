@@ -12,7 +12,7 @@ import { CandidatesVotersHistoryController } from './endpoints/candidates-voters
 import { config } from './config';
 import { CustodiansController } from './endpoints/custodians/domain/custodians.controller';
 import fastifyCORS from 'fastify-cors';
-import fastifyOAS from 'fastify-oas';
+import { fastifySwagger } from '@fastify/swagger';
 import { GetCandidatesRoute } from './endpoints/candidates/routes/get-candidates.route';
 import { GetCandidatesVotersHistoryRoute } from './endpoints/candidates-voters-history/routes/candidates-voters-history.route';
 import { GetCustodiansRoute } from './endpoints/custodians/routes/get-custodians.route';
@@ -39,7 +39,7 @@ export const buildAPIServer = async () => {
 		}
 	);
 
-	api.register(fastifyOAS, openApiOptions);
+	api.register(fastifySwagger, openApiOptions)
 
 	// Set IOC
 	const apiIoc = await setupEndpointDependencies(new Container(), config);
@@ -125,7 +125,6 @@ export const buildAPIServer = async () => {
 				`Started API server with config ${config.environment} on ${config.host || '127.0.0.1'
 				}:${config.port}`
 			);
-			await api.oas();
 		},
 		err => {
 			console.error('Error starting API', err);

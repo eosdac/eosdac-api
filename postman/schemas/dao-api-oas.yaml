@@ -1,0 +1,3605 @@
+openapi: 3.0.0
+info:
+  title: dao-api
+  description: >-
+    This document describes APIs for DAO related operations.
+
+
+    All paths are prefixed with `/v1/dao`.
+
+
+    The old prefix i.e. `/v1/eosdac` is currently supported but it will soon be
+    permanently removed.  
+
+    API clients are encouraged to start migrating their apps to utilise the new
+    prefix.
+  version: 1.0.0
+servers:
+  - url: https://dao-api-test.alienworlds.io/v1/dao
+    description: Test server
+paths:
+  /dacs:
+    get:
+      tags:
+        - default
+      summary: List all DACs and their respective info
+      description: >-
+        Provides list of all available DACs along with their respective detailed
+        information e.g. balance, statistics and globals.
+      parameters:
+        - name: dacId
+          in: query
+          schema:
+            type: string
+          description: 'Filter the list by dacId. <br><br>[length: 5-6 characters]'
+          example: eyeke
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: 'Maximum items to return. <br><br>[min: 1]'
+          example: '2'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: list all dacs
+                  value:
+                    results:
+                      - id: ''
+                        dacId: eyeke
+                        owner: eyeke.dac
+                        title: Eyeke
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: EYE
+                          precision: 4
+                        refs:
+                          logoUrl: QmW1SeninpNQUMLstTPFTv7tMkRdBZMHBJTgf17Znr1uKK
+                          description: >-
+                            Also known as Second Earth or Terra Alterna as it is
+                            the nearest, and closest, of all Alien Worlds to
+                            Earth. Humans found Eyeke inhabited by a Monastic
+                            order of Greys who believe that Eyeke is a spiritual
+                            place. Despite initial fears, Trilium mining seems
+                            to be tolerated by the Monks at this time.
+                          rest:
+                            '12': QmUXjmrQ6j2ukCdPjacdQ48MmYo853u4Y5y3kb5b4HBuuF
+                        accounts:
+                          auth: eyeke.world
+                          treasury: eyeke.world
+                          custodian: dao.worlds
+                          msigOwned: eyeke.dac
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: eyeke.dac
+                        dacTreasury:
+                          balance: 10328468.8974 TLM
+                        dacStats:
+                          supply: 2489624.2485 EYE
+                          maxSupply: 10000000000 EYE
+                          issuer: federation
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '2023-02-19T12:42:44'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2023-02-19T12:23:45'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 EYE
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 11
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 604800
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - '80813862696'
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - '16435214170'
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                      - id: ''
+                        dacId: kavian
+                        owner: kavian.dac
+                        title: Kavian
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: KAV
+                          precision: 4
+                        refs:
+                          logoUrl: QmY9n6yWcyYLKJuZ2EVnL1m7iSFovA1GCabhgDa4H1gbZN
+                          description: >-
+                            Although most land on Kavian is rocky and icy, there
+                            are some unusual areas where  diverse bio-systems
+                            have flourished. Legend has it that these areas were
+                            terraformed by ancient aliens. Kavian has a number
+                            of small Reptiloid villages.
+                          rest:
+                            '12': QmdihYLTt6T1G3N9jHs1bnUSGRTZHyQJPYwh9edLsnjPiK
+                        accounts:
+                          auth: kavian.world
+                          treasury: kavian.world
+                          custodian: dao.worlds
+                          msigOwned: kavian.dac
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: kavian.dac
+                        dacTreasury:
+                          balance: 21732275.7465 TLM
+                        dacStats:
+                          supply: 6913743.154 KAV
+                          maxSupply: 10000000000 KAV
+                          issuer: federation
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '2023-02-21T16:19:50'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2023-02-19T12:23:45'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 KAV
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 14
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 604800
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - '163980551718'
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - '37153189507'
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                      - id: ''
+                        dacId: magor
+                        owner: magor.dac
+                        title: Magor
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: MAG
+                          precision: 4
+                        refs:
+                          logoUrl: QmTSecCGktdAt7xLZs7vqiXuxe3zMNpvsSy16LQ7ShwNN5
+                          description: >-
+                            Magor has the most hostile planetary environment in
+                            the federation. Due to the volcanic activity, the
+                            sky is covered in smoke and the terrain is extremely
+                            mountainous. There are no permanent settlements but
+                            the sandy part of Magor is considered an anomaly; It
+                            is rumoured that the sand covers many ancient
+                            secrets.
+                          rest:
+                            '12': Qmd41ZeVAzUoaVbvuEYcuTm3D2j2rwNJ8WjSnrFk7TneAq
+                        accounts:
+                          auth: magor.world
+                          treasury: magor.world
+                          custodian: dao.worlds
+                          msigOwned: magor.dac
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: magor.dac
+                        dacTreasury:
+                          balance: 10386773.8947 TLM
+                        dacStats:
+                          supply: 3266267.7531 MAG
+                          maxSupply: 10000000000 MAG
+                          issuer: federation
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '2023-02-19T18:47:52'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2023-02-19T12:23:45'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 MAG
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 15
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 604800
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - '84466944490'
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - '19987040689'
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                      - id: ''
+                        dacId: naron
+                        owner: naron.dac
+                        title: Naron
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: NAR
+                          precision: 4
+                        refs:
+                          logoUrl: QmRNzgY1gBqAS3H7nadRNg19g6aTW8hqB2EJCMX8nXFcpx
+                          description: >-
+                            Naron is also a striped planet and it's geological
+                            structure has given rise to distinctive bands of
+                            environments. Large icy caps give way to mountainous
+                            terrains on both hemispheres. Then come rocky and
+                            grassy terrains with 2 huge lakes and sandy desert
+                            nearer the equator. The island in the largest lake
+                            (Lake Nyari) is held sacred by many alien races and
+                            has rival claims have caused major conflicts.
+                          rest:
+                            '12': QmX2ui6n2thrF1JZuDfsu3VHsMCHhzQe3CxsJ3raUnjsPj
+                        accounts:
+                          auth: naron.world
+                          treasury: naron.world
+                          custodian: dao.worlds
+                          msigOwned: naron.dac
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: naron.dac
+                        dacTreasury:
+                          balance: 10450704.3993 TLM
+                        dacStats:
+                          supply: 4590886.4277 NAR
+                          maxSupply: 10000000000 NAR
+                          issuer: federation
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '2023-02-21T08:54:27'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2023-02-19T12:23:45'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 NAR
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 16
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 604800
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - '53170741782'
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - '13513772085'
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                      - id: ''
+                        dacId: nerix
+                        owner: neri.dac
+                        title: Neri
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: NER
+                          precision: 4
+                        refs:
+                          logoUrl: QmbpdwnKXR2YHkgo7vQSvrQUbMJ4QYJMiAXKs8hj26XyNW
+                          description: >-
+                            A striped planet with largest forest and sandy
+                            areas, Neri also has some of the largest areas of
+                            methane swamplands. Large numbers of little green
+                            people have made the forests of Neri their home but
+                            they aim to live in balance with nature so casual
+                            visitors may not even notice the colonies.
+                          rest:
+                            '12': QmWeJmvhfG3WioNYCRwM9584xEd5tJU8cihXNRGncLz3xg
+                        accounts:
+                          auth: neri.world
+                          treasury: neri.world
+                          custodian: dao.worlds
+                          msigOwned: neri.dac
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: neri.dac
+                        dacTreasury:
+                          balance: 27225049.4747 TLM
+                        dacStats:
+                          supply: 10533629.3882 NER
+                          maxSupply: 10000000000 NER
+                          issuer: federation
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '2023-02-20T02:31:54'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2023-02-19T12:23:45'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 NER
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 26
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 604800
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - '254251955547'
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - '54370410541'
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                      - id: ''
+                        dacId: testa
+                        owner: testadacdacc
+                        title: Test A
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: TESTA
+                          precision: 4
+                        refs:
+                          logoUrl: QmSVnZ6gLCGTqwWeDuGnD8XqT7iBMfnwiZhD8eNcNwvcZ4
+                          description: >-
+                            This would be the description of Test A DAO. This
+                            text is simply a place holder. The image and the map
+                            image has been copied from Veles for convenience.
+                          rest:
+                            '12': QmPWAMikwcE6CCEiZ7VtoET1Lp5NT1Z7gvNk31stNSgLbN
+                        accounts:
+                          auth: testdaca.dac
+                          treasury: testdaca.dac
+                          custodian: dao.worlds
+                          msigOwned: testadacdacc
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: testadacdacc
+                        dacTreasury:
+                          balance: 1450.0781 TLM
+                        dacStats:
+                          supply: 11000000 TESTA
+                          maxSupply: 10000000000 TESTA
+                          issuer: ameet.worlds
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '2022-11-02T22:11:23'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2023-02-24T13:19:37'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 TESTA
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 17
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 60
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - '51341440213'
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - '7295280036'
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                      - id: ''
+                        dacId: testb
+                        owner: testb.dac
+                        title: Test B
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: TESTB
+                          precision: 4
+                        refs:
+                          rest: {}
+                        accounts:
+                          treasury: testbdacdacc
+                          custodian: dao.worlds
+                          msigOwned: testb.dac
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: testb.dac
+                        dacStats:
+                          supply: 1000000000 TESTB
+                          maxSupply: 10000000000 TESTB
+                          issuer: ameet.worlds
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '1970-01-01T00:00:00'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2022-10-16T11:49:49'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 TESTB
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 12
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 60
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - 1002777776
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - 1000000000
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                      - id: ''
+                        dacId: veles
+                        owner: veles.dac
+                        title: Veles
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: VEL
+                          precision: 4
+                        refs:
+                          logoUrl: QmSVnZ6gLCGTqwWeDuGnD8XqT7iBMfnwiZhD8eNcNwvcZ4
+                          description: >-
+                            With almost as much of a water world as Earth, Veles
+                            has some of the most beautiful landscapes found thus
+                            far in the universe. It's islands are home to some
+                            unique exoflora. Nordic aliens often visit Veles on
+                            their travels and some have made it their main home.
+                          rest:
+                            '12': QmPWAMikwcE6CCEiZ7VtoET1Lp5NT1Z7gvNk31stNSgLbN
+                        accounts:
+                          auth: veles.world
+                          treasury: veles.world
+                          custodian: dao.worlds
+                          msigOwned: veles.dac
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: veles.dac
+                        dacTreasury:
+                          balance: 10038426.3174 TLM
+                        dacStats:
+                          supply: 3880911.0535 VEL
+                          maxSupply: 10000000000 VEL
+                          issuer: federation
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '2023-02-19T12:45:22'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2023-02-19T12:23:45'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 VEL
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 12
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 604800
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - '61235564344'
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - '12831333483'
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                    count: 8
+                example-1:
+                  summary: filter by dacId
+                  value:
+                    results:
+                      - id: ''
+                        dacId: kavian
+                        owner: kavian.dac
+                        title: Kavian
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: KAV
+                          precision: 4
+                        refs:
+                          logoUrl: QmY9n6yWcyYLKJuZ2EVnL1m7iSFovA1GCabhgDa4H1gbZN
+                          description: >-
+                            Although most land on Kavian is rocky and icy, there
+                            are some unusual areas where  diverse bio-systems
+                            have flourished. Legend has it that these areas were
+                            terraformed by ancient aliens. Kavian has a number
+                            of small Reptiloid villages.
+                          rest:
+                            '12': QmdihYLTt6T1G3N9jHs1bnUSGRTZHyQJPYwh9edLsnjPiK
+                        accounts:
+                          auth: kavian.world
+                          treasury: kavian.world
+                          custodian: dao.worlds
+                          msigOwned: kavian.dac
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: kavian.dac
+                        dacTreasury:
+                          balance: 21783743.8109 TLM
+                        dacStats:
+                          supply: 6852355.9229 KAV
+                          maxSupply: 10000000000 KAV
+                          issuer: federation
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '2023-02-21T16:19:50'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2023-02-26T12:46:32'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 KAV
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 14
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 604800
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - '229944809582'
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - '46722602919'
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                    count: 1
+                example-2:
+                  summary: apply limit to list
+                  value:
+                    results:
+                      - id: ''
+                        dacId: eyeke
+                        owner: eyeke.dac
+                        title: Eyeke
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: EYE
+                          precision: 4
+                        refs:
+                          logoUrl: QmW1SeninpNQUMLstTPFTv7tMkRdBZMHBJTgf17Znr1uKK
+                          description: >-
+                            Also known as Second Earth or Terra Alterna as it is
+                            the nearest, and closest, of all Alien Worlds to
+                            Earth. Humans found Eyeke inhabited by a Monastic
+                            order of Greys who believe that Eyeke is a spiritual
+                            place. Despite initial fears, Trilium mining seems
+                            to be tolerated by the Monks at this time.
+                          rest:
+                            '12': QmUXjmrQ6j2ukCdPjacdQ48MmYo853u4Y5y3kb5b4HBuuF
+                        accounts:
+                          auth: eyeke.world
+                          treasury: eyeke.world
+                          custodian: dao.worlds
+                          msigOwned: eyeke.dac
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: eyeke.dac
+                        dacTreasury:
+                          balance: 10145834.1543 TLM
+                        dacStats:
+                          supply: 3967968.1267 EYE
+                          maxSupply: 10000000000 EYE
+                          issuer: federation
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '2023-02-26T13:52:27'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2023-02-26T12:46:32'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 EYE
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 11
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 604800
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - '156067119991'
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - '31484701762'
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                      - id: ''
+                        dacId: kavian
+                        owner: kavian.dac
+                        title: Kavian
+                        dacState: 0
+                        symbol:
+                          contract: token.worlds
+                          code: KAV
+                          precision: 4
+                        refs:
+                          logoUrl: QmY9n6yWcyYLKJuZ2EVnL1m7iSFovA1GCabhgDa4H1gbZN
+                          description: >-
+                            Although most land on Kavian is rocky and icy, there
+                            are some unusual areas where  diverse bio-systems
+                            have flourished. Legend has it that these areas were
+                            terraformed by ancient aliens. Kavian has a number
+                            of small Reptiloid villages.
+                          rest:
+                            '12': QmdihYLTt6T1G3N9jHs1bnUSGRTZHyQJPYwh9edLsnjPiK
+                        accounts:
+                          auth: kavian.world
+                          treasury: kavian.world
+                          custodian: dao.worlds
+                          msigOwned: kavian.dac
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          spendings: kavian.dac
+                        dacTreasury:
+                          balance: 21783743.8109 TLM
+                        dacStats:
+                          supply: 6852355.9229 KAV
+                          maxSupply: 10000000000 KAV
+                          issuer: federation
+                          transferLocked: false
+                        dacGlobals:
+                          - key: auth_threshold_high
+                            value:
+                              - uint8
+                              - 3
+                          - key: auth_threshold_low
+                            value:
+                              - uint8
+                              - 2
+                          - key: auth_threshold_mid
+                            value:
+                              - uint8
+                              - 3
+                          - key: budget_percentage
+                            value:
+                              - uint32
+                              - 200
+                          - key: initial_vote_quorum_percent
+                            value:
+                              - uint32
+                              - 2
+                          - key: lastclaimbudgettime
+                            value:
+                              - time_point_sec
+                              - '2023-02-21T16:19:50'
+                          - key: lastperiodtime
+                            value:
+                              - time_point_sec
+                              - '2023-02-26T12:46:32'
+                          - key: lockup_release_time_delay
+                            value:
+                              - uint32
+                              - 1
+                          - key: lockupasset
+                            value:
+                              - extended_asset
+                              - quantity: 5000.0000 KAV
+                                contract: token.worlds
+                          - key: maxvotes
+                            value:
+                              - uint8
+                              - 2
+                          - key: met_initial_votes_threshold
+                            value:
+                              - bool
+                              - 1
+                          - key: number_active_candidates
+                            value:
+                              - uint32
+                              - 14
+                          - key: numelected
+                            value:
+                              - uint8
+                              - 5
+                          - key: periodlength
+                            value:
+                              - uint32
+                              - 604800
+                          - key: requested_pay_max
+                            value:
+                              - extended_asset
+                              - quantity: 0.0000 TLM
+                                contract: alien.worlds
+                          - key: should_pay_via_service_provider
+                            value:
+                              - bool
+                              - 0
+                          - key: token_supply_theshold
+                            value:
+                              - uint64
+                              - 100000000
+                          - key: total_votes_on_candidates
+                            value:
+                              - int64
+                              - '229944809582'
+                          - key: total_weight_of_votes
+                            value:
+                              - int64
+                              - '46722602919'
+                          - key: vote_quorum_percent
+                            value:
+                              - uint32
+                              - 1
+                    count: 2
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - short dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have fewer than 5 characters
+                example-1:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have more than 6 characters
+                example-2:
+                  summary: 400 - invalid limit
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/limit must be >= 1
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: >-
+                  Data with dummy in scope: 'index.worlds' table: 'dacs' scope
+                  not found
+  /{dacId}/profile:
+    get:
+      tags:
+        - default
+      summary: Get member profile
+      description: Get user profile
+      parameters:
+        - name: account
+          in: query
+          schema:
+            type: string
+          required: true
+          description: >-
+            Account(s) to fetch. It can accept multiple accounts separated by a
+            comma. <br><br>[min length: 1]
+          example: suzqu.wam,mgaqy.wam
+        - name: dacId
+          in: path
+          schema:
+            type: string
+          required: true
+          description: 'DAC Id. <br><br>[Required] [length: 5-6 characters]'
+          example: nerix
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: single account
+                  value:
+                    results:
+                      - account: suzqu.wam
+                        block_num: 105578904
+                        member_type: 0
+                        profile:
+                          description: I am squanching in here
+                          familyName: Squanch
+                          givenName: Squanchy
+                          image: >-
+                            https://vignette1.wikia.nocookie.net/rickandmorty/images/5/56/S2e10_squanchy_close.png/revision/latest?cb=20160923052032
+                    count: 1
+                example-1:
+                  summary: flagged candidate
+                  value:
+                    results:
+                      - account: awtesteroo12
+                        error:
+                          name: Redacted Candidate
+                          body: >-
+                            Candidate "awtesteroo12" profile has been flagged
+                            for supplying inappropriate content.
+                    count: 1
+                example-2:
+                  summary: multiple accounts
+                  value:
+                    results:
+                      - block_num: '209788070'
+                        account: mgaqy.wam
+                        profile:
+                          description: "Together We Grow\_\n\nThe Goiter is the longest standing political party in all of Alien Worlds. We predate everyone and stand fast to all commitments. \n\nDon't worry, you can trust us....\n\nt.me/thegoiter\nhttps://twitter.com/nftstan"
+                          givenName: The Goiter
+                          image: >-
+                            https://gateway.pinata.cloud/ipfs/Qmci9dg78RySNm3dbQuSynd7PuEbiaUFdaWwQV7WTZDAxu
+                      - block_num: '105578904'
+                        account: suzqu.wam
+                        profile:
+                          description: I am squanching in here
+                          familyName: Squanch
+                          givenName: Squanchy
+                          image: >-
+                            https://vignette1.wikia.nocookie.net/rickandmorty/images/5/56/S2e10_squanchy_close.png/revision/latest?cb=20160923052032
+                    count: 2
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - missing account
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/account must NOT have fewer than 1 characters
+                example-1:
+                  summary: 400 - missing dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have fewer than 5 characters
+                example-2:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have more than 6 characters
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: profile not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                results: []
+                count: 0
+  /{dacId}/candidates:
+    get:
+      tags:
+        - default
+      summary: Get candidates by planet
+      description: Get candidates
+      parameters:
+        - name: walletId
+          in: query
+          schema:
+            type: string
+          required: true
+          description: 'Wallet Id <br><br>[min length: 1]'
+          example: .1uqy.wam
+        - name: dacId
+          in: path
+          schema:
+            type: string
+          required: true
+          description: 'DAC Id. <br><br>[Required] [length: 5-6 characters]'
+          example: nerix
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: list candidates
+                  value:
+                    - description: >-
+                        For the record:   
+
+                        I have never voted from a second wallet.   
+
+                        I do not run bots.   
+
+                        And I am not & never was part of any plan to take Kavian
+                        tokens.   
+
+
+                        No one from the AW nor Krown community gave me any prior
+                        information of the movement of these funds.   I was not,
+                        and am not involved.   
+
+
+                        Those that have worked with me in the space over the
+                        last 5 years will know that I promote and work towards
+                        transparency, reputation & governance.
+
+
+                        *******
+
+
+                        Many exciting updates to come soon.
+
+
+                        NERI is about FUN!!!
+
+
+                        Lets connect in the virtual & real world with events and
+                        play.
+
+
+                        More about Duane:
+
+                        Profile:
+
+                        https://genesis.eden.eoscommunity.org/members/dphillippi33
+
+
+                        TG: 
+
+                        @dphillippi
+
+
+                        Email: 
+
+                        duane@csx.io
+
+
+                        AW Weekly Meetup:
+
+                        https://gofractally.com/events/aw-community-fractal-weekly-meetup
+
+
+                        Youtube:
+
+                        https://www.youtube.com/c/KROWNDAC
+
+
+                        Signal Station:
+
+                        https://wax.consortium.vote
+                      givenName: Duane
+                      image: >-
+                        https://s.gravatar.com/avatar/3073d86e8584d5614995f19aaf90f13c?s=80
+                      walletId: 51mqs.wam
+                      requestedpay: 0 TLM
+                      votePower: 13303058
+                      rank: 6840560
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 125
+                      voteDecay: 4
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: true
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Greetings and Salutations.  My name is ADAM, and I am
+                        simply the best candidate for AW. I have a DEGREE IN
+                        POLITICAL SCIENCE. I’ve been in CRYPTO SINCE 2013 and
+                        have been a DAO PARTICIPANT SINCE 2018 and an elected
+                        DAO CUSTODIAN SINCE 2019. My platform is simple: REWARD
+                        PARTICIPATION, BUILD COMMUNITY.
+
+
+                        As a member of KINDER PARTY, I will ensure that we
+                        provide the BEST REWARDS for our participants.
+
+
+                        Our Mission:
+
+                        Adding Value to the Ecosystem through COMMUNITY
+                        BUILDING, PARTICIPATION REWARDS, DEVELOPMENT, and
+                        PROMOTIONS.
+
+
+                        At Kinder Party we have the MOST QUALIFIED, MOST
+                        EXPERIENCED candidates.  With a combined total of over
+                        15 YEARS EXPERIENCE IN DAOs, and over 30 YEARS
+                        EXPERIENCE IN BLOCKCHAIN, our candidates are
+                        specifically qualified to govern a planet in the
+                        Metaverse.
+
+
+                        We’ve learned a lot from our previous experience, when
+                        we CREATED THE FIRST INDEPENDENT EOS DAO.. 
+
+
+                        We know that building a COMMUNITY IS ALL ABOUT YOU!.  
+                        Our team is dedicated to providing value to the
+                        ecosystem through rewarding participation, building
+                        tools, and creating unique experiences for our voters.
+
+
+                        VOTE FOR THE BEST REWARDS!
+
+                        VOTE FOR THE MOST EXPERIENCE!
+
+                        VOTE FOR KINDER PARTY!
+
+
+                        To learn more visit our website at kinderparty.io
+                      givenName: Adam
+                      image: https://www.flickr.com/photos/130863568@N04/52444486403/
+                      walletId: a.d3u.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 10018856
+                      rank: 6836831
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 74
+                      voteDecay: 3
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: "I'm a member of the CryptomonKeys community, a community that its core value is fairness! It is my believe that we can ensure the prosperity of all parties involved by creating a healthy and fair environment. Our Banano and CryptomonKeys track record insures that miners, stakers and land owners are all going to be heard and that any decision will be based on what is best for the ecosystem!\_Some extra information about me: I have been involved with cryptocurrencies for the past 3 years on a personal basis. Since September 2020 I have started writing about NFTs on my blog in Publish0x and since the early days I have been a member of the CryptomonKeys community. When Alien Worlds started I saw the need to help new players and especially those that don't have deep pockets, thus I created the Help the Monkey Mine Foundation that lends tools to miners in need. DrYunani\_represents cryptomonKeys, the freely distributed NFTs on Wax. To date the cryptomonKeys project has sent out more than 55,000 NFTs to Neri miners and stakers, comprising the largest and most valuable community rewards program in the MetaVerse.\n\nMore about cryptomonKeys here:\_ \n\nhttps://twitter.com/crypt0monkeys/\n\nhttps://t.me/crypt0monKeys\n\nhttps://chat.cryptomonkeys.cc/"
+                      givenName: DrYunani
+                      image: >-
+                        https://gateway.pinata.cloud/ipfs/QmacwcRfyvHvETnAUTeD1CQgAnoVFiEgx3kWVmrX6X6LwV
+                      walletId: a52qw.wam
+                      requestedpay: 0 TLM
+                      votePower: 13667149
+                      rank: 6841310
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 242
+                      voteDecay: 3
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: true
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        I've been a supporter of Alienworlds since before it got
+                        announced to the world, started by creating the first
+                        cinematic trailer, which showcases the capacity of what
+                        Alienworlds could be, and still can become. Throw your
+                        votes my way, and I will do my best to help steer the
+                        alienworlds ecosystem the right way forward.
+                      givenName: Anyobservation
+                      image: https://anyo.io/static/images/anyo.png
+                      walletId: anyo.cabal
+                      requestedpay: 0 TLM
+                      votePower: 13529752
+                      rank: 6840629
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 98
+                      voteDecay: 4
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: "Vyryn is the Tiger of Neri, a monKeyprinter and avid monKeyminer. He believes in free distribution for everyone, and has pursued projects in accordance with that ideal. From being an advocate for Fast and Feeless on social media to creating the first ever NFT Tipbot, he promotes free access to crypto and NFT education. Vyryn represents cryptomonKeys, freely distributed NFTs on Wax. To date the cryptomonKeys project has sent out more than 65,000 NFTs to Neri miners and stakers, comprising the largest and most valuable community rewards program in the MetaVerse. Vote for Vyryn today for a Neri rich in Potassium and lush with monkeys.\nLearn more about cryptomonKeys at\_https://www.cryptomonkeys.cc and meet Vyryn in our thriving discord community."
+                      givenName: Vyryn
+                      image: >-
+                        https://gateway.pinata.cloud/ipfs/QmPxRxS6MxYiA2nZRqGqKyoaVnEbBRhoFxsSbMm3emmcuo
+                      walletId: b52qw.wam
+                      requestedpay: 0 TLM
+                      votePower: 11749594
+                      rank: 6839170
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 194
+                      voteDecay: 3
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Heavy supporter of blockchain and I really love how this
+                        game took over wax at the launch. I want to see this be
+                        the most played game and what everyone loves to play
+                        again. I support helping the ecosystem and building up
+                        partnerships with other nft collections to boost Alien
+                        Worlds again. I am helping advise on the miners union
+                        and mission control progression.
+                      givenName: Whigganese
+                      image: www.na.com
+                      walletId: c353u.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 0
+                      rank: 0
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 0
+                      voteDecay: null
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Long time fren and fan of Alien Worlds! Inspired one of
+                        my first NFT collections on WAX, Alien World Fan Art. I
+                        am WAX gang all the way and am here to help the
+                        community grow and prosper! I want to join my frens in
+                        having fun and doing some cool things to expand the web
+                        3 space, especially for gaming. So let's make Planet
+                        Neri top of the top for awesome planets! I'm here for
+                        you, the community. Lots of love WAX heads
+                      givenName: Miggy Crypto
+                      image: >-
+                        https://pbs.twimg.com/media/FejgcrDVsAA2HD6?format=jpg&name=large
+                      walletId: e3yqy.wam
+                      requestedpay: 0 TLM
+                      votePower: 25673
+                      rank: 6743803
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 2
+                      voteDecay: 24
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        The Electronic Civilization will rise and uplift
+                        humanity.
+
+
+                        Born and raised in crypto blockchain since 2013. 
+
+
+                        Software developer, Leader, and Boldness furthering
+                        adoption.
+
+
+                        Founder of the SafeX ecommerce blokchain and
+                        Xcalibra.com licensed cryptocurrency exchange. Diplomat
+                        from Liberland.
+                      givenName: Daniel Dabek
+                      image: >-
+                        https://media-exp1.licdn.com/dms/image/C5603AQGF8vxkocRtFQ/profile-displayphoto-shrink_800_800/0/1612999439340?e=1672272000&v=beta&t=HlB2FnKbhlbHMQCYnmvlGI_C2g5XGb4m72g1jDQOqDw
+                      walletId: gtanu.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 225000
+                      rank: 6745146
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 4
+                      voteDecay: 114
+                      agreedTermVersion: 3
+                      currentPlanetMemberTermsSignedValid: false
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        I do not run bots or affiliate with bot miners.
+
+
+                        I am not & never was part of any plan to take Kavian
+                        tokens.   
+
+
+                        No one from the AW nor KROWN, KROWN DAC, KROWN community
+                        gave me any prior information of the movement of these
+                        Resources.
+
+
+                        I was not, and am not involved.   
+
+
+                        Those that have worked with me in the space will know
+                        that I promote and work towards transparency, reputation
+                        & governance.
+
+                        ___
+
+                        Max made his first alternative "viral currency" with a
+                        public ledger in 2007. He has 15+ years in art, design
+                        and typography (100M+ downloads), with an emphasis on
+                        community-engagement with crypto tokens.
+
+
+                        Utilizing social engagement in the arts and design, Max
+                        has created opportunities and activities for various
+                        communities to participate, connect, grow, while
+                        intersecting with technology. 
+
+
+                        Currently, Max leverages components of DAOs to support
+                        and engage communities. He primarily works with Dacoco
+                        the publisher of Alienworlds.io 
+
+
+                        Max is one of the artists in Curio Cards
+                        www.curio.cards, the very first art (NFTs) on Ethereum
+                        in 2017, where he released artwork under the name
+                        Marisol Vengas. These works were sold at Christie's and
+                        Sotheby's in October 2021.
+
+
+                        When not designing software for future users-- he also
+                        produces fine art and design in his studios in Chico,
+                        CA.
+
+
+                        As a Candidate for the Planetary DAOs - Syndicates, if
+                        elected, Max will use his experience in extending the
+                        Alien Worlds metaverse.
+
+
+                        🍕
+                      givenName: Max Infeld
+                      image: >-
+                        https://gateway.pinata.cloud/ipfs/QmT4YbKu3kREEo4hydJy1GgkN3JeKkVnwCxsgGwqMCfVfL
+                      walletId: hweaq.wam
+                      requestedpay: 0 TLM
+                      votePower: 13449593
+                      rank: 6840478
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 54
+                      voteDecay: 5
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: "I believe in Equality in every way , This is the power of DAO. If elected I would ensure that everyone gets a fair share of votes and rewards based on the share of their Stake in Neri and will put any and all decisions up for vote in the community.\_<br />\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_Together we are stronger\_ \_ \_ \_ \_\_\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ iRiSh"
+                      givenName: iRiSh
+                      image: ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/26
+                      walletId: ihvb2.wam
+                      requestedpay: 0 TLM
+                      votePower: 90
+                      rank: 6637308
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 2
+                      voteDecay: 99
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: This is a fun game
+                      givenName: Biff
+                      image: >-
+                        https://www.pexels.com/photo/man-in-white-shirt-using-macbook-pro-3584086/
+                      walletId: jsuoa.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 464
+                      rank: 6691586
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 2
+                      voteDecay: 7
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: Alien Worlds Accounts Analytic
+                      givenName: ec2network.info
+                      image: https://ec2network.info/logoalien.png
+                      walletId: jyora.wam
+                      requestedpay: 0 TLM
+                      votePower: 12
+                      rank: 6598380
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 5
+                      voteDecay: 130
+                      agreedTermVersion: 3
+                      currentPlanetMemberTermsSignedValid: false
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: "Together We Grow\_\n\nThe Goiter is the longest standing political party in all of Alien Worlds. We predate everyone and stand fast to all commitments. \n\nDon't worry, you can trust us....\n\nt.me/thegoiter\nhttps://twitter.com/nftstan"
+                      givenName: The Goiter
+                      image: >-
+                        https://gateway.pinata.cloud/ipfs/Qmci9dg78RySNm3dbQuSynd7PuEbiaUFdaWwQV7WTZDAxu
+                      walletId: mgaqy.wam
+                      requestedpay: 0 TLM
+                      votePower: 62648
+                      rank: 6728799
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 4
+                      voteDecay: 107
+                      agreedTermVersion: 4
+                      currentPlanetMemberTermsSignedValid: false
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: AW is fun
+                      givenName: Jose
+                      image: >-
+                        https://www.pexels.com/photo/man-standing-in-front-of-window-12263516/
+                      walletId: mouoa.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 99
+                      rank: 6669153
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 1
+                      voteDecay: 7
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Good day citizens of Neri, Cardinal Quack here! I first
+                        arrived on this planet in September 2021. I've been an
+                        active miner since that time. I found myself with the
+                        opportunity to purchase the Methane Swampland on which I
+                        spent most of my days mining. I now run with the
+                        cryptomonKeys and Banano clan. I enjoy the fun and
+                        gamification they and others have added to the community
+                        and culture. Such community projects have my full
+                        support!
+
+
+                        I can relate to both miners and land owners. I am by no
+                        means a galactic whale. I have a vested interest in
+                        seeing our community thrive and stand the test of time.
+                        I hope build on this metaverse and add to the community
+                        regardless of my role in the DAO. You can follow
+                        @CardinalQuack on Twitter. I look forward to working and
+                        learning with all of you and would be most honored for a
+                        chance to serve on the Planetary Council. A vote for The
+                        Cardinal is a vote for the people and the future of
+                        Neri. Thank you all!
+                      givenName: Cardinal Quack
+                      image: >-
+                        https://cdn.discordapp.com/attachments/870141658791034925/1032718355511132160/20221020_120951.jpg
+                      walletId: mu5xq.wam
+                      requestedpay: 0 TLM
+                      votePower: 6395
+                      rank: 6690662
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 2
+                      voteDecay: 123
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        I've been involved with the AW game since launch and run
+                        many of the sites/services that all AW players use such
+                        as aw.eosusa.io, wax.stats.eosusa.news, and the AWButler
+                        airdrop service helping many projects get their NFTs out
+                        to you AW miners :)<br />You know you want EOSUSA
+                        representing your planet so be sure to include us in
+                        your vote!
+                      familyName: Michael
+                      givenName: EOSUSA
+                      image: https://bp.eosusa.news/eosusa_256.png
+                      walletId: neyau.wam
+                      requestedpay: 0 TLM
+                      votePower: 26904
+                      rank: 6748655
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 9
+                      voteDecay: 11
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        I'm one of the founders of LD2. Long-term supporter and
+                        user of AW and KROWN.
+
+
+                        First-season grant recipient from Galactic Hubs for
+                        Real-world applications. 
+
+
+                        I've been in this game for years, it made me an animal 
+
+                        It's rules to this shit, I wrote me a manual. A
+                        step-by-step booklet for you to get
+
+                        Your game on track, not your wig pushed back...
+                         
+                        I'll use that booklet to help this DAO...
+                      givenName: Extra
+                      image: >-
+                        https://ld2coin.io/wp-content/uploads/2018/06/bg-coin.jpg
+                      walletId: pwxue.wam
+                      requestedpay: 0 TLM
+                      votePower: 224875
+                      rank: 6749178
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 5
+                      voteDecay: 101
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: AW is the best game
+                      givenName: Bee
+                      image: >-
+                        https://www.pexels.com/photo/closeup-photo-of-smiling-woman-wearing-blue-denim-jacket-1130626/
+                      walletId: r1onu.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 0
+                      rank: 0
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 0
+                      voteDecay: null
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: It is time for AW to win.
+                      givenName: Afhe
+                      image: >-
+                        https://www.pexels.com/photo/man-standing-in-front-of-window-12263516/
+                      walletId: rbt3u.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 0
+                      rank: 0
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 0
+                      voteDecay: null
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Hello All! I have been a big believer of Alien Worlds
+                        and joined right after this game started! I have been
+                        working on different projects in the Sammy Snake
+                        Community and helped build nft staking contracts for
+                        multiple games on wax. I believe my knowledge and skills
+                        along with the many friends I have made along the way
+                        can help create a fun and enjoyable experience. I am
+                        currently helping build the Miners Union and Mission
+                        Control. I believe together we can build a better
+                        experience on wax and bring more people to our favorite
+                        game. Thank you.
+                      givenName: izay21
+                      image: https://limitlesswax.co/#/about-us
+                      walletId: t1dbe.wam
+                      requestedpay: 0 TLM
+                      votePower: 0
+                      rank: 0
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 0
+                      voteDecay: null
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: "Recourier, Uncle Reco, Chain Wreck, a citizen of the multiverse of metaverses by many a name.  \n\nIRL he goes by Ryan and is a partner in MetaForce Comics, a comics and collectibles brand on WAX.  He also runs a web3 consulting company and has been an advocate for  decentralization and unfettered crypto self ownership.\_ \n\nRyan has also been a team member of Cryptomonkeys and advisor on a number of other NFT projects.\n\nRyan's platform will be one of supporting smaller projects that add depth and character to blockchains.  Building and empowering small communities to work together to stay afloat through the tough times and thrive in the good times.  He works tirelessly to make sure that small projects and creators have the tools they need to help build and support their community.\n\nLearn more at recouriercrypto.com, metaforcecomics.com, and linkedin.com/in/ryanecurryprofile."
+                      givenName: Recourier
+                      image: >-
+                        https://gateway.pinata.cloud/ipfs/Qmau1jdhvRfzWHR34AfKyhKg5AMkXWYVZuvfExmNYQFsWo 
+                      walletId: x.cqw.wam
+                      requestedpay: 0 TLM
+                      votePower: 29581
+                      rank: 6711302
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 12
+                      voteDecay: 127
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Malleable Guidelines:
+
+                        1. Land Owner Have Ability to Manage Their Land to Their
+                        Best Interests.
+
+                        2. Workers have ability to travel. 
+
+                        3. Explore multi-chain opportunities.
+                      givenName: Stefan
+                      image: >-
+                        https://atomichub-ipfs.com/ipfs/QmU2cc6aVJUy2txa2p2CTkyhg22i4RbxupemojB68jePGb
+                      walletId: x4iqw.wam
+                      requestedpay: 0 TLM
+                      votePower: 95568
+                      rank: 6754708
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 5
+                      voteDecay: 48
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: yciky.c.wam
+                      givenName: yciky.c.wam
+                      image: yciky.c.wam
+                      walletId: yciky.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 5666
+                      rank: 6727806
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 1
+                      voteDecay: 6
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Hello Nerians! Skywalker here. I've been involved with
+                        blockchain and cryptocurrency technology since 2013,
+                        full time since 2018, where I worked with the Dacoco
+                        team on eosDAC, a community-owned EOS block producer and
+                        DAC enabler. I've also been involved in the Steem
+                        ecosystem since 2016 and was a consensus witness as we
+                        defended the community from attack and birthed the Hive
+                        blockchain. I've worked with FIO Protocol (an EOSIO
+                        chain) as the Managing Director. I'm passionate about
+                        blockchain governance systems and how to use them to
+                        help create a world we all want to live in. A vote for
+                        me is a vote for someone you can trust to support action
+                        which increases our ability to function and is
+                        passionate about evolving our consciousness together.
+                      givenName: Skywalker
+                      image: >-
+                        https://lukestokesdotinfo.files.wordpress.com/2022/10/screen-shot-2022-10-21-at-12.58.53-pm.png?resize=438%2C438
+                      walletId: yvcqs.wam
+                      requestedpay: 0 TLM
+                      votePower: 38308
+                      rank: 6714034
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 4
+                      voteDecay: 130
+                      agreedTermVersion: 3
+                      currentPlanetMemberTermsSignedValid: false
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        This is our time!
+
+                        Building a community, together, which exemplifies our
+                        abilities to overcome obstacles and achieve the ultimate
+                        goal: Utopia.
+                      givenName: JPhantasy
+                      image: https://play.alienworlds.io/profile/zbo2m.c.wam
+                      walletId: zbo2m.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 37758
+                      rank: 6726016
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 2
+                      voteDecay: 94
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                example-1:
+                  summary: walletId not found
+                  value:
+                    - description: >-
+                        For the record:   
+
+                        I have never voted from a second wallet.   
+
+                        I do not run bots.   
+
+                        And I am not & never was part of any plan to take Kavian
+                        tokens.   
+
+
+                        No one from the AW nor Krown community gave me any prior
+                        information of the movement of these funds.   I was not,
+                        and am not involved.   
+
+
+                        Those that have worked with me in the space over the
+                        last 5 years will know that I promote and work towards
+                        transparency, reputation & governance.
+
+
+                        *******
+
+
+                        Many exciting updates to come soon.
+
+
+                        NERI is about FUN!!!
+
+
+                        Lets connect in the virtual & real world with events and
+                        play.
+
+
+                        More about Duane:
+
+                        Profile:
+
+                        https://genesis.eden.eoscommunity.org/members/dphillippi33
+
+
+                        TG: 
+
+                        @dphillippi
+
+
+                        Email: 
+
+                        duane@csx.io
+
+
+                        AW Weekly Meetup:
+
+                        https://gofractally.com/events/aw-community-fractal-weekly-meetup
+
+
+                        Youtube:
+
+                        https://www.youtube.com/c/KROWNDAC
+
+
+                        Signal Station:
+
+                        https://wax.consortium.vote
+                      givenName: Duane
+                      image: >-
+                        https://s.gravatar.com/avatar/3073d86e8584d5614995f19aaf90f13c?s=80
+                      walletId: 51mqs.wam
+                      requestedpay: 0 TLM
+                      votePower: 13303058
+                      rank: 6840560
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 125
+                      voteDecay: 4
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Greetings and Salutations.  My name is ADAM, and I am
+                        simply the best candidate for AW. I have a DEGREE IN
+                        POLITICAL SCIENCE. I’ve been in CRYPTO SINCE 2013 and
+                        have been a DAO PARTICIPANT SINCE 2018 and an elected
+                        DAO CUSTODIAN SINCE 2019. My platform is simple: REWARD
+                        PARTICIPATION, BUILD COMMUNITY.
+
+
+                        As a member of KINDER PARTY, I will ensure that we
+                        provide the BEST REWARDS for our participants.
+
+
+                        Our Mission:
+
+                        Adding Value to the Ecosystem through COMMUNITY
+                        BUILDING, PARTICIPATION REWARDS, DEVELOPMENT, and
+                        PROMOTIONS.
+
+
+                        At Kinder Party we have the MOST QUALIFIED, MOST
+                        EXPERIENCED candidates.  With a combined total of over
+                        15 YEARS EXPERIENCE IN DAOs, and over 30 YEARS
+                        EXPERIENCE IN BLOCKCHAIN, our candidates are
+                        specifically qualified to govern a planet in the
+                        Metaverse.
+
+
+                        We’ve learned a lot from our previous experience, when
+                        we CREATED THE FIRST INDEPENDENT EOS DAO.. 
+
+
+                        We know that building a COMMUNITY IS ALL ABOUT YOU!.  
+                        Our team is dedicated to providing value to the
+                        ecosystem through rewarding participation, building
+                        tools, and creating unique experiences for our voters.
+
+
+                        VOTE FOR THE BEST REWARDS!
+
+                        VOTE FOR THE MOST EXPERIENCE!
+
+                        VOTE FOR KINDER PARTY!
+
+
+                        To learn more visit our website at kinderparty.io
+                      givenName: Adam
+                      image: https://www.flickr.com/photos/130863568@N04/52444486403/
+                      walletId: a.d3u.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 10018856
+                      rank: 6836831
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 74
+                      voteDecay: 3
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: "I'm a member of the CryptomonKeys community, a community that its core value is fairness! It is my believe that we can ensure the prosperity of all parties involved by creating a healthy and fair environment. Our Banano and CryptomonKeys track record insures that miners, stakers and land owners are all going to be heard and that any decision will be based on what is best for the ecosystem!\_Some extra information about me: I have been involved with cryptocurrencies for the past 3 years on a personal basis. Since September 2020 I have started writing about NFTs on my blog in Publish0x and since the early days I have been a member of the CryptomonKeys community. When Alien Worlds started I saw the need to help new players and especially those that don't have deep pockets, thus I created the Help the Monkey Mine Foundation that lends tools to miners in need. DrYunani\_represents cryptomonKeys, the freely distributed NFTs on Wax. To date the cryptomonKeys project has sent out more than 55,000 NFTs to Neri miners and stakers, comprising the largest and most valuable community rewards program in the MetaVerse.\n\nMore about cryptomonKeys here:\_ \n\nhttps://twitter.com/crypt0monkeys/\n\nhttps://t.me/crypt0monKeys\n\nhttps://chat.cryptomonkeys.cc/"
+                      givenName: DrYunani
+                      image: >-
+                        https://gateway.pinata.cloud/ipfs/QmacwcRfyvHvETnAUTeD1CQgAnoVFiEgx3kWVmrX6X6LwV
+                      walletId: a52qw.wam
+                      requestedpay: 0 TLM
+                      votePower: 13667149
+                      rank: 6841310
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 242
+                      voteDecay: 3
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        I've been a supporter of Alienworlds since before it got
+                        announced to the world, started by creating the first
+                        cinematic trailer, which showcases the capacity of what
+                        Alienworlds could be, and still can become. Throw your
+                        votes my way, and I will do my best to help steer the
+                        alienworlds ecosystem the right way forward.
+                      givenName: Anyobservation
+                      image: https://anyo.io/static/images/anyo.png
+                      walletId: anyo.cabal
+                      requestedpay: 0 TLM
+                      votePower: 13529752
+                      rank: 6840629
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 98
+                      voteDecay: 4
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: "Vyryn is the Tiger of Neri, a monKeyprinter and avid monKeyminer. He believes in free distribution for everyone, and has pursued projects in accordance with that ideal. From being an advocate for Fast and Feeless on social media to creating the first ever NFT Tipbot, he promotes free access to crypto and NFT education. Vyryn represents cryptomonKeys, freely distributed NFTs on Wax. To date the cryptomonKeys project has sent out more than 65,000 NFTs to Neri miners and stakers, comprising the largest and most valuable community rewards program in the MetaVerse. Vote for Vyryn today for a Neri rich in Potassium and lush with monkeys.\nLearn more about cryptomonKeys at\_https://www.cryptomonkeys.cc and meet Vyryn in our thriving discord community."
+                      givenName: Vyryn
+                      image: >-
+                        https://gateway.pinata.cloud/ipfs/QmPxRxS6MxYiA2nZRqGqKyoaVnEbBRhoFxsSbMm3emmcuo
+                      walletId: b52qw.wam
+                      requestedpay: 0 TLM
+                      votePower: 11749594
+                      rank: 6839170
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 194
+                      voteDecay: 3
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Heavy supporter of blockchain and I really love how this
+                        game took over wax at the launch. I want to see this be
+                        the most played game and what everyone loves to play
+                        again. I support helping the ecosystem and building up
+                        partnerships with other nft collections to boost Alien
+                        Worlds again. I am helping advise on the miners union
+                        and mission control progression.
+                      givenName: Whigganese
+                      image: www.na.com
+                      walletId: c353u.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 0
+                      rank: 0
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 0
+                      voteDecay: null
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Long time fren and fan of Alien Worlds! Inspired one of
+                        my first NFT collections on WAX, Alien World Fan Art. I
+                        am WAX gang all the way and am here to help the
+                        community grow and prosper! I want to join my frens in
+                        having fun and doing some cool things to expand the web
+                        3 space, especially for gaming. So let's make Planet
+                        Neri top of the top for awesome planets! I'm here for
+                        you, the community. Lots of love WAX heads
+                      givenName: Miggy Crypto
+                      image: >-
+                        https://pbs.twimg.com/media/FejgcrDVsAA2HD6?format=jpg&name=large
+                      walletId: e3yqy.wam
+                      requestedpay: 0 TLM
+                      votePower: 25673
+                      rank: 6743803
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 2
+                      voteDecay: 24
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        The Electronic Civilization will rise and uplift
+                        humanity.
+
+
+                        Born and raised in crypto blockchain since 2013. 
+
+
+                        Software developer, Leader, and Boldness furthering
+                        adoption.
+
+
+                        Founder of the SafeX ecommerce blokchain and
+                        Xcalibra.com licensed cryptocurrency exchange. Diplomat
+                        from Liberland.
+                      givenName: Daniel Dabek
+                      image: >-
+                        https://media-exp1.licdn.com/dms/image/C5603AQGF8vxkocRtFQ/profile-displayphoto-shrink_800_800/0/1612999439340?e=1672272000&v=beta&t=HlB2FnKbhlbHMQCYnmvlGI_C2g5XGb4m72g1jDQOqDw
+                      walletId: gtanu.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 225000
+                      rank: 6745146
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 4
+                      voteDecay: 114
+                      agreedTermVersion: 3
+                      currentPlanetMemberTermsSignedValid: false
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        I do not run bots or affiliate with bot miners.
+
+
+                        I am not & never was part of any plan to take Kavian
+                        tokens.   
+
+
+                        No one from the AW nor KROWN, KROWN DAC, KROWN community
+                        gave me any prior information of the movement of these
+                        Resources.
+
+
+                        I was not, and am not involved.   
+
+
+                        Those that have worked with me in the space will know
+                        that I promote and work towards transparency, reputation
+                        & governance.
+
+                        ___
+
+                        Max made his first alternative "viral currency" with a
+                        public ledger in 2007. He has 15+ years in art, design
+                        and typography (100M+ downloads), with an emphasis on
+                        community-engagement with crypto tokens.
+
+
+                        Utilizing social engagement in the arts and design, Max
+                        has created opportunities and activities for various
+                        communities to participate, connect, grow, while
+                        intersecting with technology. 
+
+
+                        Currently, Max leverages components of DAOs to support
+                        and engage communities. He primarily works with Dacoco
+                        the publisher of Alienworlds.io 
+
+
+                        Max is one of the artists in Curio Cards
+                        www.curio.cards, the very first art (NFTs) on Ethereum
+                        in 2017, where he released artwork under the name
+                        Marisol Vengas. These works were sold at Christie's and
+                        Sotheby's in October 2021.
+
+
+                        When not designing software for future users-- he also
+                        produces fine art and design in his studios in Chico,
+                        CA.
+
+
+                        As a Candidate for the Planetary DAOs - Syndicates, if
+                        elected, Max will use his experience in extending the
+                        Alien Worlds metaverse.
+
+
+                        🍕
+                      givenName: Max Infeld
+                      image: >-
+                        https://gateway.pinata.cloud/ipfs/QmT4YbKu3kREEo4hydJy1GgkN3JeKkVnwCxsgGwqMCfVfL
+                      walletId: hweaq.wam
+                      requestedpay: 0 TLM
+                      votePower: 13449593
+                      rank: 6840478
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 54
+                      voteDecay: 5
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: "I believe in Equality in every way , This is the power of DAO. If elected I would ensure that everyone gets a fair share of votes and rewards based on the share of their Stake in Neri and will put any and all decisions up for vote in the community.\_<br />\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_Together we are stronger\_ \_ \_ \_ \_\_\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ iRiSh"
+                      givenName: iRiSh
+                      image: ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/26
+                      walletId: ihvb2.wam
+                      requestedpay: 0 TLM
+                      votePower: 90
+                      rank: 6637308
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 2
+                      voteDecay: 99
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: This is a fun game
+                      givenName: Biff
+                      image: >-
+                        https://www.pexels.com/photo/man-in-white-shirt-using-macbook-pro-3584086/
+                      walletId: jsuoa.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 464
+                      rank: 6691586
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 2
+                      voteDecay: 7
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: Alien Worlds Accounts Analytic
+                      givenName: ec2network.info
+                      image: https://ec2network.info/logoalien.png
+                      walletId: jyora.wam
+                      requestedpay: 0 TLM
+                      votePower: 12
+                      rank: 6598380
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 5
+                      voteDecay: 130
+                      agreedTermVersion: 3
+                      currentPlanetMemberTermsSignedValid: false
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: "Together We Grow\_\n\nThe Goiter is the longest standing political party in all of Alien Worlds. We predate everyone and stand fast to all commitments. \n\nDon't worry, you can trust us....\n\nt.me/thegoiter\nhttps://twitter.com/nftstan"
+                      givenName: The Goiter
+                      image: >-
+                        https://gateway.pinata.cloud/ipfs/Qmci9dg78RySNm3dbQuSynd7PuEbiaUFdaWwQV7WTZDAxu
+                      walletId: mgaqy.wam
+                      requestedpay: 0 TLM
+                      votePower: 62648
+                      rank: 6728799
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 4
+                      voteDecay: 107
+                      agreedTermVersion: 4
+                      currentPlanetMemberTermsSignedValid: false
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: AW is fun
+                      givenName: Jose
+                      image: >-
+                        https://www.pexels.com/photo/man-standing-in-front-of-window-12263516/
+                      walletId: mouoa.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 99
+                      rank: 6669153
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 1
+                      voteDecay: 7
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Good day citizens of Neri, Cardinal Quack here! I first
+                        arrived on this planet in September 2021. I've been an
+                        active miner since that time. I found myself with the
+                        opportunity to purchase the Methane Swampland on which I
+                        spent most of my days mining. I now run with the
+                        cryptomonKeys and Banano clan. I enjoy the fun and
+                        gamification they and others have added to the community
+                        and culture. Such community projects have my full
+                        support!
+
+
+                        I can relate to both miners and land owners. I am by no
+                        means a galactic whale. I have a vested interest in
+                        seeing our community thrive and stand the test of time.
+                        I hope build on this metaverse and add to the community
+                        regardless of my role in the DAO. You can follow
+                        @CardinalQuack on Twitter. I look forward to working and
+                        learning with all of you and would be most honored for a
+                        chance to serve on the Planetary Council. A vote for The
+                        Cardinal is a vote for the people and the future of
+                        Neri. Thank you all!
+                      givenName: Cardinal Quack
+                      image: >-
+                        https://cdn.discordapp.com/attachments/870141658791034925/1032718355511132160/20221020_120951.jpg
+                      walletId: mu5xq.wam
+                      requestedpay: 0 TLM
+                      votePower: 6395
+                      rank: 6690662
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 2
+                      voteDecay: 123
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        I've been involved with the AW game since launch and run
+                        many of the sites/services that all AW players use such
+                        as aw.eosusa.io, wax.stats.eosusa.news, and the AWButler
+                        airdrop service helping many projects get their NFTs out
+                        to you AW miners :)<br />You know you want EOSUSA
+                        representing your planet so be sure to include us in
+                        your vote!
+                      familyName: Michael
+                      givenName: EOSUSA
+                      image: https://bp.eosusa.news/eosusa_256.png
+                      walletId: neyau.wam
+                      requestedpay: 0 TLM
+                      votePower: 26904
+                      rank: 6748655
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 9
+                      voteDecay: 11
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        I'm one of the founders of LD2. Long-term supporter and
+                        user of AW and KROWN.
+
+
+                        First-season grant recipient from Galactic Hubs for
+                        Real-world applications. 
+
+
+                        I've been in this game for years, it made me an animal 
+
+                        It's rules to this shit, I wrote me a manual. A
+                        step-by-step booklet for you to get
+
+                        Your game on track, not your wig pushed back...
+                         
+                        I'll use that booklet to help this DAO...
+                      givenName: Extra
+                      image: >-
+                        https://ld2coin.io/wp-content/uploads/2018/06/bg-coin.jpg
+                      walletId: pwxue.wam
+                      requestedpay: 0 TLM
+                      votePower: 224875
+                      rank: 6749178
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 5
+                      voteDecay: 101
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: AW is the best game
+                      givenName: Bee
+                      image: >-
+                        https://www.pexels.com/photo/closeup-photo-of-smiling-woman-wearing-blue-denim-jacket-1130626/
+                      walletId: r1onu.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 0
+                      rank: 0
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 0
+                      voteDecay: null
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: It is time for AW to win.
+                      givenName: Afhe
+                      image: >-
+                        https://www.pexels.com/photo/man-standing-in-front-of-window-12263516/
+                      walletId: rbt3u.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 0
+                      rank: 0
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 0
+                      voteDecay: null
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Hello All! I have been a big believer of Alien Worlds
+                        and joined right after this game started! I have been
+                        working on different projects in the Sammy Snake
+                        Community and helped build nft staking contracts for
+                        multiple games on wax. I believe my knowledge and skills
+                        along with the many friends I have made along the way
+                        can help create a fun and enjoyable experience. I am
+                        currently helping build the Miners Union and Mission
+                        Control. I believe together we can build a better
+                        experience on wax and bring more people to our favorite
+                        game. Thank you.
+                      givenName: izay21
+                      image: https://limitlesswax.co/#/about-us
+                      walletId: t1dbe.wam
+                      requestedpay: 0 TLM
+                      votePower: 0
+                      rank: 0
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 0
+                      voteDecay: null
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: "Recourier, Uncle Reco, Chain Wreck, a citizen of the multiverse of metaverses by many a name.  \n\nIRL he goes by Ryan and is a partner in MetaForce Comics, a comics and collectibles brand on WAX.  He also runs a web3 consulting company and has been an advocate for  decentralization and unfettered crypto self ownership.\_ \n\nRyan has also been a team member of Cryptomonkeys and advisor on a number of other NFT projects.\n\nRyan's platform will be one of supporting smaller projects that add depth and character to blockchains.  Building and empowering small communities to work together to stay afloat through the tough times and thrive in the good times.  He works tirelessly to make sure that small projects and creators have the tools they need to help build and support their community.\n\nLearn more at recouriercrypto.com, metaforcecomics.com, and linkedin.com/in/ryanecurryprofile."
+                      givenName: Recourier
+                      image: >-
+                        https://gateway.pinata.cloud/ipfs/Qmau1jdhvRfzWHR34AfKyhKg5AMkXWYVZuvfExmNYQFsWo 
+                      walletId: x.cqw.wam
+                      requestedpay: 0 TLM
+                      votePower: 29581
+                      rank: 6711302
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 12
+                      voteDecay: 127
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Malleable Guidelines:
+
+                        1. Land Owner Have Ability to Manage Their Land to Their
+                        Best Interests.
+
+                        2. Workers have ability to travel. 
+
+                        3. Explore multi-chain opportunities.
+                      givenName: Stefan
+                      image: >-
+                        https://atomichub-ipfs.com/ipfs/QmU2cc6aVJUy2txa2p2CTkyhg22i4RbxupemojB68jePGb
+                      walletId: x4iqw.wam
+                      requestedpay: 0 TLM
+                      votePower: 95568
+                      rank: 6754708
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 5
+                      voteDecay: 48
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: yciky.c.wam
+                      givenName: yciky.c.wam
+                      image: yciky.c.wam
+                      walletId: yciky.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 5666
+                      rank: 6727806
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 1
+                      voteDecay: 6
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        Hello Nerians! Skywalker here. I've been involved with
+                        blockchain and cryptocurrency technology since 2013,
+                        full time since 2018, where I worked with the Dacoco
+                        team on eosDAC, a community-owned EOS block producer and
+                        DAC enabler. I've also been involved in the Steem
+                        ecosystem since 2016 and was a consensus witness as we
+                        defended the community from attack and birthed the Hive
+                        blockchain. I've worked with FIO Protocol (an EOSIO
+                        chain) as the Managing Director. I'm passionate about
+                        blockchain governance systems and how to use them to
+                        help create a world we all want to live in. A vote for
+                        me is a vote for someone you can trust to support action
+                        which increases our ability to function and is
+                        passionate about evolving our consciousness together.
+                      givenName: Skywalker
+                      image: >-
+                        https://lukestokesdotinfo.files.wordpress.com/2022/10/screen-shot-2022-10-21-at-12.58.53-pm.png?resize=438%2C438
+                      walletId: yvcqs.wam
+                      requestedpay: 0 TLM
+                      votePower: 38308
+                      rank: 6714034
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 4
+                      voteDecay: 130
+                      agreedTermVersion: 3
+                      currentPlanetMemberTermsSignedValid: false
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+                    - description: >-
+                        This is our time!
+
+                        Building a community, together, which exemplifies our
+                        abilities to overcome obstacles and achieve the ultimate
+                        goal: Utopia.
+                      givenName: JPhantasy
+                      image: https://play.alienworlds.io/profile/zbo2m.c.wam
+                      walletId: zbo2m.c.wam
+                      requestedpay: 0 TLM
+                      votePower: 37758
+                      rank: 6726016
+                      gapFiller: 0
+                      isActive: 1
+                      totalVotes: 2
+                      voteDecay: 94
+                      agreedTermVersion: 5
+                      currentPlanetMemberTermsSignedValid: true
+                      isFlagged: false
+                      isSelected: false
+                      isVoted: false
+                      isVoteAdded: false
+                      planetName: nerix
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - missing dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have fewer than 5 characters
+                example-1:
+                  summary: 400 - missing walletId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query must have required property 'walletId'
+                example-2:
+                  summary: 400 - short walletId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/walletId must NOT have fewer than 1 characters
+                example-3:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have more than 6 characters
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+              example: []
+  /{dacId}/custodians:
+    get:
+      tags:
+        - default
+      summary: Get custodians by planet
+      description: Get custodians for the provided planet
+      parameters:
+        - name: dacId
+          in: path
+          schema:
+            type: string
+          required: true
+          description: 'DAC Id. <br><br>[Required] [length: 5-6 characters]'
+          example: nerix
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - walletId: 51mqs.wam
+                  requestedpay: 0 TLM
+                  votePower: 7815646
+                  profile:
+                    description: >-
+                      Many exciting updates to come soon.
+
+
+                      NERI is about FUN!!!
+
+
+                      Lets connect in the virtual & real world with events and
+                      play.
+
+
+                      More about Duane:
+
+                      Profile:
+
+                      https://genesis.eden.eoscommunity.org/members/dphillippi33
+
+
+                      TG: 
+
+                      @dphillippi
+
+
+                      Email: 
+
+                      duane@csx.io
+
+
+                      AW Weekly Meetup:
+
+                      https://gofractally.com/events/aw-community-fractal-weekly-meetup
+
+
+                      Youtube:
+
+                      https://www.youtube.com/c/KROWNDAC
+
+
+                      Signal Station:
+
+                      https://wax.consortium.vote
+                    givenName: Duane
+                    image: >-
+                      https://s.gravatar.com/avatar/3073d86e8584d5614995f19aaf90f13c?s=80
+                  agreedTermVersion: 5
+                  currentPlanetMemberTermsSignedValid: false
+                  isFlagged: false
+                  isSelected: false
+                  planetName: nerix
+                - walletId: a.d3u.c.wam
+                  requestedpay: 0 TLM
+                  votePower: 5414733
+                  profile:
+                    description: >-
+                      Greetings and Salutations.  My name is ADAM, and I am
+                      simply the best candidate for AW. I have a DEGREE IN
+                      POLITICAL SCIENCE. I’ve been in CRYPTO SINCE 2013 and have
+                      been a DAO PARTICIPANT SINCE 2018 and an elected DAO
+                      CUSTODIAN SINCE 2019. My platform is simple: REWARD
+                      PARTICIPATION, BUILD COMMUNITY.
+
+
+                      As a member of KINDER PARTY, I will ensure that we provide
+                      the BEST REWARDS for our participants.
+
+
+                      Our Mission:
+
+                      Adding Value to the Ecosystem through COMMUNITY BUILDING,
+                      PARTICIPATION REWARDS, DEVELOPMENT, and PROMOTIONS.
+
+
+                      At Kinder Party we have the MOST QUALIFIED, MOST
+                      EXPERIENCED candidates.  With a combined total of over 15
+                      YEARS EXPERIENCE IN DAOs, and over 30 YEARS EXPERIENCE IN
+                      BLOCKCHAIN, our candidates are specifically qualified to
+                      govern a planet in the Metaverse.
+
+
+                      We’ve learned a lot from our previous experience, when we
+                      CREATED THE FIRST INDEPENDENT EOS DAO.. 
+
+
+                      We know that building a COMMUNITY IS ALL ABOUT YOU!.   Our
+                      team is dedicated to providing value to the ecosystem
+                      through rewarding participation, building tools, and
+                      creating unique experiences for our voters.
+
+
+                      VOTE FOR THE BEST REWARDS!
+
+                      VOTE FOR THE MOST EXPERIENCE!
+
+                      VOTE FOR KINDER PARTY!
+
+
+                      To learn more visit our website at kinderparty.io
+                    givenName: Adam
+                    image: https://www.flickr.com/photos/130863568@N04/52444486403/
+                  agreedTermVersion: 5
+                  currentPlanetMemberTermsSignedValid: false
+                  isFlagged: false
+                  isSelected: false
+                  planetName: nerix
+                - walletId: a52qw.wam
+                  requestedpay: 0 TLM
+                  votePower: 4723913
+                  profile:
+                    description: "I'm a member of the CryptomonKeys community, a community that its core value is fairness! It is my believe that we can ensure the prosperity of all parties involved by creating a healthy and fair environment. Our Banano and CryptomonKeys track record insures that miners, stakers and land owners are all going to be heard and that any decision will be based on what is best for the ecosystem!\_Some extra information about me: I have been involved with cryptocurrencies for the past 3 years on a personal basis. Since September 2020 I have started writing about NFTs on my blog in Publish0x and since the early days I have been a member of the CryptomonKeys community. When Alien Worlds started I saw the need to help new players and especially those that don't have deep pockets, thus I created the Help the Monkey Mine Foundation that lends tools to miners in need. DrYunani\_represents cryptomonKeys, the freely distributed NFTs on Wax. To date the cryptomonKeys project has sent out more than 55,000 NFTs to Neri miners and stakers, comprising the largest and most valuable community rewards program in the MetaVerse.\n\nMore about cryptomonKeys here:\_ \n\nhttps://twitter.com/crypt0monkeys/\n\nhttps://t.me/crypt0monKeys\n\nhttps://chat.cryptomonkeys.cc/"
+                    givenName: DrYunani
+                    image: >-
+                      https://gateway.pinata.cloud/ipfs/QmacwcRfyvHvETnAUTeD1CQgAnoVFiEgx3kWVmrX6X6LwV
+                  agreedTermVersion: 5
+                  currentPlanetMemberTermsSignedValid: false
+                  isFlagged: false
+                  isSelected: false
+                  planetName: nerix
+                - walletId: b52qw.wam
+                  requestedpay: 0 TLM
+                  votePower: 4093846
+                  profile:
+                    description: "Vyryn is the Tiger of Neri, a monkeyPrinter and avid monkeyMiner. He believes in free distribution for everyone, and has pursued projects in accordance with that ideal. From being an advocate for Fast and Feeless on social media to creating the first ever NFT Tipbot, he promotes free access to crypto and NFT education. Vyryn represents cryptomonKeys, freely distributed NFTs on Wax. To date the cryptomonKeys project has sent out more than 55,000 NFTs to Neri miners and stakers, comprising the largest and most valuable community rewards program in the MetaVerse. Vote for Vyryn today for a Neri rich in Potassium and lush with monkeys.\nLearn more about cryptomonKeys at\_https://www.cryptomonkeys.cc and meet Vyryn in our thriving discord community."
+                    givenName: Vyryn,
+                    image: >-
+                      https://gateway.pinata.cloud/ipfs/QmPxRxS6MxYiA2nZRqGqKyoaVnEbBRhoFxsSbMm3emmcuo
+                  agreedTermVersion: 5
+                  currentPlanetMemberTermsSignedValid: false
+                  isFlagged: false
+                  isSelected: false
+                  planetName: nerix
+                - walletId: hweaq.wam
+                  requestedpay: 0 TLM
+                  votePower: 9224201
+                  profile:
+                    description: >-
+                      Max made his first alternative "viral currency" with a
+                      public ledger in 2007. He has 15+ years in art, design and
+                      typography (100M+ downloads), with an emphasis on
+                      community-engagement with crypto tokens.
+
+
+                      Utilizing social engagement in the arts and design, Max
+                      has created opportunities and activities for various
+                      communities to participate, connect, grow, while
+                      intersecting with technology. 
+
+
+                      Currently, Max leverages components of DAOs to support and
+                      engage communities. He primarily works with Dacoco the
+                      publisher of Alienworlds.io 
+
+
+                      Max is one of the artists in Curio Cards www.curio.cards,
+                      the very first art (NFTs) on Ethereum in 2017, where he
+                      released artwork under the name Marisol Vengas. These
+                      works were sold at Christie's and Sotheby's in October
+                      2021.
+
+
+                      When not designing software for future users-- he also
+                      produces fine art and design in his studios in Chico, CA.
+
+
+                      As a Candidate for the Planetary DAOs - Syndicates, if
+                      elected, Max will use his experience in extending the
+                      Alien Worlds metaverse.
+
+
+                      🍕
+                    givenName: Max Infeld
+                    image: >-
+                      https://gateway.pinata.cloud/ipfs/QmT4YbKu3kREEo4hydJy1GgkN3JeKkVnwCxsgGwqMCfVfL
+                  agreedTermVersion: 5
+                  currentPlanetMemberTermsSignedValid: false
+                  isFlagged: false
+                  isSelected: false
+                  planetName: nerix
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - short dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have fewer than 5 characters
+                example-1:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have more than 6 characters
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+              example: []
+  /candidates_voters_history:
+    get:
+      tags:
+        - default
+      summary: Votes history - candidate's or custodian's perspective
+      parameters:
+        - name: dacId
+          in: query
+          schema:
+            type: string
+          required: true
+          description: 'DAC Id. <br><br>[length: 5-6 characters]'
+          example: nerix
+        - name: candidateId
+          in: query
+          schema:
+            type: string
+          required: true
+          description: 'Wallet Id of candidate or custodian. <br><br>[min length: 1]'
+          example: 51mqs.wam
+        - name: skip
+          in: query
+          schema:
+            type: integer
+          description: 'Number of items to skip. [min: 0]'
+          example: '0'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: 'Maximum items to return. <br><br>[min: 1]'
+          example: '5'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: votes history
+                  value:
+                    results:
+                      - voter: tl2aw.wam
+                        votingPower: '65555555'
+                        action: votecust
+                        candidate: 51mqs.wam
+                        voteTimestamp: '2022-10-20T15:55:46.000Z'
+                        transactionId: >-
+                          81A90E17CCEC6BC418E83C9E300695B563587BBD2A7A77FA0A0B95731C514A92
+                      - voter: pwxue.wam
+                        votingPower: '5444444'
+                        action: votecust
+                        candidate: 51mqs.wam
+                        voteTimestamp: '2022-10-20T16:33:59.000Z'
+                        transactionId: >-
+                          2DAAD670A587BF5B8EC36E71C41DAC9DAF8EBA11ABBA36F664CCC04F2E517166
+                      - voter: 51mqs.wam
+                        votingPower: '54444444'
+                        action: votecust
+                        candidate: 51mqs.wam
+                        voteTimestamp: '2022-10-20T16:49:20.000Z'
+                        transactionId: >-
+                          0839C6563259A7C1B2F7FF1456B662D9E0D31110FB54537742715D4168C9522D
+                      - voter: bptls.c.wam
+                        votingPower: '0'
+                        action: votecust
+                        candidate: 51mqs.wam
+                        voteTimestamp: '2022-10-20T16:50:28.000Z'
+                        transactionId: >-
+                          7416D9444EB0D2951B4BC512ED98021AF3B71670E1344F7C218CACFD68FDE08C
+                      - voter: s.h.y.c.wam
+                        votingPower: '584915'
+                        action: votecust
+                        candidate: 51mqs.wam
+                        voteTimestamp: '2022-10-20T18:47:21.000Z'
+                        transactionId: >-
+                          9473E0494F769B0CF2AD506C52245C921726DE92C1008FA234071AFC070DD6FB
+                    total: 376
+                example-1:
+                  summary: invalid dacId
+                  value:
+                    results: []
+                    total: 0
+                example-2:
+                  summary: invalid candidate Id
+                  value:
+                    results: []
+                    total: 0
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - missing dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query must have required property 'dacId'
+                example-1:
+                  summary: 400 - short dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have fewer than 5 characters
+                example-2:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have more than 6 characters
+                example-3:
+                  summary: 400 - missing candidate Id
+                  value:
+                    message: bad request
+                    errors:
+                      - /query must have required property 'candidateId'
+                example-4:
+                  summary: 400 - negative skip
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/skip must be >= 0
+                example-5:
+                  summary: 400 - skip wrong data type
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/skip must be integer
+                example-6:
+                  summary: 400 - invalid limit
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/limit must be >= 1
+                example-7:
+                  summary: 400 - limit wrong data type
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/limit must be integer
+  /voting_history:
+    get:
+      tags:
+        - default
+      summary: Votes history - voter's perspective
+      parameters:
+        - name: dacId
+          in: query
+          schema:
+            type: string
+          required: true
+          description: 'DAC Id. <br><br>[length: 5-6 characters]'
+          example: nerix
+        - name: voter
+          in: query
+          schema:
+            type: string
+          required: true
+          description: 'Wallet Id of voter. <br><br>[min length: 1]'
+          example: .1uqy.wam
+        - name: skip
+          in: query
+          schema:
+            type: integer
+          description: 'Number of items to skip. [min: 0]'
+          example: '0'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: 'Maximum items to return. <br><br>[min: 1]'
+          example: '100'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: votes history
+                  value:
+                    results:
+                      - dacId: nerix
+                        voter: .1uqy.wam
+                        voteTimestamp: '2022-11-22T13:08:31.000Z'
+                        candidate: 51mqs.wam
+                        candidateVotePower: '47476171264'
+                        action: voted
+                      - dacId: nerix
+                        voter: .1uqy.wam
+                        voteTimestamp: '2022-11-22T13:08:31.000Z'
+                        candidate: a52qw.wam
+                        candidateVotePower: '40472384237'
+                        action: voted
+                    count: 2
+                example-1:
+                  summary: invalid dacId
+                  value:
+                    results: []
+                    count: 0
+                example-2:
+                  summary: invalid voter
+                  value:
+                    results: []
+                    count: 0
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - missing dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query must have required property 'dacId'
+                example-1:
+                  summary: 400 - short dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have fewer than 5 characters
+                example-2:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have more than 6 characters
+                example-3:
+                  summary: 400 - missing voter id
+                  value:
+                    message: bad request
+                    errors:
+                      - /query must have required property 'voter'
+                example-4:
+                  summary: 400 - short voter id
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/voter must NOT have fewer than 1 characters
+                example-5:
+                  summary: 400 - negative skip
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/skip must be >= 0
+                example-6:
+                  summary: 400 - skip wrong data type
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/skip must be integer
+                example-7:
+                  summary: 400 - invalid limit
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/limit must be >= 1
+                example-8:
+                  summary: 400 - limit wrong data type
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/limit must be integer
+  /health:
+    get:
+      tags:
+        - default
+      summary: Server health status
+      description: Responds with server health status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: OK
+                version: 1.0.0
+                timestamp: 1677513169143
+                uptimeSeconds: 10
+                nodeVersion: v19.7.0
+                dependencies:
+                  '@alien-worlds/api-core': 0.0.72
+                  '@alien-worlds/eosdac-api-common': 0.0.83
+                database:
+                  status: OK
+                blockChainHistory:
+                  currentBlock: '232088089'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: FAIL
+                error: Current block not found
