@@ -1,10 +1,16 @@
-import { GetRoute, Request, Result, RouteHandler, ValidationResult } from '@alien-worlds/api-core';
+import {
+  GetRoute,
+  Request,
+  Result,
+  RouteHandler,
+  ValidationResult,
+} from '@alien-worlds/api-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
 import { CustodiansRequestSchema } from '../schemas';
 import { GetCustodiansInput } from '../domain/models/get-custodians.input';
 import { GetCustodiansOutput } from '../domain/models/get-custodians.output';
-import { GetCustodiansRequestDto } from '../data/dtos/custodian.dto';
+import { GetCustodiansRequestPathVariables } from '../data/dtos/custodian.dto';
 
 /*imports*/
 
@@ -14,21 +20,25 @@ import { GetCustodiansRequestDto } from '../data/dtos/custodian.dto';
  *
  */
 export class GetCustodiansRoute extends GetRoute {
-	public static create(handler: RouteHandler) {
-		return new GetCustodiansRoute(handler);
-	}
+  public static create(handler: RouteHandler) {
+    return new GetCustodiansRoute(handler);
+  }
 
-	private constructor(handler: RouteHandler) {
-		super(['/v1/dao/:dacId/custodians', '/v1/eosdac/:dacId/custodians'], handler, {
-			validators: {
-				request: validateRequest,
-			},
-			hooks: {
-				pre: parseRequestToControllerInput,
-				post: parseResultToControllerOutput,
-			},
-		});
-	}
+  private constructor(handler: RouteHandler) {
+    super(
+      ['/v1/dao/:dacId/custodians', '/v1/eosdac/:dacId/custodians'],
+      handler,
+      {
+        validators: {
+          request: validateRequest,
+        },
+        hooks: {
+          pre: parseRequestToControllerInput,
+          post: parseResultToControllerOutput,
+        },
+      }
+    );
+  }
 }
 
 /**
@@ -36,8 +46,13 @@ export class GetCustodiansRoute extends GetRoute {
  * @param {Request} request
  * @returns {ValidationResult}
  */
-export const validateRequest = (request: Request<GetCustodiansRequestDto>): ValidationResult => {
-	return AjvValidator.initialize().validateHttpRequest(CustodiansRequestSchema, request);
+export const validateRequest = (
+  request: Request<unknown, GetCustodiansRequestPathVariables>
+): ValidationResult => {
+  return AjvValidator.initialize().validateHttpRequest(
+    CustodiansRequestSchema,
+    request
+  );
 };
 
 /**
@@ -46,10 +61,10 @@ export const validateRequest = (request: Request<GetCustodiansRequestDto>): Vali
  * @returns
  */
 export const parseRequestToControllerInput = (
-	request: Request<GetCustodiansRequestDto>
+  request: Request<unknown, GetCustodiansRequestPathVariables>
 ) => {
-	// parse DTO (query) to the options required by the controller method
-	return GetCustodiansInput.fromRequest(request);
+  // parse DTO (query) to the options required by the controller method
+  return GetCustodiansInput.fromRequest(request);
 };
 
 /**
@@ -58,22 +73,22 @@ export const parseRequestToControllerInput = (
  * @returns
  */
 export const parseResultToControllerOutput = (
-	result: Result<GetCustodiansOutput>
+  result: Result<GetCustodiansOutput>
 ) => {
-	if (result.isFailure) {
-		const {
-			failure: { error },
-		} = result;
-		if (error) {
-			return {
-				status: 500,
-				body: [],
-			};
-		}
-	}
+  if (result.isFailure) {
+    const {
+      failure: { error },
+    } = result;
+    if (error) {
+      return {
+        status: 500,
+        body: [],
+      };
+    }
+  }
 
-	return {
-		status: 200,
-		body: result.content.toJson(),
-	};
+  return {
+    status: 200,
+    body: result.content.toJson(),
+  };
 };

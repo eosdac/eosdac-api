@@ -1,7 +1,10 @@
 import { Profile } from "../../domain/entities/profile";
 
-export type ProfileRequestDto = {
+export type ProfileRequestQueryParams = {
     account: string;
+};
+
+export type ProfileRequestPathVariables = {
     dacId: string;
 };
 

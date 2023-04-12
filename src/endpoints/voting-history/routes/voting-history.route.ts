@@ -11,6 +11,7 @@ import { UserVote } from '@alien-worlds/dao-api-common';
 import { VotingHistoryInput } from '../domain/models/voting-history.input';
 import { VotingHistoryOutput } from '../domain/models/voting-history.output';
 import { VotingHistoryRequestSchema } from '../schemas';
+import { VotingHistoryRequestQueryParams } from '../data/dtos/user-voting-history.dto';
 
 /*imports*/
 
@@ -57,10 +58,10 @@ export const validateRequest = (
  * @returns
  */
 export const parseRequestToControllerInput = (
-  request: Request<VotingHistoryInput>
+  request: Request<unknown, object, VotingHistoryRequestQueryParams>
 ) => {
   // parse DTO (query) to the options required by the controller method
-  return VotingHistoryInput.fromRequest(request.query);
+  return VotingHistoryInput.fromRequest(request);
 };
 
 /**

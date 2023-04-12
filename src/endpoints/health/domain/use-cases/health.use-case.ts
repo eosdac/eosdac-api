@@ -2,7 +2,7 @@ import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 
 import { HealthOutput } from '../entities/health-output';
 import { HealthOutputDocument } from '../../data/dtos/health.dto';
-import { StateRepository } from '../repositories/state.repository';
+import { HistoryToolsBlockState } from '@alien-worlds/dao-api-common';
 
 /*imports*/
 /**
@@ -14,8 +14,8 @@ export class HealthUseCase implements UseCase<HealthOutput> {
 
   constructor(
     /*injections*/
-    @inject(StateRepository.Token)
-    private stateRepository: StateRepository
+    @inject(HistoryToolsBlockState.Token)
+    private blockState: HistoryToolsBlockState
   ) {}
 
   /**
@@ -23,7 +23,7 @@ export class HealthUseCase implements UseCase<HealthOutput> {
    * @returns {Promise<Result<HealthOutput>>}
    */
   public async execute(): Promise<Result<HealthOutput>> {
-    const getCurrentBlockRes = await this.stateRepository.getCurrentBlock();
+    const getCurrentBlockRes = await this.blockState.getBlockNumber();
 
     if (getCurrentBlockRes.isFailure) {
       return Result.withFailure(getCurrentBlockRes.failure);
@@ -57,7 +57,7 @@ export class HealthUseCase implements UseCase<HealthOutput> {
       },
 
       blockChainHistory: {
-        currentBlock: getCurrentBlockRes.content.currentBlock,
+        currentBlock: getCurrentBlockRes.content,
       },
     };
 

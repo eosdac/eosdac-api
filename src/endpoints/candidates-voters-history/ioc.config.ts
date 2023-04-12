@@ -1,9 +1,4 @@
-import {
-  connectMongo,
-  Container,
-  MongoConfig,
-  MongoSource,
-} from '@alien-worlds/api-core';
+import { Container, MongoConfig, MongoSource } from '@alien-worlds/api-core';
 
 import { VotingWeightMapper } from './data/mappers/voting-weight.mapper';
 import { VotingWeightMongoSource } from './data/data-sources/voting-weight.mongo.source';
@@ -18,12 +13,15 @@ export const setupVotingWeightRepository = async (
   if (mongo instanceof MongoSource) {
     mongoSource = mongo;
   } else {
-    const db = await connectMongo(mongo);
-    mongoSource = new MongoSource(db);
+    mongoSource = await MongoSource.create(mongo);
   }
   const voterMongoSource = new VotingWeightMongoSource(mongoSource);
   const mapper = new VotingWeightMapper();
-  const repository = new VotingWeightRepositoryImpl(voterMongoSource, mapper, mongoSource);
+  const repository = new VotingWeightRepositoryImpl(
+    voterMongoSource,
+    mapper,
+    mongoSource
+  );
 
   if (container) {
     container

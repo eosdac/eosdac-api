@@ -1,19 +1,26 @@
 import * as requestSchema from '@endpoints/get-dacs/schemas/dacs.request.schema.json';
 
-import { GetRoute, Request, Result, RouteHandler, SmartContractDataNotFoundError, ValidationResult } from '@alien-worlds/api-core';
+import {
+  GetRoute,
+  Request,
+  Result,
+  RouteHandler,
+  SmartContractDataNotFoundError,
+  ValidationResult,
+} from '@alien-worlds/api-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
 import { GetDacOutput } from '../domain/models/get-dac.output';
 import { GetDacsInput } from '../domain/models/dacs.input';
 import { GetDacsOutput } from '../domain/models/get-dacs.output';
-import { GetDacsRequestDto } from '../data/dtos/dacs.dto';
+import { GetDacsRequestQueryParams } from '../data/dtos/dacs.dto';
 
 /*imports*/
 
 /**
  * @class
- * 
- * 
+ *
+ *
  */
 export class GetDacsRoute extends GetRoute {
   public static create(handler: RouteHandler) {
@@ -38,7 +45,9 @@ export class GetDacsRoute extends GetRoute {
  * @param {Request} request
  * @returns {ValidationResult}
  */
-export const validateRequest = (request: Request<GetDacsRequestDto>): ValidationResult => {
+export const validateRequest = (
+  request: Request<unknown, object, GetDacsRequestQueryParams>
+): ValidationResult => {
   return AjvValidator.initialize().validateHttpRequest(requestSchema, request);
 };
 
@@ -47,7 +56,9 @@ export const validateRequest = (request: Request<GetDacsRequestDto>): Validation
  * @param {Request} request
  * @returns {GetDacsInput}
  */
-export const parseRequestToControllerInput = (request: Request<GetDacsRequestDto>) => {
+export const parseRequestToControllerInput = (
+  request: Request<unknown, object, GetDacsRequestQueryParams>
+) => {
   // parse DTO (query) to the options required by the controller method
   return GetDacsInput.fromRequest(request);
 };
@@ -61,10 +72,12 @@ export const parseResultToControllerOutput = (
   result: Result<GetDacOutput[]>
 ) => {
   if (result.isFailure) {
-    const { failure: { error } } = result;
+    const {
+      failure: { error },
+    } = result;
     if (error) {
       return {
-        status: (error instanceof SmartContractDataNotFoundError) ? 404 : 500,
+        status: error instanceof SmartContractDataNotFoundError ? 404 : 500,
         body: {
           error: error.message,
         },

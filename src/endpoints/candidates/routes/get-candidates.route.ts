@@ -1,16 +1,19 @@
 import {
-	GetRoute,
-	Request,
-	Result,
-	RouteHandler,
-	ValidationResult,
+  GetRoute,
+  Request,
+  Result,
+  RouteHandler,
+  ValidationResult,
 } from '@alien-worlds/api-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
 import { CandidatesRequestSchema } from '../schemas';
 import { GetCandidatesInput } from '../domain/models/get-candidates.input';
 import { GetCandidatesOutput } from '../domain/models/get-candidates.output';
-import { GetCandidatesRequestDto } from '../data/dtos/candidate.dto';
+import {
+  GetCandidatesRequestPathVariables,
+  GetCandidatesRequestQueryParams,
+} from '../data/dtos/candidate.dto';
 
 /*imports*/
 
@@ -20,21 +23,25 @@ import { GetCandidatesRequestDto } from '../data/dtos/candidate.dto';
  *
  */
 export class GetCandidatesRoute extends GetRoute {
-	public static create(handler: RouteHandler) {
-		return new GetCandidatesRoute(handler);
-	}
+  public static create(handler: RouteHandler) {
+    return new GetCandidatesRoute(handler);
+  }
 
-	private constructor(handler: RouteHandler) {
-		super(['/v1/dao/:dacId/candidates', '/v1/eosdac/:dacId/candidates'], handler, {
-			validators: {
-				request: validateRequest,
-			},
-			hooks: {
-				pre: parseRequestToControllerInput,
-				post: parseResultToControllerOutput,
-			},
-		});
-	}
+  private constructor(handler: RouteHandler) {
+    super(
+      ['/v1/dao/:dacId/candidates', '/v1/eosdac/:dacId/candidates'],
+      handler,
+      {
+        validators: {
+          request: validateRequest,
+        },
+        hooks: {
+          pre: parseRequestToControllerInput,
+          post: parseResultToControllerOutput,
+        },
+      }
+    );
+  }
 }
 
 /**
@@ -42,8 +49,17 @@ export class GetCandidatesRoute extends GetRoute {
  * @param {Request} request
  * @returns {ValidationResult}
  */
-export const validateRequest = (request: Request<GetCandidatesRequestDto>): ValidationResult => {
-	return AjvValidator.initialize().validateHttpRequest(CandidatesRequestSchema, request);
+export const validateRequest = (
+  request: Request<
+    unknown,
+    GetCandidatesRequestPathVariables,
+    GetCandidatesRequestQueryParams
+  >
+): ValidationResult => {
+  return AjvValidator.initialize().validateHttpRequest(
+    CandidatesRequestSchema,
+    request
+  );
 };
 
 /**
@@ -52,10 +68,14 @@ export const validateRequest = (request: Request<GetCandidatesRequestDto>): Vali
  * @returns
  */
 export const parseRequestToControllerInput = (
-	request: Request<GetCandidatesRequestDto>
+  request: Request<
+    unknown,
+    GetCandidatesRequestPathVariables,
+    GetCandidatesRequestQueryParams
+  >
 ) => {
-	// parse DTO (query) to the options required by the controller method
-	return GetCandidatesInput.fromRequest(request);
+  // parse DTO (query) to the options required by the controller method
+  return GetCandidatesInput.fromRequest(request);
 };
 
 /**
@@ -64,22 +84,22 @@ export const parseRequestToControllerInput = (
  * @returns
  */
 export const parseResultToControllerOutput = (
-	result: Result<GetCandidatesOutput>
+  result: Result<GetCandidatesOutput>
 ) => {
-	if (result.isFailure) {
-		const {
-			failure: { error },
-		} = result;
-		if (error) {
-			return {
-				status: 500,
-				body: [],
-			};
-		}
-	}
+  if (result.isFailure) {
+    const {
+      failure: { error },
+    } = result;
+    if (error) {
+      return {
+        status: 500,
+        body: [],
+      };
+    }
+  }
 
-	return {
-		status: 200,
-		body: result.content.toJson(),
-	};
+  return {
+    status: 200,
+    body: result.content.toJson(),
+  };
 };

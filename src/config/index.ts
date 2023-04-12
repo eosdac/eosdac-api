@@ -4,24 +4,22 @@ import { existsSync, statSync } from 'fs';
 import AppConfig from './app-config';
 
 const envPath = process.env.NODE_ENV
-	? `./.env-${process.env.NODE_ENV}`
-	: `./.env`;
+  ? `./.env-${process.env.NODE_ENV}`
+  : `./.env`;
 
 if (!existsSync(envPath)) {
-	throw new Error(
-		`Configuration file not found. Please check path: ${envPath}`
-	);
+  throw new Error(
+    `Configuration file not found. Please check path: ${envPath}`
+  );
 }
 
 const envStats = statSync(envPath);
 
 if (!envStats.isFile()) {
-	throw new Error(
-		`The given path is not a file. Please check path: ${envPath}`
-	);
+  throw new Error(
+    `The given path is not a file. Please check path: ${envPath}`
+  );
 }
 
-require('dotenv').config({ path: envPath });
-
-export const config = new AppConfig();
+export const config = AppConfig.create(envPath);
 export { Config } from './config.types';

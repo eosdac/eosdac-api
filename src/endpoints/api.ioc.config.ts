@@ -4,6 +4,7 @@ import {
   IndexWorldsContract,
   setupDacDirectoryRepository,
   setupFlagRepository,
+  setupHistoryToolsBlockState,
   setupUserVotingHistoryRepository,
   TokenWorldsContract,
 } from '@alien-worlds/dao-api-common';
@@ -11,7 +12,6 @@ import {
   AsyncContainerModule,
   Container,
   EosJsRpcSource,
-  MongoDB,
   MongoSource,
 } from '@alien-worlds/api-core';
 
@@ -43,6 +43,7 @@ import { ProfileController } from './profile/domain/profile.controller';
 import { setupStateRepository } from './health';
 import { setupVotingWeightRepository } from './candidates-voters-history/ioc.config';
 import { VotingHistoryController } from './voting-history/domain/voting-history.controller';
+import { setupDaoWorldsActionRepository } from '@alien-worlds/dao-api-common/build/contracts/dao-worlds/actions/ioc';
 
 /*imports*/
 
@@ -56,15 +57,7 @@ export const setupEndpointDependencies = async (
     /**
      * MONGO
      */
-    const { url, dbName } = config.mongo;
-    const client = new MongoDB.MongoClient(url);
-
-    /**
-     * MONGO DB (source & repositories)
-     */
-    await client.connect();
-    const db = client.db(dbName);
-    const mongoSource = new MongoSource(db);
+    const mongoSource = await MongoSource.create(config.mongo);
 
     const eosJsRpcSource = new EosJsRpcSource(config.eos.endpoint);
 
@@ -93,6 +86,7 @@ export const setupEndpointDependencies = async (
      * REPOSITORIES
      */
 
+    await setupDaoWorldsActionRepository(mongoSource, container);
     await setupFlagRepository(mongoSource, container);
     await setupDacDirectoryRepository(mongoSource, eosJsRpcSource, container);
     await setupUserVotingHistoryRepository(mongoSource, container);
@@ -104,6 +98,8 @@ export const setupEndpointDependencies = async (
     /**
      * HEALTH
      */
+
+    await setupHistoryToolsBlockState(mongoSource, container);
 
     bind<HealthController>(HealthController.Token).to(HealthController);
     bind<HealthUseCase>(HealthUseCase.Token).to(HealthUseCase);

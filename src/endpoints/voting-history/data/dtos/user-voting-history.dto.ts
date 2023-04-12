@@ -4,7 +4,7 @@ export enum VoteAction {
 	Refreshed = 'refreshed',
 }
 
-export type VotingHistoryRequestDto = {
+export type VotingHistoryRequestQueryParams = {
 	dacId: string;
 	voter: string;
 	skip?: number;

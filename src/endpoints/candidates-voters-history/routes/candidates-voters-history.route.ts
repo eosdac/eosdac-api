@@ -1,7 +1,17 @@
-import { EntityNotFoundError, GetRoute, Request, Result, RouteHandler, ValidationResult } from '@alien-worlds/api-core';
+import {
+  EntityNotFoundError,
+  GetRoute,
+  Request,
+  Result,
+  RouteHandler,
+  ValidationResult,
+} from '@alien-worlds/api-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
-import { CandidatesVotersHistoryControllerOutput } from '../data/dtos/candidates-voters-history.dto';
+import {
+  CandidatesVotersHistoryControllerOutput,
+  CandidatesVotersHistoryRequestQueryParams,
+} from '../data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryInput } from '../domain/models/candidates-voters-history.input';
 import { CandidatesVotersHistoryOutput } from '../domain/models/candidates-voters-history.output';
 import { CandidatesVotersHistoryRequestSchema } from '../schemas';
@@ -10,8 +20,8 @@ import { CandidatesVotersHistoryRequestSchema } from '../schemas';
 
 /**
  * @class
- * 
- * 
+ *
+ *
  */
 export class GetCandidatesVotersHistoryRoute extends GetRoute {
   public static create(handler: RouteHandler) {
@@ -19,15 +29,22 @@ export class GetCandidatesVotersHistoryRoute extends GetRoute {
   }
 
   private constructor(handler: RouteHandler) {
-    super(['/v1/dao/candidates_voters_history', '/v1/eosdac/candidates_voters_history'], handler, {
-      validators: {
-        request: validateRequest,
-      },
-      hooks: {
-        pre: parseRequestToControllerInput,
-        post: parseResultToControllerOutput,
-      },
-    });
+    super(
+      [
+        '/v1/dao/candidates_voters_history',
+        '/v1/eosdac/candidates_voters_history',
+      ],
+      handler,
+      {
+        validators: {
+          request: validateRequest,
+        },
+        hooks: {
+          pre: parseRequestToControllerInput,
+          post: parseResultToControllerOutput,
+        },
+      }
+    );
   }
 }
 
@@ -36,8 +53,13 @@ export class GetCandidatesVotersHistoryRoute extends GetRoute {
  * @param {Request} request
  * @returns {ValidationResult}
  */
-export const validateRequest = (request: Request<CandidatesVotersHistoryInput>): ValidationResult => {
-  return AjvValidator.initialize().validateHttpRequest(CandidatesVotersHistoryRequestSchema, request);
+export const validateRequest = (
+  request: Request<unknown, object, CandidatesVotersHistoryRequestQueryParams>
+): ValidationResult => {
+  return AjvValidator.initialize().validateHttpRequest(
+    CandidatesVotersHistoryRequestSchema,
+    request
+  );
 };
 
 /**
@@ -46,7 +68,7 @@ export const validateRequest = (request: Request<CandidatesVotersHistoryInput>):
  * @returns
  */
 export const parseRequestToControllerInput = (
-  request: Request<CandidatesVotersHistoryInput>
+  request: Request<unknown, object, CandidatesVotersHistoryRequestQueryParams>
 ) => {
   // parse DTO (query) to the options required by the controller method
   return CandidatesVotersHistoryInput.fromRequest(request.query);
@@ -71,13 +93,13 @@ export const parseResultToControllerOutput = (
           body: CandidatesVotersHistoryOutput.create({
             results: [],
             total: 0,
-          }).toJson()
-        }
+          }).toJson(),
+        };
       } else {
         return {
           status: 500,
           body: {
-            error: error.message
+            error: error.message,
           },
         };
       }
@@ -89,4 +111,3 @@ export const parseResultToControllerOutput = (
     body: CandidatesVotersHistoryOutput.create(result.content).toJson(),
   };
 };
-

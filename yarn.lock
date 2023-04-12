@@ -11,18 +11,6 @@
     debug "^4.3.4"
     safe-buffer "~5.1.2"
 
-"@alien-worlds/api-core@0.0.72":
-  version "0.0.72"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/api-core/0.0.72/c3199e5665c631a7bb93ed0905312a6a32fba124#c3199e5665c631a7bb93ed0905312a6a32fba124"
-  integrity sha512-gYBMzKCxv8f4ullcaU6DW5ANr7Yp5k5ox9J60ki7NgR9lI8007cl9XGiPu3Co35IgEjOAeoQclRW142d7T28Jw==
-  dependencies:
-    "@google-cloud/bigquery" "^6.0.3"
-    eosjs "^22.1.0"
-    inversify "^6.0.1"
-    mongodb "4.9.1"
-    node-fetch "2"
-    reflect-metadata "^0.1.13"
-
 "@alien-worlds/api-core@^0.0.87":
   version "0.0.87"
   resolved "https://npm.pkg.github.com/download/@alien-worlds/api-core/0.0.87/f25d104f3974cf7e0c3a514d2d8c50b147b65900#f25d104f3974cf7e0c3a514d2d8c50b147b65900"
@@ -38,10 +26,10 @@
     redis "^4.6.5"
     reflect-metadata "^0.1.13"
 
-"@alien-worlds/dao-api-common@^0.0.2":
-  version "0.0.2"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/dao-api-common/0.0.2/1d48745695622af959e57e440c51231d5dbbb8a9#1d48745695622af959e57e440c51231d5dbbb8a9"
-  integrity sha512-6CWtmL2TY2b4t64AwY2v0/29ZEta+9SJcMTIdJZYPhcoQDOSxoF2UrT0TTRrhkXNlNmMQfhvr6aP+khQsNQYcQ==
+"@alien-worlds/dao-api-common@^0.0.5":
+  version "0.0.5"
+  resolved "https://npm.pkg.github.com/download/@alien-worlds/dao-api-common/0.0.5/d5d12a61e5909ed970489e3f486c68a6c29ca396#d5d12a61e5909ed970489e3f486c68a6c29ca396"
+  integrity sha512-jTa+ZvqTqeFHExJN1AESCGHN+lkodyGnDAXJ+ev/o8rLonYzSJ89DrJDysHDIO/HrUT2iAOPtQ4pPw/COSMXhw==
   dependencies:
     "@alien-worlds/api-core" "^0.0.87"
     crypto "^1.0.1"
