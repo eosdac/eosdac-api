@@ -27,13 +27,13 @@
                 "@alien-worlds/api-core": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/eosdac-api-common": {
+                "@alien-worlds/dao-api-common": {
                     "$ref": "#/$defs/semanticVerString"
                 }
             },
             "required": [
                 "@alien-worlds/api-core",
-                "@alien-worlds/eosdac-api-common"
+                "@alien-worlds/dao-api-common"
             ]
         },
         "database": {

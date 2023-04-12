@@ -13,7 +13,7 @@ RUN mkdir -p /var/www/api
 ADD scripts /var/www/api/scripts
 ADD src /var/www/api/src
 
-COPY .npmrc package.json tokens.json tsconfig.json /var/www/api/
+COPY .npmrc package.json tsconfig.json /var/www/api/
 COPY .env-example /var/www/api/.env-${NODE_ENV}
 
 WORKDIR /var/www/api

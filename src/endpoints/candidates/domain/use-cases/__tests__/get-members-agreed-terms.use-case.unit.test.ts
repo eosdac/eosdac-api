@@ -5,65 +5,65 @@ import { anything, instance, mock, verify, when } from 'ts-mockito';
 
 import { Failure } from '@alien-worlds/api-core';
 import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
-import { TokenWorldsContract } from '@alien-worlds/eosdac-api-common';
+import { TokenWorldsContract } from '@alien-worlds/dao-api-common';
 
 describe('GetMembersAgreedTermsUseCase', () => {
-	let getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase;
-	let tokenWorldsContractService: TokenWorldsContract.Services.TokenWorldsContractService;
+  let getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase;
+  let tokenWorldsContractService: TokenWorldsContract.Services.TokenWorldsContractService;
 
-	beforeEach(() => {
-		tokenWorldsContractService = mock(
-			TokenWorldsContract.Services.TokenWorldsContractServiceImpl
-		);
-		getMembersAgreedTermsUseCase = new GetMembersAgreedTermsUseCase(
-			instance(tokenWorldsContractService)
-		);
-	});
+  beforeEach(() => {
+    tokenWorldsContractService = mock(
+      TokenWorldsContract.Services.TokenWorldsContractServiceImpl
+    );
+    getMembersAgreedTermsUseCase = new GetMembersAgreedTermsUseCase(
+      instance(tokenWorldsContractService)
+    );
+  });
 
-	it('should return a map of accounts and agreed terms version', async () => {
-		const dacId = 'daccustodian';
-		const accounts = ['account1', 'account2'];
+  it('should return a map of accounts and agreed terms version', async () => {
+    const dacId = 'daccustodian';
+    const accounts = ['account1', 'account2'];
 
-		const rows = [
-			{ sender: 'account1', agreedtermsversion: 2 },
-			{ sender: 'account2', agreedtermsversion: 3 },
-		];
+    const rows = [
+      { sender: 'account1', agreedtermsversion: 2 },
+      { sender: 'account2', agreedtermsversion: 3 },
+    ];
 
-		when(tokenWorldsContractService.fetchMembers(anything())).thenResolve({
-			content: rows,
-		} as any);
+    when(tokenWorldsContractService.fetchMembers(anything())).thenResolve({
+      content: rows,
+    } as any);
 
-		const result = await getMembersAgreedTermsUseCase.execute(dacId, accounts);
+    const result = await getMembersAgreedTermsUseCase.execute(dacId, accounts);
 
-		expect(result.content).toEqual(
-			new Map([
-				['account1', 2],
-				['account2', 3],
-			])
-		);
+    expect(result.content).toEqual(
+      new Map([
+        ['account1', 2],
+        ['account2', 3],
+      ])
+    );
 
-		verify(tokenWorldsContractService.fetchMembers(anything())).once();
-	});
+    verify(tokenWorldsContractService.fetchMembers(anything())).once();
+  });
 
-	it('should return a failure if fetching members fails', async () => {
-		const dacId = 'daccustodian';
-		const accounts = ['account1', 'account2'];
+  it('should return a failure if fetching members fails', async () => {
+    const dacId = 'daccustodian';
+    const accounts = ['account1', 'account2'];
 
-		when(tokenWorldsContractService.fetchMembers(anything())).thenResolve({
-			failure: Failure.withMessage('error'),
-		} as any);
+    when(tokenWorldsContractService.fetchMembers(anything())).thenResolve({
+      failure: Failure.withMessage('error'),
+    } as any);
 
-		const result = await getMembersAgreedTermsUseCase.execute(dacId, accounts);
+    const result = await getMembersAgreedTermsUseCase.execute(dacId, accounts);
 
-		expect(result.failure).toBeTruthy();
+    expect(result.failure).toBeTruthy();
 
-		verify(tokenWorldsContractService.fetchMembers(anything())).once();
-	});
+    verify(tokenWorldsContractService.fetchMembers(anything())).once();
+  });
 });
 // Unit Test Code
 // import { Container, Failure } from '@alien-worlds/api-core';
 // import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
-// import { MemberTerms } from '@alien-worlds/eosdac-api-common';
+// import { MemberTerms } from '@alien-worlds/dao-api-common';
 
 // describe('GetMemberTermsUseCase', () => {
 // 	let container: Container;

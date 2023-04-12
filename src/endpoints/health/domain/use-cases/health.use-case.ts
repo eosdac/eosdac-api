@@ -12,10 +12,11 @@ import { StateRepository } from '../repositories/state.repository';
 export class HealthUseCase implements UseCase<HealthOutput> {
   public static Token = 'HEALTH_USE_CASE';
 
-  constructor(/*injections*/
+  constructor(
+    /*injections*/
     @inject(StateRepository.Token)
     private stateRepository: StateRepository
-  ) { }
+  ) {}
 
   /**
    * @async
@@ -25,7 +26,7 @@ export class HealthUseCase implements UseCase<HealthOutput> {
     const getCurrentBlockRes = await this.stateRepository.getCurrentBlock();
 
     if (getCurrentBlockRes.isFailure) {
-      return Result.withFailure(getCurrentBlockRes.failure)
+      return Result.withFailure(getCurrentBlockRes.failure);
     }
 
     const output: HealthOutputDocument = {
@@ -41,12 +42,14 @@ export class HealthUseCase implements UseCase<HealthOutput> {
       dependencies: [
         {
           name: '@alien-worlds/api-core',
-          version: process.env.npm_package_dependencies__alien_worlds_api_core
+          version: process.env.npm_package_dependencies__alien_worlds_api_core,
         },
         {
-          name: '@alien-worlds/eosdac-api-common',
-          version: process.env.npm_package_dependencies__alien_worlds_eosdac_api_common
-        }
+          name: '@alien-worlds/dao-api-common',
+          version:
+            process.env
+              .npm_package_dependencies__alien_worlds_eosdac_api_common,
+        },
       ],
 
       database: {
@@ -63,4 +66,3 @@ export class HealthUseCase implements UseCase<HealthOutput> {
 
   /*methods*/
 }
-

@@ -3589,7 +3589,7 @@ paths:
                 nodeVersion: v19.7.0
                 dependencies:
                   '@alien-worlds/api-core': 0.0.72
-                  '@alien-worlds/eosdac-api-common': 0.0.83
+                  '@alien-worlds/dao-api-common': 0.0.83
                 database:
                   status: OK
                 blockChainHistory:

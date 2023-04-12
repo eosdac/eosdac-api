@@ -1,7 +1,13 @@
-import { GetRoute, Request, Result, RouteHandler, ValidationResult } from '@alien-worlds/api-core';
+import {
+  GetRoute,
+  Request,
+  Result,
+  RouteHandler,
+  ValidationResult,
+} from '@alien-worlds/api-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
-import { UserVote } from '@alien-worlds/eosdac-api-common';
+import { UserVote } from '@alien-worlds/dao-api-common';
 import { VotingHistoryInput } from '../domain/models/voting-history.input';
 import { VotingHistoryOutput } from '../domain/models/voting-history.output';
 import { VotingHistoryRequestSchema } from '../schemas';
@@ -10,8 +16,8 @@ import { VotingHistoryRequestSchema } from '../schemas';
 
 /**
  * @class
- * 
- * 
+ *
+ *
  */
 export class GetVotingHistoryRoute extends GetRoute {
   public static create(handler: RouteHandler) {
@@ -31,14 +37,18 @@ export class GetVotingHistoryRoute extends GetRoute {
   }
 }
 
-
 /**
  *
  * @param {Request} request
  * @returns {ValidationResult}
  */
-export const validateRequest = (request: Request<VotingHistoryInput>): ValidationResult => {
-  return AjvValidator.initialize().validateHttpRequest(VotingHistoryRequestSchema, request);
+export const validateRequest = (
+  request: Request<VotingHistoryInput>
+): ValidationResult => {
+  return AjvValidator.initialize().validateHttpRequest(
+    VotingHistoryRequestSchema,
+    request
+  );
 };
 
 /**
@@ -69,7 +79,7 @@ export const parseResultToControllerOutput = (
       return {
         status: 500,
         body: {
-          error: error.message
+          error: error.message,
         },
       };
     }
@@ -82,4 +92,3 @@ export const parseResultToControllerOutput = (
     body: VotingHistoryOutput.create(content).toJson(),
   };
 };
-

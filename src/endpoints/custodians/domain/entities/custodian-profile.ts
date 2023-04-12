@@ -1,8 +1,8 @@
 import {
-	DaoWorldsContract,
-	RequestedPayment,
-	TokenWorldsContract,
-} from '@alien-worlds/eosdac-api-common';
+  DaoWorldsContract,
+  RequestedPayment,
+  TokenWorldsContract,
+} from '@alien-worlds/dao-api-common';
 
 import { Profile } from '../../../profile/domain/entities/profile';
 
@@ -12,79 +12,79 @@ import { Profile } from '../../../profile/domain/entities/profile';
  * @class
  */
 export class CustodianProfile {
-	/**
-	 * Creates instances of Custodian based on a given DTO.
-	 *
-	 * @static
-	 * @public
-	 * @returns {CustodianProfile}
-	 */
-	public static create(
-		dacId: string,
-		custodian: DaoWorldsContract.Deltas.Entities.Custodian,
-		profile: Profile,
-		memberTerms: TokenWorldsContract.Deltas.Entities.MemberTerms,
-		agreedTermsVersion: number
-	): CustodianProfile {
-		const { name, requestedPayment, totalVotePower } = custodian;
+  /**
+   * Creates instances of Custodian based on a given DTO.
+   *
+   * @static
+   * @public
+   * @returns {CustodianProfile}
+   */
+  public static create(
+    dacId: string,
+    custodian: DaoWorldsContract.Deltas.Entities.Custodian,
+    profile: Profile,
+    memberTerms: TokenWorldsContract.Deltas.Entities.MemberTerms,
+    agreedTermsVersion: number
+  ): CustodianProfile {
+    const { name, requestedPayment, totalVotePower } = custodian;
 
-		const { version } = memberTerms;
-		const votePower = totalVotePower / 10000n;
+    const { version } = memberTerms;
+    const votePower = totalVotePower / 10000n;
 
-		return new CustodianProfile(
-			name,
-			requestedPayment,
-			Number(votePower),
-			profile?.profile,
-			agreedTermsVersion,
-			Number(version) === agreedTermsVersion,
-			!!profile?.error,
-			false,
-			dacId
-		);
-	}
+    return new CustodianProfile(
+      name,
+      requestedPayment,
+      Number(votePower),
+      profile?.profile,
+      agreedTermsVersion,
+      Number(version) === agreedTermsVersion,
+      !!profile?.error,
+      false,
+      dacId
+    );
+  }
 
-	/**
-	 * @private
-	 * @constructor
-	 */
-	private constructor(
-		public readonly walletId: string,
-		public readonly requestedPayment: RequestedPayment,
-		public readonly votePower: number,
-		public readonly profile: object,
-		public readonly agreedTermVersion: number,
-		public readonly currentPlanetMemberTermsSignedValid: boolean,
-		public readonly isFlagged: boolean,
-		public readonly isSelected: boolean,
-		public readonly planetName: string
-	) { }
+  /**
+   * @private
+   * @constructor
+   */
+  private constructor(
+    public readonly walletId: string,
+    public readonly requestedPayment: RequestedPayment,
+    public readonly votePower: number,
+    public readonly profile: object,
+    public readonly agreedTermVersion: number,
+    public readonly currentPlanetMemberTermsSignedValid: boolean,
+    public readonly isFlagged: boolean,
+    public readonly isSelected: boolean,
+    public readonly planetName: string
+  ) {}
 
-	public toJson() {
-		const {
-			walletId,
-			requestedPayment,
-			votePower,
-			profile,
-			agreedTermVersion,
-			currentPlanetMemberTermsSignedValid,
-			isFlagged,
-			isSelected,
-			planetName,
-		} = this;
+  public toJson() {
+    const {
+      walletId,
+      requestedPayment,
+      votePower,
+      profile,
+      agreedTermVersion,
+      currentPlanetMemberTermsSignedValid,
+      isFlagged,
+      isSelected,
+      planetName,
+    } = this;
 
-		const p = profile || {};
+    const p = profile || {};
 
-		return {
-			walletId,
-			requestedpay: `${requestedPayment.value} ${requestedPayment.symbol}`,
-			votePower,
-			...p,
-			agreedTermVersion,
-			currentPlanetMemberTermsSignedValid,
-			isFlagged,
-			isSelected,
-			planetName,
-		};
-	}
+    return {
+      walletId,
+      requestedpay: `${requestedPayment.value} ${requestedPayment.symbol}`,
+      votePower,
+      ...p,
+      agreedTermVersion,
+      currentPlanetMemberTermsSignedValid,
+      isFlagged,
+      isSelected,
+      planetName,
+    };
+  }
 }

@@ -1,6 +1,10 @@
-import { ContractActionDocument, MongoDB, removeUndefinedProperties } from '@alien-worlds/api-core';
+import {
+  ContractActionDocument,
+  MongoDB,
+  removeUndefinedProperties,
+} from '@alien-worlds/api-core';
 
-import { DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
+import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
 import { ProfileError } from '../../data/dtos/profile.dto';
 import { ProfileItem } from './profile-item';
 
@@ -20,8 +24,8 @@ export class Profile {
     public readonly actionName: string,
     public readonly blockNum: string,
     public readonly profile: ProfileItem,
-    public readonly error?: ProfileError,
-  ) { }
+    public readonly error?: ProfileError
+  ) {}
 
   /**
    * Create DTO based on entity data
@@ -38,7 +42,7 @@ export class Profile {
         data: {
           cand: this.account,
           profile: this.profile.toDto(),
-        }
+        },
       },
     };
 
@@ -58,7 +62,9 @@ export class Profile {
    * @param {ContractActionDocument} dto
    * @returns {Profile}
    */
-  public static fromDto(dto: ContractActionDocument<DaoWorldsContract.Actions.Types.StprofileDocument>): Profile {
+  public static fromDto(
+    dto: ContractActionDocument<DaoWorldsContract.Actions.Types.StprofileDocument>
+  ): Profile {
     const { block_num, action } = dto;
     const { profile, cand } = action.data;
 
@@ -67,11 +73,19 @@ export class Profile {
       profileJson = JSON.parse(profile);
     }
 
-    return new Profile(cand, action.account, action.name, block_num.toString(), ProfileItem.fromDto(profileJson))
+    return new Profile(
+      cand,
+      action.account,
+      action.name,
+      block_num.toString(),
+      ProfileItem.fromDto(profileJson)
+    );
   }
 
-  public static createErrorProfile(account: string, error: ProfileError): Profile {
-    return new Profile(account, null, null, null, null, error)
+  public static createErrorProfile(
+    account: string,
+    error: ProfileError
+  ): Profile {
+    return new Profile(account, null, null, null, null, error);
   }
 }
-

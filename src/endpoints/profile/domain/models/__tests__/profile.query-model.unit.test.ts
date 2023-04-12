@@ -4,35 +4,34 @@ import { ProfileQueryModel } from '../profile.query-model';
 const input = {
   custContract: 'dao.worlds',
   dacId: 'testa',
-  accounts: ['awtesteroo12']
+  accounts: ['awtesteroo12'],
 };
 
 const queryModel = {
   pipeline: [
     {
-      '$match': {
-        'action.account': 'dao.worlds',
+      $match: {
         'action.name': 'stprofile',
         'action.data.dac_id': 'testa',
-        'action.data.cand': { '$in': ['awtesteroo12'] }
-      }
+        'action.data.cand': { $in: ['awtesteroo12'] },
+      },
     },
-    { '$sort': { block_num: -1 } },
+    { $sort: { block_num: -1 } },
     {
-      '$group': {
-        _id: "$action.data.cand",
-        block_num: { '$first': '$block_num' },
-        profile: { '$first': '$action.data.profile' },
-        account: { '$first': '$action.data.cand' },
-        action: { '$first': '$action' },
-        recv_sequence: { '$first': '$recv_sequence' },
-        global_sequence: { '$first': '$global_sequence' },
-      }
+      $group: {
+        _id: '$action.data.cand',
+        block_num: { $first: '$block_num' },
+        profile: { $first: '$action.data.profile' },
+        account: { $first: '$action.data.cand' },
+        action: { $first: '$action' },
+        recv_sequence: { $first: '$recv_sequence' },
+        global_sequence: { $first: '$global_sequence' },
+      },
     },
-    { '$sort': { block_num: -1 } }
+    { $sort: { block_num: -1 } },
   ],
-  options: {}
-}
+  options: {},
+};
 
 describe('ProfileQueryModel Unit tests', () => {
   it('"ProfileQueryModel.toQueryParams" should create mongodb query model', async () => {
@@ -43,4 +42,3 @@ describe('ProfileQueryModel Unit tests', () => {
 
   /*unit-tests*/
 });
-

@@ -1,8 +1,7 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
-
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
-import { ContractActionRepository } from '@alien-worlds/eosdac-api-common';
 import { CountVotersHistoryQueryModel } from '../models/count-voters-history.query-model';
+import { DaoWorldsActionRepository } from '@alien-worlds/dao-api-common/build/contracts/dao-worlds/actions/domain/repositories';
 
 /*imports*/
 /**
@@ -12,26 +11,30 @@ import { CountVotersHistoryQueryModel } from '../models/count-voters-history.que
 export class CountVotersHistoryUseCase implements UseCase<number> {
   public static Token = 'COUNT_VOTERS_HISTORY_USE_CASE';
 
-  constructor(/*injections*/
-    @inject(ContractActionRepository.Token)
-    private contractActionRepository: ContractActionRepository
-  ) { }
+  constructor(
+    /*injections*/
+    @inject(DaoWorldsActionRepository.Token)
+    private daoWorldsActionRepository: DaoWorldsActionRepository
+  ) {}
 
   /**
    * @async
    * @returns {Promise<Result<Number, Error>>}
    */
-  public async execute(input: CandidatesVotersHistoryInput): Promise<Result<number, Error>> {
+  public async execute(
+    input: CandidatesVotersHistoryInput
+  ): Promise<Result<number, Error>> {
     const queryModel = CountVotersHistoryQueryModel.create(input);
 
-    const allMatchingActionsRes = await this.contractActionRepository.count(queryModel);
+    const allMatchingActionsRes = await this.daoWorldsActionRepository.count(
+      queryModel
+    );
     if (allMatchingActionsRes.isFailure) {
       return Result.withFailure(allMatchingActionsRes.failure);
     }
 
-    return Result.withContent(allMatchingActionsRes.content || 0)
+    return Result.withContent(allMatchingActionsRes.content || 0);
   }
 
   /*methods*/
 }
-

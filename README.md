@@ -1,4 +1,4 @@
-# eosDAC API
+# DAO API
 
 Provides DAC specific api endpoints for use by the eosdac-client.
 
@@ -11,7 +11,7 @@ Provides DAC specific api endpoints for use by the eosdac-client.
 
 ## Components
 
-The `eosdac-api` consists of 4 components
+The `dao-api` consists of 4 components
 
 ### Filler
 

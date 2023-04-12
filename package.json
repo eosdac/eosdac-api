@@ -1,5 +1,5 @@
 {
-  "name": "eosdac-api",
+  "name": "dao-api",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@alien-worlds/api-core": "0.0.72",
-    "@alien-worlds/eosdac-api-common": "0.0.83",
+    "@alien-worlds/dao-api-common": "^0.0.2",
     "@fastify/swagger": "6.1.1",
     "@jafri/eosjs2": "^20.0.1-e34c16e.170",
     "@shelf/winston-datadog-logs-transport": "^1.0.7",

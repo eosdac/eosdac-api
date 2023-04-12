@@ -3977,7 +3977,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"status\": \"OK\",\n    \"version\": \"1.0.0\",\n    \"timestamp\": 1677513169143,\n    \"uptimeSeconds\": 10,\n    \"nodeVersion\": \"v19.7.0\",\n    \"dependencies\": {\n        \"@alien-worlds/api-core\": \"0.0.72\",\n        \"@alien-worlds/eosdac-api-common\": \"0.0.83\"\n    },\n    \"database\": {\n        \"status\": \"OK\"\n    },\n    \"blockChainHistory\": {\n        \"currentBlock\": \"232088089\"\n    }\n}"
+					"body": "{\n    \"status\": \"OK\",\n    \"version\": \"1.0.0\",\n    \"timestamp\": 1677513169143,\n    \"uptimeSeconds\": 10,\n    \"nodeVersion\": \"v19.7.0\",\n    \"dependencies\": {\n        \"@alien-worlds/api-core\": \"0.0.72\",\n        \"@alien-worlds/dao-api-common\": \"0.0.83\"\n    },\n    \"database\": {\n        \"status\": \"OK\"\n    },\n    \"blockChainHistory\": {\n        \"currentBlock\": \"232088089\"\n    }\n}"
 				}
 			]
 		}

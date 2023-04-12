@@ -33,12 +33,11 @@ export class ProfileQueryModel extends QueryModel {
 	}
 
 	public toQueryParams(): MongoAggregateParams {
-		const { custContract, dacId, accounts } = this;
+		const { dacId, accounts } = this;
 
 		const pipeline: object[] = [
 			{
 				$match: {
-					'action.account': custContract,
 					'action.name': 'stprofile',
 					'action.data.dac_id': dacId,
 					'action.data.cand': { $in: accounts },

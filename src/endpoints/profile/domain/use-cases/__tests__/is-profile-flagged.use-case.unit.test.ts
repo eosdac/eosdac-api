@@ -1,7 +1,10 @@
 import 'reflect-metadata';
 
 import { Container, Failure, Result } from '@alien-worlds/api-core';
-import { DaoWorldsContract, FlagRepository } from '@alien-worlds/eosdac-api-common';
+import {
+  DaoWorldsContract,
+  FlagRepository,
+} from '@alien-worlds/dao-api-common';
 
 import { IsProfileFlaggedUseCase } from '../is-profile-flagged.use-case';
 import { IsProfileFlaggedUseCaseInput } from '../../../../profile/data/dtos/profile.dto';
@@ -12,71 +15,70 @@ import { IsProfileFlaggedUseCaseInput } from '../../../../profile/data/dtos/prof
 let container: Container;
 let useCase: IsProfileFlaggedUseCase;
 const useCaseInput: IsProfileFlaggedUseCaseInput = {
-	dacId: 'string',
-	accounts: ['awtesteroo12'],
+  dacId: 'string',
+  accounts: ['awtesteroo12'],
 };
 const flagRepository = {
-	update: jest.fn(),
-	updateMany: jest.fn(),
-	add: jest.fn(),
-	addOnce: jest.fn(),
-	count: jest.fn(),
-	find: jest.fn(),
-	findOne: jest.fn(),
-	aggregate: jest.fn(),
-	remove: jest.fn(),
-	removeMany: jest.fn(),
+  update: jest.fn(),
+  updateMany: jest.fn(),
+  add: jest.fn(),
+  addOnce: jest.fn(),
+  count: jest.fn(),
+  find: jest.fn(),
+  findOne: jest.fn(),
+  aggregate: jest.fn(),
+  remove: jest.fn(),
+  removeMany: jest.fn(),
 };
 
 describe('Is Profile Flagged Unit tests', () => {
-	beforeAll(() => {
-		container = new Container();
+  beforeAll(() => {
+    container = new Container();
+    container
+      .bind<FlagRepository>(FlagRepository.Token)
+      .toConstantValue(flagRepository as any);
+    container
+      .bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token)
+      .to(IsProfileFlaggedUseCase);
+  });
 
-		container
-			.bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token)
-			.to(IsProfileFlaggedUseCase);
-		container
-			.bind<FlagRepository>(FlagRepository.Token)
-			.toConstantValue(flagRepository);
-	});
+  beforeEach(() => {
+    useCase = container.get<IsProfileFlaggedUseCase>(
+      IsProfileFlaggedUseCase.Token
+    );
+  });
 
-	beforeEach(() => {
-		useCase = container.get<IsProfileFlaggedUseCase>(
-			IsProfileFlaggedUseCase.Token
-		);
-	});
+  afterAll(() => {
+    jest.clearAllMocks();
+    container = null;
+  });
 
-	afterAll(() => {
-		jest.clearAllMocks();
-		container = null;
-	});
+  it('"Token" should be set', () => {
+    expect(IsProfileFlaggedUseCase.Token).not.toBeNull();
+  });
 
-	it('"Token" should be set', () => {
-		expect(IsProfileFlaggedUseCase.Token).not.toBeNull();
-	});
+  it('Should return a failure when ...', async () => {
+    flagRepository.aggregate.mockResolvedValue(
+      Result.withFailure(Failure.fromError('error'))
+    );
+    const result = await useCase.execute(useCaseInput);
+    expect(result.isFailure).toBeTruthy();
+  });
 
-	it('Should return a failure when ...', async () => {
-		flagRepository.aggregate.mockResolvedValue(
-			Result.withFailure(Failure.fromError('error'))
-		);
-		const result = await useCase.execute(useCaseInput);
-		expect(result.isFailure).toBeTruthy();
-	});
+  it('should return Array', async () => {
+    const content = [
+      DaoWorldsContract.Actions.Entities.FlagCandidateProfile.fromStruct({
+        cand: 'cand',
+        reason: '',
+        reporter: '',
+        block: true,
+        dac_id: 'dacId',
+      }),
+    ];
+    flagRepository.aggregate.mockResolvedValue(Result.withContent(content));
+    const result = await useCase.execute(useCaseInput);
+    expect(result.content).toBeInstanceOf(Array);
+  });
 
-	it('should return Array', async () => {
-		const content = [
-			DaoWorldsContract.Actions.Entities.FlagCandidateProfile.fromStruct({
-				cand: 'cand',
-				reason: '',
-				reporter: '',
-				block: true,
-				dac_id: 'dacId',
-			}),
-		];
-		flagRepository.aggregate.mockResolvedValue(Result.withContent(content));
-		const result = await useCase.execute(useCaseInput);
-		expect(result.content).toBeInstanceOf(Array);
-	});
-
-	/*unit-tests*/
+  /*unit-tests*/
 });

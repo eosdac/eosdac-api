@@ -38,7 +38,6 @@ export class CandidatesVotersHistoryQueryModel extends QueryModel {
 		const pipeline: object[] = [
 			{
 				'$match': {
-					'action.account': 'dao.worlds',
 					'action.name': 'votecust',
 					'action.data.dac_id': dacId,
 					'action.data.newvotes': candidateId

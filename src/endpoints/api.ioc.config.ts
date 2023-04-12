@@ -1,14 +1,19 @@
 import {
-	AlienWorldsContract,
-	DaoWorldsContract,
-	IndexWorldsContract,
-	setupContractActionRepository,
-	setupDacDirectoryRepository,
-	setupFlagRepository,
-	setupUserVotingHistoryRepository,
-	TokenWorldsContract
-} from '@alien-worlds/eosdac-api-common';
-import { AsyncContainerModule, Container, EosJsRpcSource, MongoDB, MongoSource } from '@alien-worlds/api-core';
+  AlienWorldsContract,
+  DaoWorldsContract,
+  IndexWorldsContract,
+  setupDacDirectoryRepository,
+  setupFlagRepository,
+  setupUserVotingHistoryRepository,
+  TokenWorldsContract,
+} from '@alien-worlds/dao-api-common';
+import {
+  AsyncContainerModule,
+  Container,
+  EosJsRpcSource,
+  MongoDB,
+  MongoSource,
+} from '@alien-worlds/api-core';
 
 import AppConfig from 'src/config/app-config';
 import { CandidatesController } from './candidates/domain/candidates.controller';
@@ -42,135 +47,150 @@ import { VotingHistoryController } from './voting-history/domain/voting-history.
 /*imports*/
 
 export const setupEndpointDependencies = async (
-	container: Container,
-	config: AppConfig
+  container: Container,
+  config: AppConfig
 ): Promise<Container> => {
-	const bindings = new AsyncContainerModule(async bind => {
-		// async operations first and then binding
+  const bindings = new AsyncContainerModule(async bind => {
+    // async operations first and then binding
 
-		/**
-		 * MONGO
-		 */
-		const { url, dbName } = config.mongo;
-		const client = new MongoDB.MongoClient(url);
+    /**
+     * MONGO
+     */
+    const { url, dbName } = config.mongo;
+    const client = new MongoDB.MongoClient(url);
 
-		/**
-		 * MONGO DB (source & repositories)
-		 */
-		await client.connect();
-		const db = client.db(dbName);
-		const mongoSource = new MongoSource(db);
+    /**
+     * MONGO DB (source & repositories)
+     */
+    await client.connect();
+    const db = client.db(dbName);
+    const mongoSource = new MongoSource(db);
 
-		const eosJsRpcSource = new EosJsRpcSource(config.eos.endpoint);
+    const eosJsRpcSource = new EosJsRpcSource(config.eos.endpoint);
 
-		/**
-		 * SMART CONTRACT SERVICES
-		 */
+    /**
+     * SMART CONTRACT SERVICES
+     */
 
-		await IndexWorldsContract.Services.Ioc.setupIndexWorldsContractService(
-			eosJsRpcSource,
-			container
-		);
-		await AlienWorldsContract.Services.Ioc.setupAlienWorldsContractService(
-			eosJsRpcSource,
-			container
-		);
-		await DaoWorldsContract.Services.Ioc.setupDaoWorldsContractService(
-			eosJsRpcSource,
-			container
-		);
-		await TokenWorldsContract.Services.Ioc.setupTokenWorldsContractService(
-			eosJsRpcSource,
-			container
-		);
+    await IndexWorldsContract.Services.Ioc.setupIndexWorldsContractService(
+      eosJsRpcSource,
+      container
+    );
+    await AlienWorldsContract.Services.Ioc.setupAlienWorldsContractService(
+      eosJsRpcSource,
+      container
+    );
+    await DaoWorldsContract.Services.Ioc.setupDaoWorldsContractService(
+      eosJsRpcSource,
+      container
+    );
+    await TokenWorldsContract.Services.Ioc.setupTokenWorldsContractService(
+      eosJsRpcSource,
+      container
+    );
 
-		/**
-		 * REPOSITORIES
-		 */
+    /**
+     * REPOSITORIES
+     */
 
-		await setupFlagRepository(mongoSource, container);
-		await setupDacDirectoryRepository(mongoSource, eosJsRpcSource, container)
-		await setupUserVotingHistoryRepository(mongoSource, container)
-		await setupVotingWeightRepository(mongoSource, container);
-		await setupContractActionRepository(mongoSource, container);
-		await setupStateRepository(mongoSource, container);
+    await setupFlagRepository(mongoSource, container);
+    await setupDacDirectoryRepository(mongoSource, eosJsRpcSource, container);
+    await setupUserVotingHistoryRepository(mongoSource, container);
+    await setupVotingWeightRepository(mongoSource, container);
+    await setupStateRepository(mongoSource, container);
 
-		/*bindings*/
+    /*bindings*/
 
-		/**
-		 * HEALTH
-		 */
+    /**
+     * HEALTH
+     */
 
-		bind<HealthController>(HealthController.Token).to(HealthController);
-		bind<HealthUseCase>(HealthUseCase.Token).to(HealthUseCase);
+    bind<HealthController>(HealthController.Token).to(HealthController);
+    bind<HealthUseCase>(HealthUseCase.Token).to(HealthUseCase);
 
-		/**
-		 * ACTIONS
-		 */
+    /**
+     * ACTIONS
+     */
 
-		bind<ProfileController>(ProfileController.Token).to(ProfileController);
-		bind<GetProfilesUseCase>(GetProfilesUseCase.Token).to(GetProfilesUseCase);
-		bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token).to(
-			IsProfileFlaggedUseCase
-		);
+    bind<ProfileController>(ProfileController.Token).to(ProfileController);
+    bind<GetProfilesUseCase>(GetProfilesUseCase.Token).to(GetProfilesUseCase);
+    bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token).to(
+      IsProfileFlaggedUseCase
+    );
 
-		/**
-		 * DACS
-		 */
+    /**
+     * DACS
+     */
 
-		bind<GetDacsController>(GetDacsController.Token).to(GetDacsController);
-		bind<GetAllDacsUseCase>(GetAllDacsUseCase.Token).to(GetAllDacsUseCase);
-		bind<GetDacTreasuryUseCase>(GetDacTreasuryUseCase.Token).to(GetDacTreasuryUseCase);
-		bind<GetDacInfoUseCase>(GetDacInfoUseCase.Token).to(GetDacInfoUseCase);
-		bind<GetDacTokensUseCase>(GetDacTokensUseCase.Token).to(GetDacTokensUseCase);
+    bind<GetDacsController>(GetDacsController.Token).to(GetDacsController);
+    bind<GetAllDacsUseCase>(GetAllDacsUseCase.Token).to(GetAllDacsUseCase);
+    bind<GetDacTreasuryUseCase>(GetDacTreasuryUseCase.Token).to(
+      GetDacTreasuryUseCase
+    );
+    bind<GetDacInfoUseCase>(GetDacInfoUseCase.Token).to(GetDacInfoUseCase);
+    bind<GetDacTokensUseCase>(GetDacTokensUseCase.Token).to(
+      GetDacTokensUseCase
+    );
 
-		/**
-		 * VOTING HISTORY
-		 */
-		bind<VotingHistoryController>(VotingHistoryController.Token).to(VotingHistoryController);
-		bind<GetUserVotingHistoryUseCase>(GetUserVotingHistoryUseCase.Token).to(GetUserVotingHistoryUseCase);
+    /**
+     * VOTING HISTORY
+     */
+    bind<VotingHistoryController>(VotingHistoryController.Token).to(
+      VotingHistoryController
+    );
+    bind<GetUserVotingHistoryUseCase>(GetUserVotingHistoryUseCase.Token).to(
+      GetUserVotingHistoryUseCase
+    );
 
-		bind<CandidatesVotersHistoryController>(CandidatesVotersHistoryController.Token).to(CandidatesVotersHistoryController);
-		bind<GetCandidatesVotersHistoryUseCase>(GetCandidatesVotersHistoryUseCase.Token).to(GetCandidatesVotersHistoryUseCase);
-		bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token).to(CountVotersHistoryUseCase);
-		bind<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token).to(GetVotingPowerUseCase);
+    bind<CandidatesVotersHistoryController>(
+      CandidatesVotersHistoryController.Token
+    ).to(CandidatesVotersHistoryController);
+    bind<GetCandidatesVotersHistoryUseCase>(
+      GetCandidatesVotersHistoryUseCase.Token
+    ).to(GetCandidatesVotersHistoryUseCase);
+    bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token).to(
+      CountVotersHistoryUseCase
+    );
+    bind<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token).to(
+      GetVotingPowerUseCase
+    );
 
-		/**
-		 * CANDIDATES
-		 */
-		bind<GetMemberTermsUseCase>(GetMemberTermsUseCase.Token).to(
-			GetMemberTermsUseCase
-		);
-		bind<GetMembersAgreedTermsUseCase>(GetMembersAgreedTermsUseCase.Token).to(
-			GetMembersAgreedTermsUseCase
-		);
-		bind<GetVotedCandidateIdsUseCase>(GetVotedCandidateIdsUseCase.Token).to(
-			GetVotedCandidateIdsUseCase
-		);
-		bind<GetCandidatesUseCase>(GetCandidatesUseCase.Token).to(
-			GetCandidatesUseCase
-		);
-		bind<ListCandidateProfilesUseCase>(ListCandidateProfilesUseCase.Token).to(
-			ListCandidateProfilesUseCase
-		);
-		bind<CandidatesController>(CandidatesController.Token).to(
-			CandidatesController
-		);
+    /**
+     * CANDIDATES
+     */
+    bind<GetMemberTermsUseCase>(GetMemberTermsUseCase.Token).to(
+      GetMemberTermsUseCase
+    );
+    bind<GetMembersAgreedTermsUseCase>(GetMembersAgreedTermsUseCase.Token).to(
+      GetMembersAgreedTermsUseCase
+    );
+    bind<GetVotedCandidateIdsUseCase>(GetVotedCandidateIdsUseCase.Token).to(
+      GetVotedCandidateIdsUseCase
+    );
+    bind<GetCandidatesUseCase>(GetCandidatesUseCase.Token).to(
+      GetCandidatesUseCase
+    );
+    bind<ListCandidateProfilesUseCase>(ListCandidateProfilesUseCase.Token).to(
+      ListCandidateProfilesUseCase
+    );
+    bind<CandidatesController>(CandidatesController.Token).to(
+      CandidatesController
+    );
 
-		/**
-		 * CUSTODIANS
-		 */
-		bind<GetCustodiansUseCase>(GetCustodiansUseCase.Token).to(
-			GetCustodiansUseCase
-		);
-		bind<ListCustodianProfilesUseCase>(ListCustodianProfilesUseCase.Token).to(
-			ListCustodianProfilesUseCase
-		);
-		bind<CustodiansController>(CustodiansController.Token).to(
-			CustodiansController
-		);
-	});
+    /**
+     * CUSTODIANS
+     */
+    bind<GetCustodiansUseCase>(GetCustodiansUseCase.Token).to(
+      GetCustodiansUseCase
+    );
+    bind<ListCustodianProfilesUseCase>(ListCustodianProfilesUseCase.Token).to(
+      ListCustodianProfilesUseCase
+    );
+    bind<CustodiansController>(CustodiansController.Token).to(
+      CustodiansController
+    );
+  });
 
-	await container.loadAsync(bindings);
-	return container;
+  await container.loadAsync(bindings);
+  return container;
 };
