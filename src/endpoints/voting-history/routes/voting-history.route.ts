@@ -12,9 +12,10 @@ import { VotingHistoryInput } from '../domain/models/voting-history.input';
 import { VotingHistoryOutput } from '../domain/models/voting-history.output';
 import { VotingHistoryRequestSchema } from '../schemas';
 import { VotingHistoryRequestQueryParams } from '../data/dtos/user-voting-history.dto';
+import { config } from '@config';
 
 /*imports*/
-
+config;
 /**
  * @class
  *
@@ -26,15 +27,22 @@ export class GetVotingHistoryRoute extends GetRoute {
   }
 
   private constructor(handler: RouteHandler) {
-    super(['/v1/dao/voting_history', '/v1/eosdac/voting_history'], handler, {
-      validators: {
-        request: validateRequest,
-      },
-      hooks: {
-        pre: parseRequestToControllerInput,
-        post: parseResultToControllerOutput,
-      },
-    });
+    super(
+      [
+        `/${config.version}/dao/voting_history`,
+        `/${config.version}/eosdac/voting_history`,
+      ],
+      handler,
+      {
+        validators: {
+          request: validateRequest,
+        },
+        hooks: {
+          pre: parseRequestToControllerInput,
+          post: parseResultToControllerOutput,
+        },
+      }
+    );
   }
 }
 

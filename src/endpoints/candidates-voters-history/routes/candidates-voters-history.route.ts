@@ -15,6 +15,7 @@ import {
 import { CandidatesVotersHistoryInput } from '../domain/models/candidates-voters-history.input';
 import { CandidatesVotersHistoryOutput } from '../domain/models/candidates-voters-history.output';
 import { CandidatesVotersHistoryRequestSchema } from '../schemas';
+import { config } from '@config';
 
 /*imports*/
 
@@ -31,8 +32,8 @@ export class GetCandidatesVotersHistoryRoute extends GetRoute {
   private constructor(handler: RouteHandler) {
     super(
       [
-        '/v1/dao/candidates_voters_history',
-        '/v1/eosdac/candidates_voters_history',
+        `/${config.version}/dao/candidates_voters_history`,
+        `/${config.version}/eosdac/candidates_voters_history`,
       ],
       handler,
       {

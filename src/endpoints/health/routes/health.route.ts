@@ -1,13 +1,14 @@
 import { GetRoute, Result, RouteHandler } from '@alien-worlds/api-core';
 
 import { HealthOutput } from '../domain/entities/health-output';
+import { config } from '@config';
 
 /*imports*/
 
 /**
  * @class
- * 
- * 
+ *
+ *
  */
 export class GetHealthRoute extends GetRoute {
   public static create(handler: RouteHandler) {
@@ -15,11 +16,15 @@ export class GetHealthRoute extends GetRoute {
   }
 
   private constructor(handler: RouteHandler) {
-    super(['/v1/dao/health', '/v1/eosdac/health'], handler, {
-      hooks: {
-        post: parseResultToControllerOutput
+    super(
+      [`/${config.version}/dao/health`, `/${config.version}/eosdac/health`],
+      handler,
+      {
+        hooks: {
+          post: parseResultToControllerOutput,
+        },
       }
-    });
+    );
   }
 }
 
@@ -28,11 +33,11 @@ export class GetHealthRoute extends GetRoute {
  * @param {Result<HealthOutput[]>} result
  * @returns
  */
-export const parseResultToControllerOutput = (
-  result: Result<HealthOutput>
-) => {
+export const parseResultToControllerOutput = (result: Result<HealthOutput>) => {
   if (result.isFailure) {
-    const { failure: { error } } = result;
+    const {
+      failure: { error },
+    } = result;
     if (error) {
       return {
         status: 500,
@@ -51,4 +56,3 @@ export const parseResultToControllerOutput = (
     body: content.toJson(),
   };
 };
-

@@ -6,7 +6,7 @@
     "servers": [
         {
             "description": "Test server",
-            "url": "https://dao-api-test.alienworlds.io/v1/dao"
+            "url": "https://dao-api-test.alienworlds.io/v2/dao"
         }
     ]
 }

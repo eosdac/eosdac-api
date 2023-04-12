@@ -14,6 +14,7 @@ export default class AppConfig implements Config {
     const environment: Environment = { ...process.env } as Environment;
     const dotEnv = readEnvFile(envPath);
 
+    const version = environment.VERSION || dotEnv.VERSION;
     const env = environment.ENVIRONMENT || dotEnv.ENVIRONMENT;
     const host = environment.HOST || dotEnv.HOST;
     const port = Number(environment.PORT || dotEnv.PORT);
@@ -64,10 +65,11 @@ export default class AppConfig implements Config {
       nameCache: new Map(),
     };
 
-    return new AppConfig(env, host, port, eos, mongo, docs, logger, dac);
+    return new AppConfig(version || 'v1', env, host, port, eos, mongo, docs, logger, dac);
   }
 
   private constructor(
+    public readonly version: string,
     public readonly environment: string,
     public readonly host: string,
     public readonly port: number,

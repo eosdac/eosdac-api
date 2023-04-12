@@ -15,6 +15,7 @@ import {
   ProfileRequestPathVariables,
   ProfileRequestQueryParams,
 } from '../data/dtos/profile.dto';
+import { config } from '@config';
 
 /*imports*/
 
@@ -29,15 +30,22 @@ export class GetProfileRoute extends GetRoute {
   }
 
   private constructor(handler: RouteHandler) {
-    super(['/v1/dao/:dacId/profile', '/v1/eosdac/:dacId/profile'], handler, {
-      validators: {
-        request: validateRequest,
-      },
-      hooks: {
-        pre: parseRequestToControllerInput,
-        post: parseResultToControllerOutput,
-      },
-    });
+    super(
+      [
+        `/${config.version}/dao/:dacId/profile`,
+        `/${config.version}/eosdac/:dacId/profile`,
+      ],
+      handler,
+      {
+        validators: {
+          request: validateRequest,
+        },
+        hooks: {
+          pre: parseRequestToControllerInput,
+          post: parseResultToControllerOutput,
+        },
+      }
+    );
   }
 }
 

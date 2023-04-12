@@ -15,6 +15,7 @@ export type Environment = {
 
   PORT?: string;
   HOST?: string;
+  VERSION?: string;
 
   EOS_CHAIN_ID?: string;
   EOS_ENDPOINT?: string;

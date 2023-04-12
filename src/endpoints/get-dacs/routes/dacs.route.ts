@@ -14,6 +14,7 @@ import { GetDacOutput } from '../domain/models/get-dac.output';
 import { GetDacsInput } from '../domain/models/dacs.input';
 import { GetDacsOutput } from '../domain/models/get-dacs.output';
 import { GetDacsRequestQueryParams } from '../data/dtos/dacs.dto';
+import { config } from '@config';
 
 /*imports*/
 
@@ -28,15 +29,19 @@ export class GetDacsRoute extends GetRoute {
   }
 
   private constructor(handler: RouteHandler) {
-    super(['/v1/dao/dacs', '/v1/eosdac/dacs'], handler, {
-      validators: {
-        request: validateRequest,
-      },
-      hooks: {
-        pre: parseRequestToControllerInput,
-        post: parseResultToControllerOutput,
-      },
-    });
+    super(
+      [`/${config.version}/dao/dacs`, `/${config.version}/eosdac/dacs`],
+      handler,
+      {
+        validators: {
+          request: validateRequest,
+        },
+        hooks: {
+          pre: parseRequestToControllerInput,
+          post: parseResultToControllerOutput,
+        },
+      }
+    );
   }
 }
 

@@ -14,6 +14,7 @@ import {
   GetCandidatesRequestPathVariables,
   GetCandidatesRequestQueryParams,
 } from '../data/dtos/candidate.dto';
+import { config } from '@config';
 
 /*imports*/
 
@@ -29,7 +30,10 @@ export class GetCandidatesRoute extends GetRoute {
 
   private constructor(handler: RouteHandler) {
     super(
-      ['/v1/dao/:dacId/candidates', '/v1/eosdac/:dacId/candidates'],
+      [
+        `/${config.version}/dao/:dacId/candidates`,
+        `/${config.version}/eosdac/:dacId/candidates`,
+      ],
       handler,
       {
         validators: {

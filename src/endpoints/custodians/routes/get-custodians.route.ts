@@ -11,6 +11,7 @@ import { CustodiansRequestSchema } from '../schemas';
 import { GetCustodiansInput } from '../domain/models/get-custodians.input';
 import { GetCustodiansOutput } from '../domain/models/get-custodians.output';
 import { GetCustodiansRequestPathVariables } from '../data/dtos/custodian.dto';
+import { config } from '@config';
 
 /*imports*/
 
@@ -26,7 +27,10 @@ export class GetCustodiansRoute extends GetRoute {
 
   private constructor(handler: RouteHandler) {
     super(
-      ['/v1/dao/:dacId/custodians', '/v1/eosdac/:dacId/custodians'],
+      [
+        `/${config.version}/dao/:dacId/custodians`,
+        `/${config.version}/eosdac/:dacId/custodians`,
+      ],
       handler,
       {
         validators: {

@@ -5,17 +5,17 @@ info:
     This document describes APIs for DAO related operations.
 
 
-    All paths are prefixed with `/v1/dao`.
+    All paths are prefixed with `/v2/dao`.
 
 
-    The old prefix i.e. `/v1/eosdac` is currently supported but it will soon be
+    The old prefix i.e. `/v2/dao` is currently supported but it will soon be
     permanently removed.  
 
     API clients are encouraged to start migrating their apps to utilise the new
     prefix.
   version: 1.0.0
 servers:
-  - url: https://dao-api-test.alienworlds.io/v1/dao
+  - url: https://dao-api-test.alienworlds.io/v2/dao
     description: Test server
 paths:
   /dacs:
