@@ -5,7 +5,7 @@ info:
     This document describes APIs for DAO related operations.
 
 
-    All paths are prefixed with `/v1/dao`.
+    All paths are prefixed with `/v2/dao`.
 
 
     The old prefix i.e. `/v1/eosdac` is currently supported but it will soon be
@@ -15,8 +15,12 @@ info:
     prefix.
   version: 1.0.0
 servers:
-  - url: https://dao-api-test.alienworlds.io/v1/dao
+  - url: https://dao-api-test.alienworlds.io/v2/dao
     description: Test server
+  - url: https://dao-api.alienworlds.io/v2/dao
+    description: Production DAO API server
+  - url: https://api.alienworlds.io/v2/dao
+    description: Producton API server
 paths:
   /dacs:
     get:
