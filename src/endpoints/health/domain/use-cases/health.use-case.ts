@@ -16,7 +16,7 @@ export class HealthUseCase implements UseCase<HealthOutput> {
     /*injections*/
     @inject(HistoryToolsBlockState.Token)
     private blockState: HistoryToolsBlockState
-  ) {}
+  ) { }
 
   /**
    * @async
@@ -48,7 +48,7 @@ export class HealthUseCase implements UseCase<HealthOutput> {
           name: '@alien-worlds/dao-api-common',
           version:
             process.env
-              .npm_package_dependencies__alien_worlds_eosdac_api_common,
+              .npm_package_dependencies__alien_worlds_dao_api_common,
         },
       ],
 
