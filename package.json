@@ -18,8 +18,8 @@
     "docs:generate": "p2o ./postman/collections/dao-api.postman_collection.json -f ./docs/dao-api-oas.yaml -o ./docs/config-oas.json"
   },
   "dependencies": {
-    "@alien-worlds/api-core": "^0.0.87",
-    "@alien-worlds/dao-api-common": "^0.0.5",
+    "@alien-worlds/api-core": "0.0.101",
+    "@alien-worlds/dao-api-common": "0.0.6",
     "@fastify/swagger": "6.1.1",
     "@jafri/eosjs2": "^20.0.1-e34c16e.170",
     "@shelf/winston-datadog-logs-transport": "^1.0.7",
