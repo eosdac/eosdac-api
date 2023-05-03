@@ -1,6 +1,7 @@
 import { HTTP_METHOD, HTTP_STATUS } from '../common';
 
 import { AjvValidator } from '../../src/validator/ajv-validator';
+import { config } from '@config';
 import { createApiTestEnvironment } from '../environments';
 import { HealthResponseSchema } from '@endpoints/health/schemas';
 
@@ -12,7 +13,7 @@ const validator = AjvValidator.initialize();
 // meta
 const Api = {
     method: HTTP_METHOD.GET,
-    url: '/v1/eosdac/health',
+    url: `/${config.version}/dao/health`,
 };
 
 describe('Health API Test', () => {

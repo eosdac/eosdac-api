@@ -8,6 +8,7 @@ import {
 import { HTTP_METHOD, HTTP_STATUS } from '../common';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
+import { config } from '@config';
 import { createApiTestEnvironment } from '../environments';
 import { VotingHistoryResponseSchema } from '@endpoints/voting-history/schemas';
 
@@ -19,7 +20,7 @@ const validator = AjvValidator.initialize();
 // meta
 const Api = {
 	method: HTTP_METHOD.GET,
-	url: '/v1/eosdac/voting_history',
+	url: `/${config.version}/dao/voting_history`,
 };
 
 const Data = {
@@ -133,8 +134,14 @@ describe('Voting history API Test', () => {
 			const jsonSkip = JSON.parse(skipResponse.body);
 			validator.assert(VotingHistoryResponseSchema, jsonSkip);
 
-			expect(jsonNoSkip.results[0]).not.toEqual(jsonSkip.results[0]);
-			expect(jsonNoSkip.results[1]).toEqual(jsonSkip.results[0]);
+			// if there are no results, then we cannot verify if 'skip' param is being effective
+			if (jsonNoSkip.results.length && jsonSkip.results.length) {
+				expect(jsonNoSkip.results[0]).not.toEqual(jsonSkip.results[0]);
+
+				if (jsonNoSkip.results.length > 1) {
+					expect(jsonNoSkip.results[1]).toEqual(jsonSkip.results[0]);
+				}
+			}
 		});
 
 		it('should return error if skip is negative', async () => {

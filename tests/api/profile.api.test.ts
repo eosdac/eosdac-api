@@ -3,6 +3,7 @@ import * as fixtures from '../fixtures/profile.fixture';
 import { HTTP_METHOD, HTTP_STATUS } from '../common';
 
 import { AjvValidator } from '../../src/validator/ajv-validator';
+import { config } from '@config';
 import { createApiTestEnvironment } from '../environments';
 import { DacIdPathParamMissingErrorResponse } from 'tests/fixtures/common.fixture';
 import { ProfileResponseSchema } from '@endpoints/profile/schemas';
@@ -21,7 +22,7 @@ const Data = {
 // meta
 const Api = {
 	method: HTTP_METHOD.GET,
-	url: `/v1/eosdac/${Data.DACId}/profile`,
+	url: `/${config.version}/dao/${Data.DACId}/profile`,
 };
 
 describe('Get member profile API Test', () => {

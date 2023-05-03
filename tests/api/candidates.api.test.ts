@@ -2,6 +2,7 @@ import { HTTP_METHOD, HTTP_STATUS } from '../common';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
 import { CandidatesResponseSchema } from '@endpoints/candidates/schemas';
+import { config } from '@config';
 import { createApiTestEnvironment } from '../environments';
 import { DacIdPathParamMissingErrorResponse } from 'tests/fixtures/common.fixture';
 import { errorQueryParamWalletIdMissing } from '../fixtures/candidates.fixture';
@@ -19,7 +20,7 @@ const Data = {
 // meta
 const Api = {
 	method: HTTP_METHOD.GET,
-	url: `/v1/eosdac/${Data.DacId}/candidates`,
+	url: `/${config.version}/dao/${Data.DacId}/candidates`,
 };
 
 describe('Candidates API Test', () => {

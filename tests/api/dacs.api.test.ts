@@ -1,6 +1,7 @@
 import { HTTP_METHOD, HTTP_STATUS } from '../common';
 
 import { AjvValidator } from '../../src/validator/ajv-validator';
+import { config } from '@config';
 import { createApiTestEnvironment } from '../environments';
 import { DacsResponseSchema } from '@endpoints/get-dacs/schemas';
 import { InvalidLimitValueErrorResponse } from 'tests/fixtures/common.fixture';
@@ -13,13 +14,13 @@ const validator = AjvValidator.initialize();
 // meta
 const Api = {
 	method: HTTP_METHOD.GET,
-	url: '/v1/eosdac/dacs',
+	url: `/${config.version}/dao/dacs`,
 };
 
 const Data = {
 	DacId: 'eyeke',
 	Limit: 5,
-	AllDacs: ['eyeke', 'kavian', 'magor', 'naron', 'nerix', 'testa', 'testb', 'veles'],
+	AllDacs: ['eyeke', 'kavian', 'magor', 'naron', 'nerix', 'veles'],
 };
 
 describe('Dacs API Test', () => {

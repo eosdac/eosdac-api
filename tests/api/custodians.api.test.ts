@@ -1,6 +1,7 @@
 import { HTTP_METHOD, HTTP_STATUS } from '../common';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
+import { config } from '@config';
 import { createApiTestEnvironment } from '../environments';
 import { CustodiansResponseSchema } from '@endpoints/custodians/schemas';
 import { DacIdPathParamMissingErrorResponse } from 'tests/fixtures/common.fixture';
@@ -17,7 +18,7 @@ const Data = {
 // meta
 const Api = {
 	method: HTTP_METHOD.GET,
-	url: `/v1/eosdac/${Data.DacId}/custodians`,
+	url: `/${config.version}/dao/${Data.DacId}/custodians`,
 };
 
 describe('Custodians API Test', () => {
