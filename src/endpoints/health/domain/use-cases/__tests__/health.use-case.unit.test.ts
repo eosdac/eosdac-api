@@ -5,14 +5,13 @@ import { Failure, MongoDB, Result } from '@alien-worlds/api-core';
 import { Container } from 'inversify';
 import { HealthOutput } from '../../entities/health-output';
 import { HealthUseCase } from '../health.use-case';
-import { State } from '../../entities/state';
-import { StateRepository } from '../../repositories/state.repository';
+import { HistoryToolsBlockState } from '@alien-worlds/dao-api-common';
 
 /*imports*/
 /*mocks*/
 
-const stateRepository = {
-    getCurrentBlock: jest.fn(),
+const historyToolsBlockState = {
+    getBlockNumber: jest.fn(),
 };
 
 let container: Container;
@@ -23,8 +22,8 @@ describe('Health Unit tests', () => {
         container = new Container();
 
         container
-            .bind<StateRepository>(StateRepository.Token)
-            .toConstantValue(stateRepository as any);
+            .bind<HistoryToolsBlockState>(HistoryToolsBlockState.Token)
+            .toConstantValue(historyToolsBlockState as any);
         container
             .bind<HealthUseCase>(HealthUseCase.Token)
             .to(HealthUseCase);
@@ -44,27 +43,21 @@ describe('Health Unit tests', () => {
     });
 
     it('Should return a failure when ...', async () => {
-        stateRepository.getCurrentBlock.mockResolvedValue(Result.withFailure(Failure.fromError(null)))
+        historyToolsBlockState.getBlockNumber.mockResolvedValue(Result.withFailure(Failure.fromError(null)))
 
         const result = await useCase.execute();
         expect(result.isFailure).toBeTruthy();
     });
 
     it('should return HealthOutput', async () => {
-        stateRepository.getCurrentBlock.mockResolvedValue(Result.withContent(State.fromDto({
-            name: 'current_block',
-            value: MongoDB.Long.ONE,
-        })))
+        historyToolsBlockState.getBlockNumber.mockResolvedValue(Result.withContent(BigInt(1)))
 
         const result = await useCase.execute();
         expect(result.content).toBeInstanceOf(HealthOutput);
     });
 
     it('should return current block', async () => {
-        stateRepository.getCurrentBlock.mockResolvedValue(Result.withContent(State.fromDto({
-            name: 'current_block',
-            value: MongoDB.Long.ONE,
-        })))
+        historyToolsBlockState.getBlockNumber.mockResolvedValue(Result.withContent(BigInt(1)))
 
         const result = await useCase.execute();
         expect(result.content.blockChainHistory.currentBlock).toBe(MongoDB.Long.ONE.toBigInt())
