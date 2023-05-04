@@ -3,8 +3,8 @@ import { existsSync, statSync } from 'fs';
 
 import AppConfig from './app-config';
 
-const envPath = process.env.NODE_ENV
-  ? `./.env-${process.env.NODE_ENV}`
+const envPath = process.env.ENVIRONMENT
+  ? `./.env-${process.env.ENVIRONMENT}`
   : `./.env`;
 
 if (!existsSync(envPath)) {

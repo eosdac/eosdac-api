@@ -7,12 +7,12 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - NODE_ENV=${NODE_ENV}
+        - ENVIRONMENT=${ENVIRONMENT}
         - GITHUB_TOKEN=${GITHUB_TOKEN}
       cache_from:
         - ghcr.io/alien-worlds/dao_api
     environment:
-      NODE_ENV: '${NODE_ENV}'
+      ENVIRONMENT: '${ENVIRONMENT}'
       SERVER_PORT: '8800'
       SERVER_ADDR: '0.0.0.0'
     restart: on-failure
