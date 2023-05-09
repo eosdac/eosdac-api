@@ -9,3 +9,5 @@ dist
 logs
 
 .env*
+
+*.log

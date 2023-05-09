@@ -31,6 +31,10 @@ export type Environment = {
   LOGGER_ENVIRONMENT?: string;
   LOGGER_DATADOG_API_KEY?: string;
   ENVIRONMENT?: string;
+
+  NEW_RELIC_ENABLED?: string;
+  NEW_RELIC_LICENSE_KEY?: string;
+  NEW_RELIC_APP_NAME?: string;
 };
 
 export type Config = {
@@ -41,6 +45,7 @@ export type Config = {
   logger: LoggerConfig;
   docs: DocsConfig;
   dac: DACConfig;
+  newRelic: NewRelicConfig;
 };
 
 export type EOSConfig = {
@@ -70,4 +75,10 @@ export type DocsConfig = {
 
 export type DACConfig = {
   nameCache: Map<string, DacDirectory>;
+};
+
+export type NewRelicConfig = {
+  newRelicEnabled: boolean;
+  appName: string;
+  licenseKey: string;
 };
