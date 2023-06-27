@@ -6,18 +6,16 @@ import {
   RouteHandler,
   ValidationResult,
 } from '@alien-worlds/api-core';
-
-import { AjvValidator } from '@src/validator/ajv-validator';
-import { ProfileInput } from '../domain/models/profile.input';
-import { ProfileOutput } from '../domain/models/profile.output';
-import { ProfileRequestSchema } from '../schemas';
 import {
   ProfileRequestPathVariables,
   ProfileRequestQueryParams,
 } from '../data/dtos/profile.dto';
-import { config } from '@config';
 
-/*imports*/
+import { AjvValidator } from '@src/validator/ajv-validator';
+import { config } from '@config';
+import { ProfileInput } from '../domain/models/profile.input';
+import { ProfileOutput } from '../domain/models/profile.output';
+import { ProfileRequestSchema } from '../schemas';
 
 /**
  * @class
@@ -107,7 +105,7 @@ export const parseResultToControllerOutput = (
 
       return {
         status: 500,
-        body: ProfileOutput.create().toJson(),
+        body: ProfileOutput.create().toJSON(),
       };
     }
   }
@@ -116,6 +114,6 @@ export const parseResultToControllerOutput = (
 
   return {
     status: 200,
-    body: ProfileOutput.create(content.results, content.count).toJson(),
+    body: ProfileOutput.create(content.results, content.count).toJSON(),
   };
 };

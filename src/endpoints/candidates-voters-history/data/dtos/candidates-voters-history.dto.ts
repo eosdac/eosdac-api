@@ -12,7 +12,7 @@ export type CandidatesVotersHistoryControllerOutput = {
 
 export type CandidatesVotersHistoryOutputItem = {
   voter: string;
-  votingPower: bigint;
+  votingPower: number;
   action?: string;
   candidate: string;
   voteTimestamp: Date;

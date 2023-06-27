@@ -1,10 +1,8 @@
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { injectable, Result, UseCase } from '@alien-worlds/api-core';
 
 import { HealthOutput } from '../entities/health-output';
 import { HealthOutputDocument } from '../../data/dtos/health.dto';
-import { HistoryToolsBlockState } from '@alien-worlds/dao-api-common';
 
-/*imports*/
 /**
  * @class
  */
@@ -12,23 +10,11 @@ import { HistoryToolsBlockState } from '@alien-worlds/dao-api-common';
 export class HealthUseCase implements UseCase<HealthOutput> {
   public static Token = 'HEALTH_USE_CASE';
 
-  constructor(
-    /*injections*/
-    @inject(HistoryToolsBlockState.Token)
-    private blockState: HistoryToolsBlockState
-  ) { }
-
   /**
    * @async
    * @returns {Promise<Result<HealthOutput>>}
    */
   public async execute(): Promise<Result<HealthOutput>> {
-    const getCurrentBlockRes = await this.blockState.getBlockNumber();
-
-    if (getCurrentBlockRes.isFailure) {
-      return Result.withFailure(getCurrentBlockRes.failure);
-    }
-
     const output: HealthOutputDocument = {
       // api
       status: 'OK',
@@ -45,10 +31,49 @@ export class HealthUseCase implements UseCase<HealthOutput> {
           version: process.env.npm_package_dependencies__alien_worlds_api_core,
         },
         {
-          name: '@alien-worlds/dao-api-common',
+          name: '@alien-worlds/storage-mongodb',
+          version:
+            process.env.npm_package_dependencies__alien_worlds_storage_mongodb,
+        },
+        {
+          name: '@alien-worlds/eos',
+          version: process.env.npm_package_dependencies__alien_worlds_eos,
+        },
+        {
+          name: '@alien-worlds/eosio-contract-types',
           version:
             process.env
-              .npm_package_dependencies__alien_worlds_dao_api_common,
+              .npm_package_dependencies__alien_worlds_eosio_contract_types,
+        },
+        {
+          name: '@alien-worlds/alien-worlds-common',
+          version:
+            process.env
+              .npm_package_dependencies__alien_worlds_alien_worlds_common,
+        },
+        {
+          name: '@alien-worlds/dao-worlds-common',
+          version:
+            process.env
+              .npm_package_dependencies__alien_worlds_dao_worlds_common,
+        },
+        {
+          name: '@alien-worlds/index-worlds-common',
+          version:
+            process.env
+              .npm_package_dependencies__alien_worlds_index_worlds_common,
+        },
+        {
+          name: '@alien-worlds/stkvt-worlds-common',
+          version:
+            process.env
+              .npm_package_dependencies__alien_worlds_stkvt_worlds_common,
+        },
+        {
+          name: '@alien-worlds/token-worlds-common',
+          version:
+            process.env
+              .npm_package_dependencies__alien_worlds_token_worlds_common,
         },
       ],
 
@@ -57,12 +82,10 @@ export class HealthUseCase implements UseCase<HealthOutput> {
       },
 
       blockChainHistory: {
-        currentBlock: getCurrentBlockRes.content,
+        currentBlock: -1n, // TODO: update current block after reading from history tools API
       },
     };
 
     return Result.withContent(HealthOutput.fromDto(output));
   }
-
-  /*methods*/
 }

@@ -1,11 +1,10 @@
-import 'reflect-metadata';
-
 import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as TokenWorldsContract from '@alien-worlds/token-worlds-common';
 
 import { GetDacTokensUseCase } from '../get-dac-tokens.use-case';
-import { TokenWorldsContract } from '@alien-worlds/dao-api-common';
 
-/*imports*/
+import 'reflect-metadata';
+
 /*mocks*/
 
 const tokenWorldsContractService = {
@@ -54,7 +53,7 @@ describe('Get Dac Tokens Unit tests', () => {
   it('should return an array of Stat', async () => {
     tokenWorldsContractService.fetchStat.mockResolvedValueOnce(
       Result.withContent([
-        <TokenWorldsContract.Deltas.Types.StatStruct>{
+        <TokenWorldsContract.Deltas.Types.StatRawModel>{
           supply: '1660485.1217 EYE',
           max_supply: '10000000000.0000 EYE',
           issuer: 'federation',
@@ -69,6 +68,4 @@ describe('Get Dac Tokens Unit tests', () => {
       TokenWorldsContract.Deltas.Entities.Stat
     );
   });
-
-  /*unit-tests*/
 });

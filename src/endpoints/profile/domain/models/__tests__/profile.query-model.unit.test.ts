@@ -1,6 +1,5 @@
-import { ProfileQueryModel } from '../profile.query-model';
-/*imports*/
-/*mocks*/
+import { ProfileQueryBuilder } from '../profile.query-builder';
+
 const input = {
   custContract: 'dao.worlds',
   dacId: 'testa',
@@ -35,10 +34,8 @@ const queryModel = {
 
 describe('ProfileQueryModel Unit tests', () => {
   it('"ProfileQueryModel.toQueryParams" should create mongodb query model', async () => {
-    const model = ProfileQueryModel.create(input);
+    const model = new ProfileQueryBuilder().with({ ...input });
 
-    expect(model.toQueryParams()).toEqual(queryModel);
+    expect(model.build()).toEqual(queryModel);
   });
-
-  /*unit-tests*/
 });

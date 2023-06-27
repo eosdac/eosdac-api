@@ -1,6 +1,7 @@
 export type GetCandidatesRequestQueryParams = {
-	walletId: string;
+  walletId: string;
 };
+
 export type GetCandidatesRequestPathVariables = {
-	dacId: string;
+  dacId: string;
 };

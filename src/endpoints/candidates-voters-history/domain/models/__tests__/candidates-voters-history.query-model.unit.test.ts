@@ -1,8 +1,6 @@
 import { CandidatesVotersHistoryInput } from '../candidates-voters-history.input';
-import { CandidatesVotersHistoryQueryModel } from '../candidates-voters-history.query-model';
+import { CandidatesVotersHistoryQueryBuilder } from '../candidates-voters-history.query-model';
 
-/*imports*/
-/*mocks*/
 const input: CandidatesVotersHistoryInput = {
   dacId: 'string',
   candidateId: 'string',
@@ -12,9 +10,8 @@ const input: CandidatesVotersHistoryInput = {
 
 describe('CandidatesVotersHistoryQueryModel Unit tests', () => {
   it('"CandidatesVotersHistoryQueryModel.toQueryParams" should create mongodb query model', async () => {
-    const model = CandidatesVotersHistoryQueryModel.create(input);
-
-    expect(model.toQueryParams()).toEqual({
+    const model = new CandidatesVotersHistoryQueryBuilder().with({ ...input });
+    expect(model.build()).toEqual({
       pipeline: [
         {
           $match: {
@@ -28,6 +25,4 @@ describe('CandidatesVotersHistoryQueryModel Unit tests', () => {
       options: {},
     });
   });
-
-  /*unit-tests*/
 });

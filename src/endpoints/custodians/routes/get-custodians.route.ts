@@ -7,13 +7,11 @@ import {
 } from '@alien-worlds/api-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
+import { config } from '@config';
 import { CustodiansRequestSchema } from '../schemas';
 import { GetCustodiansInput } from '../domain/models/get-custodians.input';
 import { GetCustodiansOutput } from '../domain/models/get-custodians.output';
 import { GetCustodiansRequestPathVariables } from '../data/dtos/custodian.dto';
-import { config } from '@config';
-
-/*imports*/
 
 /**
  * @class
@@ -93,6 +91,6 @@ export const parseResultToControllerOutput = (
 
   return {
     status: 200,
-    body: result.content.toJson(),
+    body: result.content.toJSON(),
   };
 };

@@ -9,69 +9,72 @@ import { CountVotersHistoryUseCase } from '../use-cases/count-voters-history.use
 import { GetCandidatesVotersHistoryUseCase } from '../use-cases/get-candidates-voters-history.use-case';
 import { GetVotingPowerUseCase } from '../use-cases/get-voting-power.use-case';
 
-/*imports*/
-
-const voterHistoryResp: CandidatesVotersHistoryOutputItem[] = [{
+const voterHistoryResp: CandidatesVotersHistoryOutputItem[] = [
+  {
     voter: 'string',
-    votingPower: 1n,
+    votingPower: 1,
     voteTimestamp: new Date('2022-10-20T15:55:46.000Z'),
     candidate: 'string',
     transactionId: 'string',
-}];
+  },
+];
 
-
-/*mocks*/
 const getCandidatesVotersHistoryUseCase = {
-    execute: jest.fn(() => (Result.withContent(voterHistoryResp))),
+  execute: jest.fn(() => Result.withContent(voterHistoryResp)),
 };
 
 const getVotingPowerUseCase = {
-    execute: jest.fn(() => (Result.withContent(1n))),
+  execute: jest.fn(() => Result.withContent(1n)),
 };
 
 const countVotersHistoryUseCase = {
-    execute: jest.fn(() => (Result.withContent(1))),
+  execute: jest.fn(() => Result.withContent(1)),
 };
-
 
 let container: Container;
 let controller: CandidatesVotersHistoryController;
 let input: CandidatesVotersHistoryInput;
 
 describe('VotingHistory Controller Unit tests', () => {
-    beforeAll(() => {
-        container = new Container();
-        /*bindings*/
-        container
-            .bind<GetCandidatesVotersHistoryUseCase>(GetCandidatesVotersHistoryUseCase.Token)
-            .toConstantValue(getCandidatesVotersHistoryUseCase as any);
-        container
-            .bind<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token)
-            .toConstantValue(getVotingPowerUseCase as any);
-        container
-            .bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token)
-            .toConstantValue(countVotersHistoryUseCase as any);
-        container.bind<CandidatesVotersHistoryController>(CandidatesVotersHistoryController.Token).to(CandidatesVotersHistoryController);
-    });
+  beforeAll(() => {
+    container = new Container();
+    /*bindings*/
+    container
+      .bind<GetCandidatesVotersHistoryUseCase>(
+        GetCandidatesVotersHistoryUseCase.Token
+      )
+      .toConstantValue(getCandidatesVotersHistoryUseCase as any);
+    container
+      .bind<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token)
+      .toConstantValue(getVotingPowerUseCase as any);
+    container
+      .bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token)
+      .toConstantValue(countVotersHistoryUseCase as any);
+    container
+      .bind<CandidatesVotersHistoryController>(
+        CandidatesVotersHistoryController.Token
+      )
+      .to(CandidatesVotersHistoryController);
+  });
 
-    beforeEach(() => {
-        controller = container.get<CandidatesVotersHistoryController>(CandidatesVotersHistoryController.Token);
-    });
+  beforeEach(() => {
+    controller = container.get<CandidatesVotersHistoryController>(
+      CandidatesVotersHistoryController.Token
+    );
+  });
 
-    afterAll(() => {
-        jest.clearAllMocks();
-        container = null;
-    });
+  afterAll(() => {
+    jest.clearAllMocks();
+    container = null;
+  });
 
-    it('"Token" should be set', () => {
-        expect(CandidatesVotersHistoryController.Token).not.toBeNull();
-    });
+  it('"Token" should be set', () => {
+    expect(CandidatesVotersHistoryController.Token).not.toBeNull();
+  });
 
-    it('Should execute VotingHistoryUseCase', async () => {
-        await controller.candidatesVotersHistory(input);
+  it('Should execute VotingHistoryUseCase', async () => {
+    await controller.candidatesVotersHistory(input);
 
-        expect(getCandidatesVotersHistoryUseCase.execute).toBeCalled();
-    });
-    /*unit-tests*/
+    expect(getCandidatesVotersHistoryUseCase.execute).toBeCalled();
+  });
 });
-

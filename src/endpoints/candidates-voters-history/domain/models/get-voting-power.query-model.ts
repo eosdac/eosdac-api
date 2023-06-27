@@ -1,44 +1,27 @@
-import { MongoDB, MongoFindQueryParams, QueryModel } from '@alien-worlds/api-core';
+import { Query, QueryBuilder } from '@alien-worlds/api-core';
 
-/*imports*/
+import { MongoDB } from '@alien-worlds/storage-mongodb';
+
+export type GetVotingPowerQueryArgs = { voter: string; voteTimestamp: Date };
 
 /**
  * @class
  */
-export class GetVotingPowerQueryModel extends QueryModel {
-  /**
-   * @returns {GetVotingPowerQueryModel}
-   */
-  public static create(voter: string, voteTimestamp: Date): GetVotingPowerQueryModel {
-    return new GetVotingPowerQueryModel(voter, voteTimestamp);
-  }
-
-  /**
-   * @constructor
-   * @private
-   */
-  private constructor(
-    public readonly voter: string,
-    public readonly voteTimestamp: Date,
-  ) {
-    super();
-  }
-
-  public toQueryParams(): MongoFindQueryParams<unknown> {
-    const { voter, voteTimestamp } = this;
+export class GetVotingPowerQueryBuilder extends QueryBuilder {
+  public build(): Query {
+    const { voter, voteTimestamp } = this.args as GetVotingPowerQueryArgs;
 
     const filter: MongoDB.Filter<unknown> = {
-      code: "stkvt.worlds",
-      table: "weights",
-      "data.voter": voter,
-      "block_timestamp": { $lt: voteTimestamp }
+      code: 'stkvt.worlds',
+      table: 'weights',
+      'data.voter': voter,
+      block_timestamp: { $lt: voteTimestamp },
     };
     const options: MongoDB.FindOptions = {
-      sort: { "block_timestamp": -1 },
+      sort: { block_timestamp: -1 },
       limit: 1,
     };
 
     return { filter, options };
   }
 }
-

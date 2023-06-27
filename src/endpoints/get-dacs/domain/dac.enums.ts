@@ -1,0 +1,61 @@
+export enum DacRefIndex {
+  Homepage = 0,
+  LogoUrl = 1,
+  Description = 2,
+  LogoNotextUrl = 3,
+  BackgroundUrl = 4,
+  Colors = 5,
+  ClientExtension = 6,
+  FaviconUrl = 7,
+  DacCurrencyUrl = 8,
+  SystemCurrencyUrl = 9,
+  DiscordUrl = 10,
+  TelegramUrl = 11,
+}
+
+export enum DacRefKey {
+  Homepage = 'homepage',
+  LogoUrl = 'logo_url',
+  Description = 'description',
+  LogoNotextUrl = 'logo_notext_url',
+  BackgroundUrl = 'background_url',
+  Colors = 'colors',
+  ClientExtension = 'client_extension',
+  FaviconUrl = 'favicon_url',
+  DacCurrencyUrl = 'dac_currency_url',
+  SystemCurrencyUrl = 'system_currency_url',
+  DiscordUrl = 'discord_url',
+  TelegramUrl = 'telegram_url',
+}
+
+export enum DacAccountIndex {
+  Auth = 0,
+  Treasury = 1,
+  Custodian = 2,
+  MsigOwned = 3,
+  Service = 5,
+  Proposals = 6,
+  Escrow = 7,
+  VoteWeight = 8,
+  Activation = 9,
+  Referendum = 10,
+  Spendings = 11,
+  External = 254,
+  Other = 255,
+}
+
+export enum DacAccountKey {
+  Auth = 'auth',
+  Treasury = 'treasury',
+  Custodian = 'custodian',
+  MsigOwned = 'msig_owned',
+  Service = 'service',
+  Proposals = 'proposals',
+  Escrow = 'escrow',
+  VoteWeight = 'vote_weight',
+  Activation = 'activation',
+  Referendum = 'referendum',
+  Spendings = 'spendings',
+  External = 'external',
+  Other = 'other',
+}

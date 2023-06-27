@@ -1,5 +1,7 @@
-import { DacDirectory } from '@alien-worlds/dao-api-common';
-import { MongoConfig } from '@alien-worlds/api-core';
+import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+
+import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';
+import { MongoConfig } from '@alien-worlds/storage-mongodb';
 
 export type Environment = {
   MONGO_HOSTS?: string;
@@ -23,6 +25,7 @@ export type Environment = {
   EOS_LEGACY_DACS?: string;
   EOS_DAC_DIRECTORY_MODE?: string;
   EOS_DAC_DIRECTORY_DAC_ID?: string;
+  HYPERION_URL?: string;
 
   DOCS_HOST?: string;
   DOCS_ROUTE_PREFIX?: string;
@@ -55,6 +58,7 @@ export type EOSConfig = {
   legacyDacs: string[];
   dacDirectoryMode: string;
   dacDirectoryDacId: string;
+  hyperionUrl: string;
 };
 
 export type LoggerConfig = {
@@ -74,7 +78,7 @@ export type DocsConfig = {
 };
 
 export type DACConfig = {
-  nameCache: Map<string, DacDirectory>;
+  nameCache: Map<string, Dac>;
 };
 
 export type NewRelicConfig = {

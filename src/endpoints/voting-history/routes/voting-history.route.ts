@@ -7,14 +7,13 @@ import {
 } from '@alien-worlds/api-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
-import { UserVote } from '@alien-worlds/dao-api-common';
+import { config } from '@config';
+import { UserVote } from '../domain/entities/user-vote';
 import { VotingHistoryInput } from '../domain/models/voting-history.input';
 import { VotingHistoryOutput } from '../domain/models/voting-history.output';
-import { VotingHistoryRequestSchema } from '../schemas';
 import { VotingHistoryRequestQueryParams } from '../data/dtos/user-voting-history.dto';
-import { config } from '@config';
+import { VotingHistoryRequestSchema } from '../schemas';
 
-/*imports*/
 config;
 /**
  * @class

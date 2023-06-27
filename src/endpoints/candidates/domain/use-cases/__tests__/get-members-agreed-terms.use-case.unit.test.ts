@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as TokenWorldsContract from '@alien-worlds/token-worlds-common';
 
-// Unit test code
 import { anything, instance, mock, verify, when } from 'ts-mockito';
 
 import { Failure } from '@alien-worlds/api-core';
 import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
-import { TokenWorldsContract } from '@alien-worlds/dao-api-common';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 describe('GetMembersAgreedTermsUseCase', () => {
   let getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase;
@@ -13,7 +13,7 @@ describe('GetMembersAgreedTermsUseCase', () => {
 
   beforeEach(() => {
     tokenWorldsContractService = mock(
-      TokenWorldsContract.Services.TokenWorldsContractServiceImpl
+      TokenWorldsContract.Services.TokenWorldsContractService
     );
     getMembersAgreedTermsUseCase = new GetMembersAgreedTermsUseCase(
       instance(tokenWorldsContractService)
@@ -60,44 +60,3 @@ describe('GetMembersAgreedTermsUseCase', () => {
     verify(tokenWorldsContractService.fetchMembers(anything())).once();
   });
 });
-// Unit Test Code
-// import { Container, Failure } from '@alien-worlds/api-core';
-// import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
-// import { MemberTerms } from '@alien-worlds/dao-api-common';
-
-// describe('GetMemberTermsUseCase', () => {
-// 	let container: Container;
-// 	let useCase: GetMemberTermsUseCase;
-
-// 	const mockService = {
-// 		fetchMembersTerms: jest.fn(),
-// 	};
-
-// 	beforeAll(() => {
-// 		container = new Container();
-
-// 		container
-// 			.bind<GetMemberTermsUseCase>(GetMemberTermsUseCase.Token)
-// 			.toConstantValue(new GetMemberTermsUseCase(mockService as any));
-// 	});
-
-// 	beforeEach(() => {
-// 		useCase = container.get<GetMemberTermsUseCase>(GetMemberTermsUseCase.Token);
-// 	});
-
-// 	afterAll(() => {
-// 		jest.clearAllMocks();
-// 		container = null;
-// 	});
-
-// 	it('should return a Member Terms object', async () => {
-// 		const result = await useCase.execute('dac');
-// 		expect(result.content).toBeInstanceOf(MemberTerms);
-// 	});
-
-// 	it('should return a failure if the service fails', async () => {
-// 		const result = await useCase.execute('dac');
-
-// 		expect(result.failure).toBeInstanceOf(Failure);
-// 	});
-// });

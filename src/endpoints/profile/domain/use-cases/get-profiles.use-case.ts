@@ -1,3 +1,4 @@
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
 import {
   ContractAction,
   inject,
@@ -5,12 +6,10 @@ import {
   Result,
   UseCase,
 } from '@alien-worlds/api-core';
-import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
-import { GetProfilesUseCaseInput } from '../../data/dtos/profile.dto';
-import { ProfileQueryModel } from '../models/profile.query-model';
-import { DaoWorldsActionRepository } from '@alien-worlds/dao-api-common/build/contracts/dao-worlds/actions/domain/repositories';
 
-/*imports*/
+import { GetProfilesUseCaseInput } from '../../data/dtos/profile.dto';
+import { ProfileQueryBuilder } from '../models/profile.query-builder';
+
 /**
  * @class
  */
@@ -19,41 +18,40 @@ export class GetProfilesUseCase
   implements
     UseCase<
       ContractAction<
-        DaoWorldsContract.Actions.Entities.SetProfile,
-        DaoWorldsContract.Actions.Types.StprofileDocument
+        DaoWorldsCommon.Actions.Entities.Stprofile,
+        DaoWorldsCommon.Actions.Types.StprofileMongoModel
       >[]
     >
 {
   public static Token = 'GET_PROFILES_USE_CASE';
 
   constructor(
-    /*injections*/
-    @inject(DaoWorldsActionRepository.Token)
-    private daoWorldsActionRepository: DaoWorldsActionRepository
+    @inject(DaoWorldsCommon.Actions.DaoWorldsActionRepository.Token)
+    private daoWorldsActionRepository: DaoWorldsCommon.Actions.DaoWorldsActionRepository
   ) {}
 
   /**
    * @async
-   * @returns {Promise<Result<Profile[]>>}
+   * @returns {Promise<Result<ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile,DaoWorldsCommon.Actions.Types.StprofileMongoModel>[]>>}
    */
   public async execute(
     input: GetProfilesUseCaseInput
   ): Promise<
     Result<
       ContractAction<
-        DaoWorldsContract.Actions.Entities.SetProfile,
-        DaoWorldsContract.Actions.Types.StprofileDocument
+        DaoWorldsCommon.Actions.Entities.Stprofile,
+        DaoWorldsCommon.Actions.Types.StprofileMongoModel
       >[]
     >
   > {
-    const queryModel = ProfileQueryModel.create({
+    const queryBuilder = new ProfileQueryBuilder().with({
       custContract: input.custContract,
       dacId: input.dacId,
       accounts: input.accounts,
     });
 
     const actionsRes = await this.daoWorldsActionRepository.aggregate(
-      queryModel
+      queryBuilder
     );
     if (actionsRes.isFailure) {
       return Result.withFailure(actionsRes.failure);
@@ -61,11 +59,9 @@ export class GetProfilesUseCase
 
     return Result.withContent(
       actionsRes.content as ContractAction<
-        DaoWorldsContract.Actions.Entities.SetProfile,
-        DaoWorldsContract.Actions.Types.StprofileDocument
+        DaoWorldsCommon.Actions.Entities.Stprofile,
+        DaoWorldsCommon.Actions.Types.StprofileMongoModel
       >[]
     );
   }
-
-  /*methods*/
 }

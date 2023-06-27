@@ -1,8 +1,6 @@
 import { VotingHistoryInput } from '../voting-history.input';
-import { VotingHistoryQueryModel } from '@alien-worlds/dao-api-common';
+import { VotingHistoryQueryBuilder } from '../voting-history.query-model';
 
-/*imports*/
-/*mocks*/
 const input: VotingHistoryInput = {
   dacId: 'string',
   voter: 'string',
@@ -13,9 +11,14 @@ const input: VotingHistoryInput = {
 describe('VotingHistoryQueryModel Unit tests', () => {
   it('"VotingHistoryQueryModel.toQueryParams" should create mongodb query model', async () => {
     const { dacId, voter, skip, limit } = input;
-    const model = VotingHistoryQueryModel.create(dacId, voter, skip, limit);
+    const model = new VotingHistoryQueryBuilder().with({
+      dacId,
+      voter,
+      skip,
+      limit,
+    });
 
-    expect(model.toQueryParams()).toEqual({
+    expect(model.build()).toEqual({
       filter: {
         'action.account': 'dao.worlds',
         'action.name': 'votecust',
@@ -29,6 +32,4 @@ describe('VotingHistoryQueryModel Unit tests', () => {
       },
     });
   });
-
-  /*unit-tests*/
 });

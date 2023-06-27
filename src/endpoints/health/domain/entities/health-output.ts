@@ -1,18 +1,23 @@
-import { removeUndefinedProperties } from '@alien-worlds/api-core';
 import {
   BlockChainHistoryHealthDocument,
   DatabaseHealthDocument,
   HealthOutputDocument,
-  PackagedDependency
+  PackagedDependency,
 } from '../../data/dtos/health.dto';
+import {
+  Entity,
+  removeUndefinedProperties,
+  UnknownObject,
+} from '@alien-worlds/api-core';
 
-
-/*imports*/
 /**
  * Represents HealthOutput data entity.
  * @class
  */
-export class HealthOutput {
+export class HealthOutput implements Entity {
+  id?: string;
+  rest?: UnknownObject;
+
   /**
    * @private
    * @constructor
@@ -25,8 +30,8 @@ export class HealthOutput {
     public readonly nodeVersion: string,
     public readonly blockChainHistory: BlockChainHistoryHealthDocument,
     public readonly database: DatabaseHealthDocument,
-    public readonly dependencies: PackagedDependency[],
-  ) { }
+    public readonly dependencies: PackagedDependency[]
+  ) {}
 
   /**
    * Create DTO based on entity data
@@ -75,7 +80,7 @@ export class HealthOutput {
       nodeVersion,
       blockChainHistory,
       database,
-      dependencies,
+      dependencies
     );
   }
 
@@ -85,7 +90,7 @@ export class HealthOutput {
    * @public
    * @returns {object}
    */
-  public toJson(): object {
+  public toJSON(): UnknownObject {
     const {
       status,
       version,
@@ -100,7 +105,7 @@ export class HealthOutput {
     const dependenciesOutput = {};
     dependencies.forEach(dep => {
       dependenciesOutput[dep.name] = dep.version;
-    })
+    });
 
     return {
       status,
@@ -118,4 +123,3 @@ export class HealthOutput {
     };
   }
 }
-

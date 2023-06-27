@@ -10,13 +10,11 @@ import {
 } from '@alien-worlds/api-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
+import { config } from '@config';
 import { GetDacOutput } from '../domain/models/get-dac.output';
 import { GetDacsInput } from '../domain/models/dacs.input';
 import { GetDacsOutput } from '../domain/models/get-dacs.output';
 import { GetDacsRequestQueryParams } from '../data/dtos/dacs.dto';
-import { config } from '@config';
-
-/*imports*/
 
 /**
  * @class

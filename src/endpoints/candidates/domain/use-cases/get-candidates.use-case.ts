@@ -1,24 +1,18 @@
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
 
-const {
-  Entities: { Candidate },
-} = DaoWorldsContract.Deltas;
-
-/*imports*/
 /**
  * @class
  */
 @injectable()
 export class GetCandidatesUseCase
-  implements UseCase<DaoWorldsContract.Deltas.Entities.Candidate[]>
+  implements UseCase<DaoWorldsCommon.Deltas.Entities.Candidates[]>
 {
   public static Token = 'GET_CANDIDATES_USE_CASE';
 
   constructor(
-    /*injections*/
-    @inject(DaoWorldsContract.Services.DaoWorldsContractService.Token)
-    private service: DaoWorldsContract.Services.DaoWorldsContractService
+    @inject(DaoWorldsCommon.Services.DaoWorldsContractService.Token)
+    private service: DaoWorldsCommon.Services.DaoWorldsContractService
   ) {}
 
   /**
@@ -28,10 +22,9 @@ export class GetCandidatesUseCase
   public async execute(
     dacId: string,
     limit = 100
-  ): Promise<Result<DaoWorldsContract.Deltas.Entities.Candidate[]>> {
-    const { content: rows, failure } = await this.service.fetchCandidate({
+  ): Promise<Result<DaoWorldsCommon.Deltas.Entities.Candidates[]>> {
+    const { content: rows, failure } = await this.service.fetchCandidates({
       scope: dacId.toLowerCase(),
-      code: 'dao.worlds',
       limit,
     });
 
@@ -43,11 +36,13 @@ export class GetCandidatesUseCase
       return Result.withContent([]);
     }
 
-    const filteredRows = rows.filter(row => row.is_active);
-    const candidates = filteredRows.map(row => Candidate.fromStruct(row));
+    const candidatesRawMapper =
+      new DaoWorldsCommon.Deltas.Mappers.CandidatesRawMapper();
+
+    const candidates = rows
+      .filter(row => row.is_active)
+      .map(candidatesRawMapper.toEntity);
 
     return Result.withContent(candidates);
   }
-
-  /*methods*/
 }

@@ -1,14 +1,13 @@
 import 'reflect-metadata';
 
+import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+
 import { Container } from '@alien-worlds/api-core';
 import { GetProfilesUseCase } from '../use-cases/get-profiles.use-case';
-import { IndexWorldsContract } from '@alien-worlds/dao-api-common';
 import { IsProfileFlaggedUseCase } from '../use-cases/is-profile-flagged.use-case';
 import { ProfileController } from '../profile.controller';
 import { ProfileInput } from '../models/profile.input';
 import { Result } from '@alien-worlds/api-core';
-
-/*imports*/
 
 /*mocks*/
 const getProfilesUseCase = {
@@ -32,7 +31,7 @@ const input: ProfileInput = {
 describe('Profile Controller Unit tests', () => {
   beforeAll(() => {
     container = new Container();
-    /*bindings*/
+
     container
       .bind<GetProfilesUseCase>(GetProfilesUseCase.Token)
       .toConstantValue(getProfilesUseCase as any);
@@ -40,8 +39,8 @@ describe('Profile Controller Unit tests', () => {
       .bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token)
       .toConstantValue(isProfileFlaggedUseCase as any);
     container
-      .bind<IndexWorldsContract.Services.IndexWorldsContractService>(
-        IndexWorldsContract.Services.IndexWorldsContractService.Token
+      .bind<IndexWorldsCommon.Services.IndexWorldsContractService>(
+        IndexWorldsCommon.Services.IndexWorldsContractService.Token
       )
       .toConstantValue(indexWorldsContractService as any);
     container
@@ -65,7 +64,7 @@ describe('Profile Controller Unit tests', () => {
   it('Should execute GetProfilesUseCase', async () => {
     indexWorldsContractService.fetchDac.mockResolvedValue(
       Result.withContent([
-        <IndexWorldsContract.Deltas.Types.DacsStruct>{
+        <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
           accounts: [{ key: 2, value: 'dao.worlds' }],
           symbol: {
             sym: 'EYE',
@@ -78,5 +77,4 @@ describe('Profile Controller Unit tests', () => {
 
     expect(getProfilesUseCase.execute).toBeCalled();
   });
-  /*unit-tests*/
 });

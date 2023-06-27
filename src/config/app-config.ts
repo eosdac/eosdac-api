@@ -1,3 +1,5 @@
+import { MongoConfig } from '@alien-worlds/storage-mongodb';
+
 import {
   Config,
   DACConfig,
@@ -7,8 +9,6 @@ import {
   LoggerConfig,
   NewRelicConfig,
 } from './config.types';
-
-import { MongoConfig } from '@alien-worlds/api-core';
 import { readEnvFile } from './config.utils';
 
 export default class AppConfig implements Config {
@@ -33,6 +33,7 @@ export default class AppConfig implements Config {
         environment.EOS_DAC_DIRECTORY_MODE || dotEnv.EOS_DAC_DIRECTORY_MODE,
       dacDirectoryDacId:
         environment.EOS_DAC_DIRECTORY_DAC_ID || dotEnv.EOS_DAC_DIRECTORY_DAC_ID,
+      hyperionUrl: environment.HYPERION_URL || dotEnv.HYPERION_URL,
     };
 
     const mongo: MongoConfig = {
@@ -68,12 +69,29 @@ export default class AppConfig implements Config {
     };
 
     const newRelic: NewRelicConfig = {
-      newRelicEnabled: Boolean(environment.NEW_RELIC_ENABLED || dotEnv.NEW_RELIC_ENABLED),
-      appName: environment.NEW_RELIC_APP_NAME || dotEnv.NEW_RELIC_APP_NAME || `${process.env.npm_package_name}-${env}`,
-      licenseKey: environment.NEW_RELIC_LICENSE_KEY || dotEnv.NEW_RELIC_LICENSE_KEY,
+      newRelicEnabled: Boolean(
+        environment.NEW_RELIC_ENABLED || dotEnv.NEW_RELIC_ENABLED
+      ),
+      appName:
+        environment.NEW_RELIC_APP_NAME ||
+        dotEnv.NEW_RELIC_APP_NAME ||
+        `${process.env.npm_package_name}-${env}`,
+      licenseKey:
+        environment.NEW_RELIC_LICENSE_KEY || dotEnv.NEW_RELIC_LICENSE_KEY,
     };
 
-    return new AppConfig(version || 'v1', env, host, port, eos, mongo, docs, logger, dac, newRelic);
+    return new AppConfig(
+      version || 'v1',
+      env,
+      host,
+      port,
+      eos,
+      mongo,
+      docs,
+      logger,
+      dac,
+      newRelic
+    );
   }
 
   private constructor(
@@ -86,6 +104,6 @@ export default class AppConfig implements Config {
     public readonly docs: DocsConfig,
     public readonly logger: LoggerConfig,
     public readonly dac: DACConfig,
-    public readonly newRelic: NewRelicConfig,
-  ) { }
+    public readonly newRelic: NewRelicConfig
+  ) {}
 }

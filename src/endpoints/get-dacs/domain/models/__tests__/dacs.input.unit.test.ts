@@ -1,10 +1,7 @@
-/*imports*/
-
 import { GetDacsInput } from '../dacs.input';
 import { GetDacsRequestQueryParams } from '../../../../get-dacs/data/dtos/dacs.dto';
 import { Request } from '@alien-worlds/api-core';
 
-/*mocks*/
 const input = {
   query: {
     dacId: 'nerix',
@@ -37,5 +34,5 @@ describe('GetDacsInput Unit tests', () => {
     expect(fromReq.limit).toBe(input.query.limit);
   });
 
-  /*unit-tests*/
+  
 });

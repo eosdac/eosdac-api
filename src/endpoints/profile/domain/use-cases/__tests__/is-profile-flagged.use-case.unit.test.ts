@@ -1,16 +1,12 @@
 import 'reflect-metadata';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
-import {
-  DaoWorldsContract,
-  FlagRepository,
-} from '@alien-worlds/dao-api-common';
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
 
+import { Container, Failure, Result } from '@alien-worlds/api-core';
+
+import { FlagRepository } from '../../repositories/flag.repository';
 import { IsProfileFlaggedUseCase } from '../is-profile-flagged.use-case';
 import { IsProfileFlaggedUseCaseInput } from '../../../../profile/data/dtos/profile.dto';
-
-/*imports*/
-/*mocks*/
 
 let container: Container;
 let useCase: IsProfileFlaggedUseCase;
@@ -67,7 +63,7 @@ describe('Is Profile Flagged Unit tests', () => {
 
   it('should return Array', async () => {
     const content = [
-      DaoWorldsContract.Actions.Entities.FlagCandidateProfile.fromStruct({
+      new DaoWorldsCommon.Actions.Mappers.FlagcandprofRawMapper().toEntity({
         cand: 'cand',
         reason: '',
         reporter: '',
@@ -79,6 +75,4 @@ describe('Is Profile Flagged Unit tests', () => {
     const result = await useCase.execute(useCaseInput);
     expect(result.content).toBeInstanceOf(Array);
   });
-
-  /*unit-tests*/
 });

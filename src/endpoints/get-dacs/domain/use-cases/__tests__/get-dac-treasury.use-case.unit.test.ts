@@ -1,10 +1,10 @@
-import 'reflect-metadata';
-
+import * as AlienWorldsContract from '@alien-worlds/alien-worlds-common';
 import { Container, Failure, Result } from '@alien-worlds/api-core';
-import { AlienWorldsContract } from '@alien-worlds/dao-api-common';
+
 import { GetDacTreasuryUseCase } from '../get-dac-treasury.use-case';
 
-/*imports*/
+import 'reflect-metadata';
+
 /*mocks*/
 
 const alienWorldsContractService = {
@@ -54,7 +54,7 @@ describe('Get Dac Treasury Unit tests', () => {
   it('should return AlienWorldsAccount', async () => {
     alienWorldsContractService.fetchAccount.mockResolvedValueOnce(
       Result.withContent([
-        <AlienWorldsContract.Deltas.Types.AccountsStruct>{
+        <AlienWorldsContract.Deltas.Types.AccountsRawModel>{
           balance: '12237582.5498 TLM',
         },
       ])
@@ -62,9 +62,7 @@ describe('Get Dac Treasury Unit tests', () => {
 
     const result = await useCase.execute(input);
     expect(result.content).toBeInstanceOf(
-      AlienWorldsContract.Deltas.Entities.Account
+      AlienWorldsContract.Deltas.Entities.Accounts
     );
   });
-
-  /*unit-tests*/
 });

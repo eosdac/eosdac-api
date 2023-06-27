@@ -1,4 +1,8 @@
 import {
+  GetCandidatesRequestPathVariables,
+  GetCandidatesRequestQueryParams,
+} from '../data/dtos/candidate.dto';
+import {
   GetRoute,
   Request,
   Result,
@@ -8,15 +12,9 @@ import {
 
 import { AjvValidator } from '@src/validator/ajv-validator';
 import { CandidatesRequestSchema } from '../schemas';
+import { config } from '@config';
 import { GetCandidatesInput } from '../domain/models/get-candidates.input';
 import { GetCandidatesOutput } from '../domain/models/get-candidates.output';
-import {
-  GetCandidatesRequestPathVariables,
-  GetCandidatesRequestQueryParams,
-} from '../data/dtos/candidate.dto';
-import { config } from '@config';
-
-/*imports*/
 
 /**
  * @class
@@ -104,6 +102,6 @@ export const parseResultToControllerOutput = (
 
   return {
     status: 200,
-    body: result.content.toJson(),
+    body: result.content.toJSON(),
   };
 };

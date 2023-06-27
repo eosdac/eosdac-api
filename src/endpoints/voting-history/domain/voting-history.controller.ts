@@ -1,9 +1,8 @@
 import { inject, injectable, Result } from '@alien-worlds/api-core';
-import { GetUserVotingHistoryUseCase } from './use-cases/get-user-voting-history.use-case';
-import { UserVote } from '@alien-worlds/dao-api-common';
-import { VotingHistoryInput } from './models/voting-history.input';
 
-/*imports*/
+import { GetUserVotingHistoryUseCase } from './use-cases/get-user-voting-history.use-case';
+import { UserVote } from '../domain/entities/user-vote';
+import { VotingHistoryInput } from './models/voting-history.input';
 
 /**
  * @class
@@ -17,9 +16,7 @@ export class VotingHistoryController {
   constructor(
     @inject(GetUserVotingHistoryUseCase.Token)
     private getUserVotingHistoryUseCase: GetUserVotingHistoryUseCase
-  ) /*injections*/ {}
-
-  /*methods*/
+  ) {}
 
   /**
    *

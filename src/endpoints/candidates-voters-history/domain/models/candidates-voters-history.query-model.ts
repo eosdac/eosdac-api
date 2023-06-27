@@ -1,56 +1,37 @@
-import { MongoAggregateParams, MongoDB, QueryModel } from '@alien-worlds/api-core';
+import { Query, QueryBuilder } from '@alien-worlds/api-core';
+import { MongoDB } from '@alien-worlds/storage-mongodb';
 
-import { CandidatesVotersHistoryInput } from './candidates-voters-history.input';
-
-/*imports*/
+export type CandidatesVotersHistoryQueryArgs = {
+  dacId: string;
+  candidateId: string;
+};
 
 /**
  * @class
  */
-export class CandidatesVotersHistoryQueryModel extends QueryModel {
+export class CandidatesVotersHistoryQueryBuilder extends QueryBuilder {
+  public build(): Query {
+    const { candidateId, dacId } = this
+      .args as CandidatesVotersHistoryQueryArgs;
 
-	/**
-	 * @returns {CandidatesVotersHistoryQueryModel}
-	 */
-	public static create(
-		input: CandidatesVotersHistoryInput
-	): CandidatesVotersHistoryQueryModel {
-		const { dacId, candidateId, skip, limit } = input;
-		return new CandidatesVotersHistoryQueryModel(dacId, candidateId, skip, limit);
-	}
+    const pipeline: object[] = [
+      {
+        $match: {
+          'action.account': 'dao.worlds',
+          'action.name': 'votecust',
+          'action.data.dac_id': dacId,
+          'action.data.newvotes': candidateId,
+        },
+      },
+      {
+        $sort: {
+          block_num: 1,
+        },
+      },
+    ];
 
-	/**
-	 * @constructor
-	 * @private
-	 */
-	private constructor(
-		public readonly dacId: string,
-		public readonly candidateId: string,
-		public readonly skip: number,
-		public readonly limit: number
-	) {
-		super();
-	}
+    const options: MongoDB.AggregateOptions = {};
 
-	public toQueryParams(): MongoAggregateParams {
-		const { candidateId, dacId } = this;
-
-		const pipeline: object[] = [
-			{
-				'$match': {
-					'action.name': 'votecust',
-					'action.data.dac_id': dacId,
-					'action.data.newvotes': candidateId
-				}
-			}, {
-				'$sort': {
-					'block_num': 1
-				}
-			},
-		];
-
-		const options: MongoDB.AggregateOptions = {};
-
-		return { pipeline, options };
-	}
+    return { pipeline, options };
+  }
 }

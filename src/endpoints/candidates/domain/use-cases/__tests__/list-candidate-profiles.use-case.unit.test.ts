@@ -1,18 +1,15 @@
-import 'reflect-metadata';
-
 import { Container, Failure, Result } from '@alien-worlds/api-core';
-import {
-  DacDirectory,
-  IndexWorldsContract,
-} from '@alien-worlds/dao-api-common';
-import { GetCandidatesUseCase } from '../get-candidates.use-case';
-import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
-import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
+import * as IndexWorldsContract from '@alien-worlds/index-worlds-common';
+import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
+
 import { GetProfilesUseCase } from '../../../../profile/domain/use-cases/get-profiles.use-case';
+import { GetCandidatesUseCase } from '../get-candidates.use-case';
+import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
+import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
 import { GetVotedCandidateIdsUseCase } from '../get-voted-candidate-ids.use-case';
 import { ListCandidateProfilesUseCase } from '../list-candidate-profiles.use-case';
 
-/*imports*/
+import 'reflect-metadata';
 
 /*mocks*/
 
@@ -34,15 +31,18 @@ const getVotedCandidateIdsUseCase = {
 const getMembersAgreedTermsUseCase = {
   execute: jest.fn(),
 };
-const dacConfig = DacDirectory.fromStruct(<
-  IndexWorldsContract.Deltas.Types.DacsStruct
->{
-  accounts: [{ key: 2, value: 'dao.worlds' }],
-  symbol: {
-    sym: 'EYE',
-  },
-  refs: [],
-});
+
+const dacConfig = new DacMapper().toDac(
+  new IndexWorldsContract.Deltas.Mappers.DacsRawMapper().toEntity(<
+    IndexWorldsContract.Deltas.Types.DacsRawModel
+  >{
+    accounts: [{ key: 2, value: 'dao.worlds' }],
+    sym: {
+      symbol: 'EYE',
+    },
+    refs: [],
+  })
+);
 
 describe('ListCandidateProfilesUseCase Unit tests', () => {
   beforeAll(() => {
@@ -161,6 +161,4 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
     const result = await useCase.execute('dacId', 'walletId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
-
-  /*unit-tests*/
 });

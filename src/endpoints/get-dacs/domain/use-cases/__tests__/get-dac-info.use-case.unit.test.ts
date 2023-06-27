@@ -1,12 +1,8 @@
 import 'reflect-metadata';
 
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
 import { Container, Failure, Result } from '@alien-worlds/api-core';
-import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
-
 import { GetDacInfoUseCase } from '../get-dac-info.use-case';
-
-/*imports*/
-/*mocks*/
 
 const daoWorldsContractService = {
   fetchDacGlobals: jest.fn(),
@@ -20,8 +16,8 @@ describe('Get Dac Info Unit tests', () => {
     container = new Container();
 
     container
-      .bind<DaoWorldsContract.Services.DaoWorldsContractService>(
-        DaoWorldsContract.Services.DaoWorldsContractService.Token
+      .bind<DaoWorldsCommon.Services.DaoWorldsContractService>(
+        DaoWorldsCommon.Services.DaoWorldsContractService.Token
       )
       .toConstantValue(daoWorldsContractService as any);
     container
@@ -54,7 +50,7 @@ describe('Get Dac Info Unit tests', () => {
   it('should return an array of DacGlobals', async () => {
     daoWorldsContractService.fetchDacGlobals.mockResolvedValue(
       Result.withContent([
-        <DaoWorldsContract.Deltas.Types.DacglobalsStruct>{
+        <DaoWorldsCommon.Deltas.Types.DacglobalsRawModel>{
           data: [{ key: 'some_key', value: [] }],
         },
       ])
@@ -63,9 +59,7 @@ describe('Get Dac Info Unit tests', () => {
     const result = await useCase.execute('');
     expect(result.content).toBeInstanceOf(Array);
     expect(result.content[0]).toBeInstanceOf(
-      DaoWorldsContract.Deltas.Entities.DacGlobals
+      DaoWorldsCommon.Deltas.Entities.Dacglobals
     );
   });
-
-  /*unit-tests*/
 });

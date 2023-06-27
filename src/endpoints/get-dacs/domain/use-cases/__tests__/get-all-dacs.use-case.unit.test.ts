@@ -1,19 +1,15 @@
+import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+
+import { GetDacsInput } from '../../models/dacs.input';
+import { GetAllDacsUseCase } from '../get-all-dacs.use-case';
+
 import 'reflect-metadata';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
-import {
-  DacDirectory,
-  IndexWorldsContract,
-} from '@alien-worlds/dao-api-common';
-
-import { GetAllDacsUseCase } from '../get-all-dacs.use-case';
-import { GetDacsInput } from '../../models/dacs.input';
-
-/*imports*/
 /*mocks*/
 
 const indexWorldsContractService = {
-  fetchDac: jest.fn(),
+  fetchDacs: jest.fn(),
 };
 
 const input: GetDacsInput = {
@@ -29,8 +25,8 @@ describe('Get All Dacs Unit tests', () => {
     container = new Container();
 
     container
-      .bind<IndexWorldsContract.Services.IndexWorldsContractService>(
-        IndexWorldsContract.Services.IndexWorldsContractService.Token
+      .bind<IndexWorldsCommon.Services.IndexWorldsContractService>(
+        IndexWorldsCommon.Services.IndexWorldsContractService.Token
       )
       .toConstantValue(indexWorldsContractService as any);
     container
@@ -52,7 +48,7 @@ describe('Get All Dacs Unit tests', () => {
   });
 
   it('Should return a failure when index.worlds contract service fails', async () => {
-    indexWorldsContractService.fetchDac.mockResolvedValueOnce(
+    indexWorldsContractService.fetchDacs.mockResolvedValueOnce(
       Result.withFailure(Failure.fromError(null))
     );
 
@@ -60,12 +56,12 @@ describe('Get All Dacs Unit tests', () => {
     expect(result.isFailure).toBeTruthy();
   });
 
-  it('should return an array of DacDirectory', async () => {
-    indexWorldsContractService.fetchDac.mockResolvedValueOnce(
+  it('should return an array of IndexWorldsCommon.Deltas.Entities.Dacs', async () => {
+    indexWorldsContractService.fetchDacs.mockResolvedValueOnce(
       Result.withContent([
-        <IndexWorldsContract.Deltas.Types.DacsStruct>{
+        <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
           accounts: [{ key: 2, value: 'dao.worlds' }],
-          symbol: { sym: 'EYE' },
+          sym: { symbol: 'EYE' },
           refs: [],
         },
       ])
@@ -74,8 +70,8 @@ describe('Get All Dacs Unit tests', () => {
     const result = await useCase.execute(input);
 
     expect(result.content).toBeInstanceOf(Array);
-    expect(result.content[0]).toBeInstanceOf(DacDirectory);
+    expect(result.content[0]).toBeInstanceOf(
+      IndexWorldsCommon.Deltas.Entities.Dacs
+    );
   });
-
-  /*unit-tests*/
 });

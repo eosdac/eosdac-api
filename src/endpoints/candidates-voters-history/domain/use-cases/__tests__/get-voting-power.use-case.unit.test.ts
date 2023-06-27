@@ -1,73 +1,75 @@
 import 'reflect-metadata';
 
-import { Container, Failure, MongoDB, Result } from '@alien-worlds/api-core';
+import * as StkvtWorldsCommon from '@alien-worlds/stkvt-worlds-common';
+
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { CandidatesVotersHistoryOutputItem } from '../../../../candidates-voters-history/data/dtos/candidates-voters-history.dto';
 import { GetVotingPowerUseCase } from '../get-voting-power.use-case';
-import { VoteWeight } from '../../entities/vote-weight';
-import { VotingWeightRepository } from '../../repositories/voting-weight.repository';
-
-/*imports*/
-/*mocks*/
-
+import { MongoDB } from '@alien-worlds/storage-mongodb';
 
 let container: Container;
 let useCase: GetVotingPowerUseCase;
-const votingWeightRepository = {
-    findOne: jest.fn(),
+const stkvtWorldsDeltaRepository = {
+  find: jest.fn(),
 };
 
 const data: CandidatesVotersHistoryOutputItem = {
-    voter: 'string',
-    votingPower: 1n,
-    voteTimestamp: new Date('2022-10-20T15:55:46.000Z'),
-    candidate: 'string',
-    transactionId: 'string',
-}
+  voter: 'string',
+  votingPower: 1,
+  voteTimestamp: new Date('2022-10-20T15:55:46.000Z'),
+  candidate: 'string',
+  transactionId: 'string',
+};
 
 describe('Get Voting Power Unit tests', () => {
-    beforeAll(() => {
-        container = new Container();
+  beforeAll(() => {
+    container = new Container();
 
-        container
-            .bind<VotingWeightRepository>(VotingWeightRepository.Token)
-            .toConstantValue(votingWeightRepository as any);
-        container
-            .bind<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token)
-            .to(GetVotingPowerUseCase);
-    });
+    container
+      .bind<StkvtWorldsCommon.Deltas.StkvtWorldsDeltaRepository>(
+        StkvtWorldsCommon.Deltas.StkvtWorldsDeltaRepository.Token
+      )
+      .toConstantValue(stkvtWorldsDeltaRepository as any);
+    container
+      .bind<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token)
+      .to(GetVotingPowerUseCase);
+  });
 
-    beforeEach(() => {
-        useCase = container.get<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token);
-    });
+  beforeEach(() => {
+    useCase = container.get<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token);
+  });
 
-    afterAll(() => {
-        jest.clearAllMocks();
-        container = null;
-    });
+  afterAll(() => {
+    jest.clearAllMocks();
+    container = null;
+  });
 
-    it('"Token" should be set', () => {
-        expect(GetVotingPowerUseCase.Token).not.toBeNull();
-    });
+  it('"Token" should be set', () => {
+    expect(GetVotingPowerUseCase.Token).not.toBeNull();
+  });
 
-    it('Should return a failure when voting weight repository fails', async () => {
-        votingWeightRepository.findOne.mockResolvedValue(Result.withFailure(Failure.fromError("error")))
+  it('Should return a failure when voting weight repository fails', async () => {
+    stkvtWorldsDeltaRepository.find.mockResolvedValue(
+      Result.withFailure(Failure.fromError('error'))
+    );
 
-        const result = await useCase.execute(data);
-        expect(result.isFailure).toBeTruthy();
-    });
+    const result = await useCase.execute(data);
+    expect(result.isFailure).toBeTruthy();
+  });
 
-    it('should return Number', async () => {
-        votingWeightRepository.findOne.mockResolvedValue(Result.withContent(VoteWeight.fromDocument({
-            voter: 'voter',
-            weight: MongoDB.Long.ONE,
-            weight_quorum: MongoDB.Long.ZERO,
-        })))
+  it('should return Number', async () => {
+    stkvtWorldsDeltaRepository.find.mockResolvedValue(
+      Result.withContent(
+        new StkvtWorldsCommon.Deltas.Mappers.WeightsMongoMapper().toEntity({
+          voter: 'voter',
+          weight: 1,
+          weight_quorum: 0,
+        })
+      )
+    );
 
-        const result = await useCase.execute(data);
-        expect(result.content).toBe(1n)
-    });
-
-    /*unit-tests*/
+    const result = await useCase.execute(data);
+    expect(result.content).toBe(1);
+  });
 });
-

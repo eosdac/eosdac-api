@@ -27,13 +27,41 @@
                 "@alien-worlds/api-core": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/dao-api-common": {
+                "@alien-worlds/storage-mongodb": {
+                    "$ref": "#/$defs/semanticVerString"
+                },
+                "@alien-worlds/eos": {
+                    "$ref": "#/$defs/semanticVerString"
+                },
+                "@alien-worlds/eosio-contract-types": {
+                    "$ref": "#/$defs/semanticVerString"
+                },
+                "@alien-worlds/alien-worlds-common": {
+                    "$ref": "#/$defs/semanticVerString"
+                },
+                "@alien-worlds/dao-worlds-common": {
+                    "$ref": "#/$defs/semanticVerString"
+                },
+                "@alien-worlds/index-worlds-common": {
+                    "$ref": "#/$defs/semanticVerString"
+                },
+                "@alien-worlds/stkvt-worlds-common": {
+                    "$ref": "#/$defs/semanticVerString"
+                },
+                "@alien-worlds/token-worlds-common": {
                     "$ref": "#/$defs/semanticVerString"
                 }
             },
             "required": [
                 "@alien-worlds/api-core",
-                "@alien-worlds/dao-api-common"
+                "@alien-worlds/storage-mongodb",
+                "@alien-worlds/eos",
+                "@alien-worlds/eosio-contract-types",
+                "@alien-worlds/alien-worlds-common",
+                "@alien-worlds/dao-worlds-common",
+                "@alien-worlds/index-worlds-common",
+                "@alien-worlds/stkvt-worlds-common",
+                "@alien-worlds/token-worlds-common"
             ]
         },
         "database": {
@@ -73,7 +101,7 @@
     "$defs": {
         "semanticVerString": {
             "type": "string",
-            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+            "pattern": "^[^~]*(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
         },
         "semanticVerStringWithPrefix": {
             "type": "string",

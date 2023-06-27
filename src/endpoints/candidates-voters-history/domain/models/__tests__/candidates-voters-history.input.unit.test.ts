@@ -1,9 +1,6 @@
 import { CandidatesVotersHistoryInput } from '../candidates-voters-history.input';
 import { CandidatesVotersHistoryRequestQueryParams } from '../../../data/dtos/candidates-voters-history.dto';
 
-/*imports*/
-
-/*mocks*/
 const input: CandidatesVotersHistoryRequestQueryParams = {
   dacId: 'string',
   candidateId: 'string',
@@ -24,5 +21,5 @@ describe('CandidatesVotersHistoryInput Unit tests', () => {
     expect(fromReq.candidateId).toBe(input.candidateId);
   });
 
-  /*unit-tests*/
+  
 });

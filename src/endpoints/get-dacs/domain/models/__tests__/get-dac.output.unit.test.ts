@@ -1,30 +1,30 @@
-import {
-  AlienWorldsContract,
-  DacDirectory,
-  DaoWorldsContract,
-  TokenWorldsContract,
-} from '@alien-worlds/dao-api-common';
+import * as AlienWorldsCommon from '@alien-worlds/alien-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+import * as TokenWorldsCommon from '@alien-worlds/token-worlds-common';
 
+import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
 import { GetDacOutput } from '../get-dac.output';
 
-/*imports*/
-/*mocks*/
+const dacDir = new DacMapper().toDac(
+  new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity({
+    accounts: [{ key: 2, value: 'dao.worlds' }],
+    symbol: { sym: 'EYE', contract: '' },
+    refs: [],
+  })
+);
 
-const dacDir = DacDirectory.fromStruct({
-  accounts: [{ key: 2, value: 'dao.worlds' }],
-  symbol: { sym: 'EYE', contract: '' },
-  refs: [],
-});
+const dacTreasury =
+  new AlienWorldsCommon.Deltas.Mappers.AccountsRawMapper().toEntity({
+    balance: 'string',
+  });
 
-const dacTreasury = AlienWorldsContract.Deltas.Entities.Account.fromStruct({
-  balance: 'string',
-});
+const dacGlobals =
+  new DaoWorldsCommon.Deltas.Mappers.DacglobalsRawMapper().toEntity({
+    data: [],
+  });
 
-const dacGlobals = DaoWorldsContract.Deltas.Entities.DacGlobals.fromStruct({
-  data: [],
-});
-
-const dacStats = TokenWorldsContract.Deltas.Entities.Stat.fromStruct({
+const dacStats = new TokenWorldsCommon.Deltas.Mappers.StatRawMapper().toEntity({
   supply: 'string',
   max_supply: 'string',
   issuer: 'string',
@@ -53,6 +53,4 @@ describe('GetDacOutput Unit tests', () => {
 
     expect(output.toJson()).toBeInstanceOf(Object);
   });
-
-  /*unit-tests*/
 });

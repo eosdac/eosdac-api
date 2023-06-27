@@ -6,12 +6,10 @@ import { CountVotersHistoryUseCase } from './use-cases/count-voters-history.use-
 import { GetCandidatesVotersHistoryUseCase } from './use-cases/get-candidates-voters-history.use-case';
 import { GetVotingPowerUseCase } from './use-cases/get-voting-power.use-case';
 
-/*imports*/
-
 /**
  * @class
- * 
- * 
+ *
+ *
  */
 @injectable()
 export class CandidatesVotersHistoryController {
@@ -26,25 +24,25 @@ export class CandidatesVotersHistoryController {
 
     @inject(CountVotersHistoryUseCase.Token)
     private countVotersHistoryUseCase: CountVotersHistoryUseCase
-    /*injections*/
-  ) { }
-
-  /*methods*/
+  ) {}
 
   /**
-   * 
+   *
    * @returns {Promise<Result<CandidatesVotersHistoryControllerOutput, Error>>}
    */
-  public async candidatesVotersHistory(input: CandidatesVotersHistoryInput): Promise<Result<CandidatesVotersHistoryControllerOutput, Error>> {
+  public async candidatesVotersHistory(
+    input: CandidatesVotersHistoryInput
+  ): Promise<Result<CandidatesVotersHistoryControllerOutput, Error>> {
     const output: CandidatesVotersHistoryControllerOutput = {
       results: null,
       total: 0,
-    }
+    };
 
     // Fetch voters history
-    const getCandVotersHistoryRes = await this.getCandidatesVotersHistoryUseCase.execute(input);
+    const getCandVotersHistoryRes =
+      await this.getCandidatesVotersHistoryUseCase.execute(input);
     if (getCandVotersHistoryRes.isFailure) {
-      return Result.withFailure(getCandVotersHistoryRes.failure)
+      return Result.withFailure(getCandVotersHistoryRes.failure);
     }
     output.results = getCandVotersHistoryRes.content;
 
@@ -55,20 +53,22 @@ export class CandidatesVotersHistoryController {
         return {
           ...item,
           votingPower: votingPowerRes.content,
-        }
+        };
       }
 
       return item;
-    })
-    output.results = await Promise.all(resultsWithVotingPower)
+    });
+
+    output.results = await Promise.all(resultsWithVotingPower);
 
     // Fetch total count
     const countRes = await this.countVotersHistoryUseCase.execute(input);
     if (countRes.isFailure) {
-      return Result.withFailure(countRes.failure)
+      return Result.withFailure(countRes.failure);
     }
+
     output.total = countRes.content;
 
-    return Result.withContent(output)
+    return Result.withContent(output);
   }
 }

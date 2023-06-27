@@ -1,5 +1,5 @@
+import * as AlienWorldsContract from '@alien-worlds/alien-worlds-common';
 import { inject, injectable, Result } from '@alien-worlds/api-core';
-import { AlienWorldsContract } from '@alien-worlds/dao-api-common';
 
 import { GetAllDacsUseCase } from './use-cases/get-all-dacs.use-case';
 import { GetDacInfoUseCase } from './use-cases/get-dac-info.use-case';
@@ -7,8 +7,6 @@ import { GetDacOutput } from './models/get-dac.output';
 import { GetDacsInput } from './models/dacs.input';
 import { GetDacTokensUseCase } from './use-cases/get-dac-tokens.use-case';
 import { GetDacTreasuryUseCase } from './use-cases/get-dac-treasury.use-case';
-
-/*imports*/
 
 /**
  * @class
@@ -20,7 +18,6 @@ export class GetDacsController {
   public static Token = 'GET_DACS_CONTROLLER';
 
   constructor(
-    /*injections*/
     @inject(GetAllDacsUseCase.Token)
     private getAllDacsUseCase: GetAllDacsUseCase,
     @inject(GetDacTreasuryUseCase.Token)
@@ -30,8 +27,6 @@ export class GetDacsController {
     @inject(GetDacTokensUseCase.Token)
     private getDacTokensUseCase: GetDacTokensUseCase
   ) {}
-
-  /*methods*/
 
   /**
    *
@@ -47,7 +42,7 @@ export class GetDacsController {
     }
 
     for (const dac of dacs) {
-      let dacTreasury: AlienWorldsContract.Deltas.Entities.Account;
+      let dacTreasury: AlienWorldsContract.Deltas.Entities.Accounts;
 
       if (dac.accounts && dac.accounts.auth) {
         const { content, failure: getDacTreasuryFailure } =
@@ -65,7 +60,7 @@ export class GetDacsController {
       }
 
       const { content: dacTokens, failure: getDacTokensFailure } =
-        await this.getDacTokensUseCase.execute(dac.symbol.code);
+        await this.getDacTokensUseCase.execute(dac.symbol.symbol.code);
       if (getDacTokensFailure) {
         return Result.withFailure(getDacTokensFailure);
       }

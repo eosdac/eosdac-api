@@ -1,31 +1,30 @@
+import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+
 import {
-  DacDirectory,
-  IndexWorldsContract,
-} from '@alien-worlds/dao-api-common';
-import { Failure, inject, injectable, Result } from '@alien-worlds/api-core';
-import { config } from '@config';
+  EntityNotFoundError,
+  Failure,
+  inject,
+  injectable,
+  Result,
+} from '@alien-worlds/api-core';
 import { GetProfilesUseCase } from './use-cases/get-profiles.use-case';
 import { IsProfileFlaggedUseCase } from './use-cases/is-profile-flagged.use-case';
+import { loadDacConfig } from '@common/utils/dac.utils';
 import { Profile } from './entities/profile';
 import { ProfileInput } from './models/profile.input';
+import { ProfileMongoMapper } from '../data/mappers/profile.mapper';
 import { ProfileOutput } from '../data/dtos/profile.dto';
-import { isEmptyArray } from '@common/utils/dto.utils';
-
-/*imports*/
 
 /**
  * @class
- *
- *
  */
 @injectable()
 export class ProfileController {
   public static Token = 'PROFILE_CONTROLLER';
 
   constructor(
-    /*injections*/
-    @inject(IndexWorldsContract.Services.IndexWorldsContractService.Token)
-    private indexWorldsContractService: IndexWorldsContract.Services.IndexWorldsContractService,
+    @inject(IndexWorldsCommon.Services.IndexWorldsContractService.Token)
+    private indexWorldsContractService: IndexWorldsCommon.Services.IndexWorldsContractService,
 
     @inject(GetProfilesUseCase.Token)
     private getProfilesUseCase: GetProfilesUseCase,
@@ -33,8 +32,6 @@ export class ProfileController {
     @inject(IsProfileFlaggedUseCase.Token)
     private isProfileFlaggedUseCase: IsProfileFlaggedUseCase
   ) {}
-
-  /*methods*/
 
   /**
    *
@@ -44,7 +41,12 @@ export class ProfileController {
     input: ProfileInput
   ): Promise<Result<ProfileOutput, Error>> {
     const results: Profile[] = [];
-    const dacConfig = await this.loadDacConfig(input.dacId);
+
+    const dacConfig = await loadDacConfig(
+      this.indexWorldsContractService,
+      input.dacId
+    );
+
     if (!dacConfig) {
       return Result.withFailure(
         Failure.withMessage('unable to load dac config')
@@ -63,26 +65,30 @@ export class ProfileController {
       return Result.withFailure(getProfilesFailure);
     }
 
+    if (profiles.length == 0) {
+      return Result.withFailure(
+        Failure.fromError(new EntityNotFoundError('dao.worlds_actions'))
+      );
+    }
+
     const { content: flags } = await this.isProfileFlaggedUseCase.execute({
       dacId: input.dacId,
       accounts: input.accounts,
     });
 
     profiles.forEach(profile => {
-      const { candidate } = profile.action.data;
+      const { cand } = profile.data;
       let isFlagged = false;
-
       if (flags && flags.length) {
-        const flag = flags.find(flag => flag.candidate === candidate);
+        const flag = flags.find(flag => flag.cand === cand);
         if (flag && flag.block) {
           isFlagged = true;
         }
       }
-
       if (isFlagged) {
-        results.push(this.getRedactedCandidateResult(candidate));
+        results.push(this.getRedactedCandidateResult(cand));
       } else {
-        results.push(Profile.fromDto(profile.toDocument()));
+        results.push(ProfileMongoMapper.toEntity(profile));
       }
     });
 
@@ -91,32 +97,6 @@ export class ProfileController {
       results,
     });
   }
-
-  private loadDacConfig = async dacId => {
-    const dac_config_cache = config.dac.nameCache.get(dacId);
-
-    if (dac_config_cache) {
-      console.info(`Returning cached dac info`);
-      return dac_config_cache;
-    } else {
-      const result = await this.indexWorldsContractService.fetchDac({
-        scope: config.eos.dacDirectoryContract,
-        limit: 1,
-        lower_bound: dacId,
-        upper_bound: dacId,
-      });
-
-      if (result.isFailure || isEmptyArray(result.content)) {
-        console.warn(`Could not find dac with ID ${dacId}`);
-        return null;
-      }
-
-      const dacConfig = DacDirectory.fromStruct(result.content[0]);
-      config.dac.nameCache.set(dacId, dacConfig);
-
-      return dacConfig;
-    }
-  };
 
   private getRedactedCandidateResult = (account): Profile => {
     return Profile.createErrorProfile(account, {

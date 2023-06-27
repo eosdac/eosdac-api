@@ -1,25 +1,16 @@
+import { AsyncContainerModule, Container } from '@alien-worlds/api-core';
 import {
-  AlienWorldsContract,
-  DaoWorldsContract,
-  IndexWorldsContract,
-  setupDacDirectoryRepository,
-  setupFlagRepository,
-  setupHistoryToolsBlockState,
-  setupUserVotingHistoryRepository,
-  TokenWorldsContract,
-} from '@alien-worlds/dao-api-common';
-import {
-  AsyncContainerModule,
-  Container,
-  EosJsRpcSource,
-  MongoSource,
-} from '@alien-worlds/api-core';
+  setupDaoWorldsActionRepository,
+  setupDaoWorldsContractService,
+  setupDaoWorldsDeltaRepository,
+} from '@alien-worlds/dao-worlds-common';
 
 import AppConfig from 'src/config/app-config';
 import { CandidatesController } from './candidates/domain/candidates.controller';
 import { CandidatesVotersHistoryController } from './candidates-voters-history/domain/candidates-voters-history.controller';
 import { CountVotersHistoryUseCase } from './candidates-voters-history/domain/use-cases/count-voters-history.use-case';
 import { CustodiansController } from './custodians/domain/custodians.controller';
+import { EosRpcSourceImpl } from '@alien-worlds/eos';
 import { GetAllDacsUseCase } from './get-dacs/domain/use-cases/get-all-dacs.use-case';
 import { GetCandidatesUseCase } from './candidates/domain/use-cases/get-candidates.use-case';
 import { GetCandidatesVotersHistoryUseCase } from './candidates-voters-history/domain/use-cases/get-candidates-voters-history.use-case';
@@ -39,13 +30,14 @@ import { HealthUseCase } from './health/domain/use-cases/health.use-case';
 import { IsProfileFlaggedUseCase } from './profile/domain/use-cases/is-profile-flagged.use-case';
 import { ListCandidateProfilesUseCase } from './candidates/domain/use-cases/list-candidate-profiles.use-case';
 import { ListCustodianProfilesUseCase } from './custodians/domain/use-cases/list-custodian-profiles.use-case';
+import { MongoSource } from '@alien-worlds/storage-mongodb';
 import { ProfileController } from './profile/domain/profile.controller';
-import { setupStateRepository } from './health';
-import { setupVotingWeightRepository } from './candidates-voters-history/ioc.config';
+import { setupAlienWorldsContractService } from '@alien-worlds/alien-worlds-common';
+import { setupFlagRepository } from './profile/ioc.config';
+import { setupIndexWorldsContractService } from '@alien-worlds/index-worlds-common';
+import { setupStkvtWorldsDeltaRepository } from '@alien-worlds/stkvt-worlds-common';
+import { setupTokenWorldsContractService } from '@alien-worlds/token-worlds-common';
 import { VotingHistoryController } from './voting-history/domain/voting-history.controller';
-import { setupDaoWorldsActionRepository } from '@alien-worlds/dao-api-common/build/contracts/dao-worlds/actions/ioc';
-
-/*imports*/
 
 export const setupEndpointDependencies = async (
   container: Container,
@@ -59,26 +51,33 @@ export const setupEndpointDependencies = async (
      */
     const mongoSource = await MongoSource.create(config.mongo);
 
-    const eosJsRpcSource = new EosJsRpcSource(config.eos.endpoint);
+    const eosJsRpcSource = new EosRpcSourceImpl(config.eos.endpoint);
 
     /**
      * SMART CONTRACT SERVICES
      */
 
-    await IndexWorldsContract.Services.Ioc.setupIndexWorldsContractService(
+    await setupIndexWorldsContractService(
       eosJsRpcSource,
+      config.eos.hyperionUrl,
       container
     );
-    await AlienWorldsContract.Services.Ioc.setupAlienWorldsContractService(
+
+    await setupAlienWorldsContractService(
       eosJsRpcSource,
+      config.eos.hyperionUrl,
       container
     );
-    await DaoWorldsContract.Services.Ioc.setupDaoWorldsContractService(
+
+    await setupDaoWorldsContractService(
       eosJsRpcSource,
+      config.eos.hyperionUrl,
       container
     );
-    await TokenWorldsContract.Services.Ioc.setupTokenWorldsContractService(
+
+    await setupTokenWorldsContractService(
       eosJsRpcSource,
+      config.eos.hyperionUrl,
       container
     );
 
@@ -87,20 +86,13 @@ export const setupEndpointDependencies = async (
      */
 
     await setupDaoWorldsActionRepository(mongoSource, container);
+    await setupDaoWorldsDeltaRepository(mongoSource, container);
+    await setupStkvtWorldsDeltaRepository(mongoSource, container);
     await setupFlagRepository(mongoSource, container);
-    await setupDacDirectoryRepository(mongoSource, eosJsRpcSource, container);
-    await setupUserVotingHistoryRepository(mongoSource, container);
-    await setupVotingWeightRepository(mongoSource, container);
-    await setupStateRepository(mongoSource, container);
-
-    /*bindings*/
 
     /**
      * HEALTH
      */
-
-    await setupHistoryToolsBlockState(mongoSource, container);
-
     bind<HealthController>(HealthController.Token).to(HealthController);
     bind<HealthUseCase>(HealthUseCase.Token).to(HealthUseCase);
 

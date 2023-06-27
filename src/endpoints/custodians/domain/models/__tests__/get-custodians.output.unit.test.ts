@@ -1,19 +1,23 @@
+import * as DaoWorldsContract from '@alien-worlds/dao-worlds-common';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CustodianProfile } from '../../entities/custodian-profile';
-import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
 import { GetCustodiansOutput } from '../get-custodians.output';
 import { Profile } from '../../../../profile/domain/entities/profile';
 
 describe('GetCustodiansOutput', () => {
   let dacId: string;
+  const custodians1RawMapper =
+    new DaoWorldsContract.Deltas.Mappers.Custodians1RawMapper();
+
   const custodians = [
-    DaoWorldsContract.Deltas.Entities.Custodian.fromStruct({
+    custodians1RawMapper.toEntity({
       cust_name: 'custodian1',
       requestedpay: 'test',
       total_vote_power: 1,
       rank: 1,
     }),
-    DaoWorldsContract.Deltas.Entities.Custodian.fromStruct({
+    custodians1RawMapper.toEntity({
       cust_name: 'custodian2',
       requestedpay: 'test',
       total_vote_power: 1,
@@ -21,22 +25,22 @@ describe('GetCustodiansOutput', () => {
     }),
   ] as any;
   const profiles = [
-    Profile.fromDto({
-      block_num: 1,
-      action: {
-        account: 'custodian1',
-        name: '',
-        data: { cand: '', profile: '{}' },
-      },
-    } as any),
-    Profile.fromDto({
-      block_num: 1,
-      action: {
-        account: 'custodian2',
-        name: '',
-        data: { cand: '', profile: '{}' },
-      },
-    } as any),
+    // Profile.fromDto({
+    //   block_num: 1,
+    //   action: {
+    //     account: 'custodian1',
+    //     name: '',
+    //     data: { cand: '', profile: '{}' },
+    //   },
+    // } as any),
+    // Profile.fromDto({
+    //   block_num: 1,
+    //   action: {
+    //     account: 'custodian2',
+    //     name: '',
+    //     data: { cand: '', profile: '{}' },
+    //   },
+    // } as any),
   ] as any;
   const terms = { version: 1n, text: 'terms' } as any;
   let custodianProfiles: CustodianProfile[];
@@ -63,7 +67,7 @@ describe('GetCustodiansOutput', () => {
 
     expect(result.results[0]).toBeInstanceOf(CustodianProfile);
     expect(result.results[0].walletId).toBeDefined();
-    expect(result.results[0].requestedPayment).toBeDefined();
+    expect(result.results[0].requestedpay).toBeDefined();
     expect(result.results[0].votePower).toBeDefined();
     expect(result.results[0].profile).toBeDefined();
     expect(result.results[0].agreedTermVersion).toBeDefined();

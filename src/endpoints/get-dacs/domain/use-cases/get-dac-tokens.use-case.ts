@@ -1,28 +1,27 @@
+import * as TokenWorldsCommon from '@alien-worlds/token-worlds-common';
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { TokenWorldsContract } from '@alien-worlds/dao-api-common';
-/*imports*/
+
 /**
  * @class
  */
 @injectable()
 export class GetDacTokensUseCase
-  implements UseCase<TokenWorldsContract.Deltas.Entities.Stat[]>
+  implements UseCase<TokenWorldsCommon.Deltas.Entities.Stat[]>
 {
   public static Token = 'GET_DAC_TOKENS_USE_CASE';
 
   constructor(
-    /*injections*/
-    @inject(TokenWorldsContract.Services.TokenWorldsContractService.Token)
-    private tokenWorldsContractService: TokenWorldsContract.Services.TokenWorldsContractService
+    @inject(TokenWorldsCommon.Services.TokenWorldsContractService.Token)
+    private tokenWorldsContractService: TokenWorldsCommon.Services.TokenWorldsContractService
   ) {}
 
   /**
    * @async
-   * @returns {Promise<Result<Stat[]>>}
+   * @returns {Promise<Result<TokenWorldsCommon.Deltas.Entities.Stat[]>>}
    */
   public async execute(
     symbol: string
-  ): Promise<Result<TokenWorldsContract.Deltas.Entities.Stat[]>> {
+  ): Promise<Result<TokenWorldsCommon.Deltas.Entities.Stat[]>> {
     const { content: dacTokenStats, failure: fetchDacGlobalsFailure } =
       await this.tokenWorldsContractService.fetchStat({
         scope: symbol,
@@ -33,10 +32,7 @@ export class GetDacTokensUseCase
       return Result.withFailure(fetchDacGlobalsFailure);
     }
 
-    return Result.withContent(
-      dacTokenStats.map(TokenWorldsContract.Deltas.Entities.Stat.fromStruct)
-    );
+    const statRawMapper = new TokenWorldsCommon.Deltas.Mappers.StatRawMapper();
+    return Result.withContent(dacTokenStats.map(statRawMapper.toEntity));
   }
-
-  /*methods*/
 }

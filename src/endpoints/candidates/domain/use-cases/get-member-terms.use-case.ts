@@ -1,25 +1,18 @@
+import * as TokenWorldsCommon from '@alien-worlds/token-worlds-common';
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { TokenWorldsContract } from '@alien-worlds/dao-api-common';
-
-/*imports*/
-
-const {
-  Entities: { MemberTerms },
-} = TokenWorldsContract.Deltas;
 
 /**
  * @class
  */
 @injectable()
 export class GetMemberTermsUseCase
-  implements UseCase<TokenWorldsContract.Deltas.Entities.MemberTerms>
+  implements UseCase<TokenWorldsCommon.Deltas.Entities.Memberterms>
 {
   public static Token = 'GET_MEMBER_TERMS_USE_CASE';
 
   constructor(
-    /*injections*/
-    @inject(TokenWorldsContract.Services.TokenWorldsContractService.Token)
-    private service: TokenWorldsContract.Services.TokenWorldsContractService
+    @inject(TokenWorldsCommon.Services.TokenWorldsContractService.Token)
+    private service: TokenWorldsCommon.Services.TokenWorldsContractService
   ) {}
 
   /**
@@ -29,10 +22,9 @@ export class GetMemberTermsUseCase
   public async execute(
     dacId: string,
     limit = 1
-  ): Promise<Result<TokenWorldsContract.Deltas.Entities.MemberTerms>> {
-    const { content: rows, failure } = await this.service.fetchMemberTerms({
+  ): Promise<Result<TokenWorldsCommon.Deltas.Entities.Memberterms>> {
+    const { content: rows, failure } = await this.service.fetchMemberterms({
       scope: dacId.toLowerCase(),
-      code: 'token.worlds',
       limit,
       reverse: true,
     });
@@ -42,9 +34,11 @@ export class GetMemberTermsUseCase
     }
 
     return Result.withContent(
-      rows.length === 0 ? null : MemberTerms.fromStruct(rows[0])
+      rows.length === 0
+        ? null
+        : new TokenWorldsCommon.Deltas.Mappers.MembertermsRawMapper().toEntity(
+            rows[0]
+          )
     );
   }
-
-  /*methods*/
 }

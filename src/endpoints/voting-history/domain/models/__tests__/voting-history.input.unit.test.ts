@@ -2,9 +2,6 @@
 import { VotingHistoryInput } from '../voting-history.input';
 import { VotingHistoryRequestQueryParams } from '../../../data/dtos/user-voting-history.dto';
 
-/*imports*/
-
-/*mocks*/
 const input: VotingHistoryRequestQueryParams = {
   dacId: 'string',
   voter: 'string',
@@ -22,6 +19,4 @@ describe('VotingHistoryInput Unit tests', () => {
 
     expect(fromReq.voter).toBe(input.voter);
   });
-
-  /*unit-tests*/
 });

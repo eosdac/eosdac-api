@@ -1,18 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import 'reflect-metadata';
-
 import { Container, Failure, Result } from '@alien-worlds/api-core';
-import {
-  DacDirectory,
-  IndexWorldsContract,
-} from '@alien-worlds/dao-api-common';
-import { GetCustodiansUseCase } from '../get-custodians.use-case';
-import { GetMembersAgreedTermsUseCase } from '../../../../candidates/domain/use-cases/get-members-agreed-terms.use-case';
+import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
+
 import { GetMemberTermsUseCase } from '../../../../candidates/domain/use-cases/get-member-terms.use-case';
+import { GetMembersAgreedTermsUseCase } from '../../../../candidates/domain/use-cases/get-members-agreed-terms.use-case';
 import { GetProfilesUseCase } from '../../../../profile/domain/use-cases/get-profiles.use-case';
+import { GetCustodiansUseCase } from '../get-custodians.use-case';
 import { ListCustodianProfilesUseCase } from '../list-custodian-profiles.use-case';
 
-/*imports*/
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import 'reflect-metadata';
 
 /*mocks*/
 
@@ -31,15 +28,18 @@ const getMemberTermsUseCase = {
 const getMembersAgreedTermsUseCase = {
   execute: jest.fn(),
 };
-const dacConfig = DacDirectory.fromStruct(<
-  IndexWorldsContract.Deltas.Types.DacsStruct
->{
-  accounts: [{ key: 2, value: 'dao.worlds' }],
-  symbol: {
-    sym: 'EYE',
-  },
-  refs: [],
-});
+
+const dacConfig = new DacMapper().toDac(
+  new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+    IndexWorldsCommon.Deltas.Types.DacsRawModel
+  >{
+    accounts: [{ key: 2, value: 'dao.worlds' }],
+    sym: {
+      symbol: 'EYE',
+    },
+    refs: [],
+  })
+);
 
 describe('ListCustodianProfilesUseCase Unit tests', () => {
   beforeAll(() => {
@@ -138,6 +138,4 @@ describe('ListCustodianProfilesUseCase Unit tests', () => {
     const result = await useCase.execute('dacId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
-
-  /*unit-tests*/
 });

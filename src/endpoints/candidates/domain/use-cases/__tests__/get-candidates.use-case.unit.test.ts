@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Unit Test Code
+
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+
 import { Container, Failure } from '@alien-worlds/api-core';
 
-import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
 import { GetCandidatesUseCase } from '../get-candidates.use-case';
 
-const Entities = DaoWorldsContract.Deltas.Entities;
+const Entities = DaoWorldsCommon.Deltas.Entities;
 
 describe('GetCandidatesUseCase', () => {
   let container: Container;
@@ -51,9 +52,9 @@ describe('GetCandidatesUseCase', () => {
     expect(result.content).toBeInstanceOf(Array);
 
     const candidate = result
-      .content[0] as DaoWorldsContract.Deltas.Entities.Candidate;
+      .content[0] as DaoWorldsCommon.Deltas.Entities.Candidates;
 
-    expect(candidate).toBeInstanceOf(Entities.Candidate);
+    expect(candidate).toBeInstanceOf(Entities.Candidates);
   });
 
   it('should return an empty array if no candidates are found', async () => {

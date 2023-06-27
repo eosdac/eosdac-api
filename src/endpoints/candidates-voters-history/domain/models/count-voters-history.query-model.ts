@@ -1,44 +1,21 @@
-import {
-  MongoDB,
-  MongoFindQueryParams,
-  QueryModel,
-} from '@alien-worlds/api-core';
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
 
-import { CandidatesVotersHistoryInput } from './candidates-voters-history.input';
-import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
+import { Query, QueryBuilder } from '@alien-worlds/api-core';
 
-/*imports*/
+import { MongoDB } from '@alien-worlds/storage-mongodb';
+
+export type CountVotersHitoryQueryArgs = { dacId: string; candidateId: string };
 
 /**
  * @class
  */
-export class CountVotersHistoryQueryModel extends QueryModel {
-  /**
-   * @returns {CountVotersHistoryQueryModel}
-   */
-  public static create(
-    model: CandidatesVotersHistoryInput
-  ): CountVotersHistoryQueryModel {
-    const { dacId, candidateId } = model;
-    return new CountVotersHistoryQueryModel(dacId, candidateId);
-  }
+export class CountVotersHistoryQueryBuilder extends QueryBuilder {
+  public build(): Query {
+    const { dacId, candidateId } = this.args as CountVotersHitoryQueryArgs;
 
-  /**
-   * @constructor
-   * @private
-   */
-  private constructor(
-    public readonly dacId: string,
-    public readonly candidateId: string
-  ) {
-    super();
-  }
-
-  public toQueryParams(): MongoFindQueryParams<DaoWorldsContract.Actions.Types.VotecustDocument> {
-    const { dacId, candidateId } = this;
-
-    const filter: MongoDB.Filter<DaoWorldsContract.Actions.Types.VotecustDocument> =
+    const filter: MongoDB.Filter<DaoWorldsCommon.Actions.Types.VotecustMongoModel> =
       {
+        'action.account': 'dao.worlds',
         'action.name': 'votecust',
         'action.data.dac_id': dacId,
         'action.data.newvotes': candidateId,

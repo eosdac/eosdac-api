@@ -1,34 +1,31 @@
-import 'reflect-metadata';
-
-import {
-  AlienWorldsContract,
-  DacDirectory,
-  DaoWorldsContract,
-  IndexWorldsContract,
-  TokenWorldsContract,
-} from '@alien-worlds/dao-api-common';
+import * as AlienWorldsCommon from '@alien-worlds/alien-worlds-common';
 import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+import * as TokenWorldsCommon from '@alien-worlds/token-worlds-common';
 
-import { GetAllDacsUseCase } from '../use-cases/get-all-dacs.use-case';
-import { GetDacInfoUseCase } from '../use-cases/get-dac-info.use-case';
 import { GetDacsController } from '../get-dacs.controller';
 import { GetDacsInput } from '../models/dacs.input';
+import { GetAllDacsUseCase } from '../use-cases/get-all-dacs.use-case';
+import { GetDacInfoUseCase } from '../use-cases/get-dac-info.use-case';
 import { GetDacTokensUseCase } from '../use-cases/get-dac-tokens.use-case';
 import { GetDacTreasuryUseCase } from '../use-cases/get-dac-treasury.use-case';
 
-/*imports*/
+import 'reflect-metadata';
 
 /*mocks*/
 
 const getAllDacsUseCase = {
   execute: jest.fn(() =>
     Result.withContent([
-      DacDirectory.fromStruct(<IndexWorldsContract.Deltas.Types.DacsStruct>{
+      new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+        IndexWorldsCommon.Deltas.Types.DacsRawModel
+      >{
         accounts: [
           { key: 0, value: 'dao.worlds' },
           { key: 2, value: 'dao.worlds' },
         ],
-        symbol: { sym: 'EYE' },
+        sym: { symbol: 'EYE' },
         refs: [],
       }),
     ])
@@ -37,8 +34,8 @@ const getAllDacsUseCase = {
 const getDacTreasuryUseCase = {
   execute: jest.fn(() =>
     Result.withContent([
-      AlienWorldsContract.Deltas.Entities.Account.fromStruct(<
-        AlienWorldsContract.Deltas.Types.AccountsStruct
+      new AlienWorldsCommon.Deltas.Mappers.AccountsRawMapper().toEntity(<
+        AlienWorldsCommon.Deltas.Types.AccountsRawModel
       >{
         balance: 'string',
       }),
@@ -48,7 +45,7 @@ const getDacTreasuryUseCase = {
 const getDacInfoUseCase = {
   execute: jest.fn(() =>
     Result.withContent([
-      DaoWorldsContract.Deltas.Entities.DacGlobals.fromStruct({
+      new DaoWorldsCommon.Deltas.Mappers.DacglobalsRawMapper().toEntity({
         data: [
           {
             key: 'auth_threshold_high',
@@ -62,7 +59,7 @@ const getDacInfoUseCase = {
 const getDacTokensUseCase = {
   execute: jest.fn(() =>
     Result.withContent([
-      TokenWorldsContract.Deltas.Entities.Stat.fromStruct({
+      new TokenWorldsCommon.Deltas.Mappers.StatRawMapper().toEntity({
         supply: '1660485.1217 EYE',
         max_supply: '10000000000.0000 EYE',
         issuer: 'federation',
@@ -177,5 +174,4 @@ describe('GetDacs Controller Unit tests', () => {
 
     expect(result.isFailure).toBeTruthy();
   });
-  /*unit-tests*/
 });

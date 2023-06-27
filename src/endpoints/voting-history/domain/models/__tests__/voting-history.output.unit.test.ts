@@ -1,18 +1,17 @@
-import { MongoDB } from '@alien-worlds/api-core';
-import { UserVote } from '@alien-worlds/dao-api-common';
-import { VoteAction } from '../../../data/dtos/user-voting-history.dto';
+import { MongoDB } from '@alien-worlds/storage-mongodb';
+import { UserVote } from '../../../domain/entities/user-vote';
+import { UserVoteMongoMapper } from '@endpoints/voting-history/data/mappers/user-vote.mapper';
+import { VoteAction } from '../../user-voting-history.enums';
 import { VotingHistoryOutput } from '../voting-history.output';
 
-/*imports*/
-/*mocks*/
 const userVotes: UserVote[] = [
-  UserVote.fromDocument({
+  new UserVoteMongoMapper().toEntity({
     dac_id: 'string',
     voter: 'string',
     vote_timestamp: new Date(),
     action: VoteAction.Voted,
     candidate: 'string',
-    candidate_vote_power: MongoDB.Long.ZERO,
+    candidate_vote_power: 0,
   }),
 ];
 
@@ -28,6 +27,4 @@ describe('VotingHistoryOutput Unit tests', () => {
 
     expect(output.toJson()).toBeInstanceOf(Object);
   });
-
-  /*unit-tests*/
 });

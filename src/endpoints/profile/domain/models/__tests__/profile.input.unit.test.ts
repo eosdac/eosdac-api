@@ -1,13 +1,11 @@
-/*imports*/
-
-import { ProfileInput } from '../profile.input';
 import {
   ProfileRequestPathVariables,
   ProfileRequestQueryParams,
 } from '../../../data/dtos/profile.dto';
+
+import { ProfileInput } from '../profile.input';
 import { Request } from '@alien-worlds/api-core';
 
-/*mocks*/
 const input = {
   query: {
     account: 'string',
@@ -55,5 +53,5 @@ describe('ProfileInput Unit tests', () => {
     expect(fromReq.dacId).toBe(input.params.dacId);
   });
 
-  /*unit-tests*/
+  
 });

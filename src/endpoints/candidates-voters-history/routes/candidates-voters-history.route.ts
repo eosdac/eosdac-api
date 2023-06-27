@@ -1,4 +1,8 @@
 import {
+  CandidatesVotersHistoryControllerOutput,
+  CandidatesVotersHistoryRequestQueryParams,
+} from '../data/dtos/candidates-voters-history.dto';
+import {
   EntityNotFoundError,
   GetRoute,
   Request,
@@ -8,16 +12,10 @@ import {
 } from '@alien-worlds/api-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
-import {
-  CandidatesVotersHistoryControllerOutput,
-  CandidatesVotersHistoryRequestQueryParams,
-} from '../data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryInput } from '../domain/models/candidates-voters-history.input';
 import { CandidatesVotersHistoryOutput } from '../domain/models/candidates-voters-history.output';
 import { CandidatesVotersHistoryRequestSchema } from '../schemas';
 import { config } from '@config';
-
-/*imports*/
 
 /**
  * @class

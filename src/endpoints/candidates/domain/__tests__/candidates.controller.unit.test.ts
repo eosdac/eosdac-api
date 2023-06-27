@@ -1,25 +1,24 @@
-import 'reflect-metadata';
-
 import { Container, Failure, Result } from '@alien-worlds/api-core';
-import { CandidatesController } from '../candidates.controller';
-import { config } from '@config';
-import { GetCandidatesInput } from '../models/get-candidates.input';
-import { IndexWorldsContract } from '@alien-worlds/dao-api-common';
-import { ListCandidateProfilesUseCase } from '../use-cases/list-candidate-profiles.use-case';
+import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
+import { config } from '@config';
 
-/*imports*/
+import { CandidatesController } from '../candidates.controller';
+import { GetCandidatesInput } from '../models/get-candidates.input';
+import { ListCandidateProfilesUseCase } from '../use-cases/list-candidate-profiles.use-case';
+
+import 'reflect-metadata';
 
 /*mocks*/
 
-jest.mock('@config');
+('@config');
 
 const mockedConfig = config as jest.Mocked<typeof config>;
 
 let container: Container;
 let controller: CandidatesController;
 const indexWorldsContractService = {
-  fetchDac: jest.fn(),
+  fetchDacs: jest.fn(),
 };
 const listCandidateProfilesUseCase = {
   execute: jest.fn(),
@@ -34,8 +33,8 @@ describe('Candidate Controller Unit tests', () => {
     container = new Container();
     /*bindings*/
     container
-      .bind<IndexWorldsContract.Services.IndexWorldsContractService>(
-        IndexWorldsContract.Services.IndexWorldsContractService.Token
+      .bind<IndexWorldsCommon.Services.IndexWorldsContractService>(
+        IndexWorldsCommon.Services.IndexWorldsContractService.Token
       )
       .toConstantValue(indexWorldsContractService as any);
     container
@@ -50,12 +49,12 @@ describe('Candidate Controller Unit tests', () => {
     controller = container.get<CandidatesController>(
       CandidatesController.Token
     );
-    indexWorldsContractService.fetchDac.mockResolvedValue(
+    indexWorldsContractService.fetchDacs.mockResolvedValue(
       Result.withContent([
-        <IndexWorldsContract.Deltas.Types.DacsStruct>{
+        <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
           accounts: [{ key: 2, value: 'dao.worlds' }],
-          symbol: {
-            sym: 'EYE',
+          sym: {
+            symbol: 'EYE',
           },
           refs: [],
         },
@@ -82,11 +81,10 @@ describe('Candidate Controller Unit tests', () => {
 
   it('Should result with LoadDacConfigError when dac config could not be loaded', async () => {
     mockedConfig.dac.nameCache.get = () => null;
-    indexWorldsContractService.fetchDac.mockResolvedValue(
+    indexWorldsContractService.fetchDacs.mockResolvedValue(
       Result.withFailure(Failure.withMessage('error'))
     );
     const result = await controller.list(input);
     expect(result.failure.error).toBeInstanceOf(LoadDacConfigError);
   });
-  /*unit-tests*/
 });

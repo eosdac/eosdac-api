@@ -1,13 +1,11 @@
 import 'reflect-metadata';
 
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+
 import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { CandidatesVotersHistoryInput } from '../../models/candidates-voters-history.input';
 import { CountVotersHistoryUseCase } from '../count-voters-history.use-case';
-import { DaoWorldsActionRepository } from '@alien-worlds/dao-api-common/build/contracts/dao-worlds/actions/domain/repositories';
-
-/*imports*/
-/*mocks*/
 
 let container: Container;
 let useCase: CountVotersHistoryUseCase;
@@ -27,7 +25,9 @@ describe('Count Voters History Unit tests', () => {
   beforeAll(() => {
     container = new Container();
     container
-      .bind<DaoWorldsActionRepository>(DaoWorldsActionRepository.Token)
+      .bind<DaoWorldsCommon.Actions.DaoWorldsActionRepository>(
+        DaoWorldsCommon.Actions.DaoWorldsActionRepository.Token
+      )
       .toConstantValue(contractActionRepository as any);
     container
       .bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token)
@@ -65,5 +65,5 @@ describe('Count Voters History Unit tests', () => {
     expect(result.content).toBe(1);
   });
 
-  /*unit-tests*/
+  
 });

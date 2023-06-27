@@ -1,7 +1,6 @@
 import { HealthOutput } from '../health-output';
 import { HealthOutputDocument } from '../../../data/dtos/health.dto';
-/*imports*/
-/*mocks*/
+
 const healthOutputDto: HealthOutputDocument = {
   status: 'OK',
   version: '1.0.0',
@@ -42,7 +41,7 @@ describe('HealthOutput unit tests', () => {
   it('"toJson" should return an object based on entity', async () => {
     const healthOutput = HealthOutput.fromDto(healthOutputDto);
 
-    expect(healthOutput.toJson()).toEqual({
+    expect(healthOutput.toJSON()).toEqual({
       status: 'OK',
       version: '1.0.0',
       timestamp: 1676468485153,
@@ -57,5 +56,5 @@ describe('HealthOutput unit tests', () => {
     });
   });
 
-  /*unit-tests*/
+  
 });

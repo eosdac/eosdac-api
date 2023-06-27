@@ -1,9 +1,7 @@
 import { GetRoute, Result, RouteHandler } from '@alien-worlds/api-core';
 
-import { HealthOutput } from '../domain/entities/health-output';
 import { config } from '@config';
-
-/*imports*/
+import { HealthOutput } from '../domain/entities/health-output';
 
 /**
  * @class
@@ -53,6 +51,6 @@ export const parseResultToControllerOutput = (result: Result<HealthOutput>) => {
 
   return {
     status: 200,
-    body: content.toJson(),
+    body: content.toJSON(),
   };
 };

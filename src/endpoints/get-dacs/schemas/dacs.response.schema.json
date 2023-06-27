@@ -14,9 +14,6 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "id": {
-                        "type": "string"
-                    },
                     "dacId": {
                         "type": "string"
                     },
@@ -68,8 +65,7 @@
                         },
                         "required": [
                             "logoUrl",
-                            "description",
-                            "rest"
+                            "description"
                         ]
                     },
                     "accounts": {
@@ -150,7 +146,6 @@
                     }
                 },
                 "required": [
-                    "id",
                     "dacId",
                     "owner",
                     "title",

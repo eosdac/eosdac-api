@@ -1,13 +1,13 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+
 import { CustodianProfile } from '../entities/custodian-profile';
-import { DacDirectory } from '@alien-worlds/dao-api-common';
+import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';
 import { GetCustodiansUseCase } from './get-custodians.use-case';
 import { GetMembersAgreedTermsUseCase } from './../../../candidates/domain/use-cases/get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from './../../../candidates/domain/use-cases/get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
-import { Profile } from '../../../profile/domain/entities/profile';
+import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
 
-/*imports*/
 /**
  * @class
  */
@@ -18,7 +18,6 @@ export class ListCustodianProfilesUseCase
   public static Token = 'LIST_CUSTODIAN_PROFILES_USE_CASE';
 
   constructor(
-    /*injections*/
     @inject(GetCustodiansUseCase.Token)
     private getCustodiansUseCase: GetCustodiansUseCase,
     @inject(GetProfilesUseCase.Token)
@@ -35,7 +34,7 @@ export class ListCustodianProfilesUseCase
    */
   public async execute(
     dacId: string,
-    dacConfig: DacDirectory
+    dacConfig: Dac
   ): Promise<Result<CustodianProfile[]>> {
     const { content: custodians, failure } =
       await this.getCustodiansUseCase.execute(dacId);
@@ -44,7 +43,7 @@ export class ListCustodianProfilesUseCase
       return Result.withFailure(failure);
     }
 
-    const accounts = custodians.map(candidate => candidate.name);
+    const accounts = custodians.map(custodian => custodian.custName);
 
     const { content: profiles, failure: getProfilesFailure } =
       await this.getProfilesUseCase.execute({
@@ -74,14 +73,14 @@ export class ListCustodianProfilesUseCase
     const result: CustodianProfile[] = [];
 
     for (const custodian of custodians) {
-      const profile = profiles.find(item => item.id === custodian.name);
-      const agreedTermsVersion = agreedTerms.get(custodian.name);
+      const profile = profiles.find(item => item.id === custodian.custName);
+      const agreedTermsVersion = agreedTerms.get(custodian.custName);
 
       result.push(
         CustodianProfile.create(
           dacId,
           custodian,
-          profile ? Profile.fromDto(profile.toDocument()) : null,
+          profile ? ProfileMongoMapper.toEntity(profile) : null,
           terms,
           agreedTermsVersion
         )
@@ -90,6 +89,4 @@ export class ListCustodianProfilesUseCase
 
     return Result.withContent(result);
   }
-
-  /*methods*/
 }

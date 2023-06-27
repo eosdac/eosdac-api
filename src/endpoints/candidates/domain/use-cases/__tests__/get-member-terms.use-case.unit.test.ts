@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Unit Test Code
+
+import * as TokenWorldsContract from '@alien-worlds/token-worlds-common';
+
 import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
-import { TokenWorldsContract } from '@alien-worlds/dao-api-common';
 
 describe('GetMemberTermsUseCase', () => {
   let container: Container;
@@ -42,7 +43,7 @@ describe('GetMemberTermsUseCase', () => {
     );
     const result = await useCase.execute('dac');
     expect(result.content).toBeInstanceOf(
-      TokenWorldsContract.Deltas.Entities.MemberTerms
+      TokenWorldsContract.Deltas.Entities.Memberterms
     );
   });
 

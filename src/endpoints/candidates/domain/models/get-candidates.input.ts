@@ -1,4 +1,8 @@
-import { GetCandidatesRequestPathVariables, GetCandidatesRequestQueryParams } from '../../data/dtos/candidate.dto';
+import {
+  GetCandidatesRequestPathVariables,
+  GetCandidatesRequestQueryParams,
+} from '../../data/dtos/candidate.dto';
+
 import { Request } from '@alien-worlds/api-core';
 /**
  * @class
@@ -16,10 +20,7 @@ export class GetCandidatesInput {
       GetCandidatesRequestQueryParams
     >
   ): GetCandidatesInput {
-    return new GetCandidatesInput(
-      request.query.walletId,
-      request.params.dacId
-    );
+    return new GetCandidatesInput(request.query.walletId, request.params.dacId);
   }
   /**
    *

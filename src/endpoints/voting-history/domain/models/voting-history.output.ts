@@ -1,5 +1,5 @@
 import { removeUndefinedProperties } from '@alien-worlds/api-core';
-import { UserVote } from '@alien-worlds/dao-api-common';
+import { UserVote } from '../../domain/entities/user-vote';
 import { VotingHistoryOutputItem } from '../../data/dtos/user-voting-history.dto';
 
 export class VotingHistoryOutput {

@@ -1,17 +1,16 @@
-import {
-  DaoWorldsContract,
-  RequestedPayment,
-  TokenWorldsContract,
-} from '@alien-worlds/dao-api-common';
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as TokenWorldsContract from '@alien-worlds/token-worlds-common';
 
+import { Entity, UnknownObject } from '@alien-worlds/api-core';
+
+import { Asset } from '@alien-worlds/eosio-contract-types';
 import { Profile } from './../../../profile/domain/entities/profile';
 
-/*imports*/
 /**
  * Represents Candidate Profile data entity.
  * @class
  */
-export class CandidateProfile {
+export class CandidateProfile implements Entity {
   /**
    * Creates instances of Candidate based on a given DTO.
    *
@@ -21,18 +20,18 @@ export class CandidateProfile {
    */
   public static create(
     dacId: string,
-    candidate: DaoWorldsContract.Deltas.Entities.Candidate,
+    candidate: DaoWorldsCommon.Deltas.Entities.Candidates,
     profile: Profile,
-    memberTerms: TokenWorldsContract.Deltas.Entities.MemberTerms,
+    memberTerms: TokenWorldsContract.Deltas.Entities.Memberterms,
     agreedTermsVersion: number,
     votedCandidates: string[]
   ): CandidateProfile {
     const {
-      name,
-      requestedPayment,
-      votersCount,
+      candidateName,
+      requestedpay,
+      numberVoters,
       isActive,
-      avgVoteTimestamp,
+      avgVoteTimeStamp,
       rank,
       totalVotePower,
       gapFiller,
@@ -41,29 +40,29 @@ export class CandidateProfile {
     const { version } = memberTerms;
 
     const voteDecay =
-      new Date(avgVoteTimestamp).getFullYear() > 1970
+      new Date(avgVoteTimeStamp).getFullYear() > 1970
         ? Math.ceil(
-            (new Date().getTime() - new Date(avgVoteTimestamp).getTime()) /
+            (new Date().getTime() - new Date(avgVoteTimeStamp).getTime()) /
               (3600 * 24 * 1000)
           )
         : null;
-    const votePower = totalVotePower / 10000n;
+    const votePower = totalVotePower / 10000;
 
     return new CandidateProfile(
-      name,
-      requestedPayment,
+      candidateName,
+      requestedpay,
       votePower,
       rank,
       gapFiller,
-      isActive,
-      votersCount,
+      !!isActive,
+      numberVoters,
       voteDecay,
       profile?.profile,
       agreedTermsVersion,
       Number(version) === agreedTermsVersion,
       !!profile?.error,
       false,
-      votedCandidates.includes(name),
+      votedCandidates.includes(candidateName),
       false,
       dacId
     );
@@ -75,10 +74,10 @@ export class CandidateProfile {
    */
   private constructor(
     public readonly walletId: string,
-    public readonly requestedPay: RequestedPayment,
-    public readonly votePower: bigint,
-    public readonly rank: bigint,
-    public readonly gapFiller: bigint,
+    public readonly requestedPay: Asset,
+    public readonly votePower: number,
+    public readonly rank: number,
+    public readonly gapFiller: number,
     public readonly isActive: boolean,
     public readonly totalVotes: number,
     public readonly voteDecay: number,
@@ -92,7 +91,10 @@ export class CandidateProfile {
     public readonly planetName: string
   ) {}
 
-  public toJson() {
+  id?: string;
+  rest?: UnknownObject;
+
+  public toJSON(): UnknownObject {
     const {
       walletId,
       requestedPay,
@@ -118,7 +120,7 @@ export class CandidateProfile {
       ...p,
       walletId,
       requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
-      votePower: Number(votePower),
+      votePower: Number(votePower.toFixed(0)),
       rank: Number(rank),
       gapFiller: Number(gapFiller),
       isActive: Number(isActive),

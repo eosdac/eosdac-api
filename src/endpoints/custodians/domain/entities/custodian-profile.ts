@@ -1,17 +1,16 @@
-import {
-  DaoWorldsContract,
-  RequestedPayment,
-  TokenWorldsContract,
-} from '@alien-worlds/dao-api-common';
+import * as DaoWorldsContract from '@alien-worlds/dao-worlds-common';
+import * as TokenWorldsContract from '@alien-worlds/token-worlds-common';
 
+import { Entity, UnknownObject } from '@alien-worlds/api-core';
+
+import { Asset } from '@alien-worlds/eosio-contract-types';
 import { Profile } from '../../../profile/domain/entities/profile';
 
-/*imports*/
 /**
  * Represents Custodian Profile data entity.
  * @class
  */
-export class CustodianProfile {
+export class CustodianProfile implements Entity {
   /**
    * Creates instances of Custodian based on a given DTO.
    *
@@ -21,19 +20,19 @@ export class CustodianProfile {
    */
   public static create(
     dacId: string,
-    custodian: DaoWorldsContract.Deltas.Entities.Custodian,
+    custodian: DaoWorldsContract.Deltas.Entities.Custodians1,
     profile: Profile,
-    memberTerms: TokenWorldsContract.Deltas.Entities.MemberTerms,
+    memberTerms: TokenWorldsContract.Deltas.Entities.Memberterms,
     agreedTermsVersion: number
   ): CustodianProfile {
-    const { name, requestedPayment, totalVotePower } = custodian;
+    const { custName, requestedpay, totalVotePower } = custodian;
 
     const { version } = memberTerms;
-    const votePower = totalVotePower / 10000n;
+    const votePower = totalVotePower / 10000;
 
     return new CustodianProfile(
-      name,
-      requestedPayment,
+      custName,
+      requestedpay,
       Number(votePower),
       profile?.profile,
       agreedTermsVersion,
@@ -50,7 +49,7 @@ export class CustodianProfile {
    */
   private constructor(
     public readonly walletId: string,
-    public readonly requestedPayment: RequestedPayment,
+    public readonly requestedpay: Asset,
     public readonly votePower: number,
     public readonly profile: object,
     public readonly agreedTermVersion: number,
@@ -60,10 +59,13 @@ export class CustodianProfile {
     public readonly planetName: string
   ) {}
 
-  public toJson() {
+  id?: string;
+  rest?: UnknownObject;
+
+  public toJSON(): UnknownObject {
     const {
       walletId,
-      requestedPayment,
+      requestedpay,
       votePower,
       profile,
       agreedTermVersion,
@@ -77,8 +79,8 @@ export class CustodianProfile {
 
     return {
       walletId,
-      requestedpay: `${requestedPayment.value} ${requestedPayment.symbol}`,
-      votePower,
+      requestedpay: `${requestedpay.value} ${requestedpay.symbol}`,
+      votePower: Number(votePower.toFixed(0)),
       ...p,
       agreedTermVersion,
       currentPlanetMemberTermsSignedValid,

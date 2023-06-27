@@ -1,18 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// Unit Test Code
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+
 import { anything, instance, mock, verify, when } from 'ts-mockito';
 
-import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
 import { Failure } from '@alien-worlds/api-core';
 import { GetVotedCandidateIdsUseCase } from '../get-voted-candidate-ids.use-case';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 describe('GetCandidatesUseCase', () => {
   let useCase: GetVotedCandidateIdsUseCase;
-  let daoWorldsContractService: DaoWorldsContract.Services.DaoWorldsContractService;
+  let daoWorldsContractService: DaoWorldsCommon.Services.DaoWorldsContractService;
 
   beforeEach(() => {
     daoWorldsContractService = mock(
-      DaoWorldsContract.Services.DaoWorldsContractServiceImpl
+      DaoWorldsCommon.Services.DaoWorldsContractService
     );
     useCase = new GetVotedCandidateIdsUseCase(
       instance(daoWorldsContractService)
@@ -23,7 +24,7 @@ describe('GetCandidatesUseCase', () => {
     const dacId = 'dacid';
     const walletId = 'somewalletid';
 
-    when(daoWorldsContractService.fetchVote(anything())).thenResolve({
+    when(daoWorldsContractService.fetchVotes(anything())).thenResolve({
       content: [{ candidates: ['candidate1', 'candidate2', 'candidate3'] }],
     } as any);
 
@@ -31,14 +32,14 @@ describe('GetCandidatesUseCase', () => {
 
     expect(result.content).toBeInstanceOf(Array);
 
-    verify(daoWorldsContractService.fetchVote(anything())).once();
+    verify(daoWorldsContractService.fetchVotes(anything())).once();
   });
 
   it('should return an empty array if no candidates are found', async () => {
     const dacId = 'nonexistentdacid';
     const walletId = 'somewalletid';
 
-    when(daoWorldsContractService.fetchVote(anything())).thenResolve({
+    when(daoWorldsContractService.fetchVotes(anything())).thenResolve({
       content: [{ candidates: [] }],
     } as any);
 
@@ -46,14 +47,14 @@ describe('GetCandidatesUseCase', () => {
 
     expect(result.content).toStrictEqual([]);
 
-    verify(daoWorldsContractService.fetchVote(anything())).once();
+    verify(daoWorldsContractService.fetchVotes(anything())).once();
   });
 
   it('should return an empty array if an error occurs', async () => {
     const dacId = 'nonexistentdacid';
     const walletId = 'somewalletid';
 
-    when(daoWorldsContractService.fetchVote(anything())).thenResolve({
+    when(daoWorldsContractService.fetchVotes(anything())).thenResolve({
       failure: Failure.withMessage('error'),
     } as any);
 
@@ -62,6 +63,6 @@ describe('GetCandidatesUseCase', () => {
     expect(result).not.toBeNull();
     expect(result.content).toBeFalsy();
 
-    verify(daoWorldsContractService.fetchVote(anything())).once();
+    verify(daoWorldsContractService.fetchVotes(anything())).once();
   });
 });

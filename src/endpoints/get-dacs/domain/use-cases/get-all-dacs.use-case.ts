@@ -1,3 +1,5 @@
+import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+
 import {
   Failure,
   GetTableRowsOptions,
@@ -7,34 +9,30 @@ import {
   SmartContractDataNotFoundError,
   UseCase,
 } from '@alien-worlds/api-core';
-import {
-  DacDirectory,
-  IndexWorldsContract,
-} from '@alien-worlds/dao-api-common';
-
+import { Dac } from '../entities/dacs';
+import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
 import { GetDacsInput } from '../models/dacs.input';
 
-/*imports*/
 /**
  * @class
  */
 @injectable()
-export class GetAllDacsUseCase implements UseCase<DacDirectory[]> {
+export class GetAllDacsUseCase implements UseCase<Dac[]> {
   public static Token = 'GET_ALL_DACS_USE_CASE';
 
   constructor(
-    /*injections*/
-    @inject(IndexWorldsContract.Services.IndexWorldsContractService.Token)
-    private indexWorldsContractService: IndexWorldsContract.Services.IndexWorldsContractService
+    @inject(IndexWorldsCommon.Services.IndexWorldsContractService.Token)
+    private indexWorldsContractService: IndexWorldsCommon.Services.IndexWorldsContractService
   ) {}
 
   /**
    * @async
-   * @returns {Promise<Result<DacDirectory[]>>}
+   * @returns {Promise<Result<Dac[]>>}
    */
-  public async execute(input: GetDacsInput): Promise<Result<DacDirectory[]>> {
+  public async execute(input: GetDacsInput): Promise<Result<Dac[]>> {
     const options: GetTableRowsOptions = {
       limit: input.limit,
+      scope: 'index.worlds',
     };
 
     if (input.dacId) {
@@ -43,7 +41,7 @@ export class GetAllDacsUseCase implements UseCase<DacDirectory[]> {
     }
 
     const { content: dacs, failure: fetchDacsFailure } =
-      await this.indexWorldsContractService.fetchDac(options);
+      await this.indexWorldsContractService.fetchDacs(options);
 
     if (fetchDacsFailure) {
       return Result.withFailure(fetchDacsFailure);
@@ -54,14 +52,20 @@ export class GetAllDacsUseCase implements UseCase<DacDirectory[]> {
         Failure.fromError(
           new SmartContractDataNotFoundError({
             ...options,
+            table: 'dacs',
             bound: input.dacId,
           })
         )
       );
     }
 
-    return Result.withContent(dacs.map(DacDirectory.fromStruct));
-  }
+    const dacsRawMapper = new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper();
+    const dacContractMapper = new DacMapper();
 
-  /*methods*/
+    const result = dacs.map(dac => {
+      return dacContractMapper.toDac(dacsRawMapper.toEntity(dac));
+    });
+
+    return Result.withContent(result);
+  }
 }

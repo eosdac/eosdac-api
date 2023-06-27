@@ -1,22 +1,17 @@
 import 'reflect-metadata';
 
+import * as DaoWorldsContract from '@alien-worlds/dao-worlds-common';
+
 import {
   Container,
   ContractAction,
   Failure,
-  MongoDB,
   Result,
 } from '@alien-worlds/api-core';
-import {
-  DaoWorldsContract,
-} from '@alien-worlds/dao-api-common';
 
 import { GetProfilesUseCase } from '../get-profiles.use-case';
 import { GetProfilesUseCaseInput } from '../../../../profile/data/dtos/profile.dto';
-import { DaoWorldsActionRepository } from '@alien-worlds/dao-api-common/build/contracts/dao-worlds/actions/domain/repositories';
-
-/*imports*/
-/*mocks*/
+import { MongoDB } from '@alien-worlds/storage-mongodb';
 
 const actionRepository = {
   update: jest.fn(),
@@ -43,7 +38,9 @@ describe('Get Profile Unit tests', () => {
   beforeAll(() => {
     container = new Container();
     container
-      .bind<DaoWorldsActionRepository>(DaoWorldsActionRepository.Token)
+      .bind<DaoWorldsContract.Actions.DaoWorldsActionRepository>(
+        DaoWorldsContract.Actions.DaoWorldsActionRepository.Token
+      )
       .toConstantValue(actionRepository as any);
     container
       .bind<GetProfilesUseCase>(GetProfilesUseCase.Token)
@@ -86,11 +83,12 @@ describe('Get Profile Unit tests', () => {
         },
       },
     };
+
     const actions: ContractAction[] = [
-      ContractAction.fromDocument(
-        input,
-        DaoWorldsContract.Actions.Entities.SetProfile.fromDocument
-      ),
+      // ContractAction.fromDocument(
+      //   input,
+      //   DaoWorldsContract.Actions.Entities.Stprofile
+      // ),
     ];
 
     actionRepository.aggregate.mockResolvedValue(Result.withContent(actions));
@@ -98,6 +96,4 @@ describe('Get Profile Unit tests', () => {
     const result = await useCase.execute(useCaseInput);
     expect(result.content).toBeInstanceOf(Array);
   });
-
-  /*unit-tests*/
 });

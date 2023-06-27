@@ -1,14 +1,14 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+
 import { CandidateProfile } from '../entities/candidate-profile';
-import { DacDirectory } from '@alien-worlds/dao-api-common';
+import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';
 import { GetCandidatesUseCase } from './get-candidates.use-case';
 import { GetMembersAgreedTermsUseCase } from './get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from './get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
 import { GetVotedCandidateIdsUseCase } from './get-voted-candidate-ids.use-case';
-import { Profile } from '../../../profile/domain/entities/profile';
+import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
 
-/*imports*/
 /**
  * @class
  */
@@ -19,7 +19,6 @@ export class ListCandidateProfilesUseCase
   public static Token = 'LIST_CANDIDATE_PROFILES_USE_CASE';
 
   constructor(
-    /*injections*/
     @inject(GetCandidatesUseCase.Token)
     private getCandidatesUseCase: GetCandidatesUseCase,
     @inject(GetProfilesUseCase.Token)
@@ -39,7 +38,7 @@ export class ListCandidateProfilesUseCase
   public async execute(
     dacId: string,
     walletId: string,
-    dacConfig: DacDirectory
+    dacConfig: Dac
   ): Promise<Result<CandidateProfile[]>> {
     const { content: candidates, failure } =
       await this.getCandidatesUseCase.execute(dacId);
@@ -48,7 +47,7 @@ export class ListCandidateProfilesUseCase
       return Result.withFailure(failure);
     }
 
-    const accounts = candidates.map(candidate => candidate.name);
+    const accounts = candidates.map(candidate => candidate.candidateName);
 
     const { content: votedCandidates, failure: getVotedCandidateIdsFailure } =
       await this.getVotedCandidateIdsUseCase.execute(dacId, walletId);
@@ -85,14 +84,16 @@ export class ListCandidateProfilesUseCase
     const result: CandidateProfile[] = [];
 
     for (const candidate of candidates) {
-      const profile = profiles.find(item => item.id === candidate.name);
-      const agreedTermsVersion = agreedTerms.get(candidate.name);
+      const profile = profiles.find(
+        item => item.id === candidate.candidateName
+      );
+      const agreedTermsVersion = agreedTerms.get(candidate.candidateName);
 
       result.push(
         CandidateProfile.create(
           dacId,
           candidate,
-          profile ? Profile.fromDto(profile.toDocument()) : null,
+          profile ? ProfileMongoMapper.toEntity(profile) : null,
           terms,
           agreedTermsVersion,
           votedCandidates
@@ -102,6 +103,4 @@ export class ListCandidateProfilesUseCase
 
     return Result.withContent(result);
   }
-
-  /*methods*/
 }
