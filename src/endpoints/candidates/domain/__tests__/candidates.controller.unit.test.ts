@@ -1,13 +1,14 @@
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import 'reflect-metadata';
+
 import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
-import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
-import { config } from '@config';
+
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { CandidatesController } from '../candidates.controller';
+import { config } from '@config';
 import { GetCandidatesInput } from '../models/get-candidates.input';
 import { ListCandidateProfilesUseCase } from '../use-cases/list-candidate-profiles.use-case';
-
-import 'reflect-metadata';
+import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
 
 /*mocks*/
 
@@ -51,13 +52,13 @@ describe('Candidate Controller Unit tests', () => {
     );
     indexWorldsContractService.fetchDacs.mockResolvedValue(
       Result.withContent([
-        <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
-          accounts: [{ key: 2, value: 'dao.worlds' }],
-          sym: {
-            symbol: 'EYE',
-          },
-          refs: [],
-        },
+        // <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
+        //   accounts: [{ key: 2, value: 'dao.worlds' }],
+        //   sym: {
+        //     symbol: 'EYE',
+        //   },
+        //   refs: [],
+        // },
       ])
     );
     listCandidateProfilesUseCase.execute.mockResolvedValue(

@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import 'reflect-metadata';
-
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
-
 import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
 import { config } from '@config';
+
 import { CustodiansController } from '../custodians.controller';
 import { GetCustodiansInput } from '../models/get-custodians.input';
 import { ListCustodianProfilesUseCase } from '../use-cases/list-custodian-profiles.use-case';
-import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import 'reflect-metadata';
 
 /*mocks*/
 
@@ -51,13 +51,13 @@ describe('Candidate Controller Unit tests', () => {
     );
     indexWorldsContractService.fetchDac.mockResolvedValue(
       Result.withContent([
-        <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
-          accounts: [{ key: 2, value: 'dao.worlds' }],
-          symbol: {
-            sym: 'EYE',
-          },
-          refs: [],
-        },
+        // <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
+        //   accounts: [{ key: 2, value: 'dao.worlds' }],
+        //   symbol: {
+        //     sym: 'EYE',
+        //   },
+        //   refs: [],
+        // },
       ])
     );
     listCandidateProfilesUseCase.execute.mockResolvedValue(

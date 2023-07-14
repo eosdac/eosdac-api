@@ -20,10 +20,10 @@
   "dependencies": {
     "@alien-worlds/alien-worlds-common": "^0.0.12",
     "@alien-worlds/api-core": "^0.0.158",
-    "@alien-worlds/dao-worlds-common": "^0.0.18",
+    "@alien-worlds/dao-worlds-common": "^0.0.19",
     "@alien-worlds/eos": "^0.0.20",
     "@alien-worlds/eosio-contract-types": "^1.0.24",
-    "@alien-worlds/index-worlds-common": "^0.0.16",
+    "@alien-worlds/index-worlds-common": "^0.0.17",
     "@alien-worlds/stkvt-worlds-common": "^0.0.11",
     "@alien-worlds/storage-mongodb": "^0.0.27",
     "@alien-worlds/token-worlds-common": "^0.0.19",

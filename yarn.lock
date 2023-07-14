@@ -26,10 +26,10 @@
     node-fetch "2.6.6"
     reflect-metadata "^0.1.13"
 
-"@alien-worlds/dao-worlds-common@^0.0.18":
-  version "0.0.18"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/dao-worlds-common/0.0.18/a844f9b7690abea6b625550a843be231cd10ae88#a844f9b7690abea6b625550a843be231cd10ae88"
-  integrity sha512-VtKWFiAVaGyUxb2Lt9Jcy0ZppgEjs2R8pNqkcU8lI6mLIi+AyfAFU5VyVeL9xCRk3+KGaAdZcj0UyT0Ebcp9NQ==
+"@alien-worlds/dao-worlds-common@^0.0.19":
+  version "0.0.19"
+  resolved "https://npm.pkg.github.com/download/@alien-worlds/dao-worlds-common/0.0.19/62f679c52d7dc025b781ad787b33b956b0a50cfa#62f679c52d7dc025b781ad787b33b956b0a50cfa"
+  integrity sha512-03wtBbsi8S1lfmd31bZ/7t9ZWI6xXRuH5i83eJBCbtSip8d1UaBJTowNMLFrySTrOsSg2KThK5mHri9W3yKniw==
   dependencies:
     "@alien-worlds/api-core" "^0.0.158"
     "@alien-worlds/eos" "^0.0.20"
@@ -62,14 +62,14 @@
     "@alien-worlds/storage-mongodb" "^0.0.27"
     typescript "^4.9.5"
 
-"@alien-worlds/index-worlds-common@^0.0.16":
-  version "0.0.16"
-  resolved "https://npm.pkg.github.com/download/@alien-worlds/index-worlds-common/0.0.16/4ea819358b3575393425bd494442b39be1881f7d#4ea819358b3575393425bd494442b39be1881f7d"
-  integrity sha512-rhjPoTrfvRsTQxED7SpcxJAuUwazwiDaXBJ/GT80R2jaFp5YtItnxBFnPD1QMF87psWFrZ4Pur4FJVDXOTMW9w==
+"@alien-worlds/index-worlds-common@^0.0.17":
+  version "0.0.17"
+  resolved "https://npm.pkg.github.com/download/@alien-worlds/index-worlds-common/0.0.17/cf90bf4e57b5cb1ca386cb067b391d8c17cb7d79#cf90bf4e57b5cb1ca386cb067b391d8c17cb7d79"
+  integrity sha512-AJmZ/zHEeSQMaVGVaQkanXsRZCmXIK/eYDgmxsNo2kzRFQA5RgeWa5oVqF+Efn6D7uzpMt7mPZcUSqJx8S8AEQ==
   dependencies:
     "@alien-worlds/api-core" "^0.0.158"
     "@alien-worlds/eos" "^0.0.20"
-    "@alien-worlds/eosio-contract-types" "^1.0.19"
+    "@alien-worlds/eosio-contract-types" "^1.0.24"
     "@alien-worlds/storage-mongodb" "^0.0.27"
 
 "@alien-worlds/stkvt-worlds-common@^0.0.11":

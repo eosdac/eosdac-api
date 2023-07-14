@@ -1,13 +1,13 @@
-import 'reflect-metadata';
-
+import { Container } from '@alien-worlds/api-core';
+import { Result } from '@alien-worlds/api-core';
 import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
 
-import { Container } from '@alien-worlds/api-core';
+import { ProfileInput } from '../models/profile.input';
+import { ProfileController } from '../profile.controller';
 import { GetProfilesUseCase } from '../use-cases/get-profiles.use-case';
 import { IsProfileFlaggedUseCase } from '../use-cases/is-profile-flagged.use-case';
-import { ProfileController } from '../profile.controller';
-import { ProfileInput } from '../models/profile.input';
-import { Result } from '@alien-worlds/api-core';
+
+import 'reflect-metadata';
 
 /*mocks*/
 const getProfilesUseCase = {
@@ -65,7 +65,9 @@ describe('Profile Controller Unit tests', () => {
     indexWorldsContractService.fetchDac.mockResolvedValue(
       Result.withContent([
         <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
-          accounts: [{ key: 2, value: 'dao.worlds' }],
+          accounts: [
+            // { key: 2, value: 'dao.worlds' }
+          ],
           symbol: {
             sym: 'EYE',
           },

@@ -1,11 +1,10 @@
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
-
 import {
   DacAccountIndex,
   DacAccountKey,
 } from '@endpoints/get-dacs/domain/dac.enums';
 
 import { DacAccounts } from '@endpoints/get-dacs/domain/entities/dac-accounts';
+import { Pair } from '@alien-worlds/eosio-contract-types';
 
 export class DacAccountsMapper {
   private accountKeys = new Map<DacAccountIndex, DacAccountKey>([
@@ -24,13 +23,11 @@ export class DacAccountsMapper {
     [DacAccountIndex.Treasury, DacAccountKey.Treasury],
   ]);
 
-  public toDacAccounts(
-    accounts: IndexWorldsCommon.Deltas.Entities.PairUint8Name[]
-  ): DacAccounts {
+  public toDacAccounts(accounts: Pair[]): DacAccounts {
     const data = {},
       rest = {};
     accounts.forEach(account => {
-      const label = this.accountKeys.get(account.key);
+      const label = DacAccountKey[DacAccountIndex[account.key]];
       if (label) {
         data[label] = account.value;
       } else {

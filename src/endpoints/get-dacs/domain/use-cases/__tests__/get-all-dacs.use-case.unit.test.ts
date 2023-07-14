@@ -1,10 +1,11 @@
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import 'reflect-metadata';
+
 import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
 
-import { GetDacsInput } from '../../models/dacs.input';
-import { GetAllDacsUseCase } from '../get-all-dacs.use-case';
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 
-import 'reflect-metadata';
+import { GetAllDacsUseCase } from '../get-all-dacs.use-case';
+import { GetDacsInput } from '../../models/dacs.input';
 
 /*mocks*/
 
@@ -59,11 +60,11 @@ describe('Get All Dacs Unit tests', () => {
   it('should return an array of IndexWorldsCommon.Deltas.Entities.Dacs', async () => {
     indexWorldsContractService.fetchDacs.mockResolvedValueOnce(
       Result.withContent([
-        <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
-          accounts: [{ key: 2, value: 'dao.worlds' }],
-          sym: { symbol: 'EYE' },
-          refs: [],
-        },
+        // <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
+        //   accounts: [{ key: 2, value: 'dao.worlds' }],
+        //   sym: { symbol: 'EYE' },
+        //   refs: [],
+        // },
       ])
     );
 

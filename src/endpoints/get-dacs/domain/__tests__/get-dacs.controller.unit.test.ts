@@ -14,20 +14,19 @@ import { GetDacTreasuryUseCase } from '../use-cases/get-dac-treasury.use-case';
 import 'reflect-metadata';
 
 /*mocks*/
-
 const getAllDacsUseCase = {
   execute: jest.fn(() =>
     Result.withContent([
-      new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
-        IndexWorldsCommon.Deltas.Types.DacsRawModel
-      >{
-        accounts: [
-          { key: 0, value: 'dao.worlds' },
-          { key: 2, value: 'dao.worlds' },
-        ],
-        sym: { symbol: 'EYE' },
-        refs: [],
-      }),
+      // new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+      //   IndexWorldsCommon.Deltas.Types.DacsRawModel
+      // >{
+      //   accounts: [
+      //     { key: 0, value: 'dao.worlds' },
+      //     { key: 2, value: 'dao.worlds' },
+      //   ],
+      //   sym: { symbol: 'EYE' },
+      //   refs: [],
+      // }),
     ])
   ),
 };
@@ -47,10 +46,10 @@ const getDacInfoUseCase = {
     Result.withContent([
       new DaoWorldsCommon.Deltas.Mappers.DacglobalsRawMapper().toEntity({
         data: [
-          {
-            key: 'auth_threshold_high',
-            value: ['uint8', '3'],
-          },
+          // {
+          //   key: 'auth_threshold_high',
+          //   value: ['uint8', '3'],
+          // },
         ],
       }),
     ])

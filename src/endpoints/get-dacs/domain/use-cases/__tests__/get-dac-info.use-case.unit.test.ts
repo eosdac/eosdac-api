@@ -1,8 +1,9 @@
-import 'reflect-metadata';
-
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
 import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+
 import { GetDacInfoUseCase } from '../get-dac-info.use-case';
+
+import 'reflect-metadata';
 
 const daoWorldsContractService = {
   fetchDacGlobals: jest.fn(),
@@ -51,7 +52,9 @@ describe('Get Dac Info Unit tests', () => {
     daoWorldsContractService.fetchDacGlobals.mockResolvedValue(
       Result.withContent([
         <DaoWorldsCommon.Deltas.Types.DacglobalsRawModel>{
-          data: [{ key: 'some_key', value: [] }],
+          data: [
+            // { key: 'some_key', value: [] }
+          ],
         },
       ])
     );

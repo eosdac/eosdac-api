@@ -1,33 +1,16 @@
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
-
 import { DacRefIndex, DacRefKey } from '@endpoints/get-dacs/domain/dac.enums';
 
 import { DacRefs } from '@endpoints/get-dacs/domain/entities/dac-refs';
+import { Pair } from '@alien-worlds/eosio-contract-types';
 
 export class DacRefsMapper {
-  private refKeys = new Map<DacRefIndex, DacRefKey>([
-    [DacRefIndex.BackgroundUrl, DacRefKey.BackgroundUrl],
-    [DacRefIndex.ClientExtension, DacRefKey.ClientExtension],
-    [DacRefIndex.Colors, DacRefKey.Colors],
-    [DacRefIndex.DacCurrencyUrl, DacRefKey.DacCurrencyUrl],
-    [DacRefIndex.Description, DacRefKey.Description],
-    [DacRefIndex.DiscordUrl, DacRefKey.DiscordUrl],
-    [DacRefIndex.FaviconUrl, DacRefKey.FaviconUrl],
-    [DacRefIndex.Homepage, DacRefKey.Homepage],
-    [DacRefIndex.LogoNotextUrl, DacRefKey.LogoNotextUrl],
-    [DacRefIndex.LogoUrl, DacRefKey.LogoUrl],
-    [DacRefIndex.SystemCurrencyUrl, DacRefKey.SystemCurrencyUrl],
-    [DacRefIndex.TelegramUrl, DacRefKey.TelegramUrl],
-  ]);
-
-  public toDacRefs(
-    refs: IndexWorldsCommon.Deltas.Entities.PairUint8String[]
-  ): DacRefs {
+  public toDacRefs(refs: Pair[]): DacRefs {
     const data = {},
       rest = {};
 
     refs.forEach(ref => {
-      const label = this.refKeys.get(ref.key);
+      const label = DacRefKey[DacRefIndex[ref.key]];
+
       if (label) {
         data[label] = ref.value;
       } else {

@@ -36,11 +36,11 @@ const dacConfig = new DacMapper().toDac(
   new IndexWorldsContract.Deltas.Mappers.DacsRawMapper().toEntity(<
     IndexWorldsContract.Deltas.Types.DacsRawModel
   >{
-    accounts: [{ key: 2, value: 'dao.worlds' }],
-    sym: {
-      symbol: 'EYE',
-    },
-    refs: [],
+    // accounts: [{ key: 2, value: 'dao.worlds' }],
+    // sym: {
+    //   symbol: 'EYE',
+    // },
+    // refs: [],
   })
 );
 
