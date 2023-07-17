@@ -1,14 +1,11 @@
+import 'reflect-metadata';
 import * as AlienWorldsContract from '@alien-worlds/alien-worlds-common';
 import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { GetDacTreasuryUseCase } from '../get-dac-treasury.use-case';
 
-import 'reflect-metadata';
-
-/*mocks*/
-
 const alienWorldsContractService = {
-  fetchAccount: jest.fn(),
+  fetchAccounts: jest.fn(),
 };
 
 let container: Container;
@@ -43,7 +40,7 @@ describe('Get Dac Treasury Unit tests', () => {
   });
 
   it('Should return a failure when alien.worlds contract service fails', async () => {
-    alienWorldsContractService.fetchAccount.mockResolvedValueOnce(
+    alienWorldsContractService.fetchAccounts.mockResolvedValueOnce(
       Result.withFailure(Failure.fromError(null))
     );
 
@@ -52,7 +49,7 @@ describe('Get Dac Treasury Unit tests', () => {
   });
 
   it('should return AlienWorldsAccount', async () => {
-    alienWorldsContractService.fetchAccount.mockResolvedValueOnce(
+    alienWorldsContractService.fetchAccounts.mockResolvedValueOnce(
       Result.withContent([
         <AlienWorldsContract.Deltas.Types.AccountsRawModel>{
           balance: '12237582.5498 TLM',

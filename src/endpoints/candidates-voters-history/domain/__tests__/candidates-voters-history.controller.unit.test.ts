@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Container, Result } from '@alien-worlds/api-core';
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { CandidatesVotersHistoryController } from '../candidates-voters-history.controller';
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
@@ -20,7 +20,10 @@ const voterHistoryResp: CandidatesVotersHistoryOutputItem[] = [
 ];
 
 const getCandidatesVotersHistoryUseCase = {
-  execute: jest.fn(() => Result.withContent(voterHistoryResp)),
+  execute: jest.fn(
+    (): Result<CandidatesVotersHistoryOutputItem[], Error> =>
+      Result.withContent(voterHistoryResp)
+  ),
 };
 
 const getVotingPowerUseCase = {
@@ -28,7 +31,7 @@ const getVotingPowerUseCase = {
 };
 
 const countVotersHistoryUseCase = {
-  execute: jest.fn(() => Result.withContent(1)),
+  execute: jest.fn((): Result<number, Error> => Result.withContent(1)),
 };
 
 let container: Container;
@@ -38,7 +41,7 @@ let input: CandidatesVotersHistoryInput;
 describe('VotingHistory Controller Unit tests', () => {
   beforeAll(() => {
     container = new Container();
-    /*bindings*/
+
     container
       .bind<GetCandidatesVotersHistoryUseCase>(
         GetCandidatesVotersHistoryUseCase.Token
@@ -76,5 +79,25 @@ describe('VotingHistory Controller Unit tests', () => {
     await controller.candidatesVotersHistory(input);
 
     expect(getCandidatesVotersHistoryUseCase.execute).toBeCalled();
+  });
+
+  it('Should return failure when GetCandidatesVotersHistoryUseCase fails', async () => {
+    getCandidatesVotersHistoryUseCase.execute.mockImplementationOnce(() =>
+      Result.withFailure(Failure.withMessage('error'))
+    );
+
+    const result = await controller.candidatesVotersHistory(input);
+
+    expect(result.isFailure).toBeTruthy();
+  });
+
+  it('Should return failure when CountVotersHistoryUseCase fails', async () => {
+    countVotersHistoryUseCase.execute.mockImplementationOnce(() =>
+      Result.withFailure(Failure.withMessage('error'))
+    );
+
+    const result = await controller.candidatesVotersHistory(input);
+
+    expect(result.isFailure).toBeTruthy();
   });
 });

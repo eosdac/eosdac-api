@@ -61,6 +61,20 @@ describe('Is Profile Flagged Unit tests', () => {
     expect(result.isFailure).toBeTruthy();
   });
 
+  it('should return an array when service returns an object', async () => {
+    const content =
+      new DaoWorldsCommon.Actions.Mappers.FlagcandprofRawMapper().toEntity({
+        cand: 'cand',
+        reason: '',
+        reporter: '',
+        block: true,
+        dac_id: 'dacId',
+      });
+    flagRepository.aggregate.mockResolvedValue(Result.withContent(content));
+    const result = await useCase.execute(useCaseInput);
+    expect(result.content).toBeInstanceOf(Array);
+  });
+
   it('should return Array', async () => {
     const content = [
       new DaoWorldsCommon.Actions.Mappers.FlagcandprofRawMapper().toEntity({

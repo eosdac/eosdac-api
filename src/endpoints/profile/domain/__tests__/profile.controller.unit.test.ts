@@ -1,32 +1,93 @@
-import { Container } from '@alien-worlds/api-core';
-import { Result } from '@alien-worlds/api-core';
+import * as dacUtils from '@common/utils/dac.utils';
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
 import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
 
-import { ProfileInput } from '../models/profile.input';
-import { ProfileController } from '../profile.controller';
+import { Container, ContractAction, Failure } from '@alien-worlds/api-core';
+import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
 import { GetProfilesUseCase } from '../use-cases/get-profiles.use-case';
 import { IsProfileFlaggedUseCase } from '../use-cases/is-profile-flagged.use-case';
-
-import 'reflect-metadata';
-
-/*mocks*/
-const getProfilesUseCase = {
-  execute: jest.fn(() => Result.withContent([])),
-};
-
-const isProfileFlaggedUseCase = {
-  execute: jest.fn(() => Result.withContent(1)),
-};
+import { ProfileController } from '../profile.controller';
+import { ProfileInput } from '../models/profile.input';
+import { Result } from '@alien-worlds/api-core';
 
 let container: Container;
 let controller: ProfileController;
+
+const getProfilesUseCase = {
+  execute: jest.fn(),
+};
+
+const isProfileFlaggedUseCase = {
+  execute: jest.fn(() =>
+    Result.withContent([
+      DaoWorldsCommon.Actions.Entities.Flagcandprof.create(
+        'awtesteroo13',
+        'reason',
+        'reporter',
+        true,
+        'testa'
+      ),
+    ])
+  ),
+};
+
+jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValue(
+  new DacMapper().toDac(
+    new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+      IndexWorldsCommon.Deltas.Types.DacsRawModel
+    >{
+      accounts: [{ key: '2', value: 'dao.worlds' }],
+      symbol: {
+        sym: 'EYE',
+      },
+      refs: [],
+    })
+  )
+);
+
 const indexWorldsContractService = {
-  fetchDac: jest.fn(),
+  fetchDacs: jest.fn(),
 };
 const input: ProfileInput = {
-  accounts: ['string'],
-  dacId: 'string',
+  accounts: ['awtesteroo12', 'awtesteroo13'],
+  dacId: 'testa',
 };
+
+const actions: ContractAction<
+  DaoWorldsCommon.Actions.Entities.Stprofile,
+  DaoWorldsCommon.Actions.Types.StprofileMongoModel
+>[] = [
+  new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
+    'mgaqy.wam',
+    new Date('2021-02-25T04:18:56.000Z'),
+    209788070n,
+    'dao.worlds',
+    'stprofile',
+    65909692153n,
+    1980617n,
+    '591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666C',
+    DaoWorldsCommon.Actions.Entities.Stprofile.create(
+      'awtesteroo12',
+      '{"givenName":"awtesteroo12 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
+      'testa'
+    )
+  ),
+  new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
+    'mgaqy.wam',
+    new Date('2021-02-25T04:18:56.000Z'),
+    209788071n,
+    'dao.worlds',
+    'stprofile',
+    65909692154n,
+    1980618n,
+    '591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666B',
+    DaoWorldsCommon.Actions.Entities.Stprofile.create(
+      'awtesteroo13',
+      '{"givenName":"awtesteroo13 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
+      'testa'
+    )
+  ),
+];
 
 describe('Profile Controller Unit tests', () => {
   beforeAll(() => {
@@ -52,8 +113,11 @@ describe('Profile Controller Unit tests', () => {
     controller = container.get<ProfileController>(ProfileController.Token);
   });
 
-  afterAll(() => {
+  afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
     container = null;
   });
 
@@ -61,22 +125,52 @@ describe('Profile Controller Unit tests', () => {
     expect(ProfileController.Token).not.toBeNull();
   });
 
-  it('Should execute GetProfilesUseCase', async () => {
-    indexWorldsContractService.fetchDac.mockResolvedValue(
-      Result.withContent([
-        <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
-          accounts: [
-            // { key: 2, value: 'dao.worlds' }
-          ],
-          symbol: {
-            sym: 'EYE',
-          },
-          refs: [],
-        },
-      ])
-    );
-    await controller.profile(input);
+  it('should return profile', async () => {
+    getProfilesUseCase.execute.mockResolvedValue(Result.withContent(actions));
 
-    expect(getProfilesUseCase.execute).toBeCalled();
+    const result = await controller.profile(input);
+
+    expect(result.content.count).toBe(2);
+
+    expect(result.content.results).toBeDefined();
+    expect(result.content.results[0].account).toBe(input.accounts[0]);
+    expect(result.content.results[1].account).toBe(input.accounts[1]);
+  });
+
+  it('should return redacted profile for flagged candidate', async () => {
+    getProfilesUseCase.execute.mockResolvedValue(Result.withContent(actions));
+
+    const result = await controller.profile(input);
+
+    expect(result.content.results).toBeDefined();
+    expect(result.content.results[1].account).toBe(input.accounts[1]);
+    expect(result.content.results[1].error).toBeDefined();
+    expect(result.content.results[1].error.name).toBe('Redacted Candidate');
+  });
+
+  it('should return error if indexWorldsContractService fails', async () => {
+    jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValueOnce(null);
+
+    const result = await controller.profile(input);
+
+    expect(result.failure).toBeTruthy();
+  });
+
+  it('should return error if no profiles are found', async () => {
+    getProfilesUseCase.execute.mockResolvedValue(Result.withContent([]));
+
+    const result = await controller.profile(input);
+
+    expect(result.failure).toBeTruthy();
+  });
+
+  it('should return error if getProfilesUseCase fails', async () => {
+    getProfilesUseCase.execute.mockResolvedValue(
+      Result.withFailure(Failure.fromError('error'))
+    );
+
+    const result = await controller.profile(input);
+
+    expect(result.failure).toBeTruthy();
   });
 });

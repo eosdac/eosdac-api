@@ -1,4 +1,5 @@
 import { CustodianProfile } from '../entities/custodian-profile';
+import { UnknownObject } from '@alien-worlds/api-core';
 
 export class GetCustodiansOutput {
   public static create(profiles: CustodianProfile[]): GetCustodiansOutput {
@@ -7,7 +8,7 @@ export class GetCustodiansOutput {
 
   private constructor(public readonly results: CustodianProfile[]) {}
 
-  public toJSON() {
+  public toJSON(): UnknownObject[] {
     const { results } = this;
 
     return results.map(profile => profile.toJSON());

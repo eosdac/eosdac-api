@@ -32,4 +32,27 @@ describe('VotingHistoryQueryModel Unit tests', () => {
       },
     });
   });
+
+  it('should use max number as limit if not provided', async () => {
+    const { dacId, voter, skip } = input;
+    const model = new VotingHistoryQueryBuilder().with({
+      dacId,
+      voter,
+      skip,
+    });
+
+    expect(model.build()).toEqual({
+      filter: {
+        'action.account': 'dao.worlds',
+        'action.name': 'votecust',
+        'action.data.dac_id': input.dacId,
+        'action.data.voter': input.voter,
+      },
+      options: {
+        skip: input.skip,
+        limit: Number.MAX_VALUE,
+        sort: { block_num: 1 },
+      },
+    });
+  });
 });

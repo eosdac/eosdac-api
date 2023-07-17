@@ -10,8 +10,6 @@ import { GetDacTreasuryUseCase } from './use-cases/get-dac-treasury.use-case';
 
 /**
  * @class
- *
- *
  */
 @injectable()
 export class GetDacsController {

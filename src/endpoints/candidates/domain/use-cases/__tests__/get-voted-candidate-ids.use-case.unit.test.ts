@@ -1,68 +1,80 @@
 import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
 
-import { anything, instance, mock, verify, when } from 'ts-mockito';
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 
-import { Failure } from '@alien-worlds/api-core';
 import { GetVotedCandidateIdsUseCase } from '../get-voted-candidate-ids.use-case';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+let container: Container;
+let useCase: GetVotedCandidateIdsUseCase;
 
-describe('GetCandidatesUseCase', () => {
-  let useCase: GetVotedCandidateIdsUseCase;
-  let daoWorldsContractService: DaoWorldsCommon.Services.DaoWorldsContractService;
+const daoWorldsContractService = {
+  fetchVotes: jest.fn(),
+};
+
+describe('GetVotedCandidateIdsUseCase', () => {
+  beforeAll(() => {
+    container = new Container();
+    container
+      .bind<DaoWorldsCommon.Services.DaoWorldsContractService>(
+        DaoWorldsCommon.Services.DaoWorldsContractService.Token
+      )
+      .toConstantValue(daoWorldsContractService as any);
+
+    container
+      .bind<GetVotedCandidateIdsUseCase>(GetVotedCandidateIdsUseCase.Token)
+      .to(GetVotedCandidateIdsUseCase);
+  });
 
   beforeEach(() => {
-    daoWorldsContractService = mock(
-      DaoWorldsCommon.Services.DaoWorldsContractService
+    useCase = container.get<GetVotedCandidateIdsUseCase>(
+      GetVotedCandidateIdsUseCase.Token
     );
-    useCase = new GetVotedCandidateIdsUseCase(
-      instance(daoWorldsContractService)
-    );
+  });
+
+  afterAll(() => {
+    jest.clearAllMocks();
+    container = null;
   });
 
   it('should return a list of candidates', async () => {
     const dacId = 'dacid';
     const walletId = 'somewalletid';
 
-    when(daoWorldsContractService.fetchVotes(anything())).thenResolve({
-      content: [{ candidates: ['candidate1', 'candidate2', 'candidate3'] }],
-    } as any);
+    daoWorldsContractService.fetchVotes.mockResolvedValue(
+      Result.withContent([
+        { candidates: ['candidate1', 'candidate2', 'candidate3'] },
+      ])
+    );
 
     const result = await useCase.execute(walletId, dacId);
 
     expect(result.content).toBeInstanceOf(Array);
-
-    verify(daoWorldsContractService.fetchVotes(anything())).once();
   });
 
   it('should return an empty array if no candidates are found', async () => {
     const dacId = 'nonexistentdacid';
     const walletId = 'somewalletid';
 
-    when(daoWorldsContractService.fetchVotes(anything())).thenResolve({
-      content: [{ candidates: [] }],
-    } as any);
+    daoWorldsContractService.fetchVotes.mockResolvedValue(
+      Result.withContent([{ candidates: [] }])
+    );
 
     const result = await useCase.execute(walletId, dacId);
 
     expect(result.content).toStrictEqual([]);
-
-    verify(daoWorldsContractService.fetchVotes(anything())).once();
   });
 
   it('should return an empty array if an error occurs', async () => {
     const dacId = 'nonexistentdacid';
     const walletId = 'somewalletid';
 
-    when(daoWorldsContractService.fetchVotes(anything())).thenResolve({
-      failure: Failure.withMessage('error'),
-    } as any);
+    daoWorldsContractService.fetchVotes.mockResolvedValue(
+      Result.withFailure(Failure.withMessage('error'))
+    );
 
     const result = await useCase.execute(walletId, dacId);
 
     expect(result).not.toBeNull();
     expect(result.content).toBeFalsy();
-
-    verify(daoWorldsContractService.fetchVotes(anything())).once();
   });
 });

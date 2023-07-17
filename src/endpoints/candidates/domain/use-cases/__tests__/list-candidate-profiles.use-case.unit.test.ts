@@ -1,17 +1,18 @@
-import { Container, Failure, Result } from '@alien-worlds/api-core';
-import * as IndexWorldsContract from '@alien-worlds/index-worlds-common';
-import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
-
-import { GetProfilesUseCase } from '../../../../profile/domain/use-cases/get-profiles.use-case';
-import { GetCandidatesUseCase } from '../get-candidates.use-case';
-import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
-import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
-import { GetVotedCandidateIdsUseCase } from '../get-voted-candidate-ids.use-case';
-import { ListCandidateProfilesUseCase } from '../list-candidate-profiles.use-case';
-
 import 'reflect-metadata';
 
-/*mocks*/
+import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as IndexWorldsContract from '@alien-worlds/index-worlds-common';
+
+import { Container, Failure, Result } from '@alien-worlds/api-core';
+
+import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
+import { GetCandidatesUseCase } from '../get-candidates.use-case';
+import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
+import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
+import { GetProfilesUseCase } from '../../../../profile/domain/use-cases/get-profiles.use-case';
+import { GetVotedCandidateIdsUseCase } from '../get-voted-candidate-ids.use-case';
+import { ListCandidateProfilesUseCase } from '../list-candidate-profiles.use-case';
+import { Pair } from '@alien-worlds/eosio-contract-types';
 
 let container: Container;
 let useCase: ListCandidateProfilesUseCase;
@@ -36,11 +37,11 @@ const dacConfig = new DacMapper().toDac(
   new IndexWorldsContract.Deltas.Mappers.DacsRawMapper().toEntity(<
     IndexWorldsContract.Deltas.Types.DacsRawModel
   >{
-    // accounts: [{ key: 2, value: 'dao.worlds' }],
-    // sym: {
-    //   symbol: 'EYE',
-    // },
-    // refs: [],
+    accounts: [{ key: '2', value: 'dao.worlds' }] as Pair[],
+    sym: {
+      symbol: 'EYE',
+    },
+    refs: [],
   })
 );
 
@@ -72,7 +73,11 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
     useCase = container.get<ListCandidateProfilesUseCase>(
       ListCandidateProfilesUseCase.Token
     );
-    getCandidatesUseCase.execute.mockResolvedValue(Result.withContent([]));
+    getCandidatesUseCase.execute.mockResolvedValue(
+      Result.withContent([
+        DaoWorldsCommon.Deltas.Entities.Candidates.getDefault(),
+      ])
+    );
     getVotedCandidateIdsUseCase.execute.mockResolvedValue(
       Result.withContent([])
     );

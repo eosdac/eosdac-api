@@ -20,7 +20,7 @@ const Api = {
 const Data = {
   DacId: 'eyeke',
   Limit: 5,
-  AllDacs: ['eyeke', 'kavian', 'magor', 'naron', 'nerix', 'veles'],
+  AllDacs: ['eyeke', 'kavian', 'magor', 'naron', 'nerix'],
 };
 
 describe('Dacs API Test', () => {

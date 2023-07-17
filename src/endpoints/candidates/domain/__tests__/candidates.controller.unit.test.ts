@@ -1,11 +1,12 @@
 import 'reflect-metadata';
 
+import * as dacUtils from '@common/utils/dac.utils';
 import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
-
 import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { CandidatesController } from '../candidates.controller';
 import { config } from '@config';
+import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
 import { GetCandidatesInput } from '../models/get-candidates.input';
 import { ListCandidateProfilesUseCase } from '../use-cases/list-candidate-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
@@ -29,10 +30,24 @@ const input: GetCandidatesInput = {
   dacId: 'string',
 };
 
+jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValue(
+  new DacMapper().toDac(
+    new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+      IndexWorldsCommon.Deltas.Types.DacsRawModel
+    >{
+      accounts: [{ key: '2', value: 'dao.worlds' }],
+      symbol: {
+        sym: 'EYE',
+      },
+      refs: [],
+    })
+  )
+);
+
 describe('Candidate Controller Unit tests', () => {
   beforeAll(() => {
     container = new Container();
-    /*bindings*/
+
     container
       .bind<IndexWorldsCommon.Services.IndexWorldsContractService>(
         IndexWorldsCommon.Services.IndexWorldsContractService.Token
@@ -50,17 +65,7 @@ describe('Candidate Controller Unit tests', () => {
     controller = container.get<CandidatesController>(
       CandidatesController.Token
     );
-    indexWorldsContractService.fetchDacs.mockResolvedValue(
-      Result.withContent([
-        // <IndexWorldsCommon.Deltas.Types.DacsRawModel>{
-        //   accounts: [{ key: 2, value: 'dao.worlds' }],
-        //   sym: {
-        //     symbol: 'EYE',
-        //   },
-        //   refs: [],
-        // },
-      ])
-    );
+
     listCandidateProfilesUseCase.execute.mockResolvedValue(
       Result.withContent([])
     );
@@ -82,10 +87,20 @@ describe('Candidate Controller Unit tests', () => {
 
   it('Should result with LoadDacConfigError when dac config could not be loaded', async () => {
     mockedConfig.dac.nameCache.get = () => null;
-    indexWorldsContractService.fetchDacs.mockResolvedValue(
-      Result.withFailure(Failure.withMessage('error'))
-    );
+    jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValueOnce(null);
+
     const result = await controller.list(input);
     expect(result.failure.error).toBeInstanceOf(LoadDacConfigError);
+  });
+
+  it('should return failure when ListCandidateProfilesUseCase fails', async () => {
+    listCandidateProfilesUseCase.execute.mockResolvedValue(
+      Result.withFailure(Failure.withMessage('error'))
+    );
+
+    const result = await controller.list(input);
+
+    expect(listCandidateProfilesUseCase.execute).toBeCalled();
+    expect(result.isFailure).toBeTruthy();
   });
 });

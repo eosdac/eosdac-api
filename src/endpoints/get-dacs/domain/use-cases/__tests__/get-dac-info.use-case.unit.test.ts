@@ -1,12 +1,11 @@
-import { Container, Failure, Result } from '@alien-worlds/api-core';
 import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { GetDacInfoUseCase } from '../get-dac-info.use-case';
-
-import 'reflect-metadata';
+import { Pair } from '@alien-worlds/eosio-contract-types';
 
 const daoWorldsContractService = {
-  fetchDacGlobals: jest.fn(),
+  fetchDacglobals: jest.fn(),
 };
 
 let container: Container;
@@ -40,7 +39,7 @@ describe('Get Dac Info Unit tests', () => {
   });
 
   it('Should return a failure when dao.worlds contract service fails', async () => {
-    daoWorldsContractService.fetchDacGlobals.mockResolvedValueOnce(
+    daoWorldsContractService.fetchDacglobals.mockResolvedValueOnce(
       Result.withFailure(Failure.fromError(null))
     );
 
@@ -49,12 +48,10 @@ describe('Get Dac Info Unit tests', () => {
   });
 
   it('should return an array of DacGlobals', async () => {
-    daoWorldsContractService.fetchDacGlobals.mockResolvedValue(
+    daoWorldsContractService.fetchDacglobals.mockResolvedValue(
       Result.withContent([
         <DaoWorldsCommon.Deltas.Types.DacglobalsRawModel>{
-          data: [
-            // { key: 'some_key', value: [] }
-          ],
+          data: [{ key: 'some_key', value: [] }] as Pair<string, unknown>[],
         },
       ])
     );

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
 
 import { Container, Failure } from '@alien-worlds/api-core';
@@ -13,7 +11,7 @@ describe('GetCandidatesUseCase', () => {
   let useCase: GetCandidatesUseCase;
 
   const mockService = {
-    fetchCandidate: jest.fn(),
+    fetchCandidates: jest.fn(),
   };
 
   beforeAll(() => {
@@ -35,7 +33,7 @@ describe('GetCandidatesUseCase', () => {
 
   it('should return a list of candidates', async () => {
     const dacId = 'testdac';
-    mockService.fetchCandidate.mockResolvedValue({
+    mockService.fetchCandidates.mockResolvedValue({
       content: [
         {
           requestedpay: '10000 TLM',
@@ -59,7 +57,7 @@ describe('GetCandidatesUseCase', () => {
 
   it('should return an empty array if no candidates are found', async () => {
     const dacId = 'emptydac';
-    mockService.fetchCandidate.mockResolvedValue({
+    mockService.fetchCandidates.mockResolvedValue({
       content: [],
     });
     const result = await useCase.execute(dacId);
@@ -69,7 +67,7 @@ describe('GetCandidatesUseCase', () => {
 
   it('should return a failure if the service fails', async () => {
     const dacId = 'faileddac';
-    mockService.fetchCandidate.mockResolvedValue({
+    mockService.fetchCandidates.mockResolvedValue({
       failure: Failure.withMessage('error'),
     });
     const result = await useCase.execute(dacId);

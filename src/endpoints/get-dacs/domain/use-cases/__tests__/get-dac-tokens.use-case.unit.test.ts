@@ -1,11 +1,7 @@
-import { Container, Failure, Result } from '@alien-worlds/api-core';
 import * as TokenWorldsContract from '@alien-worlds/token-worlds-common';
+import { Container, Failure, Result } from '@alien-worlds/api-core';
 
 import { GetDacTokensUseCase } from '../get-dac-tokens.use-case';
-
-import 'reflect-metadata';
-
-/*mocks*/
 
 const tokenWorldsContractService = {
   fetchStat: jest.fn(),

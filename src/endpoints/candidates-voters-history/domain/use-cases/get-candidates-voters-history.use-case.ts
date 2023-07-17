@@ -3,7 +3,7 @@ import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
 import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
-import { CandidatesVotersHistoryQueryBuilder } from '../models/candidates-voters-history.query-model';
+import { CandidatesVotersHistoryQueryBuilder } from '../models/candidates-voters-history.query-builder';
 
 /**
  * @class

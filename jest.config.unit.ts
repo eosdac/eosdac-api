@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { pathsToModuleNameMapper } = require('ts-jest');
-const { compilerOptions } = require('./tsconfig')
+const { compilerOptions } = require('./tsconfig');
 
 import config from './jest.config';
 
@@ -30,7 +30,8 @@ export default {
     '!src/**/*.dto.ts',
     '!src/**/*.types.ts',
     '!src/**/*.route.ts',
-    '!src/**/*.ioc.config.ts',
+    '!src/**/*ioc.config.ts',
     '!src/api-handlers/**/*',
+    '!src/**/*.interface.ts',
   ],
 };

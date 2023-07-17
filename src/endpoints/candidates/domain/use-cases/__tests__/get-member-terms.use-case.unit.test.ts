@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import * as TokenWorldsContract from '@alien-worlds/token-worlds-common';
 
 import { Container, Failure, Result } from '@alien-worlds/api-core';
@@ -11,14 +9,20 @@ describe('GetMemberTermsUseCase', () => {
   let useCase: GetMemberTermsUseCase;
 
   const mockService = {
-    fetchMemberTerms: jest.fn(),
+    fetchMemberterms: jest.fn(),
   };
 
   beforeAll(() => {
     container = new Container();
     container
+      .bind<TokenWorldsContract.Services.TokenWorldsContractService>(
+        TokenWorldsContract.Services.TokenWorldsContractService.Token
+      )
+      .toConstantValue(mockService as any);
+
+    container
       .bind<GetMemberTermsUseCase>(GetMemberTermsUseCase.Token)
-      .toConstantValue(new GetMemberTermsUseCase(mockService as any));
+      .to(GetMemberTermsUseCase);
   });
 
   beforeEach(() => {
@@ -30,8 +34,12 @@ describe('GetMemberTermsUseCase', () => {
     container = null;
   });
 
+  it('"Token" should be set', () => {
+    expect(GetMemberTermsUseCase.Token).not.toBeNull();
+  });
+
   it('should return a Member Terms object', async () => {
-    mockService.fetchMemberTerms.mockResolvedValue(
+    mockService.fetchMemberterms.mockResolvedValue(
       Result.withContent([
         {
           version: 1,
@@ -42,13 +50,21 @@ describe('GetMemberTermsUseCase', () => {
       ])
     );
     const result = await useCase.execute('dac');
+
     expect(result.content).toBeInstanceOf(
       TokenWorldsContract.Deltas.Entities.Memberterms
     );
   });
 
+  it('should return null if service returns empty array', async () => {
+    mockService.fetchMemberterms.mockResolvedValue(Result.withContent([]));
+    const result = await useCase.execute('dac');
+
+    expect(result.content).toBeNull;
+  });
+
   it('should return a failure if the service fails', async () => {
-    mockService.fetchMemberTerms.mockResolvedValue(
+    mockService.fetchMemberterms.mockResolvedValue(
       Result.withFailure(Failure.withMessage('error'))
     );
     const result = await useCase.execute('dac');

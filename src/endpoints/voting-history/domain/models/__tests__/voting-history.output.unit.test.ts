@@ -1,4 +1,3 @@
-import { MongoDB } from '@alien-worlds/storage-mongodb';
 import { UserVote } from '../../../domain/entities/user-vote';
 import { UserVoteMongoMapper } from '@endpoints/voting-history/data/mappers/user-vote.mapper';
 import { VoteAction } from '../../user-voting-history.enums';

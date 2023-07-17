@@ -1,5 +1,5 @@
 import { CandidatesVotersHistoryInput } from '../candidates-voters-history.input';
-import { CandidatesVotersHistoryQueryBuilder } from '../candidates-voters-history.query-model';
+import { CandidatesVotersHistoryQueryBuilder } from '../candidates-voters-history.query-builder';
 
 const input: CandidatesVotersHistoryInput = {
   dacId: 'string',
@@ -8,13 +8,14 @@ const input: CandidatesVotersHistoryInput = {
   skip: 0,
 };
 
-describe('CandidatesVotersHistoryQueryModel Unit tests', () => {
-  it('"CandidatesVotersHistoryQueryModel.toQueryParams" should create mongodb query model', async () => {
+describe('CandidatesVotersHistoryQueryBuilder Unit tests', () => {
+  it('"CandidatesVotersHistoryQueryBuilder.build" should create mongodb query', async () => {
     const model = new CandidatesVotersHistoryQueryBuilder().with({ ...input });
     expect(model.build()).toEqual({
       pipeline: [
         {
           $match: {
+            'action.account': 'dao.worlds',
             'action.name': 'votecust',
             'action.data.dac_id': input.dacId,
             'action.data.newvotes': input.candidateId,

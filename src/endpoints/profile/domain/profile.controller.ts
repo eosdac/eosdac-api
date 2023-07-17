@@ -65,7 +65,7 @@ export class ProfileController {
       return Result.withFailure(getProfilesFailure);
     }
 
-    if (profiles.length == 0) {
+    if (!profiles || profiles.length == 0) {
       return Result.withFailure(
         Failure.fromError(new EntityNotFoundError('dao.worlds_actions'))
       );
@@ -93,7 +93,7 @@ export class ProfileController {
     });
 
     return Result.withContent({
-      count: profiles.length || 0,
+      count: profiles.length,
       results,
     });
   }

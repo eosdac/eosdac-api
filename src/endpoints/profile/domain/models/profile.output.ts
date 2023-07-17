@@ -1,5 +1,9 @@
+import {
+  removeUndefinedProperties,
+  UnknownObject,
+} from '@alien-worlds/api-core';
+
 import { Profile } from '../entities/profile';
-import { removeUndefinedProperties } from '@alien-worlds/api-core';
 
 export class ProfileOutput {
   public static create(results?: Profile[], count?: number): ProfileOutput {
@@ -11,7 +15,7 @@ export class ProfileOutput {
     public readonly count: number
   ) {}
 
-  public toJSON() {
+  public toJSON(): UnknownObject {
     const { results, count } = this;
 
     const result = {

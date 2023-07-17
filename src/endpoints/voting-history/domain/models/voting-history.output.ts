@@ -4,7 +4,7 @@ import { VotingHistoryOutputItem } from '../../data/dtos/user-voting-history.dto
 
 export class VotingHistoryOutput {
   public static create(results: UserVote[]): VotingHistoryOutput {
-    return new VotingHistoryOutput(results || [], results.length || 0);
+    return new VotingHistoryOutput(results, results.length);
   }
 
   private constructor(

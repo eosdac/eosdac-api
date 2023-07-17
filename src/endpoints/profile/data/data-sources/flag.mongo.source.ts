@@ -10,6 +10,8 @@ import {
  * @class
  */
 export class FlagMongoSource extends MongoCollectionSource<DaoWorldsCommon.Actions.Types.FlagcandprofMongoModel> {
+  public static Token = 'FLAG_MONGO_SOURCE';
+
   /**
    * @constructor
    * @param {MongoSource} mongoSource

@@ -2,15 +2,14 @@ import * as AlienWorldsCommon from '@alien-worlds/alien-worlds-common';
 import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
 import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
 import * as TokenWorldsCommon from '@alien-worlds/token-worlds-common';
-import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
 
+import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
 import { GetDacOutput } from '../get-dac.output';
+import { Pair } from '@alien-worlds/eosio-contract-types';
 
 const dacDir = new DacMapper().toDac(
   new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity({
-    accounts: [
-      // { key: 2, value: 'dao.worlds' }
-    ],
+    accounts: [{ key: '2', value: 'dao.worlds' }] as Pair[],
     symbol: { sym: 'EYE', contract: '' },
     refs: [],
   })
