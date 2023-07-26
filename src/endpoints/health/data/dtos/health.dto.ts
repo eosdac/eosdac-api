@@ -1,24 +1,29 @@
 export type HealthOutputDocument = {
-    status: string;
-    version: string;
-    timestamp: Date;
-    uptimeSeconds: number;
-    nodeVersion: string;
-    blockChainHistory?: BlockChainHistoryHealthDocument;
-    dependencies?: PackagedDependency[];
-    database: DatabaseHealthDocument;
-    [key: string]: unknown;
+  status: string;
+  version: string;
+  timestamp: Date;
+  uptimeSeconds: number;
+  nodeVersion: string;
+  blockChainHistory?: BlockChainHistoryHealthDocument;
+  dependencies?: PackagedDependency[];
+  database: DatabaseHealthDocument;
+  [key: string]: unknown;
 };
 
 export type BlockChainHistoryHealthDocument = {
-    currentBlock: bigint;
+  currentBlock: bigint;
+  status: string;
 };
 
 export type PackagedDependency = {
-    name: string;
-    version: string;
+  name: string;
+  version: string;
 };
 
 export type DatabaseHealthDocument = {
-    status: string;
+  status: string;
+};
+
+export type BlockStateJsonModel = {
+  currentBlockNumber: bigint;
 };

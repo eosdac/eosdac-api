@@ -118,6 +118,7 @@ export class HealthOutput implements Entity {
         status: database.status,
       },
       blockChainHistory: {
+        status: blockChainHistory.status,
         currentBlock: blockChainHistory.currentBlock.toString(),
       },
     };

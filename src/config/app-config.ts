@@ -1,14 +1,15 @@
-import { MongoConfig } from '@alien-worlds/storage-mongodb';
-
 import {
   Config,
   DACConfig,
   DocsConfig,
   Environment,
   EOSConfig,
+  HistoryApiConfig,
   LoggerConfig,
   NewRelicConfig,
 } from './config.types';
+
+import { MongoConfig } from '@alien-worlds/storage-mongodb';
 import { readEnvFile } from './config.utils';
 
 export default class AppConfig implements Config {
@@ -80,6 +81,12 @@ export default class AppConfig implements Config {
         environment.NEW_RELIC_LICENSE_KEY || dotEnv.NEW_RELIC_LICENSE_KEY,
     };
 
+    const historyApi: HistoryApiConfig = {
+      host: environment.HISTORY_API_HOST || dotEnv.HISTORY_API_HOST,
+      routePrefix:
+        environment.HISTORY_API_ROUTE_PREFIX || dotEnv.HISTORY_API_ROUTE_PREFIX,
+    };
+
     return new AppConfig(
       version || 'v1',
       env,
@@ -90,7 +97,8 @@ export default class AppConfig implements Config {
       docs,
       logger,
       dac,
-      newRelic
+      newRelic,
+      historyApi
     );
   }
 
@@ -104,6 +112,7 @@ export default class AppConfig implements Config {
     public readonly docs: DocsConfig,
     public readonly logger: LoggerConfig,
     public readonly dac: DACConfig,
-    public readonly newRelic: NewRelicConfig
+    public readonly newRelic: NewRelicConfig,
+    public readonly historyApi: HistoryApiConfig
   ) {}
 }

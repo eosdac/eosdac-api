@@ -1,5 +1,6 @@
-import { injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
 
+import { GetCurrentBlockUseCase } from './get-current-block.use-case';
 import { HealthOutput } from '../entities/health-output';
 import { HealthOutputDocument } from '../../data/dtos/health.dto';
 
@@ -10,11 +11,18 @@ import { HealthOutputDocument } from '../../data/dtos/health.dto';
 export class HealthUseCase implements UseCase<HealthOutput> {
   public static Token = 'HEALTH_USE_CASE';
 
+  constructor(
+    @inject(GetCurrentBlockUseCase.Token)
+    private getCurrentBlockUseCase: GetCurrentBlockUseCase
+  ) {}
+
   /**
    * @async
    * @returns {Promise<Result<HealthOutput>>}
    */
   public async execute(): Promise<Result<HealthOutput>> {
+    const currentBlockRes = await this.getCurrentBlockUseCase.execute();
+
     const output: HealthOutputDocument = {
       // api
       status: 'OK',
@@ -82,7 +90,10 @@ export class HealthUseCase implements UseCase<HealthOutput> {
       },
 
       blockChainHistory: {
-        currentBlock: -1n, // TODO: update current block after reading from history tools API
+        currentBlock: !currentBlockRes.isFailure
+          ? currentBlockRes.content
+          : -1n,
+        status: currentBlockRes.isFailure ? 'FAILED' : 'OK',
       },
     };
 

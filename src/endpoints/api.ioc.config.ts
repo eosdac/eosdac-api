@@ -14,6 +14,7 @@ import { EosRpcSourceImpl } from '@alien-worlds/eos';
 import { GetAllDacsUseCase } from './get-dacs/domain/use-cases/get-all-dacs.use-case';
 import { GetCandidatesUseCase } from './candidates/domain/use-cases/get-candidates.use-case';
 import { GetCandidatesVotersHistoryUseCase } from './candidates-voters-history/domain/use-cases/get-candidates-voters-history.use-case';
+import { GetCurrentBlockUseCase } from './health/domain/use-cases/get-current-block.use-case';
 import { GetCustodiansUseCase } from './custodians/domain/use-cases/get-custodians.use-case';
 import { GetDacInfoUseCase } from './get-dacs/domain/use-cases/get-dac-info.use-case';
 import { GetDacsController } from './get-dacs/domain/get-dacs.controller';
@@ -95,6 +96,9 @@ export const setupEndpointDependencies = async (
      */
     bind<HealthController>(HealthController.Token).to(HealthController);
     bind<HealthUseCase>(HealthUseCase.Token).to(HealthUseCase);
+    bind<GetCurrentBlockUseCase>(GetCurrentBlockUseCase.Token).to(
+      GetCurrentBlockUseCase
+    );
 
     /**
      * ACTIONS

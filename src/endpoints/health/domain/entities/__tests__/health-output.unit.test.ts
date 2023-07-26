@@ -22,6 +22,7 @@ const healthOutputDto: HealthOutputDocument = {
   ],
   blockChainHistory: {
     currentBlock: 0n,
+    status: 'OK',
   },
 };
 
@@ -52,9 +53,7 @@ describe('HealthOutput unit tests', () => {
         '@alien-worlds/dao-api-common': '0.0.76',
       },
       database: { status: 'OK' },
-      blockChainHistory: { currentBlock: '0' },
+      blockChainHistory: { currentBlock: '0', status: 'OK' },
     });
   });
-
-  
 });
