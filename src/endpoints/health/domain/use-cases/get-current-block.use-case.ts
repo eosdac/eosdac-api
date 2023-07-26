@@ -19,7 +19,7 @@ export class GetCurrentBlockUseCase implements UseCase<bigint> {
     let currentBlock = -1n;
 
     try {
-      const apiResp = await fetch(`${config.historyApi.host}/block-states`);
+      const apiResp = await fetch(`${config.historyApi.host}/block-state`);
 
       if (apiResp.ok) {
         const responseJson: BlockStateJsonModel = await apiResp.json();
