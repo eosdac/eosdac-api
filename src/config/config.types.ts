@@ -38,6 +38,9 @@ export type Environment = {
   NEW_RELIC_ENABLED?: string;
   NEW_RELIC_LICENSE_KEY?: string;
   NEW_RELIC_APP_NAME?: string;
+
+  HISTORY_API_HOST?: string;
+  HISTORY_API_ROUTE_PREFIX?: string;
 };
 
 export type Config = {
@@ -49,6 +52,7 @@ export type Config = {
   docs: DocsConfig;
   dac: DACConfig;
   newRelic: NewRelicConfig;
+  historyApi: HistoryApiConfig;
 };
 
 export type EOSConfig = {
@@ -85,4 +89,9 @@ export type NewRelicConfig = {
   newRelicEnabled: boolean;
   appName: string;
   licenseKey: string;
+};
+
+export type HistoryApiConfig = {
+  host: string;
+  routePrefix: string;
 };
