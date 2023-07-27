@@ -1,9 +1,9 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
 import {
   MongoCollectionSource,
   MongoSource,
-} from '@alien-worlds/storage-mongodb';
+} from '@alien-worlds/aw-storage-mongodb';
 
 /**
  * NFTs data source from the mongo database

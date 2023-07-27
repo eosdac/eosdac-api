@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
 import * as dacUtils from '@common/utils/dac.utils';
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
-import { Container, Result } from '@alien-worlds/api-core';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
+import { Container, Result } from '@alien-worlds/aw-core';
 
 import { config } from '@config';
 import { CustodiansController } from '../custodians.controller';

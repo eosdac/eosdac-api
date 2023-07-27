@@ -1,7 +1,7 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { Container, RepositoryImpl } from '@alien-worlds/api-core';
-import { MongoConfig, MongoSource } from '@alien-worlds/storage-mongodb';
+import { Container, RepositoryImpl } from '@alien-worlds/aw-core';
+import { MongoConfig, MongoSource } from '@alien-worlds/aw-storage-mongodb';
 
 import { FlagMongoSource } from './data/data-sources/flag.mongo.source';
 import { FlagRepository } from './domain/repositories/flag.repository';

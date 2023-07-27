@@ -1,5 +1,5 @@
 import { GetDacsRequestQueryParams } from '../../data/dtos/dacs.dto';
-import { Request } from '@alien-worlds/api-core';
+import { Request } from '@alien-worlds/aw-core';
 
 /**
  * @class

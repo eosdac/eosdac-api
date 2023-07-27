@@ -1,8 +1,8 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 import { CandidateVotingPowerQueryBuilder } from '../models/cand-voting-power.query-builder';
-import { MongoDB } from '@alien-worlds/storage-mongodb';
+import { MongoDB } from '@alien-worlds/aw-storage-mongodb';
 import { UserVote } from '../entities/user-vote';
 import { UserVoteMongoMapper } from '@endpoints/voting-history/data/mappers/user-vote.mapper';
 import { UserVotingHistoryMongoModel } from '@endpoints/voting-history/data/dtos/user-voting-history.dto';

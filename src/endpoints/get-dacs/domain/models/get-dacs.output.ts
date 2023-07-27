@@ -1,5 +1,5 @@
 import { GetDacOutput } from './get-dac.output';
-import { removeUndefinedProperties } from '@alien-worlds/api-core';
+import { removeUndefinedProperties } from '@alien-worlds/aw-core';
 
 export class GetDacsOutput {
   public static create(results?: GetDacOutput[]): GetDacsOutput {

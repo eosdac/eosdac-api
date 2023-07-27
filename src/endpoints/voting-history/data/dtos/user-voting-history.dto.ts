@@ -1,4 +1,4 @@
-import { MongoDB } from '@alien-worlds/storage-mongodb';
+import { MongoDB } from '@alien-worlds/aw-storage-mongodb';
 import { VoteAction } from '@endpoints/voting-history/domain/user-voting-history.enums';
 
 export type VotingHistoryRequestQueryParams = {

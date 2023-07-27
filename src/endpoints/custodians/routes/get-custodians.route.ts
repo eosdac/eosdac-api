@@ -4,7 +4,7 @@ import {
   Result,
   RouteHandler,
   ValidationResult,
-} from '@alien-worlds/api-core';
+} from '@alien-worlds/aw-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
 import { config } from '@config';

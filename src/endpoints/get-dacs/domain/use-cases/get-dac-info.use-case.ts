@@ -1,5 +1,5 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 /**
  * @class

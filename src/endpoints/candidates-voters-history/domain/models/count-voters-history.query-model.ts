@@ -1,8 +1,8 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { Query, QueryBuilder } from '@alien-worlds/api-core';
+import { Query, QueryBuilder } from '@alien-worlds/aw-core';
 
-import { MongoDB } from '@alien-worlds/storage-mongodb';
+import { MongoDB } from '@alien-worlds/aw-storage-mongodb';
 
 export type CountVotersHitoryQueryArgs = { dacId: string; candidateId: string };
 

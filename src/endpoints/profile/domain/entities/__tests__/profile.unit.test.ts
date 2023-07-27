@@ -1,6 +1,6 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { MongoDB } from '@alien-worlds/storage-mongodb';
+import { MongoDB } from '@alien-worlds/aw-storage-mongodb';
 import { Profile } from '../profile';
 
 const profileDto: DaoWorldsCommon.Actions.Types.DaoWorldsActionMongoModel =

@@ -1,4 +1,4 @@
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 
 import {
   Failure,
@@ -8,7 +8,7 @@ import {
   Result,
   SmartContractDataNotFoundError,
   UseCase,
-} from '@alien-worlds/api-core';
+} from '@alien-worlds/aw-core';
 import { Dac } from '../entities/dacs';
 import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
 import { GetDacsInput } from '../models/dacs.input';

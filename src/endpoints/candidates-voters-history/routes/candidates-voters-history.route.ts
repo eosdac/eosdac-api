@@ -9,7 +9,7 @@ import {
   Result,
   RouteHandler,
   ValidationResult,
-} from '@alien-worlds/api-core';
+} from '@alien-worlds/aw-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
 import { CandidatesVotersHistoryInput } from '../domain/models/candidates-voters-history.input';

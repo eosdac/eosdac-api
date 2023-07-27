@@ -1,12 +1,9 @@
 import 'reflect-metadata';
 
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
-import {
-  ExtendedSymbolRawModel,
-  Pair,
-} from '@alien-worlds/eosio-contract-types';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
+import { ExtendedSymbolRawModel, Pair } from '@alien-worlds/aw-antelope';
 import { Dac } from '../../entities/dacs';
 import { GetAllDacsUseCase } from '../get-all-dacs.use-case';
 import { GetDacsInput } from '../../models/dacs.input';

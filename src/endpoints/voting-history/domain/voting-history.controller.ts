@@ -1,4 +1,4 @@
-import { inject, injectable, Result } from '@alien-worlds/api-core';
+import { inject, injectable, Result } from '@alien-worlds/aw-core';
 
 import { GetUserVotingHistoryUseCase } from './use-cases/get-user-voting-history.use-case';
 import { UserVote } from '../domain/entities/user-vote';

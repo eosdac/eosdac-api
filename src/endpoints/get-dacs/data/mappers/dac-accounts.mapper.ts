@@ -4,7 +4,7 @@ import {
 } from '@endpoints/get-dacs/domain/dac.enums';
 
 import { DacAccounts } from '@endpoints/get-dacs/domain/entities/dac-accounts';
-import { Pair } from '@alien-worlds/eosio-contract-types';
+import { Pair } from '@alien-worlds/aw-antelope';
 
 export class DacAccountsMapper {
   private accountKeys = new Map<DacAccountIndex, DacAccountKey>([

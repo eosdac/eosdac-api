@@ -1,4 +1,4 @@
-import { inject, injectable, Result } from '@alien-worlds/api-core';
+import { inject, injectable, Result } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryControllerOutput } from '../data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryInput } from './models/candidates-voters-history.input';

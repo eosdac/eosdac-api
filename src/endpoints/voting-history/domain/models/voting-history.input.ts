@@ -1,4 +1,4 @@
-import { Request } from '@alien-worlds/api-core';
+import { Request } from '@alien-worlds/aw-core';
 import { VotingHistoryRequestQueryParams } from '../../data/dtos/user-voting-history.dto';
 
 /**

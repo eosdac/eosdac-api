@@ -1,5 +1,5 @@
-import * as TokenWorldsContract from '@alien-worlds/token-worlds-common';
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as TokenWorldsContract from '@alien-worlds/aw-contract-token-worlds';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { GetDacTokensUseCase } from '../get-dac-tokens.use-case';
 

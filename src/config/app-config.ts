@@ -9,7 +9,7 @@ import {
   NewRelicConfig,
 } from './config.types';
 
-import { MongoConfig } from '@alien-worlds/storage-mongodb';
+import { MongoConfig } from '@alien-worlds/aw-storage-mongodb';
 import { readEnvFile } from './config.utils';
 
 export default class AppConfig implements Config {

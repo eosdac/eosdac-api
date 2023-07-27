@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
-import * as IndexWorldsContract from '@alien-worlds/index-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import * as IndexWorldsContract from '@alien-worlds/aw-contract-index-worlds';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
 import { GetCandidatesUseCase } from '../get-candidates.use-case';
@@ -12,7 +12,7 @@ import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../../profile/domain/use-cases/get-profiles.use-case';
 import { GetVotedCandidateIdsUseCase } from '../get-voted-candidate-ids.use-case';
 import { ListCandidateProfilesUseCase } from '../list-candidate-profiles.use-case';
-import { Pair } from '@alien-worlds/eosio-contract-types';
+import { Pair } from '@alien-worlds/aw-antelope';
 
 let container: Container;
 let useCase: ListCandidateProfilesUseCase;

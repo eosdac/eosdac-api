@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import * as AlienWorldsContract from '@alien-worlds/alien-worlds-common';
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as AlienWorldsContract from '@alien-worlds/aw-contract-alien-worlds';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { GetDacTreasuryUseCase } from '../get-dac-treasury.use-case';
 

@@ -1,4 +1,4 @@
-import { removeUndefinedProperties } from '@alien-worlds/api-core';
+import { removeUndefinedProperties } from '@alien-worlds/aw-core';
 import { UserVote } from '../../domain/entities/user-vote';
 import { VotingHistoryOutputItem } from '../../data/dtos/user-voting-history.dto';
 

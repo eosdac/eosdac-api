@@ -1,6 +1,6 @@
-import * as TokenWorldsContract from '@alien-worlds/token-worlds-common';
+import * as TokenWorldsContract from '@alien-worlds/aw-contract-token-worlds';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
 

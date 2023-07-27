@@ -2,7 +2,7 @@ import {
   ProfileRequestPathVariables,
   ProfileRequestQueryParams,
 } from '../../data/dtos/profile.dto';
-import { Request } from '@alien-worlds/api-core';
+import { Request } from '@alien-worlds/aw-core';
 /**
  * @class
  */

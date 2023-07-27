@@ -1,5 +1,5 @@
-import * as AlienWorldsCommon from '@alien-worlds/alien-worlds-common';
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import * as AlienWorldsCommon from '@alien-worlds/aw-contract-alien-worlds';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 /**
  * @class

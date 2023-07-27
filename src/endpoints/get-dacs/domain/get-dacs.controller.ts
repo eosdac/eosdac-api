@@ -1,5 +1,5 @@
-import * as AlienWorldsContract from '@alien-worlds/alien-worlds-common';
-import { inject, injectable, Result } from '@alien-worlds/api-core';
+import * as AlienWorldsContract from '@alien-worlds/aw-contract-alien-worlds';
+import { inject, injectable, Result } from '@alien-worlds/aw-core';
 
 import { GetAllDacsUseCase } from './use-cases/get-all-dacs.use-case';
 import { GetDacInfoUseCase } from './use-cases/get-dac-info.use-case';

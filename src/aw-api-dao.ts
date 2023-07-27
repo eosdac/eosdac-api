@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-process.title = 'dao-api';
+process.title = 'aw-api-dao';
 
-import { Container, Route } from '@alien-worlds/api-core';
+import { Container, Route } from '@alien-worlds/aw-core';
 import fastify, { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
@@ -28,7 +28,7 @@ import { ProfileController } from './endpoints/profile/domain/profile.controller
 import { setupEndpointDependencies } from './endpoints/api.ioc.config';
 import { VotingHistoryController } from './endpoints/voting-history/domain/voting-history.controller';
 
-initLogger('dao-api', config.logger);
+initLogger('aw-api-dao', config.logger);
 
 export const buildAPIServer = async () => {
   const api: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify(

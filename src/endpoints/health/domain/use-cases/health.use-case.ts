@@ -1,4 +1,4 @@
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 import { GetCurrentBlockUseCase } from './get-current-block.use-case';
 import { HealthOutput } from '../entities/health-output';
@@ -35,53 +35,49 @@ export class HealthUseCase implements UseCase<HealthOutput> {
 
       dependencies: [
         {
-          name: '@alien-worlds/api-core',
-          version: process.env.npm_package_dependencies__alien_worlds_api_core,
+          name: '@alien-worlds/aw-core',
+          version: process.env.npm_package_dependencies__alien_worlds_aw_core,
         },
         {
-          name: '@alien-worlds/storage-mongodb',
-          version:
-            process.env.npm_package_dependencies__alien_worlds_storage_mongodb,
-        },
-        {
-          name: '@alien-worlds/eos',
-          version: process.env.npm_package_dependencies__alien_worlds_eos,
-        },
-        {
-          name: '@alien-worlds/eosio-contract-types',
+          name: '@alien-worlds/aw-storage-mongodb',
           version:
             process.env
-              .npm_package_dependencies__alien_worlds_eosio_contract_types,
+              .npm_package_dependencies__alien_worlds_aw_storage_mongodb,
         },
         {
-          name: '@alien-worlds/alien-worlds-common',
+          name: '@alien-worlds/aw-antelope',
           version:
-            process.env
-              .npm_package_dependencies__alien_worlds_alien_worlds_common,
+            process.env.npm_package_dependencies__alien_worlds_aw_antelope,
         },
         {
-          name: '@alien-worlds/dao-worlds-common',
+          name: '@alien-worlds/aw-contract-alien-worlds',
           version:
             process.env
-              .npm_package_dependencies__alien_worlds_dao_worlds_common,
+              .npm_package_dependencies__alien_worlds_aw_contract_alien_worlds,
         },
         {
-          name: '@alien-worlds/index-worlds-common',
+          name: '@alien-worlds/aw-contract-dao-worlds',
           version:
             process.env
-              .npm_package_dependencies__alien_worlds_index_worlds_common,
+              .npm_package_dependencies__alien_worlds_aw_contract_dao_worlds,
         },
         {
-          name: '@alien-worlds/stkvt-worlds-common',
+          name: '@alien-worlds/aw-contract-index-worlds',
           version:
             process.env
-              .npm_package_dependencies__alien_worlds_stkvt_worlds_common,
+              .npm_package_dependencies__alien_worlds_aw_contract_index_worlds,
         },
         {
-          name: '@alien-worlds/token-worlds-common',
+          name: '@alien-worlds/aw-contract-stkvt-worlds',
           version:
             process.env
-              .npm_package_dependencies__alien_worlds_token_worlds_common,
+              .npm_package_dependencies__alien_worlds_aw_contract_stkvt_worlds,
+        },
+        {
+          name: '@alien-worlds/aw-contract-token-worlds',
+          version:
+            process.env
+              .npm_package_dependencies__alien_worlds_aw_contract_token_worlds,
         },
       ],
 

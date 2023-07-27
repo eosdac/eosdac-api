@@ -1,9 +1,9 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
-import * as TokenWorldsContract from '@alien-worlds/token-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import * as TokenWorldsContract from '@alien-worlds/aw-contract-token-worlds';
 
-import { Entity, UnknownObject } from '@alien-worlds/api-core';
+import { Entity, UnknownObject } from '@alien-worlds/aw-core';
 
-import { Asset } from '@alien-worlds/eosio-contract-types';
+import { Asset } from '@alien-worlds/aw-antelope';
 import { Profile } from './../../../profile/domain/entities/profile';
 
 /**

@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
-import * as StkvtWorldsCommon from '@alien-worlds/stkvt-worlds-common';
+import * as StkvtWorldsCommon from '@alien-worlds/aw-contract-stkvt-worlds';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryOutputItem } from '../../../../candidates-voters-history/data/dtos/candidates-voters-history.dto';
 import { GetVotingPowerUseCase } from '../get-voting-power.use-case';

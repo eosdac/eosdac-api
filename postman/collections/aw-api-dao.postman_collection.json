@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "c7314042-260c-4c11-8ae5-abd4b05cdee5",
-		"name": "dao-api",
+		"name": "aw-api-dao",
 		"description": "This document describes APIs for DAO related operations.\n\nAll paths are prefixed with `/v2/dao`.\n\nThe old prefix i.e. `/v1/eosdac` is currently supported but it will soon be permanently removed.  \nAPI clients are encouraged to start migrating their apps to utilise the new prefix.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "2870003"
@@ -3974,7 +3974,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"status\": \"OK\",\n    \"version\": \"1.0.0\",\n    \"timestamp\": 1677513169143,\n    \"uptimeSeconds\": 10,\n    \"nodeVersion\": \"v19.7.0\",\n    \"dependencies\": {\n        \"@alien-worlds/api-core\": \"0.0.72\",\n        \"@alien-worlds/dao-api-common\": \"0.0.83\"\n    },\n    \"database\": {\n        \"status\": \"OK\"\n    },\n    \"blockChainHistory\": {\n        \"currentBlock\": \"232088089\"\n    }\n}"
+					"body": "{\n    \"status\": \"OK\",\n    \"version\": \"1.0.0\",\n    \"timestamp\": 1677513169143,\n    \"uptimeSeconds\": 10,\n    \"nodeVersion\": \"v19.7.0\",\n    \"dependencies\": {\n        \"@alien-worlds/aw-core\": \"0.0.72\",\n        \"@alien-worlds/dao-api-common\": \"0.0.83\"\n    },\n    \"database\": {\n        \"status\": \"OK\"\n    },\n    \"blockChainHistory\": {\n        \"currentBlock\": \"232088089\"\n    }\n}"
 				}
 			]
 		}

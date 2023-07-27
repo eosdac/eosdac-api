@@ -12,12 +12,8 @@ const healthOutputDto: HealthOutputDocument = {
   },
   dependencies: [
     {
-      name: '@alien-worlds/api-core',
+      name: '@alien-worlds/aw-core',
       version: '0.0.68',
-    },
-    {
-      name: '@alien-worlds/dao-api-common',
-      version: '0.0.76',
     },
   ],
   blockChainHistory: {
@@ -49,8 +45,7 @@ describe('HealthOutput unit tests', () => {
       uptimeSeconds: 100,
       nodeVersion: 'v17.3.0',
       dependencies: {
-        '@alien-worlds/api-core': '0.0.68',
-        '@alien-worlds/dao-api-common': '0.0.76',
+        '@alien-worlds/aw-core': '0.0.68',
       },
       database: { status: 'OK' },
       blockChainHistory: { currentBlock: '0', status: 'OK' },

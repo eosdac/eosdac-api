@@ -1,4 +1,4 @@
-import { MongoDB, MongoSource } from '@alien-worlds/storage-mongodb';
+import { MongoDB, MongoSource } from '@alien-worlds/aw-storage-mongodb';
 
 import { FlagMongoSource } from '../flag.mongo.source';
 

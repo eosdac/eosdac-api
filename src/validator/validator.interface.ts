@@ -1,4 +1,4 @@
-import { Request, ValidationResult } from '@alien-worlds/api-core';
+import { Request, ValidationResult } from '@alien-worlds/aw-core';
 export interface Validator {
   /**
    *

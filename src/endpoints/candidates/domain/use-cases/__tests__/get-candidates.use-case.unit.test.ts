@@ -1,6 +1,6 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { Container, Failure } from '@alien-worlds/api-core';
+import { Container, Failure } from '@alien-worlds/aw-core';
 
 import { GetCandidatesUseCase } from '../get-candidates.use-case';
 

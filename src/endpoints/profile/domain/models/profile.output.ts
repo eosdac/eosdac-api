@@ -1,7 +1,7 @@
 import {
   removeUndefinedProperties,
   UnknownObject,
-} from '@alien-worlds/api-core';
+} from '@alien-worlds/aw-core';
 
 import { Profile } from '../entities/profile';
 

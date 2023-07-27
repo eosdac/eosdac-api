@@ -6,7 +6,7 @@ const options: FastifyStaticSwaggerOptions = {
   routePrefix: `/${config.version}${config.docs.routePrefix}`,
   exposeRoute: true,
   specification: {
-    path: './docs/dao-api-oas.yaml',
+    path: './docs/aw-api-dao-oas.yaml',
     baseDir: '',
   },
 };

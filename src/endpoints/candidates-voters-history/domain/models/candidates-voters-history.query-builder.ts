@@ -1,5 +1,6 @@
-import { Query, QueryBuilder } from '@alien-worlds/api-core';
-import { MongoDB } from '@alien-worlds/storage-mongodb';
+import { Query, QueryBuilder } from '@alien-worlds/aw-core';
+
+import { MongoDB } from '@alien-worlds/aw-storage-mongodb';
 
 export type CandidatesVotersHistoryQueryArgs = {
   dacId: string;

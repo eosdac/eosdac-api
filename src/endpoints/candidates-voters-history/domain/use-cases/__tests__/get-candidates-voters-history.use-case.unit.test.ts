@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
 import {
   Container,
   ContractAction,
   Failure,
   Result,
-} from '@alien-worlds/api-core';
+} from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryInput } from '../../models/candidates-voters-history.input';
 import { GetCandidatesVotersHistoryUseCase } from '../get-candidates-voters-history.use-case';

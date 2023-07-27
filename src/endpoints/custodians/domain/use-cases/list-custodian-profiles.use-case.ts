@@ -1,4 +1,4 @@
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 import { CustodianProfile } from '../entities/custodian-profile';
 import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';

@@ -1,13 +1,13 @@
-import * as AlienWorldsCommon from '@alien-worlds/alien-worlds-common';
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
-import * as TokenWorldsCommon from '@alien-worlds/token-worlds-common';
+import * as AlienWorldsCommon from '@alien-worlds/aw-contract-alien-worlds';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
 
 import {
   removeUndefinedProperties,
   UnknownObject,
-} from '@alien-worlds/api-core';
+} from '@alien-worlds/aw-core';
 
-import { AssetRawMapper } from '@alien-worlds/eosio-contract-types';
+import { AssetRawMapper } from '@alien-worlds/aw-antelope';
 import { Dac } from '../entities/dacs';
 
 export class GetDacOutput {

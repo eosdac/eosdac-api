@@ -1,7 +1,7 @@
 import { Dac } from '../dacs';
 import { DacAccounts } from '../dac-accounts';
 import { DacRefs } from '../dac-refs';
-import { ExtendedSymbol } from '@alien-worlds/eosio-contract-types';
+import { ExtendedSymbol } from '@alien-worlds/aw-antelope';
 
 describe('Dac', () => {
   describe('constructor', () => {

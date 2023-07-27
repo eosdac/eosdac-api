@@ -24,44 +24,44 @@
         "dependencies": {
             "type": "object",
             "properties": {
-                "@alien-worlds/api-core": {
+                "@alien-worlds/aw-core": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/storage-mongodb": {
+                "@alien-worlds/aw-storage-mongodb": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/eos": {
+                "@alien-worlds/aw-antelope": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/eosio-contract-types": {
+                "@alien-worlds/aw-antelope": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/alien-worlds-common": {
+                "@alien-worlds/aw-contract-alien-worlds": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/dao-worlds-common": {
+                "aw-contract-dao-worlds": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/index-worlds-common": {
+                "@alien-worlds/aw-contract-index-worlds": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/stkvt-worlds-common": {
+                "@alien-worlds/aw-contract-stkvt-worlds": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/token-worlds-common": {
+                "@alien-worlds/aw-contract-token-worlds": {
                     "$ref": "#/$defs/semanticVerString"
                 }
             },
             "required": [
-                "@alien-worlds/api-core",
-                "@alien-worlds/storage-mongodb",
-                "@alien-worlds/eos",
-                "@alien-worlds/eosio-contract-types",
-                "@alien-worlds/alien-worlds-common",
-                "@alien-worlds/dao-worlds-common",
-                "@alien-worlds/index-worlds-common",
-                "@alien-worlds/stkvt-worlds-common",
-                "@alien-worlds/token-worlds-common"
+                "@alien-worlds/aw-core",
+                "@alien-worlds/aw-storage-mongodb",
+                "@alien-worlds/aw-antelope",
+                "@alien-worlds/aw-antelope",
+                "@alien-worlds/aw-contract-alien-worlds",
+                "aw-contract-dao-worlds",
+                "@alien-worlds/aw-contract-index-worlds",
+                "@alien-worlds/aw-contract-stkvt-worlds",
+                "@alien-worlds/aw-contract-token-worlds"
             ]
         },
         "database": {

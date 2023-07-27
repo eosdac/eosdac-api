@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
-import * as TokenWorldsCommon from '@alien-worlds/token-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
 
 import { CandidateProfile } from '../../entities/candidate-profile';
-import { ContractAction } from '@alien-worlds/api-core';
+import { ContractAction } from '@alien-worlds/aw-core';
 import { GetCandidatesOutput } from '../get-candidates.output';
 import { Profile } from '../../../../profile/domain/entities/profile';
 import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';

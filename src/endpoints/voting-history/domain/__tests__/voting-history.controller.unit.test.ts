@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Container } from '@alien-worlds/api-core';
+import { Container } from '@alien-worlds/aw-core';
 import { GetUserVotingHistoryUseCase } from '../use-cases/get-user-voting-history.use-case';
 import { VotingHistoryController } from '../voting-history.controller';
 import { VotingHistoryInput } from '../models/voting-history.input';

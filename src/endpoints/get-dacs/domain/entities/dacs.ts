@@ -1,8 +1,8 @@
-import { Entity, UnknownObject } from '@alien-worlds/api-core';
+import { Entity, UnknownObject } from '@alien-worlds/aw-core';
 
 import { DacAccounts } from './dac-accounts';
 import { DacRefs } from './dac-refs';
-import { ExtendedSymbol } from '@alien-worlds/eosio-contract-types';
+import { ExtendedSymbol } from '@alien-worlds/aw-antelope';
 
 /**
  * Represents a `Dac` object.

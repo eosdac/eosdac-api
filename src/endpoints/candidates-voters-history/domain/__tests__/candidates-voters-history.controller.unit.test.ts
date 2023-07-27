@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryController } from '../candidates-voters-history.controller';
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';

@@ -5,7 +5,7 @@ import {
   Result,
   RouteHandler,
   ValidationResult,
-} from '@alien-worlds/api-core';
+} from '@alien-worlds/aw-core';
 import {
   ProfileRequestPathVariables,
   ProfileRequestQueryParams,

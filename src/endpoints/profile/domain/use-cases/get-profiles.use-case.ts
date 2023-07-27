@@ -1,11 +1,11 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import {
   ContractAction,
   inject,
   injectable,
   Result,
   UseCase,
-} from '@alien-worlds/api-core';
+} from '@alien-worlds/aw-core';
 
 import { GetProfilesUseCaseInput } from '../../data/dtos/profile.dto';
 import { ProfileQueryBuilder } from '../models/profile.query-builder';

@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryInput } from '../../models/candidates-voters-history.input';
 import { CountVotersHistoryUseCase } from '../count-voters-history.use-case';
@@ -64,6 +64,4 @@ describe('Count Voters History Unit tests', () => {
     const result = await useCase.execute(input);
     expect(result.content).toBe(1);
   });
-
-  
 });

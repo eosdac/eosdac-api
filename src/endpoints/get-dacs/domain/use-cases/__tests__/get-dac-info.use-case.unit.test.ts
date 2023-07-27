@@ -1,8 +1,8 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { GetDacInfoUseCase } from '../get-dac-info.use-case';
-import { Pair } from '@alien-worlds/eosio-contract-types';
+import { Pair } from '@alien-worlds/aw-antelope';
 
 const daoWorldsContractService = {
   fetchDacglobals: jest.fn(),

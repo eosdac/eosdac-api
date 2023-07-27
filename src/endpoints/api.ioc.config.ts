@@ -1,16 +1,16 @@
-import { AsyncContainerModule, Container } from '@alien-worlds/api-core';
+import { AsyncContainerModule, Container } from '@alien-worlds/aw-core';
 import {
   setupDaoWorldsActionRepository,
   setupDaoWorldsContractService,
   setupDaoWorldsDeltaRepository,
-} from '@alien-worlds/dao-worlds-common';
+} from '@alien-worlds/aw-contract-dao-worlds';
 
+import { AntelopeRpcSourceImpl } from '@alien-worlds/aw-antelope';
 import AppConfig from 'src/config/app-config';
 import { CandidatesController } from './candidates/domain/candidates.controller';
 import { CandidatesVotersHistoryController } from './candidates-voters-history/domain/candidates-voters-history.controller';
 import { CountVotersHistoryUseCase } from './candidates-voters-history/domain/use-cases/count-voters-history.use-case';
 import { CustodiansController } from './custodians/domain/custodians.controller';
-import { EosRpcSourceImpl } from '@alien-worlds/eos';
 import { GetAllDacsUseCase } from './get-dacs/domain/use-cases/get-all-dacs.use-case';
 import { GetCandidatesUseCase } from './candidates/domain/use-cases/get-candidates.use-case';
 import { GetCandidatesVotersHistoryUseCase } from './candidates-voters-history/domain/use-cases/get-candidates-voters-history.use-case';
@@ -31,13 +31,13 @@ import { HealthUseCase } from './health/domain/use-cases/health.use-case';
 import { IsProfileFlaggedUseCase } from './profile/domain/use-cases/is-profile-flagged.use-case';
 import { ListCandidateProfilesUseCase } from './candidates/domain/use-cases/list-candidate-profiles.use-case';
 import { ListCustodianProfilesUseCase } from './custodians/domain/use-cases/list-custodian-profiles.use-case';
-import { MongoSource } from '@alien-worlds/storage-mongodb';
+import { MongoSource } from '@alien-worlds/aw-storage-mongodb';
 import { ProfileController } from './profile/domain/profile.controller';
-import { setupAlienWorldsContractService } from '@alien-worlds/alien-worlds-common';
+import { setupAlienWorldsContractService } from '@alien-worlds/aw-contract-alien-worlds';
 import { setupFlagRepository } from './profile/ioc.config';
-import { setupIndexWorldsContractService } from '@alien-worlds/index-worlds-common';
-import { setupStkvtWorldsDeltaRepository } from '@alien-worlds/stkvt-worlds-common';
-import { setupTokenWorldsContractService } from '@alien-worlds/token-worlds-common';
+import { setupIndexWorldsContractService } from '@alien-worlds/aw-contract-index-worlds';
+import { setupStkvtWorldsDeltaRepository } from '@alien-worlds/aw-contract-stkvt-worlds';
+import { setupTokenWorldsContractService } from '@alien-worlds/aw-contract-token-worlds';
 import { VotingHistoryController } from './voting-history/domain/voting-history.controller';
 
 export const setupEndpointDependencies = async (
@@ -52,7 +52,7 @@ export const setupEndpointDependencies = async (
      */
     const mongoSource = await MongoSource.create(config.mongo);
 
-    const eosJsRpcSource = new EosRpcSourceImpl(config.eos.endpoint);
+    const eosJsRpcSource = new AntelopeRpcSourceImpl(config.eos.endpoint);
 
     /**
      * SMART CONTRACT SERVICES

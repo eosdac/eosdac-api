@@ -1,7 +1,7 @@
 import { DacRefIndex, DacRefKey } from '@endpoints/get-dacs/domain/dac.enums';
 
 import { DacRefs } from '@endpoints/get-dacs/domain/entities/dac-refs';
-import { Pair } from '@alien-worlds/eosio-contract-types';
+import { Pair } from '@alien-worlds/aw-antelope';
 
 export class DacRefsMapper {
   public toDacRefs(refs: Pair[]): DacRefs {

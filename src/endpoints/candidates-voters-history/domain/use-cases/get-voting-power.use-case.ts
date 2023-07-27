@@ -1,5 +1,5 @@
-import * as StkvtWorldsCommon from '@alien-worlds/stkvt-worlds-common';
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import * as StkvtWorldsCommon from '@alien-worlds/aw-contract-stkvt-worlds';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
 import { GetVotingPowerQueryBuilder } from '../models/get-voting-power.query-model';

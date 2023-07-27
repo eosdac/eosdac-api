@@ -3,10 +3,10 @@
 /* istanbul ignore file */
 import 'reflect-metadata';
 
-import { buildAPIServer } from './dao-api';
+import { buildAPIServer } from './aw-api-dao';
 import { config } from './config';
 
-process.title = 'dao-api';
+process.title = 'aw-api-dao';
 
 const start = async () => {
   try {

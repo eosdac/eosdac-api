@@ -19,7 +19,7 @@ services:
     ports:
       - '8800:8800'
     volumes:
-      - dao-api:/tmp/
+      - aw-api-dao:/tmp/
 
 networks:
   default:
@@ -27,4 +27,4 @@ networks:
     name: lamington
 
 volumes:
-  dao-api:
+  aw-api-dao:

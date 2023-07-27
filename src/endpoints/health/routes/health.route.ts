@@ -1,4 +1,4 @@
-import { GetRoute, Result, RouteHandler } from '@alien-worlds/api-core';
+import { GetRoute, Result, RouteHandler } from '@alien-worlds/aw-core';
 
 import { config } from '@config';
 import { HealthOutput } from '../domain/entities/health-output';

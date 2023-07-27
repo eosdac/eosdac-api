@@ -3,7 +3,7 @@ import {
   GetCandidatesRequestQueryParams,
 } from '../../data/dtos/candidate.dto';
 
-import { Request } from '@alien-worlds/api-core';
+import { Request } from '@alien-worlds/aw-core';
 /**
  * @class
  */

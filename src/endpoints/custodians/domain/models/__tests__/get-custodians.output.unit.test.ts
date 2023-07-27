@@ -1,6 +1,6 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { ContractAction } from '@alien-worlds/api-core';
+import { ContractAction } from '@alien-worlds/aw-core';
 import { CustodianProfile } from '../../entities/custodian-profile';
 import { GetCustodiansOutput } from '../get-custodians.output';
 import { Profile } from '../../../../profile/domain/entities/profile';

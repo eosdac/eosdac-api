@@ -8,7 +8,7 @@ import {
   Entity,
   removeUndefinedProperties,
   UnknownObject,
-} from '@alien-worlds/api-core';
+} from '@alien-worlds/aw-core';
 
 /**
  * Represents HealthOutput data entity.

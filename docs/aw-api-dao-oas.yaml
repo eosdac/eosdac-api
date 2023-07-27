@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: dao-api
+  title: aw-api-dao
   description: >-
     This document describes APIs for DAO related operations.
 
@@ -8,7 +8,7 @@ info:
     All paths are prefixed with `/v2/dao`.
 
 
-    The old prefix i.e. `/v2/dao` is currently supported but it will soon be
+    The old prefix i.e. `/v1/eosdac` is currently supported but it will soon be
     permanently removed.  
 
     API clients are encouraged to start migrating their apps to utilise the new
@@ -17,6 +17,10 @@ info:
 servers:
   - url: https://dao-api-test.alienworlds.io/v2/dao
     description: Test server
+  - url: https://dao-api.alienworlds.io/v2/dao
+    description: Production DAO API server
+  - url: https://api.alienworlds.io/v2/dao
+    description: Producton API server
 paths:
   /dacs:
     get:
@@ -2160,7 +2164,7 @@ paths:
                     - description: "Recourier, Uncle Reco, Chain Wreck, a citizen of the multiverse of metaverses by many a name.  \n\nIRL he goes by Ryan and is a partner in MetaForce Comics, a comics and collectibles brand on WAX.  He also runs a web3 consulting company and has been an advocate for  decentralization and unfettered crypto self ownership.\_ \n\nRyan has also been a team member of Cryptomonkeys and advisor on a number of other NFT projects.\n\nRyan's platform will be one of supporting smaller projects that add depth and character to blockchains.  Building and empowering small communities to work together to stay afloat through the tough times and thrive in the good times.  He works tirelessly to make sure that small projects and creators have the tools they need to help build and support their community.\n\nLearn more at recouriercrypto.com, metaforcecomics.com, and linkedin.com/in/ryanecurryprofile."
                       givenName: Recourier
                       image: >-
-                        https://gateway.pinata.cloud/ipfs/Qmau1jdhvRfzWHR34AfKyhKg5AMkXWYVZuvfExmNYQFsWo 
+                        https://gateway.pinata.cloud/ipfs/Qmau1jdhvRfzWHR34AfKyhKg5AMkXWYVZuvfExmNYQFsWo
                       walletId: x.cqw.wam
                       requestedpay: 0 TLM
                       votePower: 29581
@@ -2911,7 +2915,7 @@ paths:
                     - description: "Recourier, Uncle Reco, Chain Wreck, a citizen of the multiverse of metaverses by many a name.  \n\nIRL he goes by Ryan and is a partner in MetaForce Comics, a comics and collectibles brand on WAX.  He also runs a web3 consulting company and has been an advocate for  decentralization and unfettered crypto self ownership.\_ \n\nRyan has also been a team member of Cryptomonkeys and advisor on a number of other NFT projects.\n\nRyan's platform will be one of supporting smaller projects that add depth and character to blockchains.  Building and empowering small communities to work together to stay afloat through the tough times and thrive in the good times.  He works tirelessly to make sure that small projects and creators have the tools they need to help build and support their community.\n\nLearn more at recouriercrypto.com, metaforcecomics.com, and linkedin.com/in/ryanecurryprofile."
                       givenName: Recourier
                       image: >-
-                        https://gateway.pinata.cloud/ipfs/Qmau1jdhvRfzWHR34AfKyhKg5AMkXWYVZuvfExmNYQFsWo 
+                        https://gateway.pinata.cloud/ipfs/Qmau1jdhvRfzWHR34AfKyhKg5AMkXWYVZuvfExmNYQFsWo
                       walletId: x.cqw.wam
                       requestedpay: 0 TLM
                       votePower: 29581
@@ -3588,8 +3592,7 @@ paths:
                 uptimeSeconds: 10
                 nodeVersion: v19.7.0
                 dependencies:
-                  '@alien-worlds/api-core': 0.0.72
-                  '@alien-worlds/dao-api-common': 0.0.83
+                  '@alien-worlds/aw-core': 0.0.72
                 database:
                   status: OK
                 blockChainHistory:

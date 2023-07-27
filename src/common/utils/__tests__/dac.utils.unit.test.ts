@@ -1,8 +1,5 @@
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
-import {
-  ExtendedSymbolRawModel,
-  Pair,
-} from '@alien-worlds/eosio-contract-types';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
+import { ExtendedSymbolRawModel, Pair } from '@alien-worlds/aw-antelope';
 
 import { config } from '@config';
 import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';

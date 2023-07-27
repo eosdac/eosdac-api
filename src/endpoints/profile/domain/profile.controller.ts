@@ -1,4 +1,4 @@
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 
 import {
   EntityNotFoundError,
@@ -6,7 +6,7 @@ import {
   inject,
   injectable,
   Result,
-} from '@alien-worlds/api-core';
+} from '@alien-worlds/aw-core';
 import { GetProfilesUseCase } from './use-cases/get-profiles.use-case';
 import { IsProfileFlaggedUseCase } from './use-cases/is-profile-flagged.use-case';
 import { loadDacConfig } from '@common/utils/dac.utils';

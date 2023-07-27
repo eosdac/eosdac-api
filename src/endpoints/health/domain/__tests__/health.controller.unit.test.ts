@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Container } from '@alien-worlds/api-core';
+import { Container } from '@alien-worlds/aw-core';
 import { HealthController } from '../health.controller';
 import { HealthUseCase } from '../use-cases/health.use-case';
 
@@ -41,5 +41,4 @@ describe('Health Controller Unit tests', () => {
 
     expect(healthUseCase.execute).toBeCalled();
   });
-  
 });

@@ -1,6 +1,6 @@
 import { GetDacsInput } from '../dacs.input';
 import { GetDacsRequestQueryParams } from '../../../../get-dacs/data/dtos/dacs.dto';
-import { Request } from '@alien-worlds/api-core';
+import { Request } from '@alien-worlds/aw-core';
 
 const input = {
   query: {
@@ -33,6 +33,4 @@ describe('GetDacsInput Unit tests', () => {
 
     expect(fromReq.limit).toBe(input.query.limit);
   });
-
-  
 });

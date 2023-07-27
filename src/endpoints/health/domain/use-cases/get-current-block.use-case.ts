@@ -1,4 +1,4 @@
-import { Failure, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { Failure, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 import { BlockStateJsonModel } from '@endpoints/health/data/dtos/health.dto';
 import { config } from '@config';

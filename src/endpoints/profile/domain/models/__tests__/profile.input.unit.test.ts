@@ -4,7 +4,7 @@ import {
 } from '../../../data/dtos/profile.dto';
 
 import { ProfileInput } from '../profile.input';
-import { Request } from '@alien-worlds/api-core';
+import { Request } from '@alien-worlds/aw-core';
 
 const input = {
   query: {
@@ -52,6 +52,4 @@ describe('ProfileInput Unit tests', () => {
 
     expect(fromReq.dacId).toBe(input.params.dacId);
   });
-
-  
 });

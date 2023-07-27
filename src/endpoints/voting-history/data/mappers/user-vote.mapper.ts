@@ -1,6 +1,6 @@
-import { MapperImpl, parseToBigInt } from '@alien-worlds/api-core';
+import { MapperImpl, parseToBigInt } from '@alien-worlds/aw-core';
 
-import { MongoDB } from '@alien-worlds/storage-mongodb';
+import { MongoDB } from '@alien-worlds/aw-storage-mongodb';
 import { UserVote } from '@endpoints/voting-history/domain/entities/user-vote';
 import { UserVotingHistoryMongoModel } from '../dtos/user-voting-history.dto';
 import { VoteAction } from '@endpoints/voting-history/domain/user-voting-history.enums';

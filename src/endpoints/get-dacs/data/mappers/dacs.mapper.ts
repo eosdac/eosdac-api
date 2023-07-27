@@ -1,4 +1,4 @@
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 
 import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';
 import { DacAccountsMapper } from './dac-accounts.mapper';

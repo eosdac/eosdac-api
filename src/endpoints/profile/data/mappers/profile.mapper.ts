@@ -1,6 +1,6 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { ContractAction } from '@alien-worlds/api-core';
+import { ContractAction } from '@alien-worlds/aw-core';
 import { Profile } from '@endpoints/profile/domain/entities/profile';
 import { ProfileItem } from '@endpoints/profile/domain/entities/profile-item';
 import { ProfileItemDocument } from '../dtos/profile.dto';

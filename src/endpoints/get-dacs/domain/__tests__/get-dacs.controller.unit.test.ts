@@ -1,12 +1,9 @@
-import * as AlienWorldsCommon from '@alien-worlds/alien-worlds-common';
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
-import * as TokenWorldsCommon from '@alien-worlds/token-worlds-common';
-import { Container, Failure, Result } from '@alien-worlds/api-core';
-import {
-  ExtendedSymbolRawModel,
-  Pair,
-} from '@alien-worlds/eosio-contract-types';
+import * as AlienWorldsCommon from '@alien-worlds/aw-contract-alien-worlds';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
+import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
+import { ExtendedSymbolRawModel, Pair } from '@alien-worlds/aw-antelope';
 
 import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
 import { GetAllDacsUseCase } from '../use-cases/get-all-dacs.use-case';

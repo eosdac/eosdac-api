@@ -1,6 +1,6 @@
-import * as DaoWorldsCommon from '@alien-worlds/dao-worlds-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { ContractAction } from '@alien-worlds/api-core';
+import { ContractAction } from '@alien-worlds/aw-core';
 import { Profile } from '../../entities/profile';
 import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
 import { ProfileOutput } from '../profile.output';

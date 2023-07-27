@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Container } from '@alien-worlds/api-core';
+import { Container } from '@alien-worlds/aw-core';
 import { HealthOutput } from '../../entities/health-output';
 import { HealthUseCase } from '../health.use-case';
 

@@ -1,4 +1,4 @@
-import { inject, injectable, Result } from '@alien-worlds/api-core';
+import { inject, injectable, Result } from '@alien-worlds/aw-core';
 import { HealthOutput } from './entities/health-output';
 import { HealthUseCase } from './use-cases/health.use-case';
 

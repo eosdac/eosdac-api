@@ -1,5 +1,5 @@
-import * as TokenWorldsCommon from '@alien-worlds/token-worlds-common';
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 /**
  * @class

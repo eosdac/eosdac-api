@@ -1,4 +1,4 @@
-import { Request, ValidationResult } from '@alien-worlds/api-core';
+import { Request, ValidationResult } from '@alien-worlds/aw-core';
 
 import Ajv2020 from 'ajv/dist/2020';
 import { ErrorObject } from 'ajv';

@@ -1,5 +1,5 @@
 import { CustodianProfile } from '../entities/custodian-profile';
-import { UnknownObject } from '@alien-worlds/api-core';
+import { UnknownObject } from '@alien-worlds/aw-core';
 
 export class GetCustodiansOutput {
   public static create(profiles: CustodianProfile[]): GetCustodiansOutput {

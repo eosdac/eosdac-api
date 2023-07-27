@@ -8,7 +8,7 @@ info:
     All paths are prefixed with `/v2/dao`.
 
 
-    The old prefix i.e. `/v1/eosdac` is currently supported but it will soon be
+    The old prefix i.e. `/v2/dao` is currently supported but it will soon be
     permanently removed.  
 
     API clients are encouraged to start migrating their apps to utilise the new
@@ -17,10 +17,6 @@ info:
 servers:
   - url: https://dao-api-test.alienworlds.io/v2/dao
     description: Test server
-  - url: https://dao-api.alienworlds.io/v2/dao
-    description: Production DAO API server
-  - url: https://api.alienworlds.io/v2/dao
-    description: Producton API server
 paths:
   /dacs:
     get:
@@ -3592,8 +3588,7 @@ paths:
                 uptimeSeconds: 10
                 nodeVersion: v19.7.0
                 dependencies:
-                  '@alien-worlds/api-core': 0.0.72
-                  '@alien-worlds/dao-api-common': 0.0.83
+                  '@alien-worlds/aw-core': 0.0.72
                 database:
                   status: OK
                 blockChainHistory:

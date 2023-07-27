@@ -1,6 +1,6 @@
-import * as IndexWorldsCommon from '@alien-worlds/index-worlds-common';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 
-import { Failure, inject, injectable, Result } from '@alien-worlds/api-core';
+import { Failure, inject, injectable, Result } from '@alien-worlds/aw-core';
 import { GetCandidatesInput } from './models/get-candidates.input';
 import { GetCandidatesOutput } from './models/get-candidates.output';
 import { ListCandidateProfilesUseCase } from './use-cases/list-candidate-profiles.use-case';
