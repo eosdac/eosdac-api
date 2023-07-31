@@ -3,12 +3,13 @@
 
 process.title = 'aw-api-dao';
 
-import fastify, { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
+import fastify, { FastifyInstance } from 'fastify';
+
+import ApiConfig from './config/api-config';
 import fastifyCORS from 'fastify-cors';
 import { fastifySwagger } from '@fastify/swagger';
 import openApiOptions from './open-api';
-import ApiConfig from './config/api-config';
 
 export class DaoApi {
   protected api: FastifyInstance<Server, IncomingMessage, ServerResponse>;

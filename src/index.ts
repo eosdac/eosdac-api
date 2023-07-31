@@ -3,10 +3,10 @@
 /* istanbul ignore file */
 import 'reflect-metadata';
 
+import { ApiDependencyInjector } from '@endpoints/api.ioc.config';
+import { Container } from '@alien-worlds/aw-core';
 import { DaoApi } from './api';
 import { config } from './config';
-import { Container } from '@alien-worlds/aw-core';
-import { ApiDependencyInjector } from '@endpoints/api.ioc.config';
 import { initLogger } from './connections/logger';
 import { mountRoutes } from './routes';
 

@@ -13,7 +13,7 @@ import { DacAggregateRecord } from '../models/dac-aggregate-record.ts';
 export class CreateAggregatedDacRecords
   implements UseCase<DacAggregateRecord[]>
 {
-  public static Token = 'CREATE_AGGREGATE_DAC_RECORD';
+  public static Token = 'CREATE_AGGREGATED_DAC_RECORDS';
 
   constructor(
     @inject(GetDacTreasuryUseCase.Token)

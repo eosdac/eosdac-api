@@ -1,22 +1,23 @@
 import { Container, Route } from '@alien-worlds/aw-core';
-import { GetPingRoute } from './endpoints/ping/routes/ping.route';
-import { GetCustodiansRoute } from '@endpoints/custodians/routes/get-custodians.route';
-import { CandidatesVotersHistoryController } from '@endpoints/candidates-voters-history/domain/candidates-voters-history.controller';
-import { GetCandidatesVotersHistoryRoute } from '@endpoints/candidates-voters-history/routes/candidates-voters-history.route';
+
+import ApiConfig from './config/api-config';
 import { CandidatesController } from '@endpoints/candidates/domain/candidates.controller';
-import { GetCandidatesRoute } from '@endpoints/candidates/routes/get-candidates.route';
+import { CandidatesVotersHistoryController } from '@endpoints/candidates-voters-history/domain/candidates-voters-history.controller';
 import { CustodiansController } from '@endpoints/custodians/domain/custodians.controller';
 import { DacsController } from '@endpoints/dacs/domain/dacs.controller';
-import { GetDacsRoute } from '@endpoints/dacs/routes/dacs.route';
-import { HealthCheckRoute } from '@endpoints/health/routes/health-check.route';
-import { ProfileController } from '@endpoints/profile/domain/profile.controller';
-import { GetProfileRoute } from '@endpoints/profile/routes/get-profile.route';
-import { VotingHistoryController } from '@endpoints/voting-history/domain/voting-history.controller';
-import { GetVotingHistoryRoute } from '@endpoints/voting-history/routes/voting-history.route';
 import { DaoApi } from './api';
-import ApiConfig from './config/api-config';
+import { GetCandidatesRoute } from '@endpoints/candidates/routes/get-candidates.route';
+import { GetCandidatesVotersHistoryRoute } from '@endpoints/candidates-voters-history/routes/candidates-voters-history.route';
+import { GetCustodiansRoute } from '@endpoints/custodians/routes/get-custodians.route';
+import { GetDacsRoute } from '@endpoints/dacs/routes/dacs.route';
+import { GetPingRoute } from './endpoints/ping/routes/ping.route';
+import { GetProfileRoute } from '@endpoints/profile/routes/get-profile.route';
+import { GetVotingHistoryRoute } from '@endpoints/voting-history/routes/voting-history.route';
+import { HealthCheckRoute } from '@endpoints/health/routes/health-check.route';
 import { HealthController } from '@endpoints/health/domain/health.controller';
 import { PingController } from '@endpoints/ping';
+import { ProfileController } from '@endpoints/profile/domain/profile.controller';
+import { VotingHistoryController } from '@endpoints/voting-history/domain/voting-history.controller';
 
 export const mountRoutes = (
   api: DaoApi,
@@ -47,15 +48,7 @@ export const mountRoutes = (
   //
 
   Route.mount(
-    api,
-    HealthCheckRoute.create(
-      healthController.healthCheck.bind(healthController),
-      config
-    )
-  );
-
-  Route.mount(
-    api,
+    api.framework,
     GetProfileRoute.create(
       profileController.getProfile.bind(profileController),
       config
@@ -63,7 +56,7 @@ export const mountRoutes = (
   );
 
   Route.mount(
-    api,
+    api.framework,
     GetDacsRoute.create(
       getDacsController.getDacs.bind(getDacsController),
       config
@@ -71,7 +64,7 @@ export const mountRoutes = (
   );
 
   Route.mount(
-    api,
+    api.framework,
     GetVotingHistoryRoute.create(
       votingHistoryController.votingHistory.bind(votingHistoryController),
       config
@@ -79,7 +72,7 @@ export const mountRoutes = (
   );
 
   Route.mount(
-    api,
+    api.framework,
     GetCandidatesVotersHistoryRoute.create(
       candidatesVotersHistoryController.candidatesVotersHistory.bind(
         candidatesVotersHistoryController
@@ -89,7 +82,7 @@ export const mountRoutes = (
   );
 
   Route.mount(
-    api,
+    api.framework,
     GetCandidatesRoute.create(
       candidatesController.list.bind(candidatesController),
       config
@@ -97,7 +90,7 @@ export const mountRoutes = (
   );
 
   Route.mount(
-    api,
+    api.framework,
     GetCustodiansRoute.create(
       custodiansController.list.bind(custodiansController),
       config
