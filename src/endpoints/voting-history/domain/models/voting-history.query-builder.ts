@@ -11,9 +11,18 @@ type VotingHistoryQueryArgs = {
 };
 
 /**
+ * Query builder for retrieving voting history from MongoDB.
+ *
  * @class
+ * @extends {QueryBuilder}
  */
 export class VotingHistoryQueryBuilder extends QueryBuilder {
+  /**
+   * Builds the MongoDB query for retrieving voting history.
+   *
+   * @method
+   * @returns {Query} The MongoDB query and options for retrieving voting history.
+   */
   public build(): Query {
     const { dacId, voter, skip, limit } = this.args as VotingHistoryQueryArgs;
 

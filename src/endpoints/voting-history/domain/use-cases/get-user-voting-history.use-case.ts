@@ -11,12 +11,22 @@ import { VotingHistoryInput } from '../models/voting-history.input';
 import { VotingHistoryQueryBuilder } from '../models/voting-history.query-builder';
 
 /**
+ * Represents the use case for retrieving user voting history.
+ *
  * @class
+ * @implements {UseCase<UserVote[]>}
  */
 @injectable()
 export class GetUserVotingHistoryUseCase implements UseCase<UserVote[]> {
   public static Token = 'GET_USER_VOTING_HISTORY_USE_CASE';
 
+  /**
+   * Creates a new instance of GetUserVotingHistoryUseCase.
+   *
+   * @constructor
+   * @param {DaoWorldsCommon.Actions.DaoWorldsActionRepository} daoWorldsActionRepository - The repository for DAO Worlds actions.
+   * @param {DaoWorldsCommon.Deltas.DaoWorldsDeltaRepository} daoWorldsDeltasRepository - The repository for DAO Worlds deltas.
+   */
   constructor(
     @inject(DaoWorldsCommon.Actions.DaoWorldsActionRepository.Token)
     private daoWorldsActionRepository: DaoWorldsCommon.Actions.DaoWorldsActionRepository,
@@ -26,8 +36,12 @@ export class GetUserVotingHistoryUseCase implements UseCase<UserVote[]> {
   ) {}
 
   /**
+   * Executes the GetUserVotingHistoryUseCase.
+   *
    * @async
-   * @returns {Promise<Result<UserVote[]>>}
+   * @method
+   * @param {VotingHistoryInput} input - The input data for retrieving voting history.
+   * @returns {Promise<Result<UserVote[]>>} A Promise that resolves to the Result containing the voting history of the user.
    */
   public async execute(input: VotingHistoryInput): Promise<Result<UserVote[]>> {
     let userVotes: UserVote[] = [];
@@ -93,6 +107,15 @@ export class GetUserVotingHistoryUseCase implements UseCase<UserVote[]> {
     return Result.withContent(await Promise.all(resultPromises));
   }
 
+  /**
+   * Retrieves the previously voted candidates for a vote entry.
+   *
+   * @private
+   * @method
+   * @param {UserVote} vote - The UserVote entry for which to find previously voted candidates.
+   * @param {any} allMatchingVotes - An array of all matching votes to the current vote.
+   * @returns {string[]} An array containing the names of previously voted candidates.
+   */
   private getPreviouslyVotedCandidates(
     vote: UserVote,
     allMatchingVotes: any
@@ -112,6 +135,15 @@ export class GetUserVotingHistoryUseCase implements UseCase<UserVote[]> {
     return prevCandidates;
   }
 
+  /**
+   * Determines the voting action (Voted or Refreshed) for a vote entry.
+   *
+   * @private
+   * @method
+   * @param {string} newCandidate - The name of the new candidate in the vote.
+   * @param {string[]} prevVotedCandidates - An array of previously voted candidate names.
+   * @returns {VoteAction} The voting action (Voted or Refreshed) for the vote entry.
+   */
   private getVotingAction(
     newCandidate: string,
     prevVotedCandidates: string[]
@@ -127,6 +159,17 @@ export class GetUserVotingHistoryUseCase implements UseCase<UserVote[]> {
     return action;
   }
 
+  /**
+   * Retrieves the voting power of a candidate at a specific block timestamp.
+   *
+   * @private
+   * @async
+   * @method
+   * @param {string} dacId - The ID of the DAC (Decentralized Autonomous Community).
+   * @param {string} candidateName - The name of the candidate.
+   * @param {Date} block_timestamp - The block timestamp.
+   * @returns {Promise<number>} A Promise that resolves to the voting power of the candidate at the specified block timestamp.
+   */
   private async getCandidateVotingPower(
     dacId: string,
     candidateName: string,
