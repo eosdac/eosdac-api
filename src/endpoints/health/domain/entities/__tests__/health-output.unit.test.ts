@@ -1,7 +1,7 @@
-import { HealthOutput } from '../health-output';
-import { HealthOutputDocument } from '../../../data/dtos/health.dto';
+import { HealthCheckStatus } from '../health-check-status';
+import { HealthCheckJsonModel } from '../../../data/dtos/health.dto';
 
-const healthOutputDto: HealthOutputDocument = {
+const healthOutputDto: HealthCheckJsonModel = {
   status: 'OK',
   version: '1.0.0',
   timestamp: new Date('2023-02-15T13:41:25.153Z'),
@@ -16,7 +16,7 @@ const healthOutputDto: HealthOutputDocument = {
       version: '0.0.68',
     },
   ],
-  blockChainHistory: {
+  historyApi: {
     currentBlock: 0n,
     status: 'OK',
   },
@@ -24,19 +24,19 @@ const healthOutputDto: HealthOutputDocument = {
 
 describe('HealthOutput unit tests', () => {
   it('HealthOutput.fromDto should return HealthOutput object based on the provided dto', async () => {
-    const healthOutput = HealthOutput.fromDto(healthOutputDto);
+    const healthOutput = HealthCheckStatus.fromDto(healthOutputDto);
 
     expect(healthOutput).toEqual(healthOutputDto);
   });
 
   it('"toDto" should return a dto based on entity', async () => {
-    const healthOutput = HealthOutput.fromDto(healthOutputDto);
+    const healthOutput = HealthCheckStatus.fromDto(healthOutputDto);
 
     expect(healthOutput.toDto()).toEqual(healthOutputDto);
   });
 
   it('"toJson" should return an object based on entity', async () => {
-    const healthOutput = HealthOutput.fromDto(healthOutputDto);
+    const healthOutput = HealthCheckStatus.fromDto(healthOutputDto);
 
     expect(healthOutput.toJSON()).toEqual({
       status: 'OK',

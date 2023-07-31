@@ -1,4 +1,4 @@
-import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import { Actions } from '@alien-worlds/aw-contract-dao-worlds';
 import {
   ContractAction,
   inject,
@@ -7,61 +7,53 @@ import {
   UseCase,
 } from '@alien-worlds/aw-core';
 
-import { GetProfilesUseCaseInput } from '../../data/dtos/profile.dto';
-import { ProfileQueryBuilder } from '../models/profile.query-builder';
+import { ListProfileActionsQueryBuilder } from '../models/list-profile-actions.query-builder';
+import { Profile } from '../entities/profile';
+import { ActionToProfileMapper } from '@endpoints/profile/data/mappers/action-to-profile.mapper';
 
 /**
  * @class
  */
 @injectable()
-export class GetProfilesUseCase
-  implements
-    UseCase<
-      ContractAction<
-        DaoWorldsCommon.Actions.Entities.Stprofile,
-        DaoWorldsCommon.Actions.Types.StprofileMongoModel
-      >[]
-    >
-{
+export class GetProfilesUseCase implements UseCase<Profile[]> {
   public static Token = 'GET_PROFILES_USE_CASE';
 
   constructor(
-    @inject(DaoWorldsCommon.Actions.DaoWorldsActionRepository.Token)
-    private daoWorldsActionRepository: DaoWorldsCommon.Actions.DaoWorldsActionRepository
+    @inject(Actions.DaoWorldsActionRepository.Token)
+    private daoWorldsActionRepository: Actions.DaoWorldsActionRepository
   ) {}
 
   /**
    * @async
-   * @returns {Promise<Result<ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile,DaoWorldsCommon.Actions.Types.StprofileMongoModel>[]>>}
+   * @returns {Promise<Result<ContractAction<Actions.Entities.Stprofile,Actions.Types.StprofileMongoModel>[]>>}
    */
   public async execute(
-    input: GetProfilesUseCaseInput
-  ): Promise<
-    Result<
-      ContractAction<
-        DaoWorldsCommon.Actions.Entities.Stprofile,
-        DaoWorldsCommon.Actions.Types.StprofileMongoModel
-      >[]
-    >
-  > {
-    const queryBuilder = new ProfileQueryBuilder().with({
-      custContract: input.custContract,
-      dacId: input.dacId,
-      accounts: input.accounts,
+    custodian: string,
+    dacId: string,
+    accounts: string[]
+  ): Promise<Result<Profile[]>> {
+    const queryBuilder = new ListProfileActionsQueryBuilder().with({
+      custodian,
+      dacId: dacId,
+      accounts: accounts,
     });
 
-    const actionsRes = await this.daoWorldsActionRepository.aggregate(
-      queryBuilder
-    );
-    if (actionsRes.isFailure) {
-      return Result.withFailure(actionsRes.failure);
+    const { content: actions, failure } =
+      await this.daoWorldsActionRepository.aggregate<
+        ContractAction<
+          Actions.Entities.Stprofile,
+          Actions.Types.StprofileMongoModel
+        >[]
+      >(queryBuilder);
+
+    if (failure) {
+      return Result.withFailure(failure);
     }
 
-    return Result.withContent(
-      actionsRes.content as ContractAction<
-        DaoWorldsCommon.Actions.Entities.Stprofile,
-        DaoWorldsCommon.Actions.Types.StprofileMongoModel
-      >[]
+    const profiles = actions.map(action =>
+      ActionToProfileMapper.toEntity(action)
     );
+
+    return Result.withContent(profiles);
   }
 }

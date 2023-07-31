@@ -8,7 +8,7 @@ import { UserVoteMongoMapper } from '@endpoints/voting-history/data/mappers/user
 import { UserVotingHistoryMongoModel } from '@endpoints/voting-history/data/dtos/user-voting-history.dto';
 import { VoteAction } from '../user-voting-history.enums';
 import { VotingHistoryInput } from '../models/voting-history.input';
-import { VotingHistoryQueryBuilder } from '../models/voting-history.query-model';
+import { VotingHistoryQueryBuilder } from '../models/voting-history.query-builder';
 
 /**
  * @class

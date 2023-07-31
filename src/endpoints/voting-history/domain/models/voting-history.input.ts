@@ -1,22 +1,21 @@
-import { Request } from '@alien-worlds/aw-core';
+import { IO, Request, UnknownObject } from '@alien-worlds/aw-core';
 import { VotingHistoryRequestQueryParams } from '../../data/dtos/user-voting-history.dto';
 
 /**
  * @class
  */
-export class VotingHistoryInput {
+export class VotingHistoryInput implements IO {
   /**
    *
    * @param {VotingHistoryRequestQueryParams} request
    * @returns {VotingHistoryInput}
    */
-  public static fromRequest(
-    request: Request<unknown, object, VotingHistoryRequestQueryParams>
+  public static create(
+    dacId: string,
+    voter: string,
+    skip: number,
+    limit: number
   ): VotingHistoryInput {
-    const {
-      query: { dacId = '', voter = '', skip = 0, limit = 20 },
-    } = request;
-
     return new VotingHistoryInput(
       dacId.toLowerCase(),
       voter.toLowerCase(),
@@ -39,4 +38,9 @@ export class VotingHistoryInput {
     public readonly skip: number,
     public readonly limit: number
   ) {}
+
+  public toJSON(): UnknownObject {
+    const { dacId, voter, skip, limit } = this;
+    return { dacId, voter, skip, limit };
+  }
 }

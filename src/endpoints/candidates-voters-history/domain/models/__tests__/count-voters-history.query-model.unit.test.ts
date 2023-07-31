@@ -1,5 +1,5 @@
 import { CandidatesVotersHistoryInput } from '../candidates-voters-history.input';
-import { CountVotersHistoryQueryBuilder } from '../count-voters-history.query-model';
+import { CountVotersHistoryQueryBuilder } from '../count-voters-history.query-builder';
 
 const input: CandidatesVotersHistoryInput = {
   dacId: 'nerix',

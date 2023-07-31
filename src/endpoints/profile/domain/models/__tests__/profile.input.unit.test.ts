@@ -3,7 +3,7 @@ import {
   ProfileRequestQueryParams,
 } from '../../../data/dtos/profile.dto';
 
-import { ProfileInput } from '../profile.input';
+import { GetProfileInput } from '../get-profile.input';
 import { Request } from '@alien-worlds/aw-core';
 
 const input = {
@@ -17,7 +17,7 @@ const input = {
 
 describe('ProfileInput Unit tests', () => {
   it('"ProfileInput.fromRequest" should create instance', async () => {
-    const fromReq = ProfileInput.fromRequest(
+    const fromReq = GetProfileInput.fromRequest(
       input as Request<
         unknown,
         ProfileRequestPathVariables,
@@ -25,11 +25,11 @@ describe('ProfileInput Unit tests', () => {
       >
     );
 
-    expect(fromReq).toBeInstanceOf(ProfileInput);
+    expect(fromReq).toBeInstanceOf(GetProfileInput);
   });
 
   it('ProfileInput instance should have proper account value', async () => {
-    const fromReq = ProfileInput.fromRequest(
+    const fromReq = GetProfileInput.fromRequest(
       input as Request<
         unknown,
         ProfileRequestPathVariables,
@@ -42,7 +42,7 @@ describe('ProfileInput Unit tests', () => {
   });
 
   it('ProfileInput instance should have proper dacId value', async () => {
-    const fromReq = ProfileInput.fromRequest(
+    const fromReq = GetProfileInput.fromRequest(
       input as Request<
         unknown,
         ProfileRequestPathVariables,

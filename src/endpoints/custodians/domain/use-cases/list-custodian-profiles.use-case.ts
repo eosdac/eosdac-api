@@ -1,12 +1,12 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 import { CustodianProfile } from '../entities/custodian-profile';
-import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';
+import { Dac } from '@endpoints/dacs/domain/entities/dacs';
 import { GetCustodiansUseCase } from './get-custodians.use-case';
 import { GetMembersAgreedTermsUseCase } from './../../../candidates/domain/use-cases/get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from './../../../candidates/domain/use-cases/get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
-import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
+import { ActionToProfileMapper } from '@endpoints/profile/data/mappers/action-to-profile.mapper';
 
 /**
  * @class
@@ -46,11 +46,11 @@ export class ListCustodianProfilesUseCase
     const accounts = custodians.map(custodian => custodian.custName);
 
     const { content: profiles, failure: getProfilesFailure } =
-      await this.getProfilesUseCase.execute({
-        custContract: dacConfig.accounts.custodian,
+      await this.getProfilesUseCase.execute(
+        dacConfig.accounts.custodian,
         dacId,
-        accounts,
-      });
+        accounts
+      );
 
     if (getProfilesFailure) {
       return Result.withFailure(getProfilesFailure);
@@ -80,7 +80,7 @@ export class ListCustodianProfilesUseCase
         CustodianProfile.create(
           dacId,
           custodian,
-          profile ? ProfileMongoMapper.toEntity(profile) : null,
+          profile || null,
           terms,
           agreedTermsVersion
         )

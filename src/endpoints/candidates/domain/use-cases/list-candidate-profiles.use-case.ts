@@ -1,13 +1,11 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 import { CandidateProfile } from '../entities/candidate-profile';
-import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';
+import { Dac } from '@endpoints/dacs/domain/entities/dacs';
 import { GetCandidatesUseCase } from './get-candidates.use-case';
 import { GetMembersAgreedTermsUseCase } from './get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from './get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
-import { GetVotedCandidateIdsUseCase } from './get-voted-candidate-ids.use-case';
-import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
 
 /**
  * @class
@@ -26,9 +24,7 @@ export class ListCandidateProfilesUseCase
     @inject(GetMemberTermsUseCase.Token)
     private getMemberTermsUseCase: GetMemberTermsUseCase,
     @inject(GetMembersAgreedTermsUseCase.Token)
-    private getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase,
-    @inject(GetVotedCandidateIdsUseCase.Token)
-    private getVotedCandidateIdsUseCase: GetVotedCandidateIdsUseCase
+    private getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase
   ) {}
 
   /**
@@ -37,7 +33,6 @@ export class ListCandidateProfilesUseCase
    */
   public async execute(
     dacId: string,
-    walletId: string,
     dacConfig: Dac
   ): Promise<Result<CandidateProfile[]>> {
     const { content: candidates, failure } =
@@ -48,20 +43,12 @@ export class ListCandidateProfilesUseCase
     }
 
     const accounts = candidates.map(candidate => candidate.candidateName);
-
-    const { content: votedCandidates, failure: getVotedCandidateIdsFailure } =
-      await this.getVotedCandidateIdsUseCase.execute(dacId, walletId);
-
-    if (getVotedCandidateIdsFailure) {
-      return Result.withFailure(getVotedCandidateIdsFailure);
-    }
-
     const { content: profiles, failure: getProfilesFailure } =
-      await this.getProfilesUseCase.execute({
-        custContract: dacConfig.accounts.custodian,
+      await this.getProfilesUseCase.execute(
+        dacConfig.accounts.custodian,
         dacId,
-        accounts,
-      });
+        accounts
+      );
 
     if (getProfilesFailure) {
       return Result.withFailure(getProfilesFailure);
@@ -93,10 +80,9 @@ export class ListCandidateProfilesUseCase
         CandidateProfile.create(
           dacId,
           candidate,
-          profile ? ProfileMongoMapper.toEntity(profile) : null,
+          profile || null,
           terms,
-          agreedTermsVersion,
-          votedCandidates
+          agreedTermsVersion
         )
       );
     }

@@ -1,21 +1,15 @@
+import { CandidatesVotersHistoryRequestQueryParams } from '../data/dtos/candidates-voters-history.dto';
 import {
-  CandidatesVotersHistoryControllerOutput,
-  CandidatesVotersHistoryRequestQueryParams,
-} from '../data/dtos/candidates-voters-history.dto';
-import {
-  EntityNotFoundError,
   GetRoute,
   Request,
-  Result,
   RouteHandler,
   ValidationResult,
 } from '@alien-worlds/aw-core';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
-import { CandidatesVotersHistoryInput } from '../domain/models/candidates-voters-history.input';
-import { CandidatesVotersHistoryOutput } from '../domain/models/candidates-voters-history.output';
 import { CandidatesVotersHistoryRequestSchema } from '../schemas';
-import { config } from '@config';
+import { GetCandidatesVotersHistoryRouteIO } from './candidates-voters-history.route-io';
+import ApiConfig from '@src/config/api-config';
 
 /**
  * @class
@@ -23,27 +17,17 @@ import { config } from '@config';
  *
  */
 export class GetCandidatesVotersHistoryRoute extends GetRoute {
-  public static create(handler: RouteHandler) {
-    return new GetCandidatesVotersHistoryRoute(handler);
+  public static create(handler: RouteHandler, config: ApiConfig) {
+    return new GetCandidatesVotersHistoryRoute(handler, config);
   }
 
-  private constructor(handler: RouteHandler) {
-    super(
-      [
-        `/${config.version}/dao/candidates_voters_history`,
-        `/${config.version}/eosdac/candidates_voters_history`,
-      ],
-      handler,
-      {
-        validators: {
-          request: validateRequest,
-        },
-        hooks: {
-          pre: parseRequestToControllerInput,
-          post: parseResultToControllerOutput,
-        },
-      }
-    );
+  private constructor(handler: RouteHandler, config: ApiConfig) {
+    super(`/${config.urlVersion}/dao/candidates_voters_history`, handler, {
+      io: new GetCandidatesVotersHistoryRouteIO(),
+      validators: {
+        request: validateRequest,
+      },
+    });
   }
 }
 
@@ -59,54 +43,4 @@ export const validateRequest = (
     CandidatesVotersHistoryRequestSchema,
     request
   );
-};
-
-/**
- *
- * @param {Request} request
- * @returns
- */
-export const parseRequestToControllerInput = (
-  request: Request<unknown, object, CandidatesVotersHistoryRequestQueryParams>
-) => {
-  // parse DTO (query) to the options required by the controller method
-  return CandidatesVotersHistoryInput.fromRequest(request.query);
-};
-
-/**
- *
- * @param {Result<CandidatesVotersHistoryControllerOutput>} result
- * @returns
- */
-export const parseResultToControllerOutput = (
-  result: Result<CandidatesVotersHistoryControllerOutput, Error>
-) => {
-  if (result.isFailure) {
-    const {
-      failure: { error },
-    } = result;
-    if (error) {
-      if (error instanceof EntityNotFoundError) {
-        return {
-          status: 200,
-          body: CandidatesVotersHistoryOutput.create({
-            results: [],
-            total: 0,
-          }).toJson(),
-        };
-      } else {
-        return {
-          status: 500,
-          body: {
-            error: error.message,
-          },
-        };
-      }
-    }
-  }
-
-  return {
-    status: 200,
-    body: CandidatesVotersHistoryOutput.create(result.content).toJson(),
-  };
 };

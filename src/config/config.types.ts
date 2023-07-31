@@ -1,7 +1,9 @@
-import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
-
-import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';
+import { Dac } from '@endpoints/dacs/domain/entities/dacs';
 import { MongoConfig } from '@alien-worlds/aw-storage-mongodb';
+
+export type PackagedDependencyJsonModel = {
+  [name: string]: string;
+};
 
 export type Environment = {
   MONGO_HOSTS?: string;
@@ -19,12 +21,12 @@ export type Environment = {
   HOST?: string;
   VERSION?: string;
 
-  EOS_CHAIN_ID?: string;
-  EOS_ENDPOINT?: string;
-  EOS_DAC_DIRECTORY_CONTRACT?: string;
-  EOS_LEGACY_DACS?: string;
-  EOS_DAC_DIRECTORY_MODE?: string;
-  EOS_DAC_DIRECTORY_DAC_ID?: string;
+  ANTELOPE_CHAIN_ID?: string;
+  ANTELOPE_ENDPOINT?: string;
+  ANTELOPE_DAC_DIRECTORY_CONTRACT?: string;
+  ANTELOPE_LEGACY_DACS?: string;
+  ANTELOPE_DAC_DIRECTORY_MODE?: string;
+  ANTELOPE_DAC_DIRECTORY_DAC_ID?: string;
   HYPERION_URL?: string;
 
   DOCS_HOST?: string;
@@ -47,7 +49,7 @@ export type Config = {
   host: string;
   port: number;
   mongo: MongoConfig;
-  eos: EOSConfig;
+  antelope: AntelopeConfig;
   logger: LoggerConfig;
   docs: DocsConfig;
   dac: DACConfig;
@@ -55,7 +57,7 @@ export type Config = {
   historyApi: HistoryApiConfig;
 };
 
-export type EOSConfig = {
+export type AntelopeConfig = {
   chainId: string;
   endpoint: string;
   dacDirectoryContract: string;

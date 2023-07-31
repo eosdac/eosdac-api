@@ -1,27 +1,25 @@
-export type HealthOutputDocument = {
+import { PackagedDependencyJsonModel } from '@src/config/config.types';
+
+export type HealthCheckJsonModel = {
   status: string;
   version: string;
   timestamp: Date;
   uptimeSeconds: number;
   nodeVersion: string;
-  blockChainHistory?: BlockChainHistoryHealthDocument;
-  dependencies?: PackagedDependency[];
-  database: DatabaseHealthDocument;
+  historyApi?: HistoryApiHealthCheckJsonModel;
+  dependencies?: PackagedDependencyJsonModel;
+  database: DatabaseHealthCheckJsonModel;
   [key: string]: unknown;
 };
 
-export type BlockChainHistoryHealthDocument = {
-  currentBlock: bigint;
+export type HistoryApiHealthCheckJsonModel = {
+  currentBlockNumber: string;
   status: string;
 };
 
-export type PackagedDependency = {
-  name: string;
-  version: string;
-};
-
-export type DatabaseHealthDocument = {
-  status: string;
+export type DatabaseHealthCheckJsonModel = {
+  mongodb: string;
+  [key: string]: string;
 };
 
 export type BlockStateJsonModel = {

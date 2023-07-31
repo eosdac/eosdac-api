@@ -1,18 +1,15 @@
-import { GetCustodiansRequestPathVariables } from '../../data/dtos/custodian.dto';
-import { Request } from '@alien-worlds/aw-core';
+import { IO, UnknownObject } from '@alien-worlds/aw-core';
 /**
  * @class
  */
-export class GetCustodiansInput {
+export class GetCustodiansInput implements IO {
   /**
    *
    * @param {GetCustodiansRequestDto} dto
    * @returns {GetCustodiansInput}
    */
-  public static fromRequest(
-    request: Request<unknown, GetCustodiansRequestPathVariables>
-  ): GetCustodiansInput {
-    return new GetCustodiansInput(request.params.dacId);
+  public static create(dacId: string): GetCustodiansInput {
+    return new GetCustodiansInput(dacId);
   }
   /**
    *
@@ -21,4 +18,12 @@ export class GetCustodiansInput {
    * @param {string} dacId
    */
   private constructor(public readonly dacId: string) {}
+
+  public toJSON(): UnknownObject {
+    const { dacId } = this;
+
+    return {
+      dacId,
+    };
+  }
 }

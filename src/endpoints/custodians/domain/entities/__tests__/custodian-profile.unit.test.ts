@@ -5,7 +5,7 @@ import { Asset } from '@alien-worlds/aw-antelope';
 import { ContractAction } from '@alien-worlds/aw-core';
 import { CustodianProfile } from '../custodian-profile';
 import { Profile } from '@endpoints/profile/domain/entities/profile';
-import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
+import { ActionToProfileMapper } from '@endpoints/profile/data/mappers/action-to-profile.mapper';
 
 describe('CustodianProfile', () => {
   const dacId = 'eyeke';
@@ -18,7 +18,7 @@ describe('CustodianProfile', () => {
     new Date()
   );
 
-  const profile: Profile = ProfileMongoMapper.toEntity(
+  const profile: Profile = ActionToProfileMapper.toEntity(
     new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
       'mgaqy.wam',
       new Date('2021-02-25T04:18:56.000Z'),
@@ -52,17 +52,17 @@ describe('CustodianProfile', () => {
       agreedTermsVersion
     );
 
-    expect(result.walletId).toEqual(custodian.custName);
-    expect(result.requestedpay).toEqual(custodian.requestedpay);
+    expect(result.account).toEqual(custodian.custName);
+    expect(result.requestedPay).toEqual(custodian.requestedpay);
     expect(result.votePower).toEqual(custodian.totalVotePower / 10000);
     expect(result.profile).toEqual(profile.profile);
-    expect(result.agreedTermVersion).toEqual(agreedTermsVersion);
-    expect(result.currentPlanetMemberTermsSignedValid).toEqual(
+    expect(result.signedDaoTermsVersion).toEqual(agreedTermsVersion);
+    expect(result.hasSignedCurrentDaoTerms).toEqual(
       memberTerms.version === agreedTermsVersion
     );
     expect(result.isFlagged).toEqual(false);
     expect(result.isSelected).toEqual(false);
-    expect(result.planetName).toEqual(dacId);
+    expect(result.dacId).toEqual(dacId);
   });
 
   it('should return a JSON representation of the CustodianProfile instance', () => {
@@ -75,18 +75,18 @@ describe('CustodianProfile', () => {
     );
     const result = instance.toJSON();
 
-    expect(result.walletId).toEqual(instance.walletId);
+    expect(result.walletId).toEqual(instance.account);
     expect(result.requestedpay).toEqual(
-      `${instance.requestedpay.value} ${instance.requestedpay.symbol}`
+      `${instance.requestedPay.value} ${instance.requestedPay.symbol}`
     );
     expect(result.votePower).toEqual(Number(instance.votePower.toFixed(0)));
     expect(result).toMatchObject(profile.profile);
-    expect(result.agreedTermVersion).toEqual(instance.agreedTermVersion);
+    expect(result.agreedTermVersion).toEqual(instance.signedDaoTermsVersion);
     expect(result.currentPlanetMemberTermsSignedValid).toEqual(
-      instance.currentPlanetMemberTermsSignedValid
+      instance.hasSignedCurrentDaoTerms
     );
     expect(result.isFlagged).toEqual(instance.isFlagged);
     expect(result.isSelected).toEqual(instance.isSelected);
-    expect(result.planetName).toEqual(instance.planetName);
+    expect(result.planetName).toEqual(instance.dacId);
   });
 });

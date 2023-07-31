@@ -3,19 +3,25 @@
 /* istanbul ignore file */
 import 'reflect-metadata';
 
-import { buildAPIServer } from './aw-api-dao';
+import { DaoApi } from './api';
 import { config } from './config';
+import { Container } from '@alien-worlds/aw-core';
+import { ApiDependencyInjector } from '@endpoints/api.ioc.config';
+import { initLogger } from './connections/logger';
+import { mountRoutes } from './routes';
 
 process.title = 'aw-api-dao';
 
 const start = async () => {
-  try {
-    const server = await buildAPIServer();
-    await server.listen(config.port, config.host);
-  } catch (err) {
-    console.log(err);
-    process.exit(1);
-  }
+  initLogger('aw-api-dao', config.logger);
+
+  const ioc = new Container();
+  const apiDependencyInjector = new ApiDependencyInjector(ioc);
+  apiDependencyInjector.setup(config);
+
+  const api = new DaoApi(config);
+  mountRoutes(api, ioc, config);
+  await api.start();
 };
 
 start();

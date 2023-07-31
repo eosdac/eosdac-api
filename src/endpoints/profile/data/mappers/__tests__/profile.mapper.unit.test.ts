@@ -1,6 +1,9 @@
 import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { ProfileItemMapper, ProfileMongoMapper } from '../profile.mapper';
+import {
+  ProfileItemMapper,
+  ActionToProfileMapper,
+} from '../action-to-profile.mapper';
 
 import { ContractAction } from '@alien-worlds/aw-core';
 import { Profile } from '@endpoints/profile/domain/entities/profile';
@@ -39,7 +42,7 @@ const profileItemDto = {
 describe('ProfileMapper', () => {
   describe('toEntity', () => {
     it('should return an instance of Profile', () => {
-      const result = ProfileMongoMapper.toEntity(contractAction);
+      const result = ActionToProfileMapper.toEntity(contractAction);
 
       expect(result).toBeInstanceOf(Profile);
       expect(result.account).toEqual(contractAction.data.cand);

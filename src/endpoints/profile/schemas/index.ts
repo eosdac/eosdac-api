@@ -1,7 +1,4 @@
-import ProfileRequestSchema from './profile.request.schema.json';
-import ProfileResponseSchema from './profile.response.schema.json';
+import GetProfileRequestSchema from './get-profile.request.schema.json';
+import GetProfileResponseSchema from './get-profile.response.schema.json';
 
-export {
-    ProfileRequestSchema,
-    ProfileResponseSchema
-};
+export { GetProfileRequestSchema, GetProfileResponseSchema };

@@ -1,8 +1,6 @@
 import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import * as TokenWorldsContract from '@alien-worlds/aw-contract-token-worlds';
-
 import { Entity, UnknownObject } from '@alien-worlds/aw-core';
-
 import { Asset } from '@alien-worlds/aw-antelope';
 import { Profile } from './../../../profile/domain/entities/profile';
 
@@ -24,7 +22,6 @@ export class CandidateProfile implements Entity {
     profile: Profile,
     memberTerms: TokenWorldsContract.Deltas.Entities.Memberterms,
     agreedTermsVersion: number,
-    votedCandidates: string[]
   ): CandidateProfile {
     const {
       candidateName,
@@ -34,7 +31,6 @@ export class CandidateProfile implements Entity {
       avgVoteTimeStamp,
       rank,
       totalVotePower,
-      gapFiller,
     } = candidate;
 
     const { version } = memberTerms;
@@ -53,17 +49,13 @@ export class CandidateProfile implements Entity {
       requestedpay,
       votePower,
       rank,
-      gapFiller,
       !!isActive,
       numberVoters,
       voteDecay,
-      profile?.profile,
+      profile?.profile || {},
       agreedTermsVersion,
       Number(version) === agreedTermsVersion,
       !!profile?.error,
-      false,
-      votedCandidates.includes(candidateName),
-      false,
       dacId
     );
   }
@@ -73,22 +65,18 @@ export class CandidateProfile implements Entity {
    * @constructor
    */
   private constructor(
-    public readonly walletId: string,
+    public readonly account: string,
     public readonly requestedPay: Asset,
     public readonly votePower: number,
     public readonly rank: number,
-    public readonly gapFiller: number,
     public readonly isActive: boolean,
     public readonly totalVotes: number,
     public readonly voteDecay: number,
     public readonly profile: object,
-    public readonly agreedTermVersion: number,
-    public readonly currentPlanetMemberTermsSignedValid: boolean,
+    public readonly signedDaoTermsVersion: number,
+    public readonly hasSignedCurrentDaoTerms: boolean,
     public readonly isFlagged: boolean,
-    public readonly isSelected: boolean,
-    public readonly isVoted: boolean,
-    public readonly isVoteAdded: boolean,
-    public readonly planetName: string
+    public readonly dacId: string
   ) {}
 
   id?: string;
@@ -96,43 +84,34 @@ export class CandidateProfile implements Entity {
 
   public toJSON(): UnknownObject {
     const {
-      walletId,
+      account,
       requestedPay,
       votePower,
       rank,
-      gapFiller,
       isActive,
       totalVotes,
       voteDecay,
-      profile,
-      agreedTermVersion,
-      currentPlanetMemberTermsSignedValid,
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
       isFlagged,
-      isSelected,
-      isVoted,
-      isVoteAdded,
-      planetName,
+      dacId,
+      profile
     } = this;
 
-    const p = profile || {};
 
     return {
-      ...p,
-      walletId,
+      ...profile,
+      account,
       requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
       votePower: Number(votePower.toFixed(0)),
       rank: Number(rank),
-      gapFiller: Number(gapFiller),
-      isActive: Number(isActive),
+      isActive,
       totalVotes,
       voteDecay,
-      agreedTermVersion,
-      currentPlanetMemberTermsSignedValid,
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
       isFlagged,
-      isSelected,
-      isVoted,
-      isVoteAdded,
-      planetName,
+      dacId,
     };
   }
 }

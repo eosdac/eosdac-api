@@ -5,7 +5,7 @@ import * as IndexWorldsContract from '@alien-worlds/aw-contract-index-worlds';
 
 import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
-import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
+import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { GetCandidatesUseCase } from '../get-candidates.use-case';
 import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from '../get-member-terms.use-case';

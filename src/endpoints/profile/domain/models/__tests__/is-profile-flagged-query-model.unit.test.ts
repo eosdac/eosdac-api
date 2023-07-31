@@ -1,7 +1,7 @@
 import {
   IsProfileFlaggedQueryArgs,
-  IsProfileFlaggedQueryBuilder,
-} from '../is-profile-flagged.query-model';
+  ListProfileFlagsQueryBuilder,
+} from '../list-profile-flags.query-builder';
 
 const args: IsProfileFlaggedQueryArgs = {
   dacId: '123',
@@ -25,7 +25,7 @@ const expectedQuery = {
 
 describe('IsProfileFlaggedQueryBuilder', () => {
   it('should build the correct pipeline and options', () => {
-    const queryBuilder = new IsProfileFlaggedQueryBuilder();
+    const queryBuilder = new ListProfileFlagsQueryBuilder();
 
     queryBuilder.with(args);
 

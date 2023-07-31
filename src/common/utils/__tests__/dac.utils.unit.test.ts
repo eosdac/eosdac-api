@@ -2,7 +2,7 @@ import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 import { ExtendedSymbolRawModel, Pair } from '@alien-worlds/aw-antelope';
 
 import { config } from '@config';
-import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';
+import { Dac } from '@endpoints/dacs/domain/entities/dacs';
 import { loadDacConfig } from '../dac.utils';
 
 describe('"DAC utils" unit tests', () => {
@@ -74,7 +74,7 @@ describe('"DAC utils" unit tests', () => {
     await loadDacConfig(indexWorldsContractService, dacId);
 
     expect(indexWorldsContractService.fetchDacs).toHaveBeenCalledWith({
-      scope: config.eos.dacDirectoryContract,
+      scope: config.antelope.dacDirectoryContract,
       limit: 1,
       lower_bound: dacId,
       upper_bound: dacId,
@@ -94,7 +94,7 @@ describe('"DAC utils" unit tests', () => {
 
     expect(config.dac.nameCache.get).toHaveBeenCalledWith(dacId);
     expect(indexWorldsContractService.fetchDacs).toHaveBeenCalledWith({
-      scope: config.eos.dacDirectoryContract,
+      scope: config.antelope.dacDirectoryContract,
       limit: 1,
       lower_bound: dacId,
       upper_bound: dacId,

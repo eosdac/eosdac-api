@@ -1,6 +1,5 @@
 import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
-
-import { Failure, inject, injectable, Result } from '@alien-worlds/aw-core';
+import { Failure, inject, injectable } from '@alien-worlds/aw-core';
 import { GetCustodiansInput } from './models/get-custodians.input';
 import { GetCustodiansOutput } from './models/get-custodians.output';
 import { ListCustodianProfilesUseCase } from './use-cases/list-custodian-profiles.use-case';
@@ -24,29 +23,30 @@ export class CustodiansController {
 
   /**
    *
-   * @returns {Promise<Result<GetCustodiansOutput, Error>>}
+   * @returns {Promise<GetCustodiansOutput>}
    */
-  public async list(
-    input: GetCustodiansInput
-  ): Promise<Result<GetCustodiansOutput, Error>> {
+  public async list(input: GetCustodiansInput): Promise<GetCustodiansOutput> {
     const { dacId } = input;
 
-    const dacConfig = await loadDacConfig(
+    const { content: dacConfig } = await loadDacConfig(
       this.indexWorldsContractService,
       input.dacId
     );
 
     if (!dacConfig) {
-      return Result.withFailure(Failure.fromError(new LoadDacConfigError()));
+      return GetCustodiansOutput.create(
+        [],
+        Failure.fromError(new LoadDacConfigError())
+      );
     }
 
     const { content: profiles, failure } =
       await this.listCustodianProfilesUseCase.execute(dacId, dacConfig);
 
     if (failure) {
-      return Result.withFailure(failure);
+      return GetCustodiansOutput.create([], failure);
     }
 
-    return Result.withContent(GetCustodiansOutput.create(profiles));
+    return GetCustodiansOutput.create(profiles);
   }
 }

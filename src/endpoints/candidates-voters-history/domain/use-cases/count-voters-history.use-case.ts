@@ -2,7 +2,7 @@ import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
-import { CountVotersHistoryQueryBuilder } from '../models/count-voters-history.query-model';
+import { CountVotersHistoryQueryBuilder } from '../models/count-voters-history.query-builder';
 
 /**
  * @class

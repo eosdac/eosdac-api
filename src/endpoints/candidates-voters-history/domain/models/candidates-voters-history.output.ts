@@ -1,61 +1,60 @@
+/* eslint-disable sort-imports */
 import {
-  CandidatesVotersHistoryControllerOutput,
-  CandidatesVotersHistoryOutputItem,
+  VotesModel,
+  VoteModel,
 } from '../../data/dtos/candidates-voters-history.dto';
 
-import { removeUndefinedProperties } from '@alien-worlds/aw-core';
+import { Failure, IO, removeUndefinedProperties } from '@alien-worlds/aw-core';
 
-export class CandidatesVotersHistoryOutput {
+export class CandidatesVotersHistoryOutput implements IO {
   public static create(
-    data: CandidatesVotersHistoryControllerOutput
+    results: VoteModel[],
+    total: number,
+    failure?: Failure
   ): CandidatesVotersHistoryOutput {
     return new CandidatesVotersHistoryOutput(
-      data.results || [],
-      data.total || 0
+      results || [],
+      total || 0,
+      failure
     );
   }
 
-  private constructor(
-    public readonly results: CandidatesVotersHistoryOutputItem[],
-    public readonly total: number
+  constructor(
+    public readonly results: VoteModel[],
+    public readonly total: number,
+    public readonly failure: Failure
   ) {}
 
-  public toJson(): CandidatesVotersHistoryOutput {
-    const { results, total } = this;
+  public toJSON(): VotesModel {
+    const { results, total, failure } = this;
+
+    if (failure) {
+      return { results: [], total: 0 };
+    }
 
     const result = {
-      results: results.map(this.parseCandidatesVotersHistoryItemToResult),
+      results: results.map(item => {
+        const {
+          voter,
+          votingPower,
+          action,
+          candidate,
+          voteTimestamp,
+          transactionId,
+        } = item;
+
+        return removeUndefinedProperties<VoteModel>({
+          voter,
+          votingPower: votingPower.toString(),
+          action,
+          candidate,
+          voteTimestamp,
+          transactionId,
+        });
+      }),
       total,
     };
 
-    return removeUndefinedProperties<CandidatesVotersHistoryOutput>(result);
-  }
-
-  /**
-   * Get Json object from the entity
-   *
-   */
-  private parseCandidatesVotersHistoryItemToResult(
-    item: CandidatesVotersHistoryOutputItem
-  ) {
-    const {
-      voter,
-      votingPower,
-      action,
-      candidate,
-      voteTimestamp,
-      transactionId,
-    } = item;
-
-    const dto = {
-      voter,
-      votingPower: votingPower.toString(),
-      action,
-      candidate,
-      voteTimestamp,
-      transactionId,
-    };
-
-    return removeUndefinedProperties<CandidatesVotersHistoryOutputItem>(dto);
+    return removeUndefinedProperties<VotesModel>(result);
   }
 }

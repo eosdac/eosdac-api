@@ -6,7 +6,7 @@ import { Container, Result } from '@alien-worlds/aw-core';
 
 import { config } from '@config';
 import { CustodiansController } from '../custodians.controller';
-import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
+import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { GetCustodiansInput } from '../models/get-custodians.input';
 import { ListCustodianProfilesUseCase } from '../use-cases/list-custodian-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';

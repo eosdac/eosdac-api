@@ -2,16 +2,14 @@ import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
-import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
+import { VoteModel } from '../../data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryQueryBuilder } from '../models/candidates-voters-history.query-builder';
 
 /**
  * @class
  */
 @injectable()
-export class GetCandidatesVotersHistoryUseCase
-  implements UseCase<CandidatesVotersHistoryOutputItem[]>
-{
+export class GetCandidatesVotersHistoryUseCase implements UseCase<VoteModel[]> {
   public static Token = 'GET_CANDIDATES_VOTERS_HISTORY_USE_CASE';
 
   constructor(
@@ -21,11 +19,11 @@ export class GetCandidatesVotersHistoryUseCase
 
   /**
    * @async
-   * @returns {Promise<Result<CandidatesVotersHistoryOutputItem[], Error>>}
+   * @returns {Promise<Result<VoteModel[], Error>>}
    */
   public async execute(
     input: CandidatesVotersHistoryInput
-  ): Promise<Result<CandidatesVotersHistoryOutputItem[], Error>> {
+  ): Promise<Result<VoteModel[], Error>> {
     const queryBuilder = new CandidatesVotersHistoryQueryBuilder().with({
       ...input,
     });
@@ -41,23 +39,21 @@ export class GetCandidatesVotersHistoryUseCase
       input.skip + input.limit
     );
 
-    const output: CandidatesVotersHistoryOutputItem[] = paginatedActions.map(
-      contractAction => {
-        const { voter } =
-          contractAction.data as DaoWorldsCommon.Actions.Entities.Votecust;
+    const output: VoteModel[] = paginatedActions.map(contractAction => {
+      const { voter } =
+        contractAction.data as DaoWorldsCommon.Actions.Entities.Votecust;
 
-        const item: CandidatesVotersHistoryOutputItem = {
-          voter,
-          votingPower: 0,
-          candidate: input.candidateId,
-          voteTimestamp: contractAction.blockTimestamp,
-          transactionId: contractAction.transactionId,
-          action: DaoWorldsCommon.Actions.DaoWorldsActionName.Votecust,
-        };
+      const item: VoteModel = {
+        voter,
+        votingPower: 0,
+        candidate: input.candidateId,
+        voteTimestamp: contractAction.blockTimestamp,
+        transactionId: contractAction.transactionId,
+        action: DaoWorldsCommon.Actions.DaoWorldsActionName.Votecust,
+      };
 
-        return item;
-      }
-    );
+      return item;
+    });
 
     return Result.withContent(output);
   }

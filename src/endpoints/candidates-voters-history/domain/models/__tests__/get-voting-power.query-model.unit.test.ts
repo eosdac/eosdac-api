@@ -1,4 +1,4 @@
-import { GetVotingPowerQueryBuilder } from '../get-voting-power.query-model';
+import { GetVotingPowerQueryBuilder } from '../get-voting-power.query-builder';
 
 const voter = 'voter';
 const voteTimestamp: Date = new Date('2022-10-20T15:55:46.000Z');

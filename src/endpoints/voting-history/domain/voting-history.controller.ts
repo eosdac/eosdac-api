@@ -1,8 +1,8 @@
-import { inject, injectable, Result } from '@alien-worlds/aw-core';
+import { inject, injectable } from '@alien-worlds/aw-core';
 
 import { GetUserVotingHistoryUseCase } from './use-cases/get-user-voting-history.use-case';
-import { UserVote } from '../domain/entities/user-vote';
 import { VotingHistoryInput } from './models/voting-history.input';
+import { VotingHistoryOutput } from './models/voting-history.output';
 
 /**
  * @class
@@ -20,11 +20,13 @@ export class VotingHistoryController {
 
   /**
    *
-   * @returns {Promise<Result<UserVote[], Error>>}
+   * @returns {Promise<VotingHistoryOutput>}
    */
   public async votingHistory(
     input: VotingHistoryInput
-  ): Promise<Result<UserVote[], Error>> {
-    return await this.getUserVotingHistoryUseCase.execute(input);
+  ): Promise<VotingHistoryOutput> {
+    const result = await this.getUserVotingHistoryUseCase.execute(input);
+
+    return VotingHistoryOutput.create(result);
   }
 }

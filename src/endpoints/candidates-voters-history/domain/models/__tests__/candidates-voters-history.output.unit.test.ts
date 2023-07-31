@@ -1,7 +1,7 @@
-import { CandidatesVotersHistoryControllerOutput } from '../../../../candidates-voters-history/data/dtos/candidates-voters-history.dto';
+import { VotesModel } from '../../../../candidates-voters-history/data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryOutput } from '../candidates-voters-history.output';
 
-const data: CandidatesVotersHistoryControllerOutput = {
+const data: VotesModel = {
   results: [
     {
       voter: 'string',

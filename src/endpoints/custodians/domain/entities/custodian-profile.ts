@@ -34,11 +34,10 @@ export class CustodianProfile implements Entity {
       custName,
       requestedpay,
       Number(votePower),
-      profile?.profile,
+      profile?.profile || {},
       agreedTermsVersion,
       Number(version) === agreedTermsVersion,
       !!profile?.error,
-      false,
       dacId
     );
   }
@@ -48,45 +47,40 @@ export class CustodianProfile implements Entity {
    * @constructor
    */
   private constructor(
-    public readonly walletId: string,
-    public readonly requestedpay: Asset,
+    public readonly account: string,
+    public readonly requestedPay: Asset,
     public readonly votePower: number,
     public readonly profile: object,
-    public readonly agreedTermVersion: number,
-    public readonly currentPlanetMemberTermsSignedValid: boolean,
+    public readonly signedDaoTermsVersion: number,
+    public readonly hasSignedCurrentDaoTerms: boolean,
     public readonly isFlagged: boolean,
-    public readonly isSelected: boolean,
-    public readonly planetName: string
+    public readonly dacId: string
   ) {}
 
-  id?: string;
-  rest?: UnknownObject;
+  public id?: string;
+  public rest?: UnknownObject;
 
   public toJSON(): UnknownObject {
     const {
-      walletId,
-      requestedpay,
+      account,
+      requestedPay,
       votePower,
       profile,
-      agreedTermVersion,
-      currentPlanetMemberTermsSignedValid,
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
       isFlagged,
-      isSelected,
-      planetName,
+      dacId,
     } = this;
 
-    const p = profile || {};
-
     return {
-      walletId,
-      requestedpay: `${requestedpay.value} ${requestedpay.symbol}`,
+      ...profile,
+      account,
+      requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
       votePower: Number(votePower.toFixed(0)),
-      ...p,
-      agreedTermVersion,
-      currentPlanetMemberTermsSignedValid,
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
       isFlagged,
-      isSelected,
-      planetName,
+      dacId,
     };
   }
 }

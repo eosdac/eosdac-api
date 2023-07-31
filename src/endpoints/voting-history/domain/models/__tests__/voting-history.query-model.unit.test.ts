@@ -1,5 +1,5 @@
 import { VotingHistoryInput } from '../voting-history.input';
-import { VotingHistoryQueryBuilder } from '../voting-history.query-model';
+import { VotingHistoryQueryBuilder } from '../voting-history.query-builder';
 
 const input: VotingHistoryInput = {
   dacId: 'string',

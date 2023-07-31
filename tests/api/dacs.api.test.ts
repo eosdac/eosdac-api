@@ -3,7 +3,7 @@ import { HTTP_METHOD, HTTP_STATUS } from '../common';
 import { AjvValidator } from '../../src/validator/ajv-validator';
 import { config } from '@config';
 import { createApiTestEnvironment } from '../environments';
-import { DacsResponseSchema } from '@endpoints/get-dacs/schemas';
+import { DacsResponseSchema } from '@endpoints/dacs/schemas';
 import { InvalidLimitValueErrorResponse } from 'tests/fixtures/common.fixture';
 
 const environment = createApiTestEnvironment();
@@ -14,7 +14,7 @@ const validator = AjvValidator.initialize();
 // meta
 const Api = {
   method: HTTP_METHOD.GET,
-  url: `/${config.version}/dao/dacs`,
+  url: `/${config.urlVersion}/dao/dacs`,
 };
 
 const Data = {

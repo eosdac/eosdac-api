@@ -4,12 +4,12 @@ import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryController } from '../candidates-voters-history.controller';
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
-import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
+import { VoteModel } from '../../data/dtos/candidates-voters-history.dto';
 import { CountVotersHistoryUseCase } from '../use-cases/count-voters-history.use-case';
 import { GetCandidatesVotersHistoryUseCase } from '../use-cases/get-candidates-voters-history.use-case';
 import { GetVotingPowerUseCase } from '../use-cases/get-voting-power.use-case';
 
-const voterHistoryResp: CandidatesVotersHistoryOutputItem[] = [
+const voterHistoryResp: VoteModel[] = [
   {
     voter: 'string',
     votingPower: 1,
@@ -21,8 +21,7 @@ const voterHistoryResp: CandidatesVotersHistoryOutputItem[] = [
 
 const getCandidatesVotersHistoryUseCase = {
   execute: jest.fn(
-    (): Result<CandidatesVotersHistoryOutputItem[], Error> =>
-      Result.withContent(voterHistoryResp)
+    (): Result<VoteModel[], Error> => Result.withContent(voterHistoryResp)
   ),
 };
 

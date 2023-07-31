@@ -6,7 +6,7 @@ import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { CandidatesController } from '../candidates.controller';
 import { config } from '@config';
-import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
+import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { GetCandidatesInput } from '../models/get-candidates.input';
 import { ListCandidateProfilesUseCase } from '../use-cases/list-candidate-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';

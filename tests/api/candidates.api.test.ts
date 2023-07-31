@@ -20,7 +20,7 @@ const Data = {
 // meta
 const Api = {
   method: HTTP_METHOD.GET,
-  url: `/${config.version}/dao/${Data.DacId}/candidates`,
+  url: `/${config.urlVersion}/dao/${Data.DacId}/candidates`,
 };
 
 describe('Candidates API Test', () => {

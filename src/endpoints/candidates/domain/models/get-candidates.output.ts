@@ -1,15 +1,22 @@
+/* eslint-disable sort-imports */
+import { IO, Result, UnknownObject } from '@alien-worlds/aw-core';
 import { CandidateProfile } from './../entities/candidate-profile';
 
-export class GetCandidatesOutput {
-  public static create(profiles: CandidateProfile[]): GetCandidatesOutput {
-    return new GetCandidatesOutput(profiles);
+export class GetCandidatesOutput implements IO<UnknownObject[]> {
+  
+  public static create(result: Result<CandidateProfile[]>) {
+    return new GetCandidatesOutput(result);
   }
 
-  private constructor(public readonly results: CandidateProfile[]) {}
+  constructor(public readonly result: Result<CandidateProfile[]>) {}
 
-  public toJSON() {
-    const { results } = this;
+  public toJSON(): UnknownObject[] {
+    const { result } = this;
 
-    return results.map(profile => profile.toJSON());
+    if (result.isFailure) {
+      return [];
+    }
+
+    return result.content.map(profile => profile.toJSON());
   }
 }

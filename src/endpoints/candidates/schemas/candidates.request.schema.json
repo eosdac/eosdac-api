@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "candidates.request.schema.json",
-    "title": "/:dacId/candidates?walletId={walletId} request schema",
+    "title": "/:dacId/candidates request schema",
     "type": "object",
     "properties": {
         "params": {
@@ -14,17 +14,6 @@
             "required": [
                 "dacId"
             ]
-        },
-        "query": {
-            "type": "object",
-            "properties": {
-                "walletId": {
-                    "$ref": "#/$defs/walletId"
-                }
-            },
-            "required": [
-                "walletId"
-            ]
         }
     },
     "$defs": {
@@ -32,10 +21,6 @@
             "type": "string",
             "minLength": 5,
             "maxLength": 6
-        },
-        "walletId": {
-            "type": "string",
-            "minLength": 1
         }
     }
 }

@@ -3,11 +3,11 @@ import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 
 import { Container, ContractAction, Failure } from '@alien-worlds/aw-core';
-import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
+import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { GetProfilesUseCase } from '../use-cases/get-profiles.use-case';
-import { IsProfileFlaggedUseCase } from '../use-cases/is-profile-flagged.use-case';
+import { GetProfileFlagsUseCase } from '../use-cases/is-profile-flagged.use-case';
 import { ProfileController } from '../profile.controller';
-import { ProfileInput } from '../models/profile.input';
+import { GetProfileInput } from '../models/get-profile.input';
 import { Result } from '@alien-worlds/aw-core';
 
 let container: Container;
@@ -48,7 +48,7 @@ jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValue(
 const indexWorldsContractService = {
   fetchDacs: jest.fn(),
 };
-const input: ProfileInput = {
+const input: GetProfileInput = {
   accounts: ['awtesteroo12', 'awtesteroo13'],
   dacId: 'testa',
 };
@@ -97,7 +97,7 @@ describe('Profile Controller Unit tests', () => {
       .bind<GetProfilesUseCase>(GetProfilesUseCase.Token)
       .toConstantValue(getProfilesUseCase as any);
     container
-      .bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token)
+      .bind<GetProfileFlagsUseCase>(GetProfileFlagsUseCase.Token)
       .toConstantValue(isProfileFlaggedUseCase as any);
     container
       .bind<IndexWorldsCommon.Services.IndexWorldsContractService>(
@@ -128,7 +128,7 @@ describe('Profile Controller Unit tests', () => {
   it('should return profile', async () => {
     getProfilesUseCase.execute.mockResolvedValue(Result.withContent(actions));
 
-    const result = await controller.profile(input);
+    const result = await controller.getProfile(input);
 
     expect(result.content.count).toBe(2);
 
@@ -140,7 +140,7 @@ describe('Profile Controller Unit tests', () => {
   it('should return redacted profile for flagged candidate', async () => {
     getProfilesUseCase.execute.mockResolvedValue(Result.withContent(actions));
 
-    const result = await controller.profile(input);
+    const result = await controller.getProfile(input);
 
     expect(result.content.results).toBeDefined();
     expect(result.content.results[1].account).toBe(input.accounts[1]);
@@ -151,7 +151,7 @@ describe('Profile Controller Unit tests', () => {
   it('should return error if indexWorldsContractService fails', async () => {
     jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValueOnce(null);
 
-    const result = await controller.profile(input);
+    const result = await controller.getProfile(input);
 
     expect(result.failure).toBeTruthy();
   });
@@ -159,7 +159,7 @@ describe('Profile Controller Unit tests', () => {
   it('should return error if no profiles are found', async () => {
     getProfilesUseCase.execute.mockResolvedValue(Result.withContent([]));
 
-    const result = await controller.profile(input);
+    const result = await controller.getProfile(input);
 
     expect(result.failure).toBeTruthy();
   });
@@ -169,7 +169,7 @@ describe('Profile Controller Unit tests', () => {
       Result.withFailure(Failure.fromError('error'))
     );
 
-    const result = await controller.profile(input);
+    const result = await controller.getProfile(input);
 
     expect(result.failure).toBeTruthy();
   });
