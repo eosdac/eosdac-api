@@ -12,11 +12,16 @@ import { Profile } from '../../../profile/domain/entities/profile';
  */
 export class CustodianProfile implements Entity {
   /**
-   * Creates instances of Custodian based on a given DTO.
+   * Creates instances of CustodianProfile based on a given DTO.
    *
    * @static
    * @public
-   * @returns {CustodianProfile}
+   * @param {string} dacId - The ID of the DAC.
+   * @param {DaoWorldsContract.Deltas.Entities.Custodians1} custodian - The DTO containing custodian data.
+   * @param {Profile} profile - The profile entity.
+   * @param {TokenWorldsContract.Deltas.Entities.Memberterms} memberTerms - The member terms entity.
+   * @param {number} agreedTermsVersion - The agreed terms version number.
+   * @returns {CustodianProfile} - The created CustodianProfile instance.
    */
   public static create(
     dacId: string,
@@ -60,6 +65,12 @@ export class CustodianProfile implements Entity {
   public id?: string;
   public rest?: UnknownObject;
 
+  /**
+   * Converts the CustodianProfile instance to a JSON representation.
+   *
+   * @public
+   * @returns {UnknownObject} - The JSON representation of the CustodianProfile.
+   */
   public toJSON(): UnknownObject {
     const {
       account,
