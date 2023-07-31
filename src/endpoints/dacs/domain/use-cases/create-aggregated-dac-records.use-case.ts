@@ -4,7 +4,7 @@ import { Dac } from '../entities/dacs';
 import { GetDacTreasuryUseCase } from './get-dac-treasury.use-case';
 import { GetDacInfoUseCase } from './get-dac-info.use-case';
 import { GetDacTokensUseCase } from './get-dac-tokens.use-case';
-import { DacAggregateRecord } from '../models/dac-aggregate-record.ts';
+import { DacAggregateRecord } from '../models/dac-aggregate-record';
 
 /**
  * @class

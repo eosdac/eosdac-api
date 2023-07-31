@@ -1,4 +1,4 @@
-import { DacAggregateRecord } from './dac-aggregate-record.ts.js';
+import { DacAggregateRecord } from './dac-aggregate-record';
 import {
   IO,
   Result,

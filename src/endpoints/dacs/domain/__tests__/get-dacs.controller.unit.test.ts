@@ -12,6 +12,7 @@ import { DacsController } from '../dacs.controller';
 import { GetDacsInput } from '../models/dacs.input';
 import { GetDacTokensUseCase } from '../use-cases/get-dac-tokens.use-case';
 import { GetDacTreasuryUseCase } from '../use-cases/get-dac-treasury.use-case';
+import { CreateAggregatedDacRecords } from '../use-cases/create-aggregated-dac-records.use-case';
 
 const getAllDacsUseCase = {
   execute: jest.fn(() =>
@@ -132,6 +133,19 @@ const getDacTokensUseCase = {
   ),
 };
 
+const createAggregatedDacRecords = {
+  execute: jest.fn(() =>
+    Result.withContent([
+      new TokenWorldsCommon.Deltas.Mappers.StatRawMapper().toEntity({
+        supply: '1660485.1217 EYE',
+        max_supply: '10000000000.0000 EYE',
+        issuer: 'federation',
+        transfer_locked: false,
+      }),
+    ])
+  ),
+};
+
 const input: GetDacsInput = {
   dacId: 'string',
   limit: 1,
@@ -160,6 +174,9 @@ describe('GetDacs Controller Unit tests', () => {
     container
       .bind<GetDacTokensUseCase>(GetDacTokensUseCase.Token)
       .toConstantValue(getDacTokensUseCase as any);
+    container
+      .bind<CreateAggregatedDacRecords>(CreateAggregatedDacRecords.Token)
+      .to(CreateAggregatedDacRecords);
     container.bind<DacsController>(DacsController.Token).to(DacsController);
   });
 

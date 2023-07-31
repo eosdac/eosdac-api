@@ -4,7 +4,7 @@ import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
 
 import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
-import { DacAggregateRecord } from '../dac-aggregate-record.ts.js';
+import { DacAggregateRecord } from '../dac-aggregate-record';
 import { Pair } from '@alien-worlds/aw-antelope';
 
 const dacDir = new DacMapper().toDac(
