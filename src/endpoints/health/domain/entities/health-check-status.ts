@@ -1,9 +1,10 @@
-import { PackagedDependencyJsonModel } from '@src/config/config.types';
 import {
   DatabaseHealthCheckJsonModel,
   HealthCheckJsonModel,
 } from '../../data/dtos/health.dto';
+
 import { Entity } from '@alien-worlds/aw-core';
+import { PackagedDependencyJsonModel } from '@src/config/config.types';
 
 /**
  * Represents HealthOutput data entity.
@@ -78,7 +79,7 @@ export class HealthCheckStatus implements Entity {
       database: databaseHealtCheck,
       historyApi: {
         currentBlockNumber: currentBlockNumber.toString(),
-        status: currentBlockNumber < 0 ? 'FAILED' : 'OK',
+        status: currentBlockNumber > 0 ? 'OK' : 'FAILED',
       },
     };
   }

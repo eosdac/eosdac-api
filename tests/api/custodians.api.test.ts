@@ -1,10 +1,10 @@
 import { HTTP_METHOD, HTTP_STATUS } from '../common';
 
 import { AjvValidator } from '@src/validator/ajv-validator';
-import { config } from '@config';
-import { createApiTestEnvironment } from '../environments';
 import { CustodiansResponseSchema } from '@endpoints/custodians/schemas';
 import { DacIdPathParamMissingErrorResponse } from 'tests/fixtures/common.fixture';
+import { config } from '@config';
+import { createApiTestEnvironment } from '../environments';
 
 const environment = createApiTestEnvironment();
 environment.initialize();
@@ -37,7 +37,7 @@ describe('Custodians API Test', () => {
   });
 
   describe('dacId path param', () => {
-    it('should return custodians with planetName equal to provided dacId', async () => {
+    it('should return custodians with dacId equal to provided dacId', async () => {
       const response = await getApiResponse(Api.method, `${Api.url}`);
       const jsonResponse = JSON.parse(response.body);
 
@@ -45,7 +45,7 @@ describe('Custodians API Test', () => {
 
       jsonResponse.forEach(custodian => {
         expect(custodian).toMatchObject({
-          planetName: Data.DacId,
+          dacId: Data.DacId,
         });
       });
     });

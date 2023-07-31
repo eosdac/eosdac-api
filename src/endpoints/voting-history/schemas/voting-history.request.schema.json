@@ -11,7 +11,7 @@
                     "$ref": "#/$defs/dacId"
                 },
                 "voter": {
-                    "$ref": "#/$defs/walletId"
+                    "$ref": "#/$defs/account"
                 },
                 "skip": {
                     "$ref": "#/$defs/zeroOrGreaterInteger"
@@ -32,7 +32,7 @@
             "minLength": 5,
             "maxLength": 6
         },
-        "walletId": {
+        "account": {
             "type": "string",
             "minLength": 1
         },

@@ -1,9 +1,9 @@
 import { TestEnvironment, TestHooks } from './test-environment';
 
-import { TestEnvironmentServer } from './api-test-environment';
-import { DaoApi } from '@src/api';
-import { Container } from '@alien-worlds/aw-core';
 import { ApiDependencyInjector } from '@endpoints/api.ioc.config';
+import { Container } from '@alien-worlds/aw-core';
+import { DaoApi } from '@src/api';
+import { TestEnvironmentServer } from './api-test-environment';
 import { config } from '@config';
 import { mountRoutes } from '@src/routes';
 
@@ -18,7 +18,7 @@ export class FastifyTestEnvironment implements TestEnvironment {
     beforeAll(async () => {
       const ioc = new Container();
       const apiDependencyInjector = new ApiDependencyInjector(ioc);
-      apiDependencyInjector.setup(config);
+      await apiDependencyInjector.setup(config);
 
       const api = new DaoApi(config);
       mountRoutes(api, ioc, config);

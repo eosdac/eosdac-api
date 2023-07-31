@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
+  AntelopeConfig,
   Config,
   DACConfig,
   DocsConfig,
   Environment,
-  AntelopeConfig,
   HistoryApiConfig,
   LoggerConfig,
   NewRelicConfig,

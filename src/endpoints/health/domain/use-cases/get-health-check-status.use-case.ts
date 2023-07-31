@@ -25,7 +25,7 @@ export class GetHealthCheckStatusUseCase implements UseCase<HealthCheckStatus> {
    * @returns {Promise<Result<HealthCheckStatus>>}
    */
   public async execute(): Promise<Result<HealthCheckStatus>> {
-    const { content: currentBlockNumber } =
+    const { content: currentBlockNumber = -1n } =
       await this.historyService.getCurrentBlockNumber();
     const { content: databaseConnectionStats } =
       await this.databaseService.checkConnection();
