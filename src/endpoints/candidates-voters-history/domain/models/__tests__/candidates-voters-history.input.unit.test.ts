@@ -6,7 +6,7 @@ describe('CandidatesVotersHistoryInput Unit tests', () => {
 
     expect(input.toJSON()).toEqual({
       dacId: 'dacId',
-      cand: 'cand',
+      candidateId: 'cand',
       limit: 10,
       skip: 20,
     });

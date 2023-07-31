@@ -7,6 +7,7 @@ import { CandidatesVotersHistoryInput } from '../models/candidates-voters-histor
 import { VoteModel } from '../../data/dtos/candidates-voters-history.dto';
 import { CountVotersHistoryUseCase } from '../use-cases/count-voters-history.use-case';
 import { GetCandidatesVotersHistoryUseCase } from '../use-cases/get-candidates-voters-history.use-case';
+import { AssignVotingPowerUseCase } from '../use-cases/assign-voting-power.use-case';
 
 const voterHistoryResp: VoteModel[] = [
   {
@@ -24,7 +25,7 @@ const getCandidatesVotersHistoryUseCase = {
   ),
 };
 
-const getVotingPowerUseCase = {
+const assignVotingPowerUseCase = {
   execute: jest.fn(() => Result.withContent(1n)),
 };
 
@@ -48,6 +49,9 @@ describe('VotingHistory Controller Unit tests', () => {
     container
       .bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token)
       .toConstantValue(countVotersHistoryUseCase as any);
+    container
+      .bind<AssignVotingPowerUseCase>(AssignVotingPowerUseCase.Token)
+      .toConstantValue(assignVotingPowerUseCase as any);
     container
       .bind<CandidatesVotersHistoryController>(
         CandidatesVotersHistoryController.Token

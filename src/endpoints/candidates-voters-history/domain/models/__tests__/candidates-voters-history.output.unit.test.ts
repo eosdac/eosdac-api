@@ -41,6 +41,6 @@ describe('CandidatesVotersHistoryOutput Unit tests', () => {
       Failure.withMessage('error')
     );
 
-    expect(output.toJSON()).toBe({ results: [], total: 0 });
+    expect(output.toJSON()).toEqual({ results: [], total: 0 });
   });
 });
