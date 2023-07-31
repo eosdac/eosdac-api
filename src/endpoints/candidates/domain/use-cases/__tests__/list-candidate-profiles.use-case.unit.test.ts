@@ -10,7 +10,6 @@ import { GetCandidatesUseCase } from '../get-candidates.use-case';
 import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../../profile/domain/use-cases/get-profiles.use-case';
-import { GetVotedCandidateIdsUseCase } from '../get-voted-candidate-ids.use-case';
 import { ListCandidateProfilesUseCase } from '../list-candidate-profiles.use-case';
 import { Pair } from '@alien-worlds/aw-antelope';
 
@@ -59,9 +58,6 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       .bind<GetMemberTermsUseCase>(GetMemberTermsUseCase.Token)
       .toConstantValue(getMemberTermsUseCase as any);
     container
-      .bind<GetVotedCandidateIdsUseCase>(GetVotedCandidateIdsUseCase.Token)
-      .toConstantValue(getVotedCandidateIdsUseCase as any);
-    container
       .bind<GetMembersAgreedTermsUseCase>(GetMembersAgreedTermsUseCase.Token)
       .toConstantValue(getMembersAgreedTermsUseCase as any);
     container
@@ -104,20 +100,6 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
 
   it('Should return failure when GetCandidatesUseCase fails', async () => {
     getCandidatesUseCase.execute.mockResolvedValue(
-      Result.withFailure(Failure.withMessage('error'))
-    );
-
-    const result = await useCase.execute('dacId', dacConfig);
-    expect(result.failure).toBeTruthy();
-  });
-
-  it('Should execute GetVotedCandidateIdsUseCase', async () => {
-    await useCase.execute('dacId', dacConfig);
-    expect(getVotedCandidateIdsUseCase.execute).toBeCalled();
-  });
-
-  it('Should return failure when GetVotedCandidateIdsUseCase fails', async () => {
-    getVotedCandidateIdsUseCase.execute.mockResolvedValue(
       Result.withFailure(Failure.withMessage('error'))
     );
 

@@ -11,9 +11,29 @@ import { GetCandidatesInput } from '../models/get-candidates.input';
 import { ListCandidateProfilesUseCase } from '../use-cases/list-candidate-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
 
-/*mocks*/
+const dac = new DacMapper().toDac(
+  new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+    IndexWorldsCommon.Deltas.Types.DacsRawModel
+  >{
+    accounts: [{ key: '2', value: 'dao.worlds' }],
+    symbol: {
+      sym: 'EYE',
+    },
+    refs: [],
+  })
+);
 
-('@config');
+jest.mock('@config', () => {
+  return {
+    config: {
+      dac: {
+        nameCache: {
+          get: jest.fn(),
+        },
+      },
+    },
+  };
+});
 
 const mockedConfig = config as jest.Mocked<typeof config>;
 
@@ -29,18 +49,6 @@ const input: GetCandidatesInput = {
   dacId: 'string',
   toJSON: () => ({ dacId: 'string' }),
 };
-
-const dac = new DacMapper().toDac(
-  new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
-    IndexWorldsCommon.Deltas.Types.DacsRawModel
-  >{
-    accounts: [{ key: '2', value: 'dao.worlds' }],
-    symbol: {
-      sym: 'EYE',
-    },
-    refs: [],
-  })
-);
 
 jest
   .spyOn(dacUtils, 'loadDacConfig')
@@ -89,7 +97,7 @@ describe('Candidate Controller Unit tests', () => {
 
   it('Should result with LoadDacConfigError when dac config could not be loaded', async () => {
     mockedConfig.dac.nameCache.get = () => null;
-    jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValueOnce(null);
+    jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValueOnce(Result.withFailure('no dac'));
 
     const output = await controller.list(input);
     expect(output.result.failure.error).toBeInstanceOf(LoadDacConfigError);

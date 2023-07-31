@@ -81,7 +81,7 @@ describe('GetCandidatesOutput', () => {
       Result.withContent(candidateProfiles)
     );
 
-    expect(output.result).toHaveLength(1);
+    expect(output.result.content).toHaveLength(1);
   });
 
   it('should return JSON result object', () => {
