@@ -6,6 +6,10 @@ import {
 import { DacAccounts } from '@endpoints/dacs/domain/entities/dac-accounts';
 import { Pair } from '@alien-worlds/aw-antelope';
 
+/**
+ * The `DacAccountsMapper` class is responsible for converting a list of key-value pairs into a `DacAccounts` object,
+ * which represents the various DAC accounts with their respective balances.
+ */
 export class DacAccountsMapper {
   private accountKeys = new Map<DacAccountIndex, DacAccountKey>([
     [DacAccountIndex.Activation, DacAccountKey.Activation],
@@ -23,6 +27,11 @@ export class DacAccountsMapper {
     [DacAccountIndex.Treasury, DacAccountKey.Treasury],
   ]);
 
+  /**
+   * Converts a list of key-value pairs into a `DacAccounts` object.
+   * @param {Pair[]} accounts - The list of key-value pairs representing the DAC accounts and their balances.
+   * @returns {DacAccounts} - The DacAccounts object representing the DAC accounts with their balances.
+   */
   public toDacAccounts(accounts: Pair[]): DacAccounts {
     const data = {},
       rest = {};

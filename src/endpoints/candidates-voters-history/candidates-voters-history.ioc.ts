@@ -5,13 +5,13 @@ import { CountVotersHistoryUseCase } from './domain/use-cases/count-voters-histo
 import { AssignVotingPowerUseCase } from './domain/use-cases/assign-voting-power.use-case';
 
 /**
- * Represents a dependency injector for setting up the Candidates voters history module dependencies.
+ * Represents a dependency injector for setting up the Candidates voters history endpoint dependencies.
  * @class
  * @extends {DependencyInjector}
  */
 export class CandidatesVotersHistoryDependencyInjector extends DependencyInjector {
   /**
-   * Sets up the Candidates voters history module dependencies.
+   * Sets up the Candidates voters history endpoint dependencies.
    *
    * @async
    * @public

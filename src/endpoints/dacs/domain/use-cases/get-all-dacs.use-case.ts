@@ -14,20 +14,27 @@ import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { GetDacsInput } from '../models/dacs.input';
 
 /**
+ * The `GetAllDacsUseCase` class represents a use case for fetching all DACs or a specific DAC based on the provided input.
  * @class
  */
 @injectable()
 export class GetAllDacsUseCase implements UseCase<Dac[]> {
   public static Token = 'GET_ALL_DACS_USE_CASE';
 
+  /**
+   * Creates an instance of the `GetAllDacsUseCase` use case with the specified dependencies.
+   * @param {IndexWorldsCommon.Services.IndexWorldsContractService} indexWorldsContractService - The service for interacting with the Index Worlds smart contract.
+   */
   constructor(
     @inject(IndexWorldsCommon.Services.IndexWorldsContractService.Token)
     private indexWorldsContractService: IndexWorldsCommon.Services.IndexWorldsContractService
   ) {}
 
   /**
+   * Executes the use case to fetch all DACs or a specific DAC based on the provided input.
    * @async
-   * @returns {Promise<Result<Dac[]>>}
+   * @param {GetDacsInput} input - The input parameters for fetching DACs, including an optional DAC ID and a limit.
+   * @returns {Promise<Result<Dac[]>>} - The result of the use case operation containing the fetched DAC entities.
    */
   public async execute(input: GetDacsInput): Promise<Result<Dac[]>> {
     const options: GetTableRowsOptions = {

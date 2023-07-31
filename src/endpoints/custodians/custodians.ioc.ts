@@ -4,7 +4,7 @@ import { ListCustodianProfilesUseCase } from './domain/use-cases/list-custodian-
 import { CustodiansController } from './domain/custodians.controller';
 
 /**
- * Represents a dependency injector for setting up the Custodians module dependencies.
+ * Represents a dependency injector for setting up the Custodians endpoint dependencies.
  */
 export class CustodiansDependencyInjector extends DependencyInjector {
   /**

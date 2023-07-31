@@ -9,10 +9,10 @@ import { GetCustodiansOutput } from '../domain/models/get-custodians.output';
  */
 export class GetCustodiansRouteIO implements RouteIO {
   /**
-   * Converts the output of the GetCustodiansUseCase to a response format.
+   * Converts the output of the GetCustodians controller to a response format.
    *
    * @public
-   * @param {GetCustodiansOutput} output - The output data from the GetCustodiansUseCase.
+   * @param {GetCustodiansOutput} output - The output data from the GetCustodians controller.
    * @returns {Response} - The Response object with status code and body.
    */
   public toResponse(output: GetCustodiansOutput): Response {
@@ -31,7 +31,7 @@ export class GetCustodiansRouteIO implements RouteIO {
   }
 
   /**
-   * Converts the request object to the input format for the GetCustodiansUseCase.
+   * Converts the request object to the input format for the GetCustodians controller.
    *
    * @public
    * @param {Request<unknown, GetCustodiansRequestPathVariables>} request - The request object containing the path variables.

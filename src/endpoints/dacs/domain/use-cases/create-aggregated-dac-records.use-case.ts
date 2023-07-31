@@ -7,6 +7,7 @@ import { GetDacTokensUseCase } from './get-dac-tokens.use-case';
 import { DacAggregateRecord } from '../models/dac-aggregate-record';
 
 /**
+ * The `CreateAggregatedDacRecords` class represents a use case for creating aggregated DAC records.
  * @class
  */
 @injectable()
@@ -15,6 +16,12 @@ export class CreateAggregatedDacRecords
 {
   public static Token = 'CREATE_AGGREGATED_DAC_RECORDS';
 
+  /**
+   * Creates an instance of the `CreateAggregatedDacRecords` use case with the specified dependencies.
+   * @param {GetDacTreasuryUseCase} getDacTreasuryUseCase - The use case for fetching DAC treasury information.
+   * @param {GetDacInfoUseCase} getDacInfoUseCase - The use case for fetching DAC information.
+   * @param {GetDacTokensUseCase} getDacTokensUseCase - The use case for fetching DAC tokens information.
+   */
   constructor(
     @inject(GetDacTreasuryUseCase.Token)
     private getDacTreasuryUseCase: GetDacTreasuryUseCase,
@@ -25,8 +32,10 @@ export class CreateAggregatedDacRecords
   ) {}
 
   /**
+   * Executes the use case to create aggregated DAC records for the given DACs.
    * @async
-   * @returns {Promise<Result<DacAggregateRecord[]>>}
+   * @param {Dac[]} dacs - The list of DAC entities.
+   * @returns {Promise<Result<DacAggregateRecord[]>>} - The result of the use case operation containing aggregated DAC records.
    */
   public async execute(dacs: Dac[]): Promise<Result<DacAggregateRecord[]>> {
     const list: DacAggregateRecord[] = [];

@@ -10,6 +10,10 @@ import {
 import { AssetRawMapper } from '@alien-worlds/aw-antelope';
 import { Dac } from '../entities/dacs';
 
+/**
+ * The `DacAggregateRecord` class is responsible for creating an aggregated record that contains information about a DAC
+ * and its related data.
+ */
 export class DacAggregateRecord {
   public static create(
     dac?: Dac,
@@ -20,6 +24,15 @@ export class DacAggregateRecord {
     return new DacAggregateRecord(dac, dacTreasury, dacGlobals, dacStats);
   }
 
+  /**
+   *
+   * @private
+   * @constructor
+   * @param dac
+   * @param dacTreasury
+   * @param dacGlobals
+   * @param dacStats
+   */
   private constructor(
     public readonly dac: Dac,
     public readonly dacTreasury: AlienWorldsCommon.Deltas.Entities.Accounts,
@@ -27,6 +40,10 @@ export class DacAggregateRecord {
     public readonly dacStats: TokenWorldsCommon.Deltas.Entities.Stat
   ) {}
 
+  /**
+   * Converts the `DacAggregateRecord` into a JSON representation.
+   * @returns {UnknownObject} - The JSON representation of the `DacAggregateRecord`.
+   */
   public toJSON(): UnknownObject {
     const { dac, dacTreasury, dacGlobals, dacStats } = this;
     const { dacId, owner, title, dacState, symbol, accounts } = dac;

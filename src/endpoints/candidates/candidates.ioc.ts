@@ -6,13 +6,13 @@ import { ListCandidateProfilesUseCase } from './domain/use-cases/list-candidate-
 import { CandidatesController } from './domain/candidates.controller';
 
 /**
- * Represents a dependency injector for setting up the Candidates module dependencies.
+ * Represents a dependency injector for setting up the Candidates endpoint dependencies.
  * @class
  * @extends {DependencyInjector}
  */
 export class CandidatesDependencyInjector extends DependencyInjector {
   /**
-   * Sets up the Candidates module dependencies.
+   * Sets up the Candidates endpoint dependencies.
    *
    * @async
    * @public
