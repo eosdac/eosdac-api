@@ -5,6 +5,18 @@ import { config } from '@config';
 import { Dac } from '@endpoints/dacs/domain/entities/dacs';
 import { loadDacConfig } from '../dac.utils';
 
+jest.mock('@config', () => {
+  return {
+    config: {
+      dac: {
+        nameCache: {
+          get: jest.fn(),
+        },
+      },
+    },
+  };
+});
+
 describe('"DAC utils" unit tests', () => {
   let indexWorldsContractService;
   let dacId: string;
@@ -30,7 +42,7 @@ describe('"DAC utils" unit tests', () => {
     const result = await loadDacConfig(indexWorldsContractService, dacId);
 
     expect(config.dac.nameCache.get).toHaveBeenCalledWith(dacId);
-    expect(result).toBe(cachedDacInfo);
+    expect(result.content).toBe(cachedDacInfo);
   });
 
   it('should fetch dac info if not available in cache', async () => {
