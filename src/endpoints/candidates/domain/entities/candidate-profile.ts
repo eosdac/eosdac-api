@@ -14,14 +14,19 @@ export class CandidateProfile implements Entity {
    *
    * @static
    * @public
-   * @returns {CandidateProfile}
+   * @param {string} dacId - The ID of the DAC.
+   * @param {DaoWorldsCommon.Deltas.Entities.Candidates} candidate - The candidate data from the DAO worlds contract.
+   * @param {Profile} profile - The profile data of the candidate.
+   * @param {TokenWorldsContract.Deltas.Entities.Memberterms} memberTerms - The member terms data from the token worlds contract.
+   * @param {number} agreedTermsVersion - The version of the agreed terms.
+   * @returns {CandidateProfile} - The created CandidateProfile instance.
    */
   public static create(
     dacId: string,
     candidate: DaoWorldsCommon.Deltas.Entities.Candidates,
     profile: Profile,
     memberTerms: TokenWorldsContract.Deltas.Entities.Memberterms,
-    agreedTermsVersion: number,
+    agreedTermsVersion: number
   ): CandidateProfile {
     const {
       candidateName,
@@ -63,6 +68,18 @@ export class CandidateProfile implements Entity {
   /**
    * @private
    * @constructor
+   * @param {string} account - The account of the candidate.
+   * @param {Asset} requestedPay - The requested pay as an Asset object.
+   * @param {number} votePower - The vote power of the candidate.
+   * @param {number} rank - The rank of the candidate.
+   * @param {boolean} isActive - Indicates whether the candidate is active.
+   * @param {number} totalVotes - The total number of votes received by the candidate.
+   * @param {number} voteDecay - The vote decay value of the candidate.
+   * @param {object} profile - The profile data of the candidate.
+   * @param {number} signedDaoTermsVersion - The version of the signed DAO terms.
+   * @param {boolean} hasSignedCurrentDaoTerms - Indicates whether the candidate has signed the current DAO terms.
+   * @param {boolean} isFlagged - Indicates whether the candidate is flagged.
+   * @param {string} dacId - The ID of the DAC.
    */
   private constructor(
     public readonly account: string,
@@ -79,9 +96,15 @@ export class CandidateProfile implements Entity {
     public readonly dacId: string
   ) {}
 
-  id?: string;
-  rest?: UnknownObject;
+  public id?: string;
+  public rest?: UnknownObject;
 
+  /**
+   * Converts the CandidateProfile object to a plain JavaScript object.
+   *
+   * @public
+   * @returns {UnknownObject} - The plain JavaScript object representing the CandidateProfile.
+   */
   public toJSON(): UnknownObject {
     const {
       account,
@@ -95,9 +118,8 @@ export class CandidateProfile implements Entity {
       hasSignedCurrentDaoTerms,
       isFlagged,
       dacId,
-      profile
+      profile,
     } = this;
-
 
     return {
       ...profile,

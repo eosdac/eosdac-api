@@ -1,12 +1,23 @@
 import { DependencyInjector } from '@alien-worlds/aw-core';
 import { GetMemberTermsUseCase } from './domain/use-cases/get-member-terms.use-case';
 import { GetMembersAgreedTermsUseCase } from './domain/use-cases/get-members-agreed-terms.use-case';
-import { GetVotedCandidateIdsUseCase } from './domain/use-cases/get-voted-candidate-ids.use-case';
 import { GetCandidatesUseCase } from './domain/use-cases/get-candidates.use-case';
 import { ListCandidateProfilesUseCase } from './domain/use-cases/list-candidate-profiles.use-case';
 import { CandidatesController } from './domain/candidates.controller';
 
+/**
+ * Represents a dependency injector for setting up the Candidates module dependencies.
+ * @class
+ * @extends {DependencyInjector}
+ */
 export class CandidatesDependencyInjector extends DependencyInjector {
+  /**
+   * Sets up the Candidates module dependencies.
+   *
+   * @async
+   * @public
+   * @returns {Promise<void>} - A Promise that resolves once the setup is complete.
+   */
   public async setup(): Promise<void> {
     const { container } = this;
 
@@ -16,9 +27,6 @@ export class CandidatesDependencyInjector extends DependencyInjector {
     container
       .bind<GetMembersAgreedTermsUseCase>(GetMembersAgreedTermsUseCase.Token)
       .to(GetMembersAgreedTermsUseCase);
-    container
-      .bind<GetVotedCandidateIdsUseCase>(GetVotedCandidateIdsUseCase.Token)
-      .to(GetVotedCandidateIdsUseCase);
     container
       .bind<GetCandidatesUseCase>(GetCandidatesUseCase.Token)
       .to(GetCandidatesUseCase);

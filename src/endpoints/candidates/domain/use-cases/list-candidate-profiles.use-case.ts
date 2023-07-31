@@ -8,7 +8,9 @@ import { GetMemberTermsUseCase } from './get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
 
 /**
+ * Represents a use case for listing candidate profiles for a specific DAC.
  * @class
+ * @implements {UseCase<CandidateProfile[]>}
  */
 @injectable()
 export class ListCandidateProfilesUseCase
@@ -16,6 +18,13 @@ export class ListCandidateProfilesUseCase
 {
   public static Token = 'LIST_CANDIDATE_PROFILES_USE_CASE';
 
+  /**
+   * @constructor
+   * @param {GetCandidatesUseCase} getCandidatesUseCase - The use case to get candidates for a specific DAC.
+   * @param {GetProfilesUseCase} getProfilesUseCase - The use case to get profiles for candidate accounts.
+   * @param {GetMemberTermsUseCase} getMemberTermsUseCase - The use case to get member terms for a specific DAC.
+   * @param {GetMembersAgreedTermsUseCase} getMembersAgreedTermsUseCase - The use case to get agreed terms for DAC members.
+   */
   constructor(
     @inject(GetCandidatesUseCase.Token)
     private getCandidatesUseCase: GetCandidatesUseCase,
@@ -28,8 +37,13 @@ export class ListCandidateProfilesUseCase
   ) {}
 
   /**
+   * Executes the ListCandidateProfilesUseCase to list candidate profiles for a specific DAC.
+   *
    * @async
-   * @returns {Promise<Result<CandidateProfile[]>>}
+   * @public
+   * @param {string} dacId - The ID of the DAC to list candidate profiles for.
+   * @param {Dac} dacConfig - The configuration of the DAC.
+   * @returns {Promise<Result<CandidateProfile[]>>} - The result containing the array of candidate profile objects.
    */
   public async execute(
     dacId: string,

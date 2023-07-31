@@ -25,9 +25,7 @@ const getProfilesUseCase = {
 const getMemberTermsUseCase = {
   execute: jest.fn(),
 };
-const getVotedCandidateIdsUseCase = {
-  execute: jest.fn(),
-};
+
 const getMembersAgreedTermsUseCase = {
   execute: jest.fn(),
 };
@@ -73,9 +71,6 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withContent([
         DaoWorldsCommon.Deltas.Entities.Candidates.getDefault(),
       ])
-    );
-    getVotedCandidateIdsUseCase.execute.mockResolvedValue(
-      Result.withContent([])
     );
     getProfilesUseCase.execute.mockResolvedValue(Result.withContent([]));
     getMemberTermsUseCase.execute.mockResolvedValue(Result.withContent({}));
