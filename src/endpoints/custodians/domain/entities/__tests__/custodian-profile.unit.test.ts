@@ -74,17 +74,19 @@ describe('CustodianProfile', () => {
     );
     const result = instance.toJSON();
 
-    expect(result.walletId).toEqual(instance.account);
+    expect(result.account).toEqual(instance.account);
     expect(result.requestedpay).toEqual(
       `${instance.requestedPay.value} ${instance.requestedPay.symbol}`
     );
     expect(result.votePower).toEqual(Number(instance.votePower.toFixed(0)));
     expect(result).toMatchObject(profile.profile);
-    expect(result.agreedTermVersion).toEqual(instance.signedDaoTermsVersion);
-    expect(result.currentPlanetMemberTermsSignedValid).toEqual(
+    expect(result.signedDaoTermsVersion).toEqual(
+      instance.signedDaoTermsVersion
+    );
+    expect(result.hasSignedCurrentDaoTerms).toEqual(
       instance.hasSignedCurrentDaoTerms
     );
     expect(result.isFlagged).toEqual(instance.isFlagged);
-    expect(result.planetName).toEqual(instance.dacId);
+    expect(result.dacId).toEqual(instance.dacId);
   });
 });

@@ -11,7 +11,17 @@ import { GetCustodiansInput } from '../models/get-custodians.input';
 import { ListCustodianProfilesUseCase } from '../use-cases/list-custodian-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
 
-('@config');
+jest.mock('@config', () => {
+  return {
+    config: {
+      dac: {
+        nameCache: {
+          get: jest.fn(),
+        },
+      },
+    },
+  };
+});
 
 const mockedConfig = config as jest.Mocked<typeof config>;
 
@@ -87,7 +97,9 @@ describe('Custodians Controller Unit tests', () => {
 
   it('Should result with LoadDacConfigError when dac config could not be loaded', async () => {
     mockedConfig.dac.nameCache.get = () => null;
-    jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValueOnce(null);
+    jest
+      .spyOn(dacUtils, 'loadDacConfig')
+      .mockResolvedValueOnce(Result.withFailure('failure'));
 
     const result = await controller.list(input);
     expect(result.failure.error).toBeInstanceOf(LoadDacConfigError);
