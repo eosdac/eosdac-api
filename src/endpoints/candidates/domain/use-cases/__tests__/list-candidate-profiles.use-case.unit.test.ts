@@ -98,7 +98,7 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
   });
 
   it('Should execute GetCandidatesUseCase', async () => {
-    await useCase.execute('dacId', 'walletId', dacConfig);
+    await useCase.execute('dacId', dacConfig);
     expect(getCandidatesUseCase.execute).toBeCalled();
   });
 
@@ -107,12 +107,12 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await useCase.execute('dacId', 'walletId', dacConfig);
+    const result = await useCase.execute('dacId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
 
   it('Should execute GetVotedCandidateIdsUseCase', async () => {
-    await useCase.execute('dacId', 'walletId', dacConfig);
+    await useCase.execute('dacId', dacConfig);
     expect(getVotedCandidateIdsUseCase.execute).toBeCalled();
   });
 
@@ -121,12 +121,12 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await useCase.execute('dacId', 'walletId', dacConfig);
+    const result = await useCase.execute('dacId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
 
   it('Should execute GetProfilesUseCase', async () => {
-    await useCase.execute('dacId', 'walletId', dacConfig);
+    await useCase.execute('dacId', dacConfig);
     expect(getProfilesUseCase.execute).toBeCalled();
   });
 
@@ -135,12 +135,12 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await useCase.execute('dacId', 'walletId', dacConfig);
+    const result = await useCase.execute('dacId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
 
   it('Should execute GetMemberTermsUseCase', async () => {
-    await useCase.execute('dacId', 'walletId', dacConfig);
+    await useCase.execute('dacId', dacConfig);
     expect(getMemberTermsUseCase.execute).toBeCalled();
   });
 
@@ -149,12 +149,12 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await useCase.execute('dacId', 'walletId', dacConfig);
+    const result = await useCase.execute('dacId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
 
   it('Should execute GetMembersAgreedTermsUseCase', async () => {
-    await useCase.execute('dacId', 'walletId', dacConfig);
+    await useCase.execute('dacId', dacConfig);
     expect(getMembersAgreedTermsUseCase.execute).toBeCalled();
   });
 
@@ -163,7 +163,7 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await useCase.execute('dacId', 'walletId', dacConfig);
+    const result = await useCase.execute('dacId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
 });

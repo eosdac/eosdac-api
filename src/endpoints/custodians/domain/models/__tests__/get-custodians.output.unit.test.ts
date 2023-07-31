@@ -78,7 +78,6 @@ describe('GetCustodiansOutput', () => {
     expect(result.results[0].signedDaoTermsVersion).toBeDefined();
     expect(result.results[0].hasSignedCurrentDaoTerms).toBeDefined();
     expect(result.results[0].isFlagged).toBeDefined();
-    expect(result.results[0].isSelected).toBeDefined();
     expect(result.results[0].dacId).toBeDefined();
   });
 

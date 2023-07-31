@@ -3,13 +3,11 @@
 
 process.title = 'aw-api-dao';
 
-import { Container } from '@alien-worlds/aw-core';
 import fastify, { FastifyInstance } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import fastifyCORS from 'fastify-cors';
 import { fastifySwagger } from '@fastify/swagger';
 import openApiOptions from './open-api';
-import { ApiDependencyInjector } from '@endpoints/api.ioc.config';
 import ApiConfig from './config/api-config';
 
 export class DaoApi {
@@ -22,11 +20,6 @@ export class DaoApi {
     });
 
     this.api.register(fastifySwagger, openApiOptions);
-
-    // Set IOC
-    const ioc = new Container();
-    const apiDependencyInjector = new ApiDependencyInjector(ioc);
-    apiDependencyInjector.setup(config);
 
     this.api.register(fastifyCORS, {
       allowedHeaders: 'Content-Type,X-DAC-Name',

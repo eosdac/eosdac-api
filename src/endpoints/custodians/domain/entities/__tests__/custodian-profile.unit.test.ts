@@ -61,7 +61,6 @@ describe('CustodianProfile', () => {
       memberTerms.version === agreedTermsVersion
     );
     expect(result.isFlagged).toEqual(false);
-    expect(result.isSelected).toEqual(false);
     expect(result.dacId).toEqual(dacId);
   });
 
@@ -86,7 +85,6 @@ describe('CustodianProfile', () => {
       instance.hasSignedCurrentDaoTerms
     );
     expect(result.isFlagged).toEqual(instance.isFlagged);
-    expect(result.isSelected).toEqual(instance.isSelected);
     expect(result.planetName).toEqual(instance.dacId);
   });
 });

@@ -26,23 +26,25 @@ const listCandidateProfilesUseCase = {
   execute: jest.fn(),
 };
 const input: GetCandidatesInput = {
-  walletId: 'string',
   dacId: 'string',
+  toJSON: () => ({ dacId: 'string' }),
 };
 
-jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValue(
-  new DacMapper().toDac(
-    new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
-      IndexWorldsCommon.Deltas.Types.DacsRawModel
-    >{
-      accounts: [{ key: '2', value: 'dao.worlds' }],
-      symbol: {
-        sym: 'EYE',
-      },
-      refs: [],
-    })
-  )
+const dac = new DacMapper().toDac(
+  new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+    IndexWorldsCommon.Deltas.Types.DacsRawModel
+  >{
+    accounts: [{ key: '2', value: 'dao.worlds' }],
+    symbol: {
+      sym: 'EYE',
+    },
+    refs: [],
+  })
 );
+
+jest
+  .spyOn(dacUtils, 'loadDacConfig')
+  .mockResolvedValue(Result.withContent(dac));
 
 describe('Candidate Controller Unit tests', () => {
   beforeAll(() => {
@@ -89,8 +91,8 @@ describe('Candidate Controller Unit tests', () => {
     mockedConfig.dac.nameCache.get = () => null;
     jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValueOnce(null);
 
-    const result = await controller.list(input);
-    expect(result.failure.error).toBeInstanceOf(LoadDacConfigError);
+    const output = await controller.list(input);
+    expect(output.result.failure.error).toBeInstanceOf(LoadDacConfigError);
   });
 
   it('should return failure when ListCandidateProfilesUseCase fails', async () => {
@@ -98,9 +100,9 @@ describe('Candidate Controller Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await controller.list(input);
+    const output = await controller.list(input);
 
     expect(listCandidateProfilesUseCase.execute).toBeCalled();
-    expect(result.isFailure).toBeTruthy();
+    expect(output.result.isFailure).toBeTruthy();
   });
 });

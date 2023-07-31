@@ -135,6 +135,10 @@ const getDacTokensUseCase = {
 const input: GetDacsInput = {
   dacId: 'string',
   limit: 1,
+  toJSON: () => ({
+    dacId: 'string',
+    limit: 1,
+  }),
 };
 
 let container: Container;
@@ -201,9 +205,9 @@ describe('GetDacs Controller Unit tests', () => {
       jest.fn(() => Result.withFailure(Failure.fromError(null)))
     );
 
-    const result = await controller.getDacs(input);
+    const output = await controller.getDacs(input);
 
-    expect(result.isFailure).toBeTruthy();
+    expect(output.result.isFailure).toBeTruthy();
   });
 
   it('Should return failure when GetDacTreasuryUseCase fails', async () => {
@@ -211,9 +215,9 @@ describe('GetDacs Controller Unit tests', () => {
       jest.fn(() => Result.withFailure(Failure.fromError(null)))
     );
 
-    const result = await controller.getDacs(input);
+    const output = await controller.getDacs(input);
 
-    expect(result.isFailure).toBeTruthy();
+    expect(output.result.isFailure).toBeTruthy();
   });
 
   it('Should return failure when GetDacInfoUseCase fails', async () => {
@@ -221,9 +225,9 @@ describe('GetDacs Controller Unit tests', () => {
       jest.fn(() => Result.withFailure(Failure.fromError(null)))
     );
 
-    const result = await controller.getDacs(input);
+    const output = await controller.getDacs(input);
 
-    expect(result.isFailure).toBeTruthy();
+    expect(output.result.isFailure).toBeTruthy();
   });
 
   it('Should return failure when GetDacTokensUseCase fails', async () => {
@@ -231,8 +235,8 @@ describe('GetDacs Controller Unit tests', () => {
       jest.fn(() => Result.withFailure(Failure.fromError(null)))
     );
 
-    const result = await controller.getDacs(input);
+    const output = await controller.getDacs(input);
 
-    expect(result.isFailure).toBeTruthy();
+    expect(output.result.isFailure).toBeTruthy();
   });
 });

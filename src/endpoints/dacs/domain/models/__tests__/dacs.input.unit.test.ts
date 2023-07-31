@@ -1,6 +1,4 @@
 import { GetDacsInput } from '../dacs.input';
-import { GetDacsRequestQueryParams } from '../../../data/dtos/dacs.dto';
-import { Request } from '@alien-worlds/aw-core';
 
 const input = {
   query: {
@@ -11,25 +9,19 @@ const input = {
 
 describe('GetDacsInput Unit tests', () => {
   it('"GetDacsInput.fromRequest" should create instance', async () => {
-    const fromReq = GetDacsInput.fromRequest(
-      input as Request<unknown, object, GetDacsRequestQueryParams>
-    );
+    const fromReq = GetDacsInput.create(input.query.dacId, input.query.limit);
 
     expect(fromReq).toBeInstanceOf(GetDacsInput);
   });
 
   it('GetDacsInput instance should have proper dacId value', async () => {
-    const fromReq = GetDacsInput.fromRequest(
-      input as Request<unknown, object, GetDacsRequestQueryParams>
-    );
+    const fromReq = GetDacsInput.create(input.query.dacId, input.query.limit);
 
     expect(fromReq.dacId).toBe(input.query.dacId);
   });
 
   it('GetDacsInput instance should have proper limit value', async () => {
-    const fromReq = GetDacsInput.fromRequest(
-      input as Request<unknown, object, GetDacsRequestQueryParams>
-    );
+    const fromReq = GetDacsInput.create(input.query.dacId, input.query.limit);
 
     expect(fromReq.limit).toBe(input.query.limit);
   });

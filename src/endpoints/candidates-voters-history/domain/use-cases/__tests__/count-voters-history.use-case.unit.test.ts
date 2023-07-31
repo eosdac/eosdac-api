@@ -9,13 +9,12 @@ import { CountVotersHistoryUseCase } from '../count-voters-history.use-case';
 
 let container: Container;
 let useCase: CountVotersHistoryUseCase;
-const input: CandidatesVotersHistoryInput =
-  CandidatesVotersHistoryInput.fromRequest({
-    dacId: 'string',
-    candidateId: 'string',
-    skip: 0,
-    limit: 20,
-  });
+const input: CandidatesVotersHistoryInput = new CandidatesVotersHistoryInput(
+  'string',
+  'string',
+  0,
+  20
+);
 
 const contractActionRepository = {
   count: jest.fn(),

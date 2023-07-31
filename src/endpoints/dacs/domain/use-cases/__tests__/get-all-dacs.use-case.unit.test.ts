@@ -15,6 +15,10 @@ const indexWorldsContractService = {
 const input: GetDacsInput = {
   dacId: 'string',
   limit: 1,
+  toJSON: () => ({
+    dacId: 'string',
+    limit: 1,
+  }),
 };
 
 let container: Container;

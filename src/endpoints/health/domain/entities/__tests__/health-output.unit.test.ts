@@ -8,36 +8,34 @@ const healthOutputDto: HealthCheckJsonModel = {
   uptimeSeconds: 100,
   nodeVersion: 'v17.3.0',
   database: {
-    status: 'OK',
+    mongodb: 'OK',
   },
-  dependencies: [
-    {
-      name: '@alien-worlds/aw-core',
-      version: '0.0.68',
-    },
-  ],
+  dependencies: {
+    '@alien-worlds/aw-core': '0.0.68',
+  },
   historyApi: {
-    currentBlock: 0n,
+    currentBlockNumber: '0',
     status: 'OK',
   },
 };
 
+const healthOutput = HealthCheckStatus.create(
+  '1.0.0',
+  {
+    '@alien-worlds/aw-core': '0.0.68',
+  },
+  {
+    mongodb: 'OK',
+  },
+  0n
+);
+
 describe('HealthOutput unit tests', () => {
   it('HealthOutput.fromDto should return HealthOutput object based on the provided dto', async () => {
-    const healthOutput = HealthCheckStatus.fromDto(healthOutputDto);
-
     expect(healthOutput).toEqual(healthOutputDto);
   });
 
-  it('"toDto" should return a dto based on entity', async () => {
-    const healthOutput = HealthCheckStatus.fromDto(healthOutputDto);
-
-    expect(healthOutput.toDto()).toEqual(healthOutputDto);
-  });
-
   it('"toJson" should return an object based on entity', async () => {
-    const healthOutput = HealthCheckStatus.fromDto(healthOutputDto);
-
     expect(healthOutput.toJSON()).toEqual({
       status: 'OK',
       version: '1.0.0',

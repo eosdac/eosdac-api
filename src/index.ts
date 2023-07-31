@@ -17,7 +17,7 @@ const start = async () => {
 
   const ioc = new Container();
   const apiDependencyInjector = new ApiDependencyInjector(ioc);
-  apiDependencyInjector.setup(config);
+  await apiDependencyInjector.setup(config);
 
   const api = new DaoApi(config);
   mountRoutes(api, ioc, config);

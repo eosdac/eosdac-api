@@ -7,7 +7,6 @@ import { CandidatesVotersHistoryInput } from '../models/candidates-voters-histor
 import { VoteModel } from '../../data/dtos/candidates-voters-history.dto';
 import { CountVotersHistoryUseCase } from '../use-cases/count-voters-history.use-case';
 import { GetCandidatesVotersHistoryUseCase } from '../use-cases/get-candidates-voters-history.use-case';
-import { GetVotingPowerUseCase } from '../use-cases/get-voting-power.use-case';
 
 const voterHistoryResp: VoteModel[] = [
   {
@@ -47,9 +46,6 @@ describe('VotingHistory Controller Unit tests', () => {
       )
       .toConstantValue(getCandidatesVotersHistoryUseCase as any);
     container
-      .bind<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token)
-      .toConstantValue(getVotingPowerUseCase as any);
-    container
       .bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token)
       .toConstantValue(countVotersHistoryUseCase as any);
     container
@@ -85,9 +81,9 @@ describe('VotingHistory Controller Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await controller.candidatesVotersHistory(input);
+    const output = await controller.candidatesVotersHistory(input);
 
-    expect(result.isFailure).toBeTruthy();
+    expect(output.failure).toBeTruthy();
   });
 
   it('Should return failure when CountVotersHistoryUseCase fails', async () => {
@@ -95,8 +91,8 @@ describe('VotingHistory Controller Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await controller.candidatesVotersHistory(input);
+    const output = await controller.candidatesVotersHistory(input);
 
-    expect(result.isFailure).toBeTruthy();
+    expect(output.failure).toBeTruthy();
   });
 });

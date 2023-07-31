@@ -1,5 +1,4 @@
-import { IO, Request, UnknownObject } from '@alien-worlds/aw-core';
-import { VotingHistoryRequestQueryParams } from '../../data/dtos/user-voting-history.dto';
+import { IO, UnknownObject } from '@alien-worlds/aw-core';
 
 /**
  * @class

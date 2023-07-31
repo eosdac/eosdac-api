@@ -7,7 +7,7 @@ describe('GetCustodiansInput', () => {
 				params: { dacId: 'someDacId' },
 			};
 
-			const getCustodiansInput = GetCustodiansInput.fromRequest(request as any);
+			const getCustodiansInput = GetCustodiansInput.create(request.params.dacId);
 
 			expect(getCustodiansInput.dacId).toBe('someDacId');
 		});

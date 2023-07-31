@@ -6,6 +6,7 @@ import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
 import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { DacAggregateRecord } from '../dac-aggregate-record.ts.js';
 import { GetDacsOutput } from '../get-dacs.output';
+import { Result } from '@alien-worlds/aw-core';
 
 const dacDir = new DacMapper().toDac(
   new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity({
@@ -34,18 +35,22 @@ const dacStats = new TokenWorldsCommon.Deltas.Mappers.StatRawMapper().toEntity({
 
 describe('GetDacsOutput Unit tests', () => {
   it('"GetDacsOutput.create" should create instance', async () => {
-    const output = GetDacsOutput.create([
-      DacAggregateRecord.create(dacDir, dacTreasury, dacGlobals, dacStats),
-    ]);
+    const output = GetDacsOutput.create(
+      Result.withContent([
+        DacAggregateRecord.create(dacDir, dacTreasury, dacGlobals, dacStats),
+      ])
+    );
 
     expect(output).toBeInstanceOf(GetDacsOutput);
   });
 
   it('GetDacsOutput.toJson should return json object', async () => {
-    const output = GetDacsOutput.create([
-      DacAggregateRecord.create(dacDir, dacTreasury, dacGlobals, dacStats),
-    ]);
+    const output = GetDacsOutput.create(
+      Result.withContent([
+        DacAggregateRecord.create(dacDir, dacTreasury, dacGlobals, dacStats),
+      ])
+    );
 
-    expect(output.toJson()).toBeInstanceOf(Object);
+    expect(output.toJSON()).toBeInstanceOf(Object);
   });
 });

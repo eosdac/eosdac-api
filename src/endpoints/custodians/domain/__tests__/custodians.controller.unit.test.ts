@@ -25,21 +25,24 @@ const listCandidateProfilesUseCase = {
 };
 const input: GetCustodiansInput = {
   dacId: 'string',
+  toJSON: () => ({
+    dacId: 'string',
+  }),
 };
-
-jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValue(
-  new DacMapper().toDac(
-    new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
-      IndexWorldsCommon.Deltas.Types.DacsRawModel
-    >{
-      accounts: [{ key: '2', value: 'dao.worlds' }],
-      symbol: {
-        sym: 'EYE',
-      },
-      refs: [],
-    })
-  )
+const dac = new DacMapper().toDac(
+  new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+    IndexWorldsCommon.Deltas.Types.DacsRawModel
+  >{
+    accounts: [{ key: '2', value: 'dao.worlds' }],
+    symbol: {
+      sym: 'EYE',
+    },
+    refs: [],
+  })
 );
+jest
+  .spyOn(dacUtils, 'loadDacConfig')
+  .mockResolvedValue(Result.withContent(dac));
 
 describe('Custodians Controller Unit tests', () => {
   beforeAll(() => {

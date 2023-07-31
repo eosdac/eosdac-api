@@ -6,6 +6,12 @@ const input: VotingHistoryInput = {
   voter: 'string',
   limit: 20,
   skip: 0,
+  toJSON: () => ({
+    dacId: 'string',
+    voter: 'string',
+    limit: 20,
+    skip: 0,
+  }),
 };
 
 describe('VotingHistoryQueryModel Unit tests', () => {
