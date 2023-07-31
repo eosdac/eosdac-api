@@ -9,20 +9,31 @@ import { GetVotingPowerQueryBuilder } from '../models/get-voting-power.query-bui
 type Weights = StkvtWorldsCommon.Deltas.Entities.Weights;
 
 /**
+ * Represents the use case for assigning voting power to an array of VoteModel objects.
  * @class
+ * @implements {UseCase<VoteModel[]>}
  */
 @injectable()
 export class AssignVotingPowerUseCase implements UseCase<VoteModel[]> {
   public static Token = 'ASSIGN_VOTING_POWER_USE_CASE';
-
+  /**
+   * Creates a new instance of AssignVotingPowerUseCase.
+   *
+   * @constructor
+   * @param {StkvtWorldsCommon.Deltas.StkvtWorldsDeltaRepository} stkvtWorldsDeltaRepository - The repository for stkvt worlds deltas.
+   */
   constructor(
     @inject(StkvtWorldsCommon.Deltas.StkvtWorldsDeltaRepository.Token)
     private stkvtWorldsDeltaRepository: StkvtWorldsCommon.Deltas.StkvtWorldsDeltaRepository
   ) {}
 
   /**
+   * Executes the AssignVotingPowerUseCase with the provided array of VoteModel objects.
+   *
    * @async
-   * @returns {Promise<Result<VoteModel[]>>}
+   * @public
+   * @param {VoteModel[]} models - The array of VoteModel objects.
+   * @returns {Promise<Result<VoteModel[]>>} - A promise that resolves with a Result containing the updated array of VoteModel objects.
    */
   public async execute(models: VoteModel[]): Promise<Result<VoteModel[]>> {
     const promises = models.map(model =>

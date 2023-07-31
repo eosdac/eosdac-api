@@ -5,20 +5,32 @@ import { CandidatesVotersHistoryInput } from '../models/candidates-voters-histor
 import { CountVotersHistoryQueryBuilder } from '../models/count-voters-history.query-builder';
 
 /**
+ * Represents the use case for counting voters' history for a candidate.
  * @class
+ * @implements {UseCase<number>}
  */
 @injectable()
 export class CountVotersHistoryUseCase implements UseCase<number> {
   public static Token = 'COUNT_VOTERS_HISTORY_USE_CASE';
 
+  /**
+   * Creates a new instance of CountVotersHistoryUseCase.
+   *
+   * @constructor
+   * @param {DaoWorldsCommon.Actions.DaoWorldsActionRepository} daoWorldsActionRepository - The repository for DAO worlds actions.
+   */
   constructor(
     @inject(DaoWorldsCommon.Actions.DaoWorldsActionRepository.Token)
     private daoWorldsActionRepository: DaoWorldsCommon.Actions.DaoWorldsActionRepository
   ) {}
 
   /**
+   * Executes the CountVotersHistoryUseCase with the provided input.
+   *
    * @async
-   * @returns {Promise<Result<Number, Error>>}
+   * @public
+   * @param {CandidatesVotersHistoryInput} input - The input containing the DAC ID and candidate ID.
+   * @returns {Promise<Result<number, Error>>} - A promise that resolves with a Result containing the count of voters' history for the candidate.
    */
   public async execute(
     input: CandidatesVotersHistoryInput

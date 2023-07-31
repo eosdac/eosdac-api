@@ -4,7 +4,19 @@ import { GetCandidatesVotersHistoryUseCase } from './domain/use-cases/get-candid
 import { CountVotersHistoryUseCase } from './domain/use-cases/count-voters-history.use-case';
 import { AssignVotingPowerUseCase } from './domain/use-cases/assign-voting-power.use-case';
 
+/**
+ * Represents a dependency injector for setting up the Candidates voters history module dependencies.
+ * @class
+ * @extends {DependencyInjector}
+ */
 export class CandidatesVotersHistoryDependencyInjector extends DependencyInjector {
+  /**
+   * Sets up the Candidates voters history module dependencies.
+   *
+   * @async
+   * @public
+   * @returns {Promise<void>} - A Promise that resolves once the setup is complete.
+   */
   public async setup(): Promise<void> {
     const { container } = this;
 

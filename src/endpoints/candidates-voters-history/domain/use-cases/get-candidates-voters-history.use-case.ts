@@ -6,20 +6,32 @@ import { VoteModel } from '../../data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryQueryBuilder } from '../models/candidates-voters-history.query-builder';
 
 /**
+ * Represents the use case for getting the voting history of candidates.
  * @class
+ * @implements {UseCase<VoteModel[]>}
  */
 @injectable()
 export class GetCandidatesVotersHistoryUseCase implements UseCase<VoteModel[]> {
   public static Token = 'GET_CANDIDATES_VOTERS_HISTORY_USE_CASE';
 
+  /**
+   * Creates a new instance of GetCandidatesVotersHistoryUseCase.
+   *
+   * @constructor
+   * @param {DaoWorldsCommon.Actions.DaoWorldsActionRepository} daoWorldsActionRepository - The repository for DAO worlds actions.
+   */
   constructor(
     @inject(DaoWorldsCommon.Actions.DaoWorldsActionRepository.Token)
     private daoWorldsActionRepository: DaoWorldsCommon.Actions.DaoWorldsActionRepository
   ) {}
 
   /**
+   * Executes the GetCandidatesVotersHistoryUseCase with the provided input.
+   *
    * @async
-   * @returns {Promise<Result<VoteModel[], Error>>}
+   * @public
+   * @param {CandidatesVotersHistoryInput} input - The input containing the DAC ID, candidate ID, skip, and limit.
+   * @returns {Promise<Result<VoteModel[], Error>>} - A promise that resolves with a Result containing the voting history of candidates.
    */
   public async execute(
     input: CandidatesVotersHistoryInput

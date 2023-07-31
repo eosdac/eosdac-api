@@ -7,12 +7,21 @@ import { CandidatesVotersHistoryOutput } from './models/candidates-voters-histor
 import { AssignVotingPowerUseCase } from './use-cases/assign-voting-power.use-case';
 
 /**
+ * Represents the controller for managing candidates' voting history.
  * @class
  */
 @injectable()
 export class CandidatesVotersHistoryController {
   public static Token = 'VOTERS_HISTORY_CONTROLLER';
 
+  /**
+   * Creates a new instance of CandidatesVotersHistoryController.
+   *
+   * @constructor
+   * @param {GetCandidatesVotersHistoryUseCase} getCandidatesVotersHistoryUseCase - The use case for getting candidates' voting history.
+   * @param {AssignVotingPowerUseCase} assignVotingPowerUseCase - The use case for assigning voting power to the voting history.
+   * @param {CountVotersHistoryUseCase} countVotersHistoryUseCase - The use case for counting voters' history.
+   */
   constructor(
     @inject(GetCandidatesVotersHistoryUseCase.Token)
     private getCandidatesVotersHistoryUseCase: GetCandidatesVotersHistoryUseCase,
@@ -25,8 +34,12 @@ export class CandidatesVotersHistoryController {
   ) {}
 
   /**
+   * Retrieves the candidates' voting history based on the provided input.
    *
-   * @returns {Promise<CandidatesVotersHistoryOutput>}
+   * @async
+   * @public
+   * @param {CandidatesVotersHistoryInput} input - The input containing the DAC ID, candidate ID, skip, and limit.
+   * @returns {Promise<CandidatesVotersHistoryOutput>} - A promise that resolves with the candidates' voting history output.
    */
   public async candidatesVotersHistory(
     input: CandidatesVotersHistoryInput

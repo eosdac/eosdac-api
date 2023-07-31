@@ -8,9 +8,17 @@ export type CandidatesVotersHistoryQueryArgs = {
 };
 
 /**
+ * Represents a query builder for querying candidates' voters history for a specific DAC and candidate.
  * @class
+ * @extends {QueryBuilder}
  */
 export class CandidatesVotersHistoryQueryBuilder extends QueryBuilder {
+  /**
+   * Builds the MongoDB aggregation pipeline and options for the query.
+   *
+   * @public
+   * @returns {Query} - The Query object containing the pipeline and options.
+   */
   public build(): Query {
     const { candidateId, dacId } = this
       .args as CandidatesVotersHistoryQueryArgs;

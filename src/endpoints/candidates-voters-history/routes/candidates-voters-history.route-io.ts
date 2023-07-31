@@ -9,7 +9,18 @@ import { CandidatesVotersHistoryRequestQueryParams } from '../data/dtos/candidat
 import { CandidatesVotersHistoryInput } from '../domain/models/candidates-voters-history.input';
 import { CandidatesVotersHistoryOutput } from '../domain/models/candidates-voters-history.output';
 
+/**
+ * Represents the RouteIO for handling the input and output of the GetCandidatesVotersHistoryRoute.
+ * @class
+ */
 export class GetCandidatesVotersHistoryRouteIO implements RouteIO {
+  /**
+   * Converts the CandidatesVotersHistoryOutput to a Response object.
+   *
+   * @public
+   * @param {CandidatesVotersHistoryOutput} output - The CandidatesVotersHistoryOutput to convert.
+   * @returns {Response} - The Response object.
+   */
   public toResponse(output: CandidatesVotersHistoryOutput): Response {
     const { failure } = output;
     if (failure) {
@@ -36,6 +47,13 @@ export class GetCandidatesVotersHistoryRouteIO implements RouteIO {
     };
   }
 
+  /**
+   * Converts the Request object to a CandidatesVotersHistoryInput object.
+   *
+   * @public
+   * @param {Request<unknown, object, CandidatesVotersHistoryRequestQueryParams>} request - The Request object to convert.
+   * @returns {CandidatesVotersHistoryInput} - The CandidatesVotersHistoryInput object.
+   */
   public fromRequest(
     request: Request<unknown, object, CandidatesVotersHistoryRequestQueryParams>
   ): CandidatesVotersHistoryInput {

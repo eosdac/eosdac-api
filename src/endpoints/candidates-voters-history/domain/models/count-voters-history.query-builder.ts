@@ -5,9 +5,17 @@ import { MongoDB } from '@alien-worlds/aw-storage-mongodb';
 export type CountVotersHitoryQueryArgs = { dacId: string; candidateId: string };
 
 /**
+ * Represents a query builder for counting voters' history for a specific DAC and candidate.
  * @class
+ * @extends {QueryBuilder}
  */
 export class CountVotersHistoryQueryBuilder extends QueryBuilder {
+  /**
+   * Builds the MongoDB filter and options for the query.
+   *
+   * @public
+   * @returns {Query} - The Query object containing the filter and options.
+   */
   public build(): Query {
     const { dacId, candidateId } = this.args as CountVotersHitoryQueryArgs;
 
