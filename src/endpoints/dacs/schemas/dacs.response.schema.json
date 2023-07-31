@@ -23,8 +23,8 @@
                     "title": {
                         "type": "string"
                     },
-                    "dacState": {
-                        "type": "integer"
+                    "isDacActive": {
+                        "type": "boolean"
                     },
                     "symbol": {
                         "type": "object",
@@ -137,25 +137,105 @@
                             "transferLocked"
                         ]
                     },
-                    "dacGlobals": {
-                        "type": "array",
-                        "minItems": 0,
-                        "items": {
-                            "$ref": "#/$defs/dacGlobalItem"
-                        }
+                    "electionGlobals": {
+                        "type": "object",
+                        "properties": {
+                            "authThresholdHigh": {
+                                "type": "integer"
+                            },
+                            "authThresholdLow": {
+                                "type": "integer"
+                            },
+                            "authThresholdMid": {
+                                "type": "integer"
+                            },
+                            "budgetPercentage": {
+                                "type": "integer"
+                            },
+                            "initialVoteQuorumPercent": {
+                                "type": "integer"
+                            },
+                            "lastClaimBudgetTime": {
+                                "type": "string"
+                            },
+                            "lastPeriodTime": {
+                                "type": "string"
+                            },
+                            "lockupReleaseTimeDelay": {
+                                "type": "integer"
+                            },
+                            "lockupAsset": {
+                                "$ref": "#/$defs/asset"
+                            },
+                            "maxVotes": {
+                                "type": "integer"
+                            },
+                            "metInitialVotesThreshold": {
+                                "type": "integer"
+                            },
+                            "numberActiveCandidates": {
+                                "type": "integer"
+                            },
+                            "numElected": {
+                                "type": "integer"
+                            },
+                            "periodLength": {
+                                "type": "integer"
+                            },
+                            "requestedPayMax": {
+                                "$ref": "#/$defs/asset"
+                            },
+                            "shouldPayViaServiceProvider": {
+                                "type": "integer"
+                            },
+                            "tokenSupplyTheshold": {
+                                "type": "integer"
+                            },
+                            "totalVotesOnCandidates": {
+                                "type": "string"
+                            },
+                            "totalWeightOfVotes": {
+                                "type": "string"
+                            },
+                            "voteQuorumPercent": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "authThresholdHigh",
+                            "authThresholdLow",
+                            "authThresholdMid",
+                            "budgetPercentage",
+                            "initialVoteQuorumPercent",
+                            "lastClaimBudgetTime",
+                            "lastPeriodTime",
+                            "lockupReleaseTimeDelay",
+                            "lockupAsset",
+                            "maxVotes",
+                            "metInitialVotesThreshold",
+                            "numberActiveCandidates",
+                            "numElected",
+                            "periodLength",
+                            "requestedPayMax",
+                            "shouldPayViaServiceProvider",
+                            "tokenSupplyTheshold",
+                            "totalVotesOnCandidates",
+                            "totalWeightOfVotes",
+                            "voteQuorumPercent"
+                        ]
                     }
                 },
                 "required": [
                     "dacId",
                     "owner",
                     "title",
-                    "dacState",
+                    "isDacActive",
                     "symbol",
                     "refs",
                     "accounts",
                     "dacTreasury",
                     "dacStats",
-                    "dacGlobals"
+                    "electionGlobals"
                 ]
             }
         },
@@ -168,51 +248,18 @@
             "type": "string",
             "pattern": "^\\d+(\\.\\d+)? [A-Z]{3}"
         },
-        "dacGlobalItem": {
+        "asset": {
             "type": "object",
             "required": [
-                "key",
-                "value"
+                "quantity",
+                "contract"
             ],
             "properties": {
-                "key": {
+                "quantity": {
                     "type": "string"
                 },
-                "value": {
-                    "type": "array",
-                    "minItems": 2,
-                    "maxItems": 2,
-                    "items": false,
-                    "prefixItems": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "anyOf": [
-                                {
-                                    "type": "string"
-                                },
-                                {
-                                    "type": "integer"
-                                },
-                                {
-                                    "type": "object",
-                                    "required": [
-                                        "quantity",
-                                        "contract"
-                                    ],
-                                    "properties": {
-                                        "quantity": {
-                                            "type": "string"
-                                        },
-                                        "contract": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    ]
+                "contract": {
+                    "type": "string"
                 }
             }
         }
