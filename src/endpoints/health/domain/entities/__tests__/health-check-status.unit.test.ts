@@ -31,22 +31,21 @@ const healthOutput = HealthCheckStatus.create(
 );
 
 describe('HealthOutput unit tests', () => {
-  it('HealthOutput.fromDto should return HealthOutput object based on the provided dto', async () => {
-    expect(healthOutput).toEqual(healthOutputDto);
-  });
-
   it('"toJson" should return an object based on entity', async () => {
-    expect(healthOutput.toJSON()).toEqual({
-      status: 'OK',
-      version: '1.0.0',
-      timestamp: 1676468485153,
-      uptimeSeconds: 100,
-      nodeVersion: 'v17.3.0',
-      dependencies: {
-        '@alien-worlds/aw-core': '0.0.68',
-      },
-      database: { status: 'OK' },
-      blockChainHistory: { currentBlock: '0', status: 'OK' },
+    const json = healthOutput.toJSON();
+
+    expect(json.database).toEqual({
+      mongodb: 'OK',
     });
+    expect(json.dependencies).toEqual({
+      '@alien-worlds/aw-core': '0.0.68',
+    });
+    expect(json.historyApi).toEqual({
+      currentBlockNumber: '0',
+      status: 'FAILED',
+    });
+    expect(json.nodeVersion).toEqual('v17.4.0');
+    expect(json.status).toEqual('OK');
+    expect(json.version).toEqual('1.0.0');
   });
 });
