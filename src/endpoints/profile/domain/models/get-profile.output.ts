@@ -1,8 +1,8 @@
 import {
   Failure,
   IO,
-  removeUndefinedProperties,
   UnknownObject,
+  removeUndefinedProperties,
 } from '@alien-worlds/aw-core';
 
 import { Profile } from '../entities/profile';
@@ -20,7 +20,7 @@ export class GetProfileOutput implements IO {
     public readonly profiles: Profile[],
     public readonly count: number,
     public readonly failure: Failure
-  ) {}
+  ) { }
 
   public toJSON(): UnknownObject {
     const { profiles, count, failure } = this;
@@ -44,7 +44,7 @@ export class GetProfileOutput implements IO {
           };
         } else {
           output = {
-            block_num: blockNum.toString(),
+            blockNumber: blockNum.toString(),
             account,
             profile: profile.profile.toJSON(),
           };

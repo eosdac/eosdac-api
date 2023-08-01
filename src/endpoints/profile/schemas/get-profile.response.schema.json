@@ -10,7 +10,7 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "block_num": {
+                    "blockNumber": {
                         "type": "string"
                     },
                     "account": {
@@ -40,7 +40,7 @@
                     }
                 },
                 "required": [
-                    "block_num",
+                    "blockNumber",
                     "account",
                     "profile"
                 ]
