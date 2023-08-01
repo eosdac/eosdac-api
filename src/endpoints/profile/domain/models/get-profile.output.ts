@@ -20,7 +20,7 @@ export class GetProfileOutput implements IO {
     public readonly profiles: Profile[],
     public readonly count: number,
     public readonly failure: Failure
-  ) { }
+  ) {}
 
   public toJSON(): UnknownObject {
     const { profiles, count, failure } = this;

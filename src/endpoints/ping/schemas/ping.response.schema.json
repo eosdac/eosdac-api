@@ -1,11 +1,11 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "ping.response.schema.json",
-    "title": "/ping response schema",
-    "type": "object",
-    "properties": {
-        "ping": {
-            "const": "pong"
-        }
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ping.response.schema.json",
+  "title": "/ping response schema",
+  "type": "object",
+  "properties": {
+    "ping": {
+      "const": "pong"
     }
+  }
 }

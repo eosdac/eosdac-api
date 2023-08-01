@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { FlagRepository } from "../flag.repository";
+import { FlagRepository } from '../flag.repository';
 
 describe('FlagRepository unit tests', () => {
   it('"Token" should be set', () => {

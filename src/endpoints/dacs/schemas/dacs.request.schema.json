@@ -1,31 +1,31 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "dacs.request.schema.json",
-    "title": "/dacs request schema",
-    "type": "object",
-    "properties": {
-        "query": {
-            "type": "object",
-            "properties": {
-                "dacId": {
-                    "$ref": "#/$defs/dacId"
-                },
-                "limit": {
-                    "$ref": "#/$defs/positiveInteger"
-                }
-            },
-            "required": []
-        }
-    },
-    "$defs": {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dacs.request.schema.json",
+  "title": "/dacs request schema",
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "object",
+      "properties": {
         "dacId": {
-            "type": "string",
-            "minLength": 5,
-            "maxLength": 6
+          "$ref": "#/$defs/dacId"
         },
-        "positiveInteger": {
-            "type": "integer",
-            "minimum": 1
+        "limit": {
+          "$ref": "#/$defs/positiveInteger"
         }
+      },
+      "required": []
     }
+  },
+  "$defs": {
+    "dacId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 6
+    },
+    "positiveInteger": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
 }

@@ -1,5 +1,4 @@
 export type GetDacsRequestQueryParams = {
-	dacId: string,
-	limit: number,
+  dacId: string;
+  limit: number;
 };
-

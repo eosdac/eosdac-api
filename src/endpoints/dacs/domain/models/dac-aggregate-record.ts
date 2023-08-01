@@ -2,7 +2,10 @@ import { AssetRawMapper, Pair } from '@alien-worlds/aw-antelope';
 import * as AlienWorldsCommon from '@alien-worlds/aw-contract-alien-worlds';
 import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
-import { removeUndefinedProperties, UnknownObject } from '@alien-worlds/aw-core';
+import {
+  removeUndefinedProperties,
+  UnknownObject,
+} from '@alien-worlds/aw-core';
 import { camelCase } from 'change-case';
 
 import { Dac } from '../entities/dacs';
@@ -35,7 +38,7 @@ export class DacAggregateRecord {
     public readonly dacTreasury: AlienWorldsCommon.Deltas.Entities.Accounts,
     public readonly dacGlobals: DaoWorldsCommon.Deltas.Entities.Dacglobals,
     public readonly dacStats: TokenWorldsCommon.Deltas.Entities.Stat
-  ) { }
+  ) {}
 
   /**
    * Converts the `DacAggregateRecord` into a JSON representation.
@@ -99,9 +102,9 @@ export class DacAggregateRecord {
 
         let formattedValue;
         if (value && Array.isArray(value) && value.length > 1) {
-          formattedValue = value[1]
+          formattedValue = value[1];
         } else if (second && Array.isArray(second) && second.length > 1) {
-          formattedValue = second[1]
+          formattedValue = second[1];
         }
 
         result.electionGlobals[this.getKeyName(eg)] = formattedValue;

@@ -97,7 +97,9 @@ describe('Candidate Controller Unit tests', () => {
 
   it('Should result with LoadDacConfigError when dac config could not be loaded', async () => {
     mockedConfig.dac.nameCache.get = () => null;
-    jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValueOnce(Result.withFailure('no dac'));
+    jest
+      .spyOn(dacUtils, 'loadDacConfig')
+      .mockResolvedValueOnce(Result.withFailure('no dac'));
 
     const output = await controller.list(input);
     expect(output.result.failure.error).toBeInstanceOf(LoadDacConfigError);

@@ -1,48 +1,45 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "voting-history.request.schema.json",
-    "title": "/voting_history?dacId=${dacId}&voter={voter}&skip={skip}&limit={limit} request schema",
-    "type": "object",
-    "properties": {
-        "query": {
-            "type": "object",
-            "properties": {
-                "dacId": {
-                    "$ref": "#/$defs/dacId"
-                },
-                "voter": {
-                    "$ref": "#/$defs/account"
-                },
-                "skip": {
-                    "$ref": "#/$defs/zeroOrGreaterInteger"
-                },
-                "limit": {
-                    "$ref": "#/$defs/positiveInteger"
-                }
-            },
-            "required": [
-                "dacId",
-                "voter"
-            ]
-        }
-    },
-    "$defs": {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "voting-history.request.schema.json",
+  "title": "/voting_history?dacId=${dacId}&voter={voter}&skip={skip}&limit={limit} request schema",
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "object",
+      "properties": {
         "dacId": {
-            "type": "string",
-            "minLength": 5,
-            "maxLength": 6
+          "$ref": "#/$defs/dacId"
         },
-        "account": {
-            "type": "string",
-            "minLength": 1
+        "voter": {
+          "$ref": "#/$defs/account"
         },
-        "zeroOrGreaterInteger": {
-            "type": "integer",
-            "minimum": 0
+        "skip": {
+          "$ref": "#/$defs/zeroOrGreaterInteger"
         },
-        "positiveInteger": {
-            "type": "integer",
-            "minimum": 1
+        "limit": {
+          "$ref": "#/$defs/positiveInteger"
         }
+      },
+      "required": ["dacId", "voter"]
     }
+  },
+  "$defs": {
+    "dacId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 6
+    },
+    "account": {
+      "type": "string",
+      "minLength": 1
+    },
+    "zeroOrGreaterInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "positiveInteger": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
 }
