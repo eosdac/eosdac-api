@@ -1,0 +1,41 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "profile.request.schema.json",
+    "title": "/:dacId/profile?account={account} request schema",
+    "type": "object",
+    "properties": {
+        "params": {
+            "type": "object",
+            "properties": {
+                "dacId": {
+                    "$ref": "#/$defs/dacId"
+                }
+            },
+            "required": [
+                "dacId"
+            ]
+        },
+        "query": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "$ref": "#/$defs/account"
+                }
+            },
+            "required": [
+                "account"
+            ]
+        }
+    },
+    "$defs": {
+        "dacId": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 6
+        },
+        "account": {
+            "type": "string",
+            "minLength": 1
+        }
+    }
+}

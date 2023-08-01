@@ -1,52 +1,90 @@
-import { removeUndefinedProperties } from '@alien-worlds/aw-core';
+import {
+  Failure,
+  IO,
+  Result,
+  UnknownObject,
+  removeUndefinedProperties,
+} from '@alien-worlds/aw-core';
 import { UserVote } from '../../domain/entities/user-vote';
 import { VotingHistoryOutputItem } from '../../data/dtos/user-voting-history.dto';
 
-export class VotingHistoryOutput {
-  public static create(results: UserVote[]): VotingHistoryOutput {
-    return new VotingHistoryOutput(results, results.length);
-  }
-
-  private constructor(
-    public readonly results: UserVote[],
-    public readonly count: number
-  ) {}
-
-  public toJson(): VotingHistoryOutput {
-    const { results, count } = this;
-
-    const result = {
-      results: results.map(e => this.parseUserVoteToResult(e)),
-      count,
-    };
-
-    return removeUndefinedProperties<VotingHistoryOutput>(result);
+/**
+ * Represents the output data for the voting history query.
+ *
+ * @class
+ * @implements {IO}
+ */
+export class VotingHistoryOutput implements IO {
+  /**
+   * Creates a new instance of VotingHistoryOutput.
+   *
+   * @method
+   * @static
+   * @param {Result<UserVote[]>} result - The result of the voting history query.
+   * @returns {VotingHistoryOutput} The newly created VotingHistoryOutput instance.
+   */
+  public static create(result: Result<UserVote[]>): VotingHistoryOutput {
+    const { content, failure } = result;
+    return new VotingHistoryOutput(content, content?.length || 0, failure);
   }
 
   /**
-   * Get Json object from the entity
+   * Creates a new instance of VotingHistoryOutput.
    *
-   * @returns {VotingHistoryOutputItem}
+   * @method
+   * @private
+   * @constructor
+   * @param {UserVote[]} results - The array of UserVote instances representing the voting history.
+   * @param {number} count - The count of voting history items.
+   * @param {Failure} failure - The failure object if the query was not successful.
    */
-  private parseUserVoteToResult(userVote: UserVote): VotingHistoryOutputItem {
-    const {
-      dacId,
-      voter,
-      voteTimestamp,
-      candidate,
-      candidateVotePower,
-      action,
-    } = userVote;
+  private constructor(
+    public readonly results: UserVote[],
+    public readonly count: number,
+    public readonly failure: Failure
+  ) {}
 
-    const dto = {
-      dacId,
-      voter,
-      voteTimestamp,
-      candidate,
-      candidateVotePower: candidateVotePower.toString(),
-      action,
+  /**
+   * Converts the VotingHistoryOutput instance to a JSON representation.
+   *
+   * @method
+   * @returns {UnknownObject} The JSON representation of the VotingHistoryOutput instance.
+   */
+  public toJSON(): UnknownObject {
+    const { failure, results, count } = this;
+
+    if (failure) {
+      return {
+        results: [],
+        count: 0,
+      };
+    }
+
+    const result = {
+      results: results.map(vote => {
+        const {
+          dacId,
+          voter,
+          voteTimestamp,
+          candidate,
+          candidateVotePower,
+          action,
+        } = vote;
+
+        const dto = {
+          dacId,
+          voter,
+          voteTimestamp,
+          candidate,
+          candidateVotePower: candidateVotePower.toString(),
+          action,
+        };
+
+        return removeUndefinedProperties<VotingHistoryOutputItem>(dto);
+      }),
+      count,
     };
 
-    return removeUndefinedProperties<VotingHistoryOutputItem>(dto);
+    return removeUndefinedProperties(result);
   }
 }

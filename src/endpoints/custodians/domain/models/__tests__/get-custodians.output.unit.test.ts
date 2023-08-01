@@ -4,7 +4,7 @@ import { ContractAction } from '@alien-worlds/aw-core';
 import { CustodianProfile } from '../../entities/custodian-profile';
 import { GetCustodiansOutput } from '../get-custodians.output';
 import { Profile } from '../../../../profile/domain/entities/profile';
-import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
+import { ActionToProfileMapper } from '@endpoints/profile/data/mappers/action-to-profile.mapper';
 
 const contractAction: ContractAction<
   DaoWorldsCommon.Actions.Entities.Stprofile,
@@ -25,7 +25,7 @@ const contractAction: ContractAction<
   )
 );
 
-const profiles: Profile[] = [ProfileMongoMapper.toEntity(contractAction)];
+const profiles: Profile[] = [ActionToProfileMapper.toEntity(contractAction)];
 
 describe('GetCustodiansOutput', () => {
   let dacId: string;
@@ -71,15 +71,14 @@ describe('GetCustodiansOutput', () => {
     expect(result.results).toHaveLength(2);
 
     expect(result.results[0]).toBeInstanceOf(CustodianProfile);
-    expect(result.results[0].walletId).toBeDefined();
-    expect(result.results[0].requestedpay).toBeDefined();
+    expect(result.results[0].account).toBeDefined();
+    expect(result.results[0].requestedPay).toBeDefined();
     expect(result.results[0].votePower).toBeDefined();
     expect(result.results[0].profile).toBeDefined();
-    expect(result.results[0].agreedTermVersion).toBeDefined();
-    expect(result.results[0].currentPlanetMemberTermsSignedValid).toBeDefined();
+    expect(result.results[0].signedDaoTermsVersion).toBeDefined();
+    expect(result.results[0].hasSignedCurrentDaoTerms).toBeDefined();
     expect(result.results[0].isFlagged).toBeDefined();
-    expect(result.results[0].isSelected).toBeDefined();
-    expect(result.results[0].planetName).toBeDefined();
+    expect(result.results[0].dacId).toBeDefined();
   });
 
   it('should return JSON object', () => {

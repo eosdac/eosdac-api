@@ -5,12 +5,11 @@ import * as IndexWorldsContract from '@alien-worlds/aw-contract-index-worlds';
 
 import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
-import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
+import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { GetCandidatesUseCase } from '../get-candidates.use-case';
 import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../../profile/domain/use-cases/get-profiles.use-case';
-import { GetVotedCandidateIdsUseCase } from '../get-voted-candidate-ids.use-case';
 import { ListCandidateProfilesUseCase } from '../list-candidate-profiles.use-case';
 import { Pair } from '@alien-worlds/aw-antelope';
 
@@ -26,9 +25,7 @@ const getProfilesUseCase = {
 const getMemberTermsUseCase = {
   execute: jest.fn(),
 };
-const getVotedCandidateIdsUseCase = {
-  execute: jest.fn(),
-};
+
 const getMembersAgreedTermsUseCase = {
   execute: jest.fn(),
 };
@@ -59,9 +56,6 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       .bind<GetMemberTermsUseCase>(GetMemberTermsUseCase.Token)
       .toConstantValue(getMemberTermsUseCase as any);
     container
-      .bind<GetVotedCandidateIdsUseCase>(GetVotedCandidateIdsUseCase.Token)
-      .toConstantValue(getVotedCandidateIdsUseCase as any);
-    container
       .bind<GetMembersAgreedTermsUseCase>(GetMembersAgreedTermsUseCase.Token)
       .toConstantValue(getMembersAgreedTermsUseCase as any);
     container
@@ -77,9 +71,6 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withContent([
         DaoWorldsCommon.Deltas.Entities.Candidates.getDefault(),
       ])
-    );
-    getVotedCandidateIdsUseCase.execute.mockResolvedValue(
-      Result.withContent([])
     );
     getProfilesUseCase.execute.mockResolvedValue(Result.withContent([]));
     getMemberTermsUseCase.execute.mockResolvedValue(Result.withContent({}));
@@ -98,7 +89,7 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
   });
 
   it('Should execute GetCandidatesUseCase', async () => {
-    await useCase.execute('dacId', 'walletId', dacConfig);
+    await useCase.execute('dacId', dacConfig);
     expect(getCandidatesUseCase.execute).toBeCalled();
   });
 
@@ -107,26 +98,12 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await useCase.execute('dacId', 'walletId', dacConfig);
-    expect(result.failure).toBeTruthy();
-  });
-
-  it('Should execute GetVotedCandidateIdsUseCase', async () => {
-    await useCase.execute('dacId', 'walletId', dacConfig);
-    expect(getVotedCandidateIdsUseCase.execute).toBeCalled();
-  });
-
-  it('Should return failure when GetVotedCandidateIdsUseCase fails', async () => {
-    getVotedCandidateIdsUseCase.execute.mockResolvedValue(
-      Result.withFailure(Failure.withMessage('error'))
-    );
-
-    const result = await useCase.execute('dacId', 'walletId', dacConfig);
+    const result = await useCase.execute('dacId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
 
   it('Should execute GetProfilesUseCase', async () => {
-    await useCase.execute('dacId', 'walletId', dacConfig);
+    await useCase.execute('dacId', dacConfig);
     expect(getProfilesUseCase.execute).toBeCalled();
   });
 
@@ -135,12 +112,12 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await useCase.execute('dacId', 'walletId', dacConfig);
+    const result = await useCase.execute('dacId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
 
   it('Should execute GetMemberTermsUseCase', async () => {
-    await useCase.execute('dacId', 'walletId', dacConfig);
+    await useCase.execute('dacId', dacConfig);
     expect(getMemberTermsUseCase.execute).toBeCalled();
   });
 
@@ -149,12 +126,12 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await useCase.execute('dacId', 'walletId', dacConfig);
+    const result = await useCase.execute('dacId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
 
   it('Should execute GetMembersAgreedTermsUseCase', async () => {
-    await useCase.execute('dacId', 'walletId', dacConfig);
+    await useCase.execute('dacId', dacConfig);
     expect(getMembersAgreedTermsUseCase.execute).toBeCalled();
   });
 
@@ -163,7 +140,7 @@ describe('ListCandidateProfilesUseCase Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await useCase.execute('dacId', 'walletId', dacConfig);
+    const result = await useCase.execute('dacId', dacConfig);
     expect(result.failure).toBeTruthy();
   });
 });

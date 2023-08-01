@@ -36,8 +36,8 @@
                 "url": {
                     "type": "string"
                 },
-                "walletId": {
-                    "$ref": "#/$defs/walletId"
+                "account": {
+                    "$ref": "#/$defs/account"
                 },
                 "requestedpay": {
                     "type": "string"
@@ -48,11 +48,8 @@
                 "rank": {
                     "type": "integer"
                 },
-                "gapFiller": {
-                    "type": "integer"
-                },
                 "isActive": {
-                    "type": "integer"
+                    "type": "boolean"
                 },
                 "totalVotes": {
                     "type": "integer"
@@ -60,47 +57,34 @@
                 "voteDecay": {
                     "type": "integer"
                 },
-                "agreedTermVersion": {
+                "signedDaoTermsVersion": {
                     "type": "integer"
                 },
-                "currentPlanetMemberTermsSignedValid": {
+                "hasSignedCurrentDaoTerms": {
                     "type": "boolean"
                 },
                 "isFlagged": {
                     "type": "boolean"
                 },
-                "isSelected": {
-                    "type": "boolean"
-                },
-                "isVoted": {
-                    "type": "boolean"
-                },
-                "isVoteAdded": {
-                    "type": "boolean"
-                },
-                "planetName": {
+                "dacId": {
                     "type": "string"
                 }
             },
             "required": [
-                "walletId",
+                "account",
                 "requestedpay",
                 "votePower",
                 "rank",
-                "gapFiller",
                 "isActive",
                 "totalVotes",
                 "voteDecay",
-                "agreedTermVersion",
-                "currentPlanetMemberTermsSignedValid",
+                "signedDaoTermsVersion",
+                "hasSignedCurrentDaoTerms",
                 "isFlagged",
-                "isSelected",
-                "isVoted",
-                "isVoteAdded",
-                "planetName"
+                "dacId"
             ]
         },
-        "walletId": {
+        "account": {
             "type": "string",
             "minLength": 1
         }

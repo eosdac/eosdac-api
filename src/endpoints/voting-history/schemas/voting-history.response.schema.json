@@ -14,13 +14,13 @@
                         "$ref": "#/$defs/dacId"
                     },
                     "voter": {
-                        "$ref": "#/$defs/walletId"
+                        "$ref": "#/$defs/account"
                     },
                     "voteTimestamp": {
                         "type": "string"
                     },
                     "candidate": {
-                        "$ref": "#/$defs/walletId"
+                        "$ref": "#/$defs/account"
                     },
                     "candidateVotePower": {
                         "$ref": "#/$defs/stringOfAtleastOneDigit"
@@ -53,7 +53,7 @@
             "minLength": 5,
             "maxLength": 6
         },
-        "walletId": {
+        "account": {
             "type": "string",
             "minLength": 1
         },

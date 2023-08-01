@@ -1,0 +1,267 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "dacs.response.schema.json",
+    "title": "/dacs response schema",
+    "type": "object",
+    "required": [
+        "results",
+        "count"
+    ],
+    "properties": {
+        "results": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "dacId": {
+                        "type": "string"
+                    },
+                    "owner": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "isDacActive": {
+                        "type": "boolean"
+                    },
+                    "symbol": {
+                        "type": "object",
+                        "properties": {
+                            "contract": {
+                                "type": "string"
+                            },
+                            "code": {
+                                "type": "string"
+                            },
+                            "precision": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "contract",
+                            "code",
+                            "precision"
+                        ]
+                    },
+                    "refs": {
+                        "type": "object",
+                        "properties": {
+                            "logoUrl": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "rest": {
+                                "type": "object",
+                                "properties": {
+                                    "12": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "logoUrl",
+                            "description"
+                        ]
+                    },
+                    "accounts": {
+                        "type": "object",
+                        "properties": {
+                            "auth": {
+                                "type": "string"
+                            },
+                            "treasury": {
+                                "type": "string"
+                            },
+                            "custodian": {
+                                "type": "string"
+                            },
+                            "msigOwned": {
+                                "type": "string"
+                            },
+                            "voteWeight": {
+                                "type": "string"
+                            },
+                            "activation": {
+                                "type": "string"
+                            },
+                            "spendings": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "auth",
+                            "treasury",
+                            "custodian",
+                            "msigOwned",
+                            "voteWeight",
+                            "activation",
+                            "spendings"
+                        ]
+                    },
+                    "dacTreasury": {
+                        "type": "object",
+                        "properties": {
+                            "balance": {
+                                "$ref": "#/$defs/balance"
+                            }
+                        },
+                        "required": [
+                            "balance"
+                        ]
+                    },
+                    "dacStats": {
+                        "type": "object",
+                        "properties": {
+                            "supply": {
+                                "type": "string"
+                            },
+                            "maxSupply": {
+                                "type": "string"
+                            },
+                            "issuer": {
+                                "type": "string"
+                            },
+                            "transferLocked": {
+                                "type": "boolean"
+                            }
+                        },
+                        "required": [
+                            "supply",
+                            "maxSupply",
+                            "issuer",
+                            "transferLocked"
+                        ]
+                    },
+                    "electionGlobals": {
+                        "type": "object",
+                        "properties": {
+                            "authThresholdHigh": {
+                                "type": "integer"
+                            },
+                            "authThresholdLow": {
+                                "type": "integer"
+                            },
+                            "authThresholdMid": {
+                                "type": "integer"
+                            },
+                            "budgetPercentage": {
+                                "type": "integer"
+                            },
+                            "initialVoteQuorumPercent": {
+                                "type": "integer"
+                            },
+                            "lastClaimBudgetTime": {
+                                "type": "string"
+                            },
+                            "lastPeriodTime": {
+                                "type": "string"
+                            },
+                            "lockupReleaseTimeDelay": {
+                                "type": "integer"
+                            },
+                            "lockupAsset": {
+                                "$ref": "#/$defs/asset"
+                            },
+                            "maxVotes": {
+                                "type": "integer"
+                            },
+                            "metInitialVotesThreshold": {
+                                "type": "integer"
+                            },
+                            "numberActiveCandidates": {
+                                "type": "integer"
+                            },
+                            "numElected": {
+                                "type": "integer"
+                            },
+                            "periodLength": {
+                                "type": "integer"
+                            },
+                            "requestedPayMax": {
+                                "$ref": "#/$defs/asset"
+                            },
+                            "shouldPayViaServiceProvider": {
+                                "type": "integer"
+                            },
+                            "tokenSupplyTheshold": {
+                                "type": "integer"
+                            },
+                            "totalVotesOnCandidates": {
+                                "type": "string"
+                            },
+                            "totalWeightOfVotes": {
+                                "type": "string"
+                            },
+                            "voteQuorumPercent": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "authThresholdHigh",
+                            "authThresholdLow",
+                            "authThresholdMid",
+                            "budgetPercentage",
+                            "initialVoteQuorumPercent",
+                            "lastClaimBudgetTime",
+                            "lastPeriodTime",
+                            "lockupReleaseTimeDelay",
+                            "lockupAsset",
+                            "maxVotes",
+                            "metInitialVotesThreshold",
+                            "numberActiveCandidates",
+                            "numElected",
+                            "periodLength",
+                            "requestedPayMax",
+                            "shouldPayViaServiceProvider",
+                            "tokenSupplyTheshold",
+                            "totalVotesOnCandidates",
+                            "totalWeightOfVotes",
+                            "voteQuorumPercent"
+                        ]
+                    }
+                },
+                "required": [
+                    "dacId",
+                    "owner",
+                    "title",
+                    "isDacActive",
+                    "symbol",
+                    "refs",
+                    "accounts",
+                    "dacTreasury",
+                    "dacStats",
+                    "electionGlobals"
+                ]
+            }
+        },
+        "count": {
+            "type": "integer"
+        }
+    },
+    "$defs": {
+        "balance": {
+            "type": "string",
+            "pattern": "^\\d+(\\.\\d+)? [A-Z]{3}"
+        },
+        "asset": {
+            "type": "object",
+            "required": [
+                "quantity",
+                "contract"
+            ],
+            "properties": {
+                "quantity": {
+                    "type": "string"
+                },
+                "contract": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

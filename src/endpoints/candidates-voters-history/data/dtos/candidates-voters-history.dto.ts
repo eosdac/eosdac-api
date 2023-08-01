@@ -5,12 +5,12 @@ export type CandidatesVotersHistoryRequestQueryParams = {
   limit?: number;
 };
 
-export type CandidatesVotersHistoryControllerOutput = {
-  results: CandidatesVotersHistoryOutputItem[];
+export type VotesModel = {
+  results: VoteModel[];
   total: number;
 };
 
-export type CandidatesVotersHistoryOutputItem = {
+export type VoteModel = {
   voter: string;
   votingPower: number;
   action?: string;

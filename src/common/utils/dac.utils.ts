@@ -1,22 +1,23 @@
 import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 
 import { config } from '@config';
-import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';
-import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
+import { Dac } from '@endpoints/dacs/domain/entities/dacs';
+import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { isEmptyArray } from './dto.utils';
+import { Failure, Result } from '@alien-worlds/aw-core';
 
 export const loadDacConfig = async (
   indexWorldsContractService: IndexWorldsCommon.Services.IndexWorldsContractService,
   dacId: string
-): Promise<Dac> => {
+): Promise<Result<Dac>> => {
   const dac_config_cache = config.dac.nameCache.get(dacId);
 
   if (dac_config_cache) {
     console.info(`Returning cached dac info`);
-    return dac_config_cache;
+    return Result.withContent(dac_config_cache);
   } else {
     const svcResponse = await indexWorldsContractService.fetchDacs({
-      scope: config.eos.dacDirectoryContract,
+      scope: config.antelope.dacDirectoryContract,
       limit: 1,
       lower_bound: dacId,
       upper_bound: dacId,
@@ -24,7 +25,9 @@ export const loadDacConfig = async (
 
     if (svcResponse.isFailure || isEmptyArray(svcResponse.content)) {
       console.warn(`Could not find dac with ID ${dacId}`);
-      return null;
+      return Result.withFailure(
+        Failure.withMessage('unable to load dac config')
+      );
     }
 
     const result = new DacMapper().toDac(
@@ -35,6 +38,6 @@ export const loadDacConfig = async (
 
     config.dac.nameCache.set(dacId, result);
 
-    return result;
+    return Result.withContent(result);
   }
 };

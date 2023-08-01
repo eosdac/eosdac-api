@@ -1,25 +1,46 @@
 import 'reflect-metadata';
 
-import { Container } from '@alien-worlds/aw-core';
-import { HealthOutput } from '../../entities/health-output';
-import { HealthUseCase } from '../health.use-case';
+import { Container, Result } from '@alien-worlds/aw-core';
+import { HealthCheckStatus } from '../../entities/health-check-status';
+import { GetHealthCheckStatusUseCase } from '../get-health-check-status.use-case';
+import ApiConfig from '@src/config/api-config';
+import { HistoryService } from '../../services/history.service';
+import { DatabaseService } from '../../services/database.service';
 
 // const historyToolsBlockState = {
 //   getBlockNumber: jest.fn(),
 // };
 
 let container: Container;
-let useCase: HealthUseCase;
+let useCase: GetHealthCheckStatusUseCase;
+
+const historyService = {
+  getCurrentBlockNumber: jest.fn(() => Result.withContent(-1n)),
+};
+const databaseService = {
+  checkConnection: jest.fn(() => Result.withContent({ mongodb: 'OK' })),
+};
 
 describe('Health Unit tests', () => {
   beforeAll(() => {
     container = new Container();
 
-    container.bind<HealthUseCase>(HealthUseCase.Token).to(HealthUseCase);
+    container.bind<ApiConfig>(ApiConfig.Token).toConstantValue({} as any);
+    container
+      .bind<HistoryService>(HistoryService.Token)
+      .toConstantValue(historyService as any);
+    container
+      .bind<DatabaseService>(DatabaseService.Token)
+      .toConstantValue(databaseService as any);
+    container
+      .bind<GetHealthCheckStatusUseCase>(GetHealthCheckStatusUseCase.Token)
+      .to(GetHealthCheckStatusUseCase);
   });
 
   beforeEach(() => {
-    useCase = container.get<HealthUseCase>(HealthUseCase.Token);
+    useCase = container.get<GetHealthCheckStatusUseCase>(
+      GetHealthCheckStatusUseCase.Token
+    );
   });
 
   afterAll(() => {
@@ -28,7 +49,7 @@ describe('Health Unit tests', () => {
   });
 
   it('"Token" should be set', () => {
-    expect(HealthUseCase.Token).not.toBeNull();
+    expect(GetHealthCheckStatusUseCase.Token).not.toBeNull();
   });
 
   // it('Should return a failure when ...', async () => {
@@ -46,7 +67,7 @@ describe('Health Unit tests', () => {
     // );
 
     const result = await useCase.execute();
-    expect(result.content).toBeInstanceOf(HealthOutput);
+    expect(result.content).toBeInstanceOf(HealthCheckStatus);
   });
 
   // it('should return current block', async () => {

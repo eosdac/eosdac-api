@@ -17,11 +17,6 @@ export type VotingHistoryOutputItem = {
   action: VoteAction;
 };
 
-export type VotingHistoryOutput = {
-  results: VotingHistoryOutputItem[];
-  count: number;
-};
-
 export type UserVotingHistoryMongoModel = {
   _id?: MongoDB.ObjectId;
   dac_id: string;

@@ -12,11 +12,16 @@ import { Profile } from '../../../profile/domain/entities/profile';
  */
 export class CustodianProfile implements Entity {
   /**
-   * Creates instances of Custodian based on a given DTO.
+   * Creates instances of CustodianProfile based on a given DTO.
    *
    * @static
    * @public
-   * @returns {CustodianProfile}
+   * @param {string} dacId - The ID of the DAC.
+   * @param {DaoWorldsContract.Deltas.Entities.Custodians1} custodian - The DTO containing custodian data.
+   * @param {Profile} profile - The profile entity.
+   * @param {TokenWorldsContract.Deltas.Entities.Memberterms} memberTerms - The member terms entity.
+   * @param {number} agreedTermsVersion - The agreed terms version number.
+   * @returns {CustodianProfile} - The created CustodianProfile instance.
    */
   public static create(
     dacId: string,
@@ -34,11 +39,10 @@ export class CustodianProfile implements Entity {
       custName,
       requestedpay,
       Number(votePower),
-      profile?.profile,
+      profile?.profile || {},
       agreedTermsVersion,
       Number(version) === agreedTermsVersion,
       !!profile?.error,
-      false,
       dacId
     );
   }
@@ -48,45 +52,46 @@ export class CustodianProfile implements Entity {
    * @constructor
    */
   private constructor(
-    public readonly walletId: string,
-    public readonly requestedpay: Asset,
+    public readonly account: string,
+    public readonly requestedPay: Asset,
     public readonly votePower: number,
     public readonly profile: object,
-    public readonly agreedTermVersion: number,
-    public readonly currentPlanetMemberTermsSignedValid: boolean,
+    public readonly signedDaoTermsVersion: number,
+    public readonly hasSignedCurrentDaoTerms: boolean,
     public readonly isFlagged: boolean,
-    public readonly isSelected: boolean,
-    public readonly planetName: string
+    public readonly dacId: string
   ) {}
 
-  id?: string;
-  rest?: UnknownObject;
+  public id?: string;
+  public rest?: UnknownObject;
 
+  /**
+   * Converts the CustodianProfile instance to a JSON representation.
+   *
+   * @public
+   * @returns {UnknownObject} - The JSON representation of the CustodianProfile.
+   */
   public toJSON(): UnknownObject {
     const {
-      walletId,
-      requestedpay,
+      account,
+      requestedPay,
       votePower,
       profile,
-      agreedTermVersion,
-      currentPlanetMemberTermsSignedValid,
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
       isFlagged,
-      isSelected,
-      planetName,
+      dacId,
     } = this;
 
-    const p = profile || {};
-
     return {
-      walletId,
-      requestedpay: `${requestedpay.value} ${requestedpay.symbol}`,
+      ...profile,
+      account,
+      requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
       votePower: Number(votePower.toFixed(0)),
-      ...p,
-      agreedTermVersion,
-      currentPlanetMemberTermsSignedValid,
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
       isFlagged,
-      isSelected,
-      planetName,
+      dacId,
     };
   }
 }

@@ -2,8 +2,8 @@ import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
 import { ContractAction } from '@alien-worlds/aw-core';
 import { Profile } from '../../entities/profile';
-import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
-import { ProfileOutput } from '../profile.output';
+import { ActionToProfileMapper } from '@endpoints/profile/data/mappers/action-to-profile.mapper';
+import { GetProfileOutput } from '../get-profile.output';
 
 const contractAction: ContractAction<
   DaoWorldsCommon.Actions.Entities.Stprofile,
@@ -24,37 +24,37 @@ const contractAction: ContractAction<
   )
 );
 
-const profiles: Profile[] = [ProfileMongoMapper.toEntity(contractAction)];
+const profiles: Profile[] = [ActionToProfileMapper.toEntity(contractAction)];
 
 describe('ProfileOutput Unit tests', () => {
   it('should construct output result', async () => {
-    const output = ProfileOutput.create(profiles);
+    const output = GetProfileOutput.create(profiles);
 
-    expect(output).toBeInstanceOf(ProfileOutput);
+    expect(output).toBeInstanceOf(GetProfileOutput);
   });
 
   it('should use default value as empty array if result is not provided', async () => {
-    const output = ProfileOutput.create();
+    const output = GetProfileOutput.create();
 
-    expect(output).toBeInstanceOf(ProfileOutput);
-    expect(output.results).toEqual([]);
+    expect(output).toBeInstanceOf(GetProfileOutput);
+    expect(output.profiles).toEqual([]);
   });
 
   it('should use default count if count is not provided', async () => {
-    const output = ProfileOutput.create();
+    const output = GetProfileOutput.create();
 
-    expect(output).toBeInstanceOf(ProfileOutput);
+    expect(output).toBeInstanceOf(GetProfileOutput);
     expect(output.count).toEqual(0);
   });
 
   it('ProfileOutput.toJson should return json object', async () => {
-    const output = ProfileOutput.create(profiles);
+    const output = GetProfileOutput.create(profiles);
 
     expect(output.toJSON()).toBeInstanceOf(Object);
   });
 
   it('should mention error in response if profile has an error', async () => {
-    const output = ProfileOutput.create([
+    const output = GetProfileOutput.create([
       Profile.createErrorProfile('string', {
         name: 'string',
         body: 'error',
@@ -63,7 +63,7 @@ describe('ProfileOutput Unit tests', () => {
 
     const json = output.toJSON();
 
-    expect(output).toBeInstanceOf(ProfileOutput);
+    expect(output).toBeInstanceOf(GetProfileOutput);
 
     expect(json.results).toBeDefined();
     expect(json.results[0].error).toBeDefined();

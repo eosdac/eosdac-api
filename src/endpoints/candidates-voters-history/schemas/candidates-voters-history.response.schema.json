@@ -11,7 +11,7 @@
                 "type": "object",
                 "properties": {
                     "voter": {
-                        "$ref": "#/$defs/walletId"
+                        "$ref": "#/$defs/account"
                     },
                     "votingPower": {
                         "$ref": "#/$defs/stringOfAtleastOneDigit"
@@ -20,7 +20,7 @@
                         "const": "votecust"
                     },
                     "candidate": {
-                        "$ref": "#/$defs/walletId"
+                        "$ref": "#/$defs/account"
                     },
                     "voteTimestamp": {
                         "type": "string"
@@ -48,7 +48,7 @@
         "total"
     ],
     "$defs": {
-        "walletId": {
+        "account": {
             "type": "string",
             "minLength": 1
         },

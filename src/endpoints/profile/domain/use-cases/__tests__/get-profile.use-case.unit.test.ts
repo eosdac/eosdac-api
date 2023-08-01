@@ -52,7 +52,11 @@ describe('Get Profile Unit tests', () => {
     actionRepository.aggregate.mockResolvedValue(
       Result.withFailure(Failure.fromError('error'))
     );
-    const result = await useCase.execute(useCaseInput);
+    const result = await useCase.execute(
+      useCaseInput.custContract,
+      useCaseInput.dacId,
+      useCaseInput.accounts
+    );
     expect(result.isFailure).toBeTruthy();
   });
 
@@ -80,7 +84,11 @@ describe('Get Profile Unit tests', () => {
 
     actionRepository.aggregate.mockResolvedValue(Result.withContent(actions));
 
-    const result = await useCase.execute(useCaseInput);
+    const result = await useCase.execute(
+      useCaseInput.custContract,
+      useCaseInput.dacId,
+      useCaseInput.accounts
+    );
     expect(result.content).toBeInstanceOf(Array);
   });
 });

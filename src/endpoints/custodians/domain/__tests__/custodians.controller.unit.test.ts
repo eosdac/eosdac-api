@@ -6,12 +6,22 @@ import { Container, Result } from '@alien-worlds/aw-core';
 
 import { config } from '@config';
 import { CustodiansController } from '../custodians.controller';
-import { DacMapper } from '@endpoints/get-dacs/data/mappers/dacs.mapper';
+import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { GetCustodiansInput } from '../models/get-custodians.input';
 import { ListCustodianProfilesUseCase } from '../use-cases/list-custodian-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
 
-('@config');
+jest.mock('@config', () => {
+  return {
+    config: {
+      dac: {
+        nameCache: {
+          get: jest.fn(),
+        },
+      },
+    },
+  };
+});
 
 const mockedConfig = config as jest.Mocked<typeof config>;
 
@@ -25,21 +35,24 @@ const listCandidateProfilesUseCase = {
 };
 const input: GetCustodiansInput = {
   dacId: 'string',
+  toJSON: () => ({
+    dacId: 'string',
+  }),
 };
-
-jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValue(
-  new DacMapper().toDac(
-    new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
-      IndexWorldsCommon.Deltas.Types.DacsRawModel
-    >{
-      accounts: [{ key: '2', value: 'dao.worlds' }],
-      symbol: {
-        sym: 'EYE',
-      },
-      refs: [],
-    })
-  )
+const dac = new DacMapper().toDac(
+  new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+    IndexWorldsCommon.Deltas.Types.DacsRawModel
+  >{
+    accounts: [{ key: '2', value: 'dao.worlds' }],
+    symbol: {
+      sym: 'EYE',
+    },
+    refs: [],
+  })
 );
+jest
+  .spyOn(dacUtils, 'loadDacConfig')
+  .mockResolvedValue(Result.withContent(dac));
 
 describe('Custodians Controller Unit tests', () => {
   beforeAll(() => {
@@ -84,7 +97,9 @@ describe('Custodians Controller Unit tests', () => {
 
   it('Should result with LoadDacConfigError when dac config could not be loaded', async () => {
     mockedConfig.dac.nameCache.get = () => null;
-    jest.spyOn(dacUtils, 'loadDacConfig').mockResolvedValueOnce(null);
+    jest
+      .spyOn(dacUtils, 'loadDacConfig')
+      .mockResolvedValueOnce(Result.withFailure('failure'));
 
     const result = await controller.list(input);
     expect(result.failure.error).toBeInstanceOf(LoadDacConfigError);

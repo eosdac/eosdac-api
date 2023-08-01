@@ -2,6 +2,7 @@ import { UserVote } from '../../../domain/entities/user-vote';
 import { UserVoteMongoMapper } from '@endpoints/voting-history/data/mappers/user-vote.mapper';
 import { VoteAction } from '../../user-voting-history.enums';
 import { VotingHistoryOutput } from '../voting-history.output';
+import { Result } from '@alien-worlds/aw-core';
 
 const userVotes: UserVote[] = [
   new UserVoteMongoMapper().toEntity({
@@ -16,14 +17,14 @@ const userVotes: UserVote[] = [
 
 describe('VotingHistoryOutput Unit tests', () => {
   it('"VotingHistoryOutput.create" should create instance', async () => {
-    const output = VotingHistoryOutput.create(userVotes);
+    const output = VotingHistoryOutput.create(Result.withContent(userVotes));
 
     expect(output).toBeInstanceOf(VotingHistoryOutput);
   });
 
   it('VotingHistoryOutput.toJson should return json object', async () => {
-    const output = VotingHistoryOutput.create(userVotes);
+    const output = VotingHistoryOutput.create(Result.withContent(userVotes));
 
-    expect(output.toJson()).toBeInstanceOf(Object);
+    expect(output.toJSON()).toBeInstanceOf(Object);
   });
 });

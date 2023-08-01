@@ -1,5 +1,3 @@
-import { Profile } from '../../domain/entities/profile';
-
 export type ProfileRequestQueryParams = {
   account: string;
 };
@@ -24,18 +22,8 @@ export type ProfileItemDocument = {
   url: string;
 };
 
-export type ProfileOutput = {
-  results: Profile[];
-  count: number;
-};
-
 export type GetProfilesUseCaseInput = {
   custContract: string;
-  dacId: string;
-  accounts: string[];
-};
-
-export type IsProfileFlaggedUseCaseInput = {
   dacId: string;
   accounts: string[];
 };

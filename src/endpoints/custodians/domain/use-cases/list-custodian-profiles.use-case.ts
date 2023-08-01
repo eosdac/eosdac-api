@@ -1,14 +1,14 @@
 import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 import { CustodianProfile } from '../entities/custodian-profile';
-import { Dac } from '@endpoints/get-dacs/domain/entities/dacs';
+import { Dac } from '@endpoints/dacs/domain/entities/dacs';
 import { GetCustodiansUseCase } from './get-custodians.use-case';
 import { GetMembersAgreedTermsUseCase } from './../../../candidates/domain/use-cases/get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from './../../../candidates/domain/use-cases/get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
-import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
 
 /**
+ * Represents the use case for listing custodian profiles.
  * @class
  */
 @injectable()
@@ -17,6 +17,14 @@ export class ListCustodianProfilesUseCase
 {
   public static Token = 'LIST_CUSTODIAN_PROFILES_USE_CASE';
 
+  /**
+   * Creates an instance of ListCustodianProfilesUseCase.
+   * @constructor
+   * @param {GetCustodiansUseCase} getCustodiansUseCase - The use case for getting custodians.
+   * @param {GetProfilesUseCase} getProfilesUseCase - The use case for getting profiles.
+   * @param {GetMemberTermsUseCase} getMemberTermsUseCase - The use case for getting member terms.
+   * @param {GetMembersAgreedTermsUseCase} getMembersAgreedTermsUseCase - The use case for getting members' agreed terms.
+   */
   constructor(
     @inject(GetCustodiansUseCase.Token)
     private getCustodiansUseCase: GetCustodiansUseCase,
@@ -29,8 +37,13 @@ export class ListCustodianProfilesUseCase
   ) {}
 
   /**
+   * Executes the ListCustodianProfilesUseCase to fetch and create custodian profiles based on the given DAC ID and configuration.
+   *
    * @async
-   * @returns {Promise<Result<CustodianProfile[]>>}
+   * @public
+   * @param {string} dacId - The DAC ID for which to fetch custodians and profiles.
+   * @param {Dac} dacConfig - The DAC configuration.
+   * @returns {Promise<Result<CustodianProfile[]>>} - A Promise that resolves to a Result containing an array of CustodianProfile entities or a failure object in case of an error.
    */
   public async execute(
     dacId: string,
@@ -46,11 +59,11 @@ export class ListCustodianProfilesUseCase
     const accounts = custodians.map(custodian => custodian.custName);
 
     const { content: profiles, failure: getProfilesFailure } =
-      await this.getProfilesUseCase.execute({
-        custContract: dacConfig.accounts.custodian,
+      await this.getProfilesUseCase.execute(
+        dacConfig.accounts.custodian,
         dacId,
-        accounts,
-      });
+        accounts
+      );
 
     if (getProfilesFailure) {
       return Result.withFailure(getProfilesFailure);
@@ -80,7 +93,7 @@ export class ListCustodianProfilesUseCase
         CustodianProfile.create(
           dacId,
           custodian,
-          profile ? ProfileMongoMapper.toEntity(profile) : null,
+          profile || null,
           terms,
           agreedTermsVersion
         )

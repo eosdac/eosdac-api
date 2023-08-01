@@ -5,7 +5,7 @@ import { Asset } from '@alien-worlds/aw-antelope';
 import { CandidateProfile } from '../candidate-profile';
 import { ContractAction } from '@alien-worlds/aw-core';
 import { Profile } from '@endpoints/profile/domain/entities/profile';
-import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
+import { ActionToProfileMapper } from '@endpoints/profile/data/mappers/action-to-profile.mapper';
 
 const contractAction: ContractAction<
   DaoWorldsCommon.Actions.Entities.Stprofile,
@@ -26,7 +26,7 @@ const contractAction: ContractAction<
   )
 );
 
-const profile: Profile = ProfileMongoMapper.toEntity(contractAction);
+const profile: Profile = ActionToProfileMapper.toEntity(contractAction);
 
 describe('CandidateProfile', () => {
   let candidateProfile: CandidateProfile;
@@ -49,8 +49,7 @@ describe('CandidateProfile', () => {
       cand,
       profile,
       TokenWorldsCommon.Deltas.Entities.Memberterms.getDefault(),
-      0,
-      []
+      0
     );
   });
 
@@ -63,23 +62,18 @@ describe('CandidateProfile', () => {
   });
 
   it('should have correct properties', () => {
-    expect(candidateProfile.walletId).toBe('walletId');
+    expect(candidateProfile.account).toBe('walletId');
     expect(candidateProfile.requestedPay).toEqual({
       value: 100,
       symbol: 'TLM',
     });
     expect(candidateProfile.rank).toBe(1);
-    expect(candidateProfile.gapFiller).toBe(0);
     expect(candidateProfile.isActive).toBe(true);
     expect(candidateProfile.totalVotes).toBe(10);
     expect(candidateProfile.profile).toBeDefined();
-    expect(candidateProfile.agreedTermVersion).toBe(0);
-    expect(candidateProfile.currentPlanetMemberTermsSignedValid).toBe(true);
+    expect(candidateProfile.signedDaoTermsVersion).toBe(0);
     expect(candidateProfile.isFlagged).toBe(false);
-    expect(candidateProfile.isSelected).toBe(false);
-    expect(candidateProfile.isVoted).toBe(false);
-    expect(candidateProfile.isVoteAdded).toBe(false);
-    expect(candidateProfile.planetName).toBe('testa');
+    expect(candidateProfile.dacId).toBe('testa');
   });
 
   it('should correctly calculate toJSON method', () => {
@@ -97,23 +91,17 @@ describe('CandidateProfile', () => {
         'https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png',
       timezone: undefined,
       url: undefined,
-      id: undefined,
-      rest: undefined,
-      walletId: 'walletId',
+      account: 'walletId',
       requestedpay: '100 TLM',
       votePower: 0,
       rank: 1,
-      gapFiller: 0,
-      isActive: 1,
+      isActive: true,
       totalVotes: 10,
       voteDecay: 0,
-      agreedTermVersion: 0,
-      currentPlanetMemberTermsSignedValid: true,
+      signedDaoTermsVersion: 0,
+      hasSignedCurrentDaoTerms: true,
       isFlagged: false,
-      isSelected: false,
-      isVoted: false,
-      isVoteAdded: false,
-      planetName: 'testa',
+      dacId: 'testa',
     });
   });
 });

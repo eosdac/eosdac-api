@@ -4,12 +4,12 @@ import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryController } from '../candidates-voters-history.controller';
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
-import { CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
+import { VoteModel } from '../../data/dtos/candidates-voters-history.dto';
 import { CountVotersHistoryUseCase } from '../use-cases/count-voters-history.use-case';
 import { GetCandidatesVotersHistoryUseCase } from '../use-cases/get-candidates-voters-history.use-case';
-import { GetVotingPowerUseCase } from '../use-cases/get-voting-power.use-case';
+import { AssignVotingPowerUseCase } from '../use-cases/assign-voting-power.use-case';
 
-const voterHistoryResp: CandidatesVotersHistoryOutputItem[] = [
+const voterHistoryResp: VoteModel[] = [
   {
     voter: 'string',
     votingPower: 1,
@@ -21,12 +21,11 @@ const voterHistoryResp: CandidatesVotersHistoryOutputItem[] = [
 
 const getCandidatesVotersHistoryUseCase = {
   execute: jest.fn(
-    (): Result<CandidatesVotersHistoryOutputItem[], Error> =>
-      Result.withContent(voterHistoryResp)
+    (): Result<VoteModel[], Error> => Result.withContent(voterHistoryResp)
   ),
 };
 
-const getVotingPowerUseCase = {
+const assignVotingPowerUseCase = {
   execute: jest.fn(() => Result.withContent(1n)),
 };
 
@@ -48,11 +47,11 @@ describe('VotingHistory Controller Unit tests', () => {
       )
       .toConstantValue(getCandidatesVotersHistoryUseCase as any);
     container
-      .bind<GetVotingPowerUseCase>(GetVotingPowerUseCase.Token)
-      .toConstantValue(getVotingPowerUseCase as any);
-    container
       .bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token)
       .toConstantValue(countVotersHistoryUseCase as any);
+    container
+      .bind<AssignVotingPowerUseCase>(AssignVotingPowerUseCase.Token)
+      .toConstantValue(assignVotingPowerUseCase as any);
     container
       .bind<CandidatesVotersHistoryController>(
         CandidatesVotersHistoryController.Token
@@ -86,9 +85,9 @@ describe('VotingHistory Controller Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await controller.candidatesVotersHistory(input);
+    const output = await controller.candidatesVotersHistory(input);
 
-    expect(result.isFailure).toBeTruthy();
+    expect(output.failure).toBeTruthy();
   });
 
   it('Should return failure when CountVotersHistoryUseCase fails', async () => {
@@ -96,8 +95,8 @@ describe('VotingHistory Controller Unit tests', () => {
       Result.withFailure(Failure.withMessage('error'))
     );
 
-    const result = await controller.candidatesVotersHistory(input);
+    const output = await controller.candidatesVotersHistory(input);
 
-    expect(result.isFailure).toBeTruthy();
+    expect(output.failure).toBeTruthy();
   });
 });

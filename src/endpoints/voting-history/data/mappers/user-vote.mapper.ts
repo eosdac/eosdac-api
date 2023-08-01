@@ -1,15 +1,24 @@
-import { MapperImpl, parseToBigInt } from '@alien-worlds/aw-core';
+import { MapperImpl } from '@alien-worlds/aw-core';
 
 import { MongoDB } from '@alien-worlds/aw-storage-mongodb';
 import { UserVote } from '@endpoints/voting-history/domain/entities/user-vote';
 import { UserVotingHistoryMongoModel } from '../dtos/user-voting-history.dto';
 import { VoteAction } from '@endpoints/voting-history/domain/user-voting-history.enums';
 
-// Mongo Mappers
+/**
+ * MongoDB mapper for UserVote entities.
+ *
+ * @class
+ * @extends {MapperImpl<UserVote, UserVotingHistoryMongoModel>}
+ */
 export class UserVoteMongoMapper extends MapperImpl<
   UserVote,
   UserVotingHistoryMongoModel
 > {
+  /**
+   * Creates an instance of UserVoteMongoMapper.
+   * Sets up the mapping from entity properties to MongoDB model properties.
+   */
   constructor() {
     super();
 
@@ -44,6 +53,12 @@ export class UserVoteMongoMapper extends MapperImpl<
     });
   }
 
+  /**
+   * Converts a MongoDB model object to a UserVote entity.
+   *
+   * @param {UserVotingHistoryMongoModel} mongoModel - The MongoDB model to convert.
+   * @returns {UserVote} The converted UserVote entity.
+   */
   public toEntity(mongoModel: UserVotingHistoryMongoModel): UserVote {
     const {
       dac_id,

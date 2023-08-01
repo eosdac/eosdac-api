@@ -6,10 +6,16 @@ const input: CandidatesVotersHistoryInput = {
   candidateId: 'string',
   limit: 20,
   skip: 0,
+  toJSON: () => ({
+    dacId: 'string',
+    candidateId: 'string',
+    limit: 20,
+    skip: 0,
+  }),
 };
 
 describe('CandidatesVotersHistoryQueryBuilder Unit tests', () => {
-  it('"CandidatesVotersHistoryQueryBuilder.build" should create mongodb query', async () => {
+  it('"build" should create mongodb query', async () => {
     const model = new CandidatesVotersHistoryQueryBuilder().with({ ...input });
     expect(model.build()).toEqual({
       pipeline: [

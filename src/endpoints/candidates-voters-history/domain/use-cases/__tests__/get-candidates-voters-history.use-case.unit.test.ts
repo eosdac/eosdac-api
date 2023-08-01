@@ -18,13 +18,12 @@ const contractActionRepository = {
 
 let container: Container;
 let useCase: GetCandidatesVotersHistoryUseCase;
-const input: CandidatesVotersHistoryInput =
-  CandidatesVotersHistoryInput.fromRequest({
-    dacId: 'string',
-    candidateId: 'string',
-    skip: 0,
-    limit: 20,
-  });
+const input: CandidatesVotersHistoryInput = new CandidatesVotersHistoryInput(
+  'string',
+  'string',
+  0,
+  20
+);
 
 const actions: ContractAction[] = [
   // ContractAction.fromDocument(

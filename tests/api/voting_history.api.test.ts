@@ -1,9 +1,9 @@
 import * as fixtures from '../fixtures/voting_history.fixture';
 
 import {
-	DacIdShortLengthErrorResponse,
-	InvalidLimitValueErrorResponse,
-	InvalidSkipValueErrorResponse
+  DacIdShortLengthErrorResponse,
+  InvalidLimitValueErrorResponse,
+  InvalidSkipValueErrorResponse,
 } from 'tests/fixtures/common.fixture';
 import { HTTP_METHOD, HTTP_STATUS } from '../common';
 
@@ -19,178 +19,175 @@ const validator = AjvValidator.initialize();
 
 // meta
 const Api = {
-	method: HTTP_METHOD.GET,
-	url: `/${config.version}/dao/voting_history`,
+  method: HTTP_METHOD.GET,
+  url: `/${config.urlVersion}/dao/voting_history`,
 };
 
 const Data = {
-	DacId: 'nerix',
-	Voter: '.w2fo.wam',
-	Skip: 0,
-	Limit: 100,
+  DacId: 'nerix',
+  Voter: '.w2fo.wam',
+  Skip: 0,
+  Limit: 100,
 };
 
 describe('Voting history API Test', () => {
-	it('should return status 200', async () => {
-		const response = await getApiResponse(
-			Api.method,
-			`${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
-		);
+  it('should return status 200', async () => {
+    const response = await getApiResponse(
+      Api.method,
+      `${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
+    );
 
-		expect(response.statusCode).toEqual(HTTP_STATUS.OK);
-	});
+    expect(response.statusCode).toEqual(HTTP_STATUS.OK);
+  });
 
-	it('should return voting history', async () => {
-		const response = await getApiResponse(
-			Api.method,
-			`${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
-		);
-		const jsonResponse = JSON.parse(response.body);
+  it('should return voting history', async () => {
+    const response = await getApiResponse(
+      Api.method,
+      `${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
+    );
+    const jsonResponse = JSON.parse(response.body);
 
-		validator.assert(VotingHistoryResponseSchema, jsonResponse);
-	});
+    validator.assert(VotingHistoryResponseSchema, jsonResponse);
+  });
 
+  describe('dacId query param', () => {
+    it('should return empty list when provided dacId has no matching results', async () => {
+      const response = await getApiResponse(
+        Api.method,
+        `${Api.url}?dacId=dummy&voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
+      );
 
-	describe('dacId query param', () => {
-		it('should return empty list when provided dacId has no matching results', async () => {
-			const response = await getApiResponse(
-				Api.method,
-				`${Api.url}?dacId=dummy&voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
-			);
+      expect(JSON.parse(response.body)).toEqual(
+        fixtures.votingHistoryEmptyResponse
+      );
+    });
 
-			expect(JSON.parse(response.body)).toEqual(
-				fixtures.votingHistoryEmptyResponse
-			);
-		});
+    it('should return 400 when dacId is missing', async () => {
+      const response = await getApiResponse(
+        Api.method,
+        `${Api.url}?voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
+      );
 
-		it('should return 400 when dacId is missing', async () => {
-			const response = await getApiResponse(
-				Api.method,
-				`${Api.url}?voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
-			);
+      expect(response.statusCode).toEqual(HTTP_STATUS.BAD_REQUEST);
+    });
 
-			expect(response.statusCode).toEqual(HTTP_STATUS.BAD_REQUEST);
-		});
+    it('should return error message when dacId is missing', async () => {
+      const response = await getApiResponse(
+        Api.method,
+        `${Api.url}?voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
+      );
+      const jsonResponse = JSON.parse(response.body);
 
-		it('should return error message when dacId is missing', async () => {
-			const response = await getApiResponse(
-				Api.method,
-				`${Api.url}?voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
-			);
-			const jsonResponse = JSON.parse(response.body);
+      expect(jsonResponse).toEqual(fixtures.missingDacIdErrorResponse);
+    });
 
-			expect(jsonResponse).toEqual(fixtures.missingDacIdErrorResponse);
-		});
+    it('should return error message when dacId value is less than minimum length', async () => {
+      const response = await getApiResponse(
+        Api.method,
+        `${Api.url}?dacId=abcd&voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
+      );
+      const jsonResponse = JSON.parse(response.body);
 
-		it('should return error message when dacId value is less than minimum length', async () => {
-			const response = await getApiResponse(
-				Api.method,
-				`${Api.url}?dacId=abcd&voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
-			);
-			const jsonResponse = JSON.parse(response.body);
+      expect(jsonResponse).toEqual(DacIdShortLengthErrorResponse);
+    });
+  });
 
-			expect(jsonResponse).toEqual(DacIdShortLengthErrorResponse);
-		});
-	})
+  describe('voter query param', () => {
+    it('should return empty list when provided voter has no matching results', async () => {
+      const response = await getApiResponse(
+        Api.method,
+        `${Api.url}?dacId=${Data.DacId}&voter=dummy&skip=${Data.Skip}&limit=${Data.Limit}`
+      );
 
+      expect(JSON.parse(response.body)).toEqual(
+        fixtures.votingHistoryEmptyResponse
+      );
+    });
 
-	describe('voter query param', () => {
-		it('should return empty list when provided voter has no matching results', async () => {
-			const response = await getApiResponse(
-				Api.method,
-				`${Api.url}?dacId=${Data.DacId}&voter=dummy&skip=${Data.Skip}&limit=${Data.Limit}`
-			);
+    it('should return error when voter is missing', async () => {
+      const response = await getApiResponse(
+        Api.method,
+        `${Api.url}?dacId=${Data.DacId}&skip=${Data.Skip}&limit=${Data.Limit}`
+      );
+      const jsonResponse = JSON.parse(response.body);
 
-			expect(JSON.parse(response.body)).toEqual(
-				fixtures.votingHistoryEmptyResponse
-			);
-		});
+      expect(jsonResponse).toEqual(fixtures.missingVoterErrorResponse);
+    });
+  });
 
-		it('should return error when voter is missing', async () => {
-			const response = await getApiResponse(
-				Api.method,
-				`${Api.url}?dacId=${Data.DacId}&skip=${Data.Skip}&limit=${Data.Limit}`
-			);
-			const jsonResponse = JSON.parse(response.body);
+  describe('skip query param', () => {
+    it('should skip entries equal to skip parameter', async () => {
+      const noSkipResponse = await getApiResponse(
+        Api.method,
+        `${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=0&limit=${Data.Limit}`
+      );
+      const jsonNoSkip = JSON.parse(noSkipResponse.body);
+      validator.assert(VotingHistoryResponseSchema, jsonNoSkip);
 
-			expect(jsonResponse).toEqual(fixtures.missingVoterErrorResponse);
-		});
-	})
+      const skipResponse = await getApiResponse(
+        Api.method,
+        `${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=1&limit=2`
+      );
+      const jsonSkip = JSON.parse(skipResponse.body);
+      validator.assert(VotingHistoryResponseSchema, jsonSkip);
 
+      // if there are no results, then we cannot verify if 'skip' param is being effective
+      if (jsonNoSkip.results.length && jsonSkip.results.length) {
+        expect(jsonNoSkip.results[0]).not.toEqual(jsonSkip.results[0]);
 
-	describe('skip query param', () => {
-		it('should skip entries equal to skip parameter', async () => {
-			const noSkipResponse = await getApiResponse(
-				Api.method,
-				`${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=0&limit=${Data.Limit}`
-			);
-			const jsonNoSkip = JSON.parse(noSkipResponse.body);
-			validator.assert(VotingHistoryResponseSchema, jsonNoSkip);
+        if (jsonNoSkip.results.length > 1) {
+          expect(jsonNoSkip.results[1]).toEqual(jsonSkip.results[0]);
+        }
+      }
+    });
 
-			const skipResponse = await getApiResponse(
-				Api.method,
-				`${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=1&limit=2`
-			);
-			const jsonSkip = JSON.parse(skipResponse.body);
-			validator.assert(VotingHistoryResponseSchema, jsonSkip);
+    it('should return error if skip is negative', async () => {
+      const skip = -1;
+      const response = await getApiResponse(
+        Api.method,
+        `${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${skip}&limit=${Data.Limit}`
+      );
+      const jsonResponse = JSON.parse(response.body);
 
-			// if there are no results, then we cannot verify if 'skip' param is being effective
-			if (jsonNoSkip.results.length && jsonSkip.results.length) {
-				expect(jsonNoSkip.results[0]).not.toEqual(jsonSkip.results[0]);
+      expect(jsonResponse).toEqual(InvalidSkipValueErrorResponse);
+    });
+  });
 
-				if (jsonNoSkip.results.length > 1) {
-					expect(jsonNoSkip.results[1]).toEqual(jsonSkip.results[0]);
-				}
-			}
-		});
+  describe('limit query param', () => {
+    it('should return entries less than or equal to limit', async () => {
+      const response = await getApiResponse(
+        Api.method,
+        `${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
+      );
 
-		it('should return error if skip is negative', async () => {
-			const skip = -1;
-			const response = await getApiResponse(
-				Api.method,
-				`${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${skip}&limit=${Data.Limit}`
-			);
-			const jsonResponse = JSON.parse(response.body);
+      expect(JSON.parse(response.body).count).toBeLessThanOrEqual(Data.Limit);
+    });
 
-			expect(jsonResponse).toEqual(InvalidSkipValueErrorResponse)
-		});
-	})
+    it('should return error if limit is zero', async () => {
+      const limit = 0;
+      const response = await getApiResponse(
+        Api.method,
+        `${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${Data.Skip}&limit=${limit}`
+      );
+      const jsonResponse = JSON.parse(response.body);
 
-	describe('limit query param', () => {
-		it('should return entries less than or equal to limit', async () => {
-			const response = await getApiResponse(
-				Api.method,
-				`${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${Data.Skip}&limit=${Data.Limit}`
-			);
+      expect(jsonResponse).toEqual(InvalidLimitValueErrorResponse);
+    });
 
-			expect(JSON.parse(response.body).count).toBeLessThanOrEqual(Data.Limit);
-		});
+    it('should return error if limit is negative', async () => {
+      const limit = -1;
+      const response = await getApiResponse(
+        Api.method,
+        `${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${Data.Skip}&limit=${limit}`
+      );
+      const jsonResponse = JSON.parse(response.body);
 
-		it('should return error if limit is zero', async () => {
-			const limit = 0;
-			const response = await getApiResponse(
-				Api.method,
-				`${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${Data.Skip}&limit=${limit}`
-			);
-			const jsonResponse = JSON.parse(response.body);
-
-			expect(jsonResponse).toEqual(InvalidLimitValueErrorResponse)
-		});
-
-		it('should return error if limit is negative', async () => {
-			const limit = -1;
-			const response = await getApiResponse(
-				Api.method,
-				`${Api.url}?dacId=${Data.DacId}&voter=${Data.Voter}&skip=${Data.Skip}&limit=${limit}`
-			);
-			const jsonResponse = JSON.parse(response.body);
-
-			expect(jsonResponse).toEqual(InvalidLimitValueErrorResponse)
-		});
-	})
+      expect(jsonResponse).toEqual(InvalidLimitValueErrorResponse);
+    });
+  });
 });
 
 // helpers
 const getApiResponse = async function (method, url) {
-	return await environment.server.inject({ method, url });
+  return await environment.server.inject({ method, url });
 };

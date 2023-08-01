@@ -11,8 +11,7 @@
             "$ref": "#/$defs/semanticVerString"
         },
         "timestamp": {
-            "type": "integer",
-            "minimum": 0
+            "type": "string"
         },
         "uptimeSeconds": {
             "type": "integer",
@@ -33,13 +32,10 @@
                 "@alien-worlds/aw-antelope": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "@alien-worlds/aw-antelope": {
-                    "$ref": "#/$defs/semanticVerString"
-                },
                 "@alien-worlds/aw-contract-alien-worlds": {
                     "$ref": "#/$defs/semanticVerString"
                 },
-                "aw-contract-dao-worlds": {
+                "@alien-worlds/aw-contract-dao-worlds": {
                     "$ref": "#/$defs/semanticVerString"
                 },
                 "@alien-worlds/aw-contract-index-worlds": {
@@ -56,9 +52,8 @@
                 "@alien-worlds/aw-core",
                 "@alien-worlds/aw-storage-mongodb",
                 "@alien-worlds/aw-antelope",
-                "@alien-worlds/aw-antelope",
                 "@alien-worlds/aw-contract-alien-worlds",
-                "aw-contract-dao-worlds",
+                "@alien-worlds/aw-contract-dao-worlds",
                 "@alien-worlds/aw-contract-index-worlds",
                 "@alien-worlds/aw-contract-stkvt-worlds",
                 "@alien-worlds/aw-contract-token-worlds"
@@ -67,24 +62,29 @@
         "database": {
             "type": "object",
             "properties": {
+                "mongodb": {
+                    "type": "string",
+                    "minLength": 2
+                }
+            },
+            "required": [
+                "mongodb"
+            ]
+        },
+        "historyApi": {
+            "type": "object",
+            "properties": {
+                "currentBlockNumber": {
+                    "$ref": "#/$defs/stringOfAtleastOneDigit"
+                },
                 "status": {
                     "type": "string",
                     "minLength": 2
                 }
             },
             "required": [
+                "currentBlockNumber",
                 "status"
-            ]
-        },
-        "blockChainHistory": {
-            "type": "object",
-            "properties": {
-                "currentBlock": {
-                    "$ref": "#/$defs/stringOfAtleastOneDigit"
-                }
-            },
-            "required": [
-                "currentBlock"
             ]
         }
     },
@@ -96,7 +96,7 @@
         "nodeVersion",
         "dependencies",
         "database",
-        "blockChainHistory"
+        "historyApi"
     ],
     "$defs": {
         "semanticVerString": {
@@ -109,7 +109,7 @@
         },
         "stringOfAtleastOneDigit": {
             "type": "string",
-            "pattern": "^\\d+$"
+            "pattern": "^-*\\d+$"
         }
     }
 }

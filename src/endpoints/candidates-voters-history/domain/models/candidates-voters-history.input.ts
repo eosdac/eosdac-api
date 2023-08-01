@@ -1,39 +1,40 @@
-import { CandidatesVotersHistoryRequestQueryParams } from '../../data/dtos/candidates-voters-history.dto';
+import { IO, UnknownObject } from '@alien-worlds/aw-core';
 
 /**
+ * Represents the input for querying candidates' voters history for a specific DAC and candidate.
  * @class
+ * @implements {IO}
  */
-export class CandidatesVotersHistoryInput {
+export class CandidatesVotersHistoryInput implements IO {
   /**
-   *
-   * @param {CandidatesVotersHistoryRequestQueryParams} queryParams
-   * @returns {CandidatesVotersHistoryInput}
-   */
-  public static fromRequest(
-    queryParams: CandidatesVotersHistoryRequestQueryParams
-  ): CandidatesVotersHistoryInput {
-    const { dacId = '', candidateId = '', skip = 0, limit = 20 } = queryParams;
-
-    return new CandidatesVotersHistoryInput(
-      dacId.toLowerCase(),
-      candidateId.toLowerCase(),
-      Number(skip),
-      Number(limit)
-    );
-  }
-  /**
-   *
    * @constructor
-   * @private
-   * @param {string} dacId
-   * @param {string} candidateId
-   * @param {number} skip
-   * @param {number} limit
+   * @public
+   * @param {string} dacId - The ID of the DAC.
+   * @param {string} candidateId - The ID of the candidate.
+   * @param {number} skip - The number of records to skip (used for pagination).
+   * @param {number} limit - The maximum number of records to return per query (used for pagination).
    */
-  private constructor(
+  constructor(
     public readonly dacId: string,
     public readonly candidateId: string,
     public readonly skip: number,
     public readonly limit: number
   ) {}
+
+  /**
+   * Converts the CandidatesVotersHistoryInput object to a JSON representation.
+   *
+   * @public
+   * @returns {UnknownObject} - The JSON representation of the CandidatesVotersHistoryInput object.
+   */
+  public toJSON(): UnknownObject {
+    const { dacId, candidateId, skip, limit } = this;
+
+    return {
+      dacId,
+      candidateId,
+      skip,
+      limit,
+    };
+  }
 }

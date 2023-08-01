@@ -36,8 +36,8 @@
                 "url": {
                     "type": "string"
                 },
-                "walletId": {
-                    "$ref": "#/$defs/walletId"
+                "account": {
+                    "$ref": "#/$defs/account"
                 },
                 "requestedpay": {
                     "type": "string"
@@ -45,34 +45,30 @@
                 "votePower": {
                     "type": "integer"
                 },
-                "agreedTermVersion": {
+                "signedDaoTermsVersion": {
                     "type": "integer"
                 },
-                "currentPlanetMemberTermsSignedValid": {
+                "hasSignedCurrentDaoTerms": {
                     "type": "boolean"
                 },
                 "isFlagged": {
                     "type": "boolean"
                 },
-                "isSelected": {
-                    "type": "boolean"
-                },
-                "planetName": {
+                "dacId": {
                     "type": "string"
                 }
             },
             "required": [
-                "walletId",
+                "account",
                 "requestedpay",
                 "votePower",
-                "agreedTermVersion",
-                "currentPlanetMemberTermsSignedValid",
+                "signedDaoTermsVersion",
+                "hasSignedCurrentDaoTerms",
                 "isFlagged",
-                "isSelected",
-                "planetName"
+                "dacId"
             ]
         },
-        "walletId": {
+        "account": {
             "type": "string",
             "minLength": 1
         }

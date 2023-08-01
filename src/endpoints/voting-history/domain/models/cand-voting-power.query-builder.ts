@@ -10,9 +10,18 @@ export type CandidateVotingPowerQueryArgs = {
 };
 
 /**
+ * Query builder for retrieving candidate voting power from MongoDB.
+ *
  * @class
+ * @extends {QueryBuilder}
  */
 export class CandidateVotingPowerQueryBuilder extends QueryBuilder {
+  /**
+   * Builds the MongoDB query for retrieving candidate voting power.
+   *
+   * @method
+   * @returns {Query} The MongoDB query and options for retrieving candidate voting power.
+   */
   public build(): Query {
     const { dacId, candidateName, block_timestamp } = this
       .args as CandidateVotingPowerQueryArgs;

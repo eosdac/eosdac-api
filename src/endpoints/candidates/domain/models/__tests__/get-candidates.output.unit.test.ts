@@ -1,3 +1,4 @@
+import { Result } from '@alien-worlds/aw-core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
@@ -6,10 +7,10 @@ import { CandidateProfile } from '../../entities/candidate-profile';
 import { ContractAction } from '@alien-worlds/aw-core';
 import { GetCandidatesOutput } from '../get-candidates.output';
 import { Profile } from '../../../../profile/domain/entities/profile';
-import { ProfileMongoMapper } from '@endpoints/profile/data/mappers/profile.mapper';
+import { ActionToProfileMapper } from '@endpoints/profile/data/mappers/action-to-profile.mapper';
 
 const profiles: Profile[] = [
-  ProfileMongoMapper.toEntity(
+  ActionToProfileMapper.toEntity(
     new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
       'mgaqy.wam',
       new Date('2021-02-25T04:18:56.000Z'),
@@ -32,7 +33,6 @@ describe('GetCandidatesOutput', () => {
   let dacId: string;
   let candidates: DaoWorldsCommon.Deltas.Entities.Candidates[];
   let agreedTerms: Map<string, number>;
-  let votedCandidates: string[];
   let candidateProfiles: CandidateProfile[];
 
   beforeEach(() => {
@@ -54,7 +54,6 @@ describe('GetCandidatesOutput', () => {
     agreedTerms = new Map<string, number>();
     agreedTerms.set('candidate1', 1);
 
-    votedCandidates = ['candidate1'];
     candidateProfiles = [
       CandidateProfile.create(
         dacId,
@@ -63,27 +62,32 @@ describe('GetCandidatesOutput', () => {
         new TokenWorldsCommon.Deltas.Mappers.MembertermsRawMapper().toEntity({
           version: 1,
         }),
-        1,
-        votedCandidates
+        1
       ),
     ];
   });
 
   it('should create a GetCandidatesOutput object with the correct properties', () => {
-    const result = GetCandidatesOutput.create(candidateProfiles);
+    const output = GetCandidatesOutput.create(
+      Result.withContent(candidateProfiles)
+    );
 
-    expect(result).toBeInstanceOf(GetCandidatesOutput);
-    expect(result.results).toBeDefined();
+    expect(output).toBeInstanceOf(GetCandidatesOutput);
+    expect(output.result).toBeDefined();
   });
 
   it('should create a CandidateProfile for each candidate in the input array', () => {
-    const result = GetCandidatesOutput.create(candidateProfiles);
+    const output = GetCandidatesOutput.create(
+      Result.withContent(candidateProfiles)
+    );
 
-    expect(result.results).toHaveLength(1);
+    expect(output.result.content).toHaveLength(1);
   });
 
   it('should return JSON result object', () => {
-    const result = GetCandidatesOutput.create(candidateProfiles);
+    const result = GetCandidatesOutput.create(
+      Result.withContent(candidateProfiles)
+    );
     const json = result.toJSON();
 
     expect(json).toBeDefined();

@@ -1,7 +1,8 @@
-import { CandidatesVotersHistoryControllerOutput } from '../../../../candidates-voters-history/data/dtos/candidates-voters-history.dto';
+import { Failure } from '@alien-worlds/aw-core';
+import { VotesModel } from '../../../../candidates-voters-history/data/dtos/candidates-voters-history.dto';
 import { CandidatesVotersHistoryOutput } from '../candidates-voters-history.output';
 
-const data: CandidatesVotersHistoryControllerOutput = {
+const data: VotesModel = {
   results: [
     {
       voter: 'string',
@@ -15,15 +16,31 @@ const data: CandidatesVotersHistoryControllerOutput = {
 };
 
 describe('CandidatesVotersHistoryOutput Unit tests', () => {
-  it('"CandidatesVotersHistoryOutput.create" should create instance', async () => {
-    const output = CandidatesVotersHistoryOutput.create(data);
+  it('"create" should create instance', async () => {
+    const output = CandidatesVotersHistoryOutput.create(
+      data.results,
+      data.total
+    );
 
     expect(output).toBeInstanceOf(CandidatesVotersHistoryOutput);
   });
 
-  it('CandidatesVotersHistoryOutput.toJson should return json object', async () => {
-    const output = CandidatesVotersHistoryOutput.create(data);
+  it('"toJson" should return json object', async () => {
+    const output = CandidatesVotersHistoryOutput.create(
+      data.results,
+      data.total
+    );
 
-    expect(output.toJson()).toBeInstanceOf(Object);
+    expect(output.toJSON()).toBeInstanceOf(Object);
+  });
+
+  it('"toJson" should return empty json object when failure', async () => {
+    const output = CandidatesVotersHistoryOutput.create(
+      data.results,
+      data.total,
+      Failure.withMessage('error')
+    );
+
+    expect(output.toJSON()).toEqual({ results: [], total: 0 });
   });
 });
