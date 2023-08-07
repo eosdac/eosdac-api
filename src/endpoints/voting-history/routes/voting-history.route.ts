@@ -1,70 +1,65 @@
-import { GetRoute, Request, Result, RouteHandler } from '@alien-worlds/api-core';
-import { UserVote } from '@alien-worlds/eosdac-api-common';
+import {
+  GetRoute,
+  Request,
+  RouteHandler,
+  ValidationResult,
+} from '@alien-worlds/aw-core';
 
+import { AjvValidator } from '@src/validator/ajv-validator';
 import { VotingHistoryInput } from '../domain/models/voting-history.input';
-import { VotingHistoryOutput } from '../domain/models/voting-history.output';
-
-/*imports*/
+import { VotingHistoryRequestSchema } from '../schemas';
+import { GetVotingHistoryRouteIO } from './voting-history.route-io';
+import ApiConfig from '@src/config/api-config';
 
 /**
+ * Represents the route for getting voting history data.
+ *
  * @class
- * 
- * 
+ * @extends {GetRoute}
  */
 export class GetVotingHistoryRoute extends GetRoute {
-  public static create(handler: RouteHandler) {
-    return new GetVotingHistoryRoute(handler);
+  /**
+   * Creates a new instance of GetVotingHistoryRoute.
+   *
+   * @static
+   * @method
+   * @param {RouteHandler} handler - The handler function for the route.
+   * @param {ApiConfig} config - The configuration object for the API.
+   * @returns {GetVotingHistoryRoute} The newly created GetVotingHistoryRoute instance.
+   */
+  public static create(handler: RouteHandler, config: ApiConfig) {
+    return new GetVotingHistoryRoute(handler, config);
   }
 
-  private constructor(handler: RouteHandler) {
-    super(['/v1/dao/voting_history', '/v1/eosdac/voting_history'], handler, {
-      hooks: {
-        pre: parseRequestToControllerInput,
-        post: parseResultToControllerOutput,
+  /**
+   * Creates a new instance of GetVotingHistoryRoute.
+   *
+   * @constructor
+   * @private
+   * @param {RouteHandler} handler - The handler function for the route.
+   * @param {ApiConfig} config - The configuration object for the API.
+   */
+  private constructor(handler: RouteHandler, config: ApiConfig) {
+    super(`/${config.urlVersion}/dao/voting_history`, handler, {
+      io: new GetVotingHistoryRouteIO(),
+      validators: {
+        request: validateRequest,
       },
     });
   }
 }
 
 /**
+ * Validates the request data for the GetVotingHistoryRoute.
  *
- * @param {Request} request
- * @returns
+ * @param {Request<VotingHistoryInput>} request - The request object for the GetVotingHistoryRoute.
+ * @returns {ValidationResult} The result of the validation.
  */
-export const parseRequestToControllerInput = (
+export const validateRequest = (
   request: Request<VotingHistoryInput>
-) => {
-  // parse DTO (query) to the options required by the controller method
-  return VotingHistoryInput.fromRequest(request.query);
+): ValidationResult => {
+  return AjvValidator.initialize().validateHttpRequest(
+    VotingHistoryRequestSchema,
+    request
+  );
 };
-
-/**
- *
- * @param {Result<VotingHistoryOutput>} result
- * @returns
- */
-export const parseResultToControllerOutput = (
-  result: Result<UserVote[], Error>
-) => {
-  if (result.isFailure) {
-    const {
-      failure: { error },
-    } = result;
-    if (error) {
-      return {
-        status: 500,
-        body: {
-          error: error.message
-        },
-      };
-    }
-  }
-
-  const { content } = result;
-
-  return {
-    status: 200,
-    body: VotingHistoryOutput.create(content).toJson(),
-  };
-};
-

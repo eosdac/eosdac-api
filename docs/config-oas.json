@@ -1,0 +1,21 @@
+{
+    "responseHeaders": false,
+    "disabledParams": {
+        "includeQuery": true
+    },
+    "pathDepth": 2,
+    "servers": [
+        {
+            "description": "Test server",
+            "url": "https://dao-api-test.alienworlds.io/v2/dao"
+        },
+        {
+            "description": "Production DAO API server",
+            "url": "https://dao-api.alienworlds.io/v2/dao"
+        },
+        {
+            "description": "Producton API server",
+            "url": "https://api.alienworlds.io/v2/dao"
+        }
+    ]
+}

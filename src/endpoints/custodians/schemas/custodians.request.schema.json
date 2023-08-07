@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "custodians.request.schema.json",
+  "title": "/:dacId/custodians request schema",
+  "type": "object",
+  "properties": {
+    "params": {
+      "type": "object",
+      "properties": {
+        "dacId": {
+          "$ref": "#/$defs/dacId"
+        }
+      },
+      "required": ["dacId"]
+    }
+  },
+  "$defs": {
+    "dacId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 6
+    }
+  }
+}

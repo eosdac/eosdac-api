@@ -1,0 +1,3545 @@
+{
+	"info": {
+		"_postman_id": "c7314042-260c-4c11-8ae5-abd4b05cdee5",
+		"name": "aw-api-dao",
+		"description": "This document describes APIs for DAO related operations.\n\nAll paths are prefixed with `/v2/dao`.\n\nThe old prefix i.e. `/v1/eosdac` is currently supported but it will soon be permanently removed.  \nAPI clients are encouraged to start migrating their apps to utilise the new prefix.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2870003"
+	},
+	"item": [
+		{
+			"name": "List all DACs and their respective info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/{{version}}/{{prefix}}/dacs?dacId=eyeke",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{version}}",
+						"{{prefix}}",
+						"dacs"
+					],
+					"query": [
+						{
+							"key": "dacId",
+							"value": "eyeke",
+							"description": "Filter the list by dacId. <br><br>[length: 5-6 characters]"
+						},
+						{
+							"key": "limit",
+							"value": "2",
+							"description": "Maximum items to return. <br><br>[min: 1]",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Provides list of all available DACs along with their respective detailed information e.g. balance, statistics and globals."
+			},
+			"response": [
+				{
+					"name": "list all dacs",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/dacs",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"dacs"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "12631"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:12:16 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [\n        {\n            \"dacId\": \"eyeke\",\n            \"owner\": \"eyeke.dac\",\n            \"title\": \"Eyeke\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"EYE\",\n                \"precision\": 4\n            },\n            \"refs\": {\n                \"12\": \"QmUXjmrQ6j2ukCdPjacdQ48MmYo853u4Y5y3kb5b4HBuuF\",\n                \"logoUrl\": \"QmW1SeninpNQUMLstTPFTv7tMkRdBZMHBJTgf17Znr1uKK\",\n                \"description\": \"Also known as Second Earth or Terra Alterna as it is the nearest, and closest, of all Alien Worlds to Earth. Humans found Eyeke inhabited by a Monastic order of Greys who believe that Eyeke is a spiritual place. Despite initial fears, Trilium mining seems to be tolerated by the Monks at this time.\"\n            },\n            \"accounts\": {\n                \"auth\": \"eyeke.world\",\n                \"treasury\": \"eyeke.world\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"eyeke.dac\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"eyeke.dac\"\n            },\n            \"dacTreasury\": {\n                \"balance\": \"8148085.9744 TLM\"\n            },\n            \"dacStats\": {\n                \"supply\": \"9221737.242 EYE\",\n                \"maxSupply\": \"10000000000 EYE\",\n                \"issuer\": \"federation\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"2023-07-26T05:07:45\",\n                \"lastPeriodTime\": \"2023-07-26T02:39:14\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 EYE\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 16,\n                \"numElected\": 5,\n                \"periodLength\": 604800,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": \"421963069221\",\n                \"totalWeightOfVotes\": \"84755997865\",\n                \"voteQuorumPercent\": 1\n            }\n        },\n        {\n            \"dacId\": \"kavian\",\n            \"owner\": \"kavian.dac\",\n            \"title\": \"Kavian\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"KAV\",\n                \"precision\": 4\n            },\n            \"refs\": {\n                \"12\": \"QmdihYLTt6T1G3N9jHs1bnUSGRTZHyQJPYwh9edLsnjPiK\",\n                \"logoUrl\": \"QmY9n6yWcyYLKJuZ2EVnL1m7iSFovA1GCabhgDa4H1gbZN\",\n                \"description\": \"Although most land on Kavian is rocky and icy, there are some unusual areas where  diverse bio-systems have flourished. Legend has it that these areas were terraformed by ancient aliens. Kavian has a number of small Reptiloid villages.\"\n            },\n            \"accounts\": {\n                \"auth\": \"kavian.world\",\n                \"treasury\": \"kavian.world\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"kavian.dac\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"kavian.dac\"\n            },\n            \"dacTreasury\": {\n                \"balance\": \"15943979.9359 TLM\"\n            },\n            \"dacStats\": {\n                \"supply\": \"9017494.2203 KAV\",\n                \"maxSupply\": \"10000000000 KAV\",\n                \"issuer\": \"federation\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"2023-07-26T14:46:11\",\n                \"lastPeriodTime\": \"2023-07-26T02:39:14\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 KAV\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 12,\n                \"numElected\": 5,\n                \"periodLength\": 604800,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": \"287041240908\",\n                \"totalWeightOfVotes\": \"57935556857\",\n                \"voteQuorumPercent\": 1\n            }\n        },\n        {\n            \"dacId\": \"magor\",\n            \"owner\": \"magor.dac\",\n            \"title\": \"Magor\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"MAG\",\n                \"precision\": 4\n            },\n            \"refs\": {\n                \"12\": \"Qmd41ZeVAzUoaVbvuEYcuTm3D2j2rwNJ8WjSnrFk7TneAq\",\n                \"logoUrl\": \"QmTSecCGktdAt7xLZs7vqiXuxe3zMNpvsSy16LQ7ShwNN5\",\n                \"description\": \"Magor has the most hostile planetary environment in the federation. Due to the volcanic activity, the sky is covered in smoke and the terrain is extremely mountainous. There are no permanent settlements but the sandy part of Magor is considered an anomaly; It is rumoured that the sand covers many ancient secrets.\"\n            },\n            \"accounts\": {\n                \"auth\": \"magor.world\",\n                \"treasury\": \"magor.world\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"magor.dac\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"magor.dac\"\n            },\n            \"dacTreasury\": {\n                \"balance\": \"7802897.1845 TLM\"\n            },\n            \"dacStats\": {\n                \"supply\": \"6310323.5658 MAG\",\n                \"maxSupply\": \"10000000000 MAG\",\n                \"issuer\": \"federation\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"2023-07-26T02:40:14\",\n                \"lastPeriodTime\": \"2023-07-26T02:39:14\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 MAG\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 17,\n                \"numElected\": 5,\n                \"periodLength\": 604800,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": \"197495629715\",\n                \"totalWeightOfVotes\": \"41143031533\",\n                \"voteQuorumPercent\": 1\n            }\n        },\n        {\n            \"dacId\": \"naron\",\n            \"owner\": \"naron.dac\",\n            \"title\": \"Naron\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"NAR\",\n                \"precision\": 4\n            },\n            \"refs\": {\n                \"12\": \"QmX2ui6n2thrF1JZuDfsu3VHsMCHhzQe3CxsJ3raUnjsPj\",\n                \"logoUrl\": \"QmRNzgY1gBqAS3H7nadRNg19g6aTW8hqB2EJCMX8nXFcpx\",\n                \"description\": \"Naron is also a striped planet and it's geological structure has given rise to distinctive bands of environments. Large icy caps give way to mountainous terrains on both hemispheres. Then come rocky and grassy terrains with 2 huge lakes and sandy desert nearer the equator. The island in the largest lake (Lake Nyari) is held sacred by many alien races and has rival claims have caused major conflicts.\"\n            },\n            \"accounts\": {\n                \"auth\": \"naron.world\",\n                \"treasury\": \"naron.world\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"naron.dac\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"naron.dac\"\n            },\n            \"dacTreasury\": {\n                \"balance\": \"8292655.1424 TLM\"\n            },\n            \"dacStats\": {\n                \"supply\": \"9990612.5942 NAR\",\n                \"maxSupply\": \"10000000000 NAR\",\n                \"issuer\": \"federation\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"2023-07-29T13:04:31\",\n                \"lastPeriodTime\": \"2023-07-26T02:39:14\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 NAR\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 18,\n                \"numElected\": 5,\n                \"periodLength\": 604800,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": \"161054465541\",\n                \"totalWeightOfVotes\": \"41148463271\",\n                \"voteQuorumPercent\": 1\n            }\n        },\n        {\n            \"dacId\": \"nerix\",\n            \"owner\": \"neri.dac\",\n            \"title\": \"Neri\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"NER\",\n                \"precision\": 4\n            },\n            \"refs\": {\n                \"12\": \"QmWeJmvhfG3WioNYCRwM9584xEd5tJU8cihXNRGncLz3xg\",\n                \"logoUrl\": \"QmbpdwnKXR2YHkgo7vQSvrQUbMJ4QYJMiAXKs8hj26XyNW\",\n                \"description\": \"A striped planet with largest forest and sandy areas, Neri also has some of the largest areas of methane swamplands. Large numbers of little green people have made the forests of Neri their home but they aim to live in balance with nature so casual visitors may not even notice the colonies.\"\n            },\n            \"accounts\": {\n                \"auth\": \"neri.world\",\n                \"treasury\": \"neri.world\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"neri.dac\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"neri.dac\"\n            },\n            \"dacTreasury\": {\n                \"balance\": \"20999014.8565 TLM\"\n            },\n            \"dacStats\": {\n                \"supply\": \"12576663.9948 NER\",\n                \"maxSupply\": \"10000000000 NER\",\n                \"issuer\": \"federation\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"2023-07-26T07:18:52\",\n                \"lastPeriodTime\": \"2023-07-26T02:39:14\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 NER\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 21,\n                \"numElected\": 5,\n                \"periodLength\": 604800,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": \"334834616185\",\n                \"totalWeightOfVotes\": \"68860425592\",\n                \"voteQuorumPercent\": 1\n            }\n        },\n        {\n            \"dacId\": \"testa\",\n            \"owner\": \"testadacdacc\",\n            \"title\": \"Test A\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"TESTA\",\n                \"precision\": 4\n            },\n            \"refs\": {\n                \"12\": \"QmPWAMikwcE6CCEiZ7VtoET1Lp5NT1Z7gvNk31stNSgLbN\",\n                \"logoUrl\": \"QmSVnZ6gLCGTqwWeDuGnD8XqT7iBMfnwiZhD8eNcNwvcZ4\",\n                \"description\": \"This would be the description of Test A DAO. This text is simply a place holder. The image and the map image has been copied from Veles for convenience.\"\n            },\n            \"accounts\": {\n                \"auth\": \"testdaca.dac\",\n                \"treasury\": \"testdaca.dac\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"testadacdacc\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"testadacdacc\"\n            },\n            \"dacTreasury\": {\n                \"balance\": \"1459.5258 TLM\"\n            },\n            \"dacStats\": {\n                \"supply\": \"11000000 TESTA\",\n                \"maxSupply\": \"10000000000 TESTA\",\n                \"issuer\": \"ameet.worlds\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"2023-02-27T14:45:01\",\n                \"lastPeriodTime\": \"2023-06-23T16:16:23\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 TESTA\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 19,\n                \"numElected\": 5,\n                \"periodLength\": 60,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": \"52411712359\",\n                \"totalWeightOfVotes\": \"8365320037\",\n                \"voteQuorumPercent\": 1\n            }\n        },\n        {\n            \"dacId\": \"testb\",\n            \"owner\": \"testb.dac\",\n            \"title\": \"Test B\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"TESTB\",\n                \"precision\": 4\n            },\n            \"refs\": {},\n            \"accounts\": {\n                \"treasury\": \"testbdacdacc\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"testb.dac\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"testb.dac\"\n            },\n            \"dacStats\": {\n                \"supply\": \"1000000000 TESTB\",\n                \"maxSupply\": \"10000000000 TESTB\",\n                \"issuer\": \"ameet.worlds\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"1970-01-01T00:00:00\",\n                \"lastPeriodTime\": \"2022-10-16T11:49:49\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 TESTB\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 12,\n                \"numElected\": 5,\n                \"periodLength\": 60,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": 1002777776,\n                \"totalWeightOfVotes\": 1000000000,\n                \"voteQuorumPercent\": 1\n            }\n        },\n        {\n            \"dacId\": \"veles\",\n            \"owner\": \"veles.dac\",\n            \"title\": \"Veles\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"VEL\",\n                \"precision\": 4\n            },\n            \"refs\": {\n                \"12\": \"QmPWAMikwcE6CCEiZ7VtoET1Lp5NT1Z7gvNk31stNSgLbN\",\n                \"logoUrl\": \"QmSVnZ6gLCGTqwWeDuGnD8XqT7iBMfnwiZhD8eNcNwvcZ4\",\n                \"description\": \"With almost as much of a water world as Earth, Veles has some of the most beautiful landscapes found thus far in the universe. It's islands are home to some unique exoflora. Nordic aliens often visit Veles on their travels and some have made it their main home.\"\n            },\n            \"accounts\": {\n                \"auth\": \"veles.world\",\n                \"treasury\": \"veles.world\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"veles.dac\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"veles.dac\"\n            },\n            \"dacTreasury\": {\n                \"balance\": \"7381439.3068 TLM\"\n            },\n            \"dacStats\": {\n                \"supply\": \"4233130.028 VEL\",\n                \"maxSupply\": \"10000000000 VEL\",\n                \"issuer\": \"federation\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"2023-07-29T23:47:39\",\n                \"lastPeriodTime\": \"2023-07-26T02:39:14\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 VEL\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 14,\n                \"numElected\": 5,\n                \"periodLength\": 604800,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": \"116315151726\",\n                \"totalWeightOfVotes\": \"24001359597\",\n                \"voteQuorumPercent\": 1\n            }\n        }\n    ],\n    \"count\": 8\n}"
+				},
+				{
+					"name": "filter by dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/dacs?dacId=kavian",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"dacs"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "kavian",
+									"description": "Filter the list by dacId. <br><br>[length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "1621"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:13:30 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [\n        {\n            \"dacId\": \"kavian\",\n            \"owner\": \"kavian.dac\",\n            \"title\": \"Kavian\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"KAV\",\n                \"precision\": 4\n            },\n            \"refs\": {\n                \"12\": \"QmdihYLTt6T1G3N9jHs1bnUSGRTZHyQJPYwh9edLsnjPiK\",\n                \"logoUrl\": \"QmY9n6yWcyYLKJuZ2EVnL1m7iSFovA1GCabhgDa4H1gbZN\",\n                \"description\": \"Although most land on Kavian is rocky and icy, there are some unusual areas where  diverse bio-systems have flourished. Legend has it that these areas were terraformed by ancient aliens. Kavian has a number of small Reptiloid villages.\"\n            },\n            \"accounts\": {\n                \"auth\": \"kavian.world\",\n                \"treasury\": \"kavian.world\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"kavian.dac\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"kavian.dac\"\n            },\n            \"dacTreasury\": {\n                \"balance\": \"15943979.9359 TLM\"\n            },\n            \"dacStats\": {\n                \"supply\": \"9017494.2203 KAV\",\n                \"maxSupply\": \"10000000000 KAV\",\n                \"issuer\": \"federation\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"2023-07-26T14:46:11\",\n                \"lastPeriodTime\": \"2023-07-26T02:39:14\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 KAV\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 12,\n                \"numElected\": 5,\n                \"periodLength\": 604800,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": \"287041240908\",\n                \"totalWeightOfVotes\": \"57935556857\",\n                \"voteQuorumPercent\": 1\n            }\n        }\n    ],\n    \"count\": 1\n}"
+				},
+				{
+					"name": "apply limit to list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/dacs?limit=2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"dacs"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "3273"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:14:19 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [\n        {\n            \"dacId\": \"eyeke\",\n            \"owner\": \"eyeke.dac\",\n            \"title\": \"Eyeke\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"EYE\",\n                \"precision\": 4\n            },\n            \"refs\": {\n                \"12\": \"QmUXjmrQ6j2ukCdPjacdQ48MmYo853u4Y5y3kb5b4HBuuF\",\n                \"logoUrl\": \"QmW1SeninpNQUMLstTPFTv7tMkRdBZMHBJTgf17Znr1uKK\",\n                \"description\": \"Also known as Second Earth or Terra Alterna as it is the nearest, and closest, of all Alien Worlds to Earth. Humans found Eyeke inhabited by a Monastic order of Greys who believe that Eyeke is a spiritual place. Despite initial fears, Trilium mining seems to be tolerated by the Monks at this time.\"\n            },\n            \"accounts\": {\n                \"auth\": \"eyeke.world\",\n                \"treasury\": \"eyeke.world\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"eyeke.dac\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"eyeke.dac\"\n            },\n            \"dacTreasury\": {\n                \"balance\": \"8148085.9744 TLM\"\n            },\n            \"dacStats\": {\n                \"supply\": \"9221737.242 EYE\",\n                \"maxSupply\": \"10000000000 EYE\",\n                \"issuer\": \"federation\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"2023-07-26T05:07:45\",\n                \"lastPeriodTime\": \"2023-07-26T02:39:14\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 EYE\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 16,\n                \"numElected\": 5,\n                \"periodLength\": 604800,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": \"421963069221\",\n                \"totalWeightOfVotes\": \"84755997865\",\n                \"voteQuorumPercent\": 1\n            }\n        },\n        {\n            \"dacId\": \"kavian\",\n            \"owner\": \"kavian.dac\",\n            \"title\": \"Kavian\",\n            \"isDacActive\": false,\n            \"symbol\": {\n                \"contract\": \"token.worlds\",\n                \"code\": \"KAV\",\n                \"precision\": 4\n            },\n            \"refs\": {\n                \"12\": \"QmdihYLTt6T1G3N9jHs1bnUSGRTZHyQJPYwh9edLsnjPiK\",\n                \"logoUrl\": \"QmY9n6yWcyYLKJuZ2EVnL1m7iSFovA1GCabhgDa4H1gbZN\",\n                \"description\": \"Although most land on Kavian is rocky and icy, there are some unusual areas where  diverse bio-systems have flourished. Legend has it that these areas were terraformed by ancient aliens. Kavian has a number of small Reptiloid villages.\"\n            },\n            \"accounts\": {\n                \"auth\": \"kavian.world\",\n                \"treasury\": \"kavian.world\",\n                \"custodian\": \"dao.worlds\",\n                \"msigOwned\": \"kavian.dac\",\n                \"proposals\": \"prop.worlds\",\n                \"escrow\": \"escrw.worlds\",\n                \"voteWeight\": \"stkvt.worlds\",\n                \"activation\": \"newperiodctl\",\n                \"referendum\": \"ref.worlds\",\n                \"spendings\": \"kavian.dac\"\n            },\n            \"dacTreasury\": {\n                \"balance\": \"15943979.9359 TLM\"\n            },\n            \"dacStats\": {\n                \"supply\": \"9017494.2203 KAV\",\n                \"maxSupply\": \"10000000000 KAV\",\n                \"issuer\": \"federation\",\n                \"transferLocked\": false\n            },\n            \"electionGlobals\": {\n                \"authThresholdHigh\": 3,\n                \"authThresholdLow\": 2,\n                \"authThresholdMid\": 3,\n                \"budgetPercentage\": 200,\n                \"initialVoteQuorumPercent\": 2,\n                \"lastClaimBudgetTime\": \"2023-07-26T14:46:11\",\n                \"lastPeriodTime\": \"2023-07-26T02:39:14\",\n                \"lockupReleaseTimeDelay\": 1,\n                \"lockupAsset\": {\n                    \"quantity\": \"5000.0000 KAV\",\n                    \"contract\": \"token.worlds\"\n                },\n                \"maxVotes\": 2,\n                \"metInitialVotesThreshold\": 1,\n                \"numberActiveCandidates\": 12,\n                \"numElected\": 5,\n                \"periodLength\": 604800,\n                \"requestedPayMax\": {\n                    \"quantity\": \"0.0000 TLM\",\n                    \"contract\": \"alien.worlds\"\n                },\n                \"shouldPayViaServiceProvider\": 0,\n                \"tokenSupplyTheshold\": 100000000,\n                \"totalVotesOnCandidates\": \"287041240908\",\n                \"totalWeightOfVotes\": \"57935556857\",\n                \"voteQuorumPercent\": 1\n            }\n        }\n    ],\n    \"count\": 2\n}"
+				},
+				{
+					"name": "404 - invalid dac",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/dacs?dacId=dummy",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"dacs"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "dummy",
+									"description": "Filter the list by dacId. <br><br>[length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "82"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:14:40 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Data with dummy in scope: 'index.worlds' table: 'dacs' scope not found\"\n}"
+				},
+				{
+					"name": "400 - short dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/dacs?dacId=x",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"dacs"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "x",
+									"description": "Filter the list by dacId. <br><br>[length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "89"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:15:18 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/dacId must NOT have fewer than 5 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - long dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/dacs?dacId=dummyDacId",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"dacs"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "dummyDacId",
+									"description": "Filter the list by dacId. <br><br>[length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "88"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:15:39 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/dacId must NOT have more than 6 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - invalid limit",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/dacs?limit=0",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"dacs"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "0",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "64"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:15:45 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/limit must be >= 1\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Get member profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{version}}",
+						"{{prefix}}",
+						":dacId",
+						"profile"
+					],
+					"query": [
+						{
+							"key": "account",
+							"value": "suzqu.wam,mgaqy.wam",
+							"description": "Account(s) to fetch. It can accept multiple accounts separated by a comma. <br><br>[Required] [min length: 1]"
+						}
+					],
+					"variable": [
+						{
+							"key": "dacId",
+							"value": "nerix",
+							"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+						}
+					]
+				},
+				"description": "Get user profile"
+			},
+			"response": [
+				{
+					"name": "single account",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/nerix/profile?account=suzqu.wam",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"nerix",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "account",
+									"value": "suzqu.wam",
+									"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "302"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:18:12 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [\n        {\n            \"blockNumber\": \"105578904\",\n            \"account\": \"suzqu.wam\",\n            \"profile\": {\n                \"description\": \"I am squanching in here\",\n                \"familyName\": \"Squanch\",\n                \"givenName\": \"Squanchy\",\n                \"image\": \"https://vignette1.wikia.nocookie.net/rickandmorty/images/5/56/S2e10_squanchy_close.png/revision/latest?cb=20160923052032\"\n            }\n        }\n    ],\n    \"count\": 1\n}"
+				},
+				{
+					"name": "flagged candidate",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/profile?account=awtesteroo12",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "account",
+									"value": "awtesteroo12",
+									"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
+								}
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "testa"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "186"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:18:21 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [\n        {\n            \"account\": \"awtesteroo12\",\n            \"error\": {\n                \"name\": \"Redacted Candidate\",\n                \"body\": \"Candidate \\\"awtesteroo12\\\" profile has been flagged for supplying inappropriate content.\"\n            }\n        }\n    ],\n    \"count\": 1\n}"
+				},
+				{
+					"name": "multiple accounts",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "account",
+									"value": "suzqu.wam,mgaqy.wam",
+									"description": "(Required) Account to fetch, you can supply multiple accounts by separating them with a comma"
+								}
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "nerix"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "733"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:18:44 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [\n        {\n            \"blockNumber\": \"209788070\",\n            \"account\": \"mgaqy.wam\",\n            \"profile\": {\n                \"description\": \"Together We Grow \\n\\nThe Goiter is the longest standing political party in all of Alien Worlds. We predate everyone and stand fast to all commitments. \\n\\nDon't worry, you can trust us....\\n\\nt.me/thegoiter\\nhttps://twitter.com/nftstan\",\n                \"givenName\": \"The Goiter\",\n                \"image\": \"https://gateway.pinata.cloud/ipfs/Qmci9dg78RySNm3dbQuSynd7PuEbiaUFdaWwQV7WTZDAxu\"\n            }\n        },\n        {\n            \"blockNumber\": \"105578904\",\n            \"account\": \"suzqu.wam\",\n            \"profile\": {\n                \"description\": \"I am squanching in here\",\n                \"familyName\": \"Squanch\",\n                \"givenName\": \"Squanchy\",\n                \"image\": \"https://vignette1.wikia.nocookie.net/rickandmorty/images/5/56/S2e10_squanchy_close.png/revision/latest?cb=20160923052032\"\n            }\n        }\n    ],\n    \"count\": 2\n}"
+				},
+				{
+					"name": "404 - invalid account",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/profile?account=dummy",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "account",
+									"value": "dummy",
+									"description": "Account(s) to fetch. It can accept multiple accounts separated by a comma. <br><br>[Required] [min length: 1]"
+								}
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "29"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:19:10 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"profile not found\"\n}"
+				},
+				{
+					"name": "500 - invalid dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "account",
+									"value": "suzqu.wam,mgaqy.wam",
+									"description": "Account(s) to fetch. It can accept multiple accounts separated by a comma. <br><br>[Required] [min length: 1]"
+								}
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "dummy",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "24"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:19:18 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [],\n    \"count\": 0\n}"
+				},
+				{
+					"name": "400 - missing account",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/profile?account=",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "account",
+									"value": "",
+									"description": "Account(s) to fetch. It can accept multiple accounts separated by a comma. <br><br>[Required] [min length: 1]"
+								}
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "91"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:18:51 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/account must NOT have fewer than 1 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - missing dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "account",
+									"value": "suzqu.wam,mgaqy.wam",
+									"description": "Account(s) to fetch. It can accept multiple accounts separated by a comma. <br><br>[Required] [min length: 1]"
+								}
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": " ",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "90"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:18:57 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/params/dacId must NOT have fewer than 5 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - long dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/profile?account=suzqu.wam,mgaqy.wam",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "account",
+									"value": "suzqu.wam,mgaqy.wam",
+									"description": "Account(s) to fetch. It can accept multiple accounts separated by a comma. <br><br>[Required] [min length: 1]"
+								}
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "dummyDacId",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "89"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:19:05 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/params/dacId must NOT have more than 6 characters\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Get candidates by planet",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/candidates",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{version}}",
+						"{{prefix}}",
+						":dacId",
+						"candidates"
+					],
+					"variable": [
+						{
+							"key": "dacId",
+							"value": "nerix",
+							"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+						}
+					]
+				},
+				"description": "Get candidates"
+			},
+			"response": [
+				{
+					"name": "list candidates",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/candidates",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"candidates"
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "4595"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:26:13 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"account\": \".p2bu.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 9123638,\n        \"rank\": 6882300,\n        \"isActive\": true,\n        \"totalVotes\": 19,\n        \"voteDecay\": 16,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"2dybi.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 3,\n        \"rank\": 6670369,\n        \"isActive\": true,\n        \"totalVotes\": 3,\n        \"voteDecay\": 6,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"a52qw.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 17118124,\n        \"rank\": 6895312,\n        \"isActive\": true,\n        \"totalVotes\": 369,\n        \"voteDecay\": 5,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"b52qw.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 14320239,\n        \"rank\": 6888855,\n        \"isActive\": true,\n        \"totalVotes\": 271,\n        \"voteDecay\": 16,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"bsskq.c.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 5453,\n        \"rank\": 6780202,\n        \"isActive\": true,\n        \"totalVotes\": 2,\n        \"voteDecay\": 1,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"c353u.c.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 0,\n        \"rank\": 0,\n        \"isActive\": true,\n        \"totalVotes\": 0,\n        \"voteDecay\": null,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"e3yqy.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 26722,\n        \"rank\": 6746255,\n        \"isActive\": true,\n        \"totalVotes\": 5,\n        \"voteDecay\": 172,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"gtanu.c.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 25000,\n        \"rank\": 6714308,\n        \"isActive\": true,\n        \"totalVotes\": 4,\n        \"voteDecay\": 265,\n        \"signedDaoTermsVersion\": 3,\n        \"hasSignedCurrentDaoTerms\": false,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"i4p3u.c.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 6842525,\n        \"rank\": 6883401,\n        \"isActive\": true,\n        \"totalVotes\": 11,\n        \"voteDecay\": 1,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"ihvb2.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 7263,\n        \"rank\": 6768207,\n        \"isActive\": true,\n        \"totalVotes\": 6,\n        \"voteDecay\": 50,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"jyora.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 122,\n        \"rank\": 6631069,\n        \"isActive\": true,\n        \"totalVotes\": 5,\n        \"voteDecay\": 284,\n        \"signedDaoTermsVersion\": 3,\n        \"hasSignedCurrentDaoTerms\": false,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"mgaqy.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 57164,\n        \"rank\": 6762040,\n        \"isActive\": true,\n        \"totalVotes\": 4,\n        \"voteDecay\": 158,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"mu5xq.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 0,\n        \"rank\": 0,\n        \"isActive\": true,\n        \"totalVotes\": 0,\n        \"voteDecay\": null,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"neyau.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 71083,\n        \"rank\": 6795646,\n        \"isActive\": true,\n        \"totalVotes\": 21,\n        \"voteDecay\": 66,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"pwxue.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 25000,\n        \"rank\": 6797954,\n        \"isActive\": true,\n        \"totalVotes\": 2,\n        \"voteDecay\": 14,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"qstm4.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 2378218,\n        \"rank\": 6847626,\n        \"isActive\": true,\n        \"totalVotes\": 14,\n        \"voteDecay\": 62,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"rlxqw.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 14844659,\n        \"rank\": 6890686,\n        \"isActive\": true,\n        \"totalVotes\": 51,\n        \"voteDecay\": 12,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"t1dbe.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 1689,\n        \"rank\": 6746763,\n        \"isActive\": true,\n        \"totalVotes\": 3,\n        \"voteDecay\": 51,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"x4iqw.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 128013,\n        \"rank\": 6771688,\n        \"isActive\": true,\n        \"totalVotes\": 8,\n        \"voteDecay\": 164,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"yciky.c.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 5446,\n        \"rank\": 6727232,\n        \"isActive\": true,\n        \"totalVotes\": 1,\n        \"voteDecay\": 160,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"zbo2m.c.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 37758,\n        \"rank\": 6726016,\n        \"isActive\": true,\n        \"totalVotes\": 2,\n        \"voteDecay\": 248,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    }\n]"
+				},
+				{
+					"name": "400 - missing dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/candidates",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"candidates"
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": " ",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "90"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:27:27 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/params/dacId must NOT have fewer than 5 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - long dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/candidates",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"candidates"
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "dummyDacId",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "89"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:27:41 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/params/dacId must NOT have more than 6 characters\"\n    ]\n}"
+				},
+				{
+					"name": "500 - invalid dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/candidates",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"candidates"
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "dummy",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "2"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:27:52 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[]"
+				}
+			]
+		},
+		{
+			"name": "Get custodians by planet",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/custodians",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{version}}",
+						"{{prefix}}",
+						":dacId",
+						"custodians"
+					],
+					"variable": [
+						{
+							"key": "dacId",
+							"value": "nerix",
+							"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+						}
+					]
+				},
+				"description": "Get custodians for the provided planet"
+			},
+			"response": [
+				{
+					"name": "success response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/custodians",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"custodians"
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "801"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:28:39 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"account\": \".p2bu.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 9124138,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"a52qw.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 17116881,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"b52qw.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 14318693,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"i4p3u.c.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 6842432,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    },\n    {\n        \"account\": \"rlxqw.wam\",\n        \"requestedpay\": \"0 TLM\",\n        \"votePower\": 14844811,\n        \"signedDaoTermsVersion\": 5,\n        \"hasSignedCurrentDaoTerms\": true,\n        \"isFlagged\": false,\n        \"dacId\": \"nerix\"\n    }\n]"
+				},
+				{
+					"name": "400 - short dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/custodians",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"custodians"
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "x",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "90"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:28:56 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/params/dacId must NOT have fewer than 5 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - long dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/custodians",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"custodians"
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "dummyDacId",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "89"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:29:04 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/params/dacId must NOT have more than 6 characters\"\n    ]\n}"
+				},
+				{
+					"name": "500 - invalid dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/:dacId/custodians",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								":dacId",
+								"custodians"
+							],
+							"variable": [
+								{
+									"key": "dacId",
+									"value": "dummy",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								}
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "2"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 10:29:12 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[]"
+				}
+			]
+		},
+		{
+			"name": "Votes history - candidate's or custodian's perspective",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=0&limit=5",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{version}}",
+						"{{prefix}}",
+						"candidates_voters_history"
+					],
+					"query": [
+						{
+							"key": "dacId",
+							"value": "nerix",
+							"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+						},
+						{
+							"key": "candidateId",
+							"value": "51mqs.wam",
+							"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+						},
+						{
+							"key": "skip",
+							"value": "0",
+							"description": "Number of items to skip. [min: 0]"
+						},
+						{
+							"key": "limit",
+							"value": "5",
+							"description": "Maximum items to return. <br><br>[min: 1]"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "votes history",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=0&limit=5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "candidateId",
+									"value": "51mqs.wam",
+									"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. <br><br>[min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "1079"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:04:11 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [\n        {\n            \"voter\": \"tl2aw.wam\",\n            \"votingPower\": \"0\",\n            \"action\": \"votecust\",\n            \"candidate\": \"51mqs.wam\",\n            \"voteTimestamp\": \"2022-10-20T15:55:46.000Z\",\n            \"transactionId\": \"81A90E17CCEC6BC418E83C9E300695B563587BBD2A7A77FA0A0B95731C514A92\"\n        },\n        {\n            \"voter\": \"pwxue.wam\",\n            \"votingPower\": \"0\",\n            \"action\": \"votecust\",\n            \"candidate\": \"51mqs.wam\",\n            \"voteTimestamp\": \"2022-10-20T16:33:59.000Z\",\n            \"transactionId\": \"2DAAD670A587BF5B8EC36E71C41DAC9DAF8EBA11ABBA36F664CCC04F2E517166\"\n        },\n        {\n            \"voter\": \"51mqs.wam\",\n            \"votingPower\": \"0\",\n            \"action\": \"votecust\",\n            \"candidate\": \"51mqs.wam\",\n            \"voteTimestamp\": \"2022-10-20T16:49:20.000Z\",\n            \"transactionId\": \"0839C6563259A7C1B2F7FF1456B662D9E0D31110FB54537742715D4168C9522D\"\n        },\n        {\n            \"voter\": \"bptls.c.wam\",\n            \"votingPower\": \"0\",\n            \"action\": \"votecust\",\n            \"candidate\": \"51mqs.wam\",\n            \"voteTimestamp\": \"2022-10-20T16:50:28.000Z\",\n            \"transactionId\": \"7416D9444EB0D2951B4BC512ED98021AF3B71670E1344F7C218CACFD68FDE08C\"\n        },\n        {\n            \"voter\": \"s.h.y.c.wam\",\n            \"votingPower\": \"0\",\n            \"action\": \"votecust\",\n            \"candidate\": \"51mqs.wam\",\n            \"voteTimestamp\": \"2022-10-20T18:47:21.000Z\",\n            \"transactionId\": \"9473E0494F769B0CF2AD506C52245C921726DE92C1008FA234071AFC070DD6FB\"\n        }\n    ],\n    \"total\": 579\n}"
+				},
+				{
+					"name": "invalid dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=dummy&candidateId=51mqs.wam&skip=0&limit=5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "dummy",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "candidateId",
+									"value": "51mqs.wam",
+									"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "24"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:04:42 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [],\n    \"total\": 0\n}"
+				},
+				{
+					"name": "invalid candidate Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=nerix&candidateId=dummy&skip=0&limit=5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "candidateId",
+									"value": "dummy",
+									"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "24"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:04:50 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [],\n    \"total\": 0\n}"
+				},
+				{
+					"name": "400 - missing dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?candidateId=51mqs.wam&skip=0&limit=5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "candidateId",
+									"value": "51mqs.wam",
+									"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "81"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:04:57 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query must have required property 'dacId'\"\n    ]\n}"
+				},
+				{
+					"name": "400 - short dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=x&candidateId=51mqs.wam&skip=0&limit=5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "x",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "candidateId",
+									"value": "51mqs.wam",
+									"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "89"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:05:03 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/dacId must NOT have fewer than 5 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - long dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=dummyDacId&candidateId=51mqs.wam&skip=0&limit=5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "dummyDacId",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "candidateId",
+									"value": "51mqs.wam",
+									"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "88"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:05:10 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/dacId must NOT have more than 6 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - missing candidate Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=nerix&skip=0&limit=5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "87"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:05:15 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query must have required property 'candidateId'\"\n    ]\n}"
+				},
+				{
+					"name": "400 - negative skip",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=-1&limit=5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "candidateId",
+									"value": "51mqs.wam",
+									"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "-1",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "63"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:05:20 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/skip must be >= 0\"\n    ]\n}"
+				},
+				{
+					"name": "400 - skip wrong data type",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=x&limit=5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "candidateId",
+									"value": "51mqs.wam",
+									"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "x",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "66"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:05:26 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/skip must be integer\"\n    ]\n}"
+				},
+				{
+					"name": "400 - invalid limit",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=0&limit=0",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "candidateId",
+									"value": "51mqs.wam",
+									"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "0",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "64"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:05:32 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/limit must be >= 1\"\n    ]\n}"
+				},
+				{
+					"name": "400 - limit wrong data type",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/candidates_voters_history?dacId=nerix&candidateId=51mqs.wam&skip=0&limit=x",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"candidates_voters_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "candidateId",
+									"value": "51mqs.wam",
+									"description": "Wallet Id of candidate or custodian. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "x",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "67"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:05:37 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/limit must be integer\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Votes history - voter's perspective",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=nerix&voter=.1uqy.wam&skip=0&limit=100",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{version}}",
+						"{{prefix}}",
+						"voting_history"
+					],
+					"query": [
+						{
+							"key": "dacId",
+							"value": "nerix",
+							"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+						},
+						{
+							"key": "voter",
+							"value": ".1uqy.wam",
+							"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+						},
+						{
+							"key": "skip",
+							"value": "0",
+							"description": "Number of items to skip. [min: 0]"
+						},
+						{
+							"key": "limit",
+							"value": "100",
+							"description": "Maximum items to return. <br><br>[min: 1]"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "votes history",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=nerix&voter=.1uqy.wam&skip=0&limit=100",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "337"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:05:57 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [\n        {\n            \"dacId\": \"nerix\",\n            \"voter\": \".1uqy.wam\",\n            \"voteTimestamp\": \"2022-11-22T13:08:31.000Z\",\n            \"candidate\": \"51mqs.wam\",\n            \"candidateVotePower\": \"47476171264\",\n            \"action\": \"voted\"\n        },\n        {\n            \"dacId\": \"nerix\",\n            \"voter\": \".1uqy.wam\",\n            \"voteTimestamp\": \"2022-11-22T13:08:31.000Z\",\n            \"candidate\": \"a52qw.wam\",\n            \"candidateVotePower\": \"40472384237\",\n            \"action\": \"voted\"\n        }\n    ],\n    \"count\": 2\n}"
+				},
+				{
+					"name": "invalid dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=dummy&voter=.1uqy.wam&skip=0&limit=100",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "dummy",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "24"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:06:06 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [],\n    \"count\": 0\n}"
+				},
+				{
+					"name": "invalid voter",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=nerix&voter=dummy&skip=0&limit=100",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": "dummy",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "24"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:06:12 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"results\": [],\n    \"count\": 0\n}"
+				},
+				{
+					"name": "400 - missing dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?voter=.1uqy.wam&skip=0&limit=100",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "voter",
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "81"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:06:16 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query must have required property 'dacId'\"\n    ]\n}"
+				},
+				{
+					"name": "400 - short dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=x&voter=.1uqy.wam&skip=0&limit=100",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "x",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "89"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:06:21 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/dacId must NOT have fewer than 5 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - long dacId",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=dummyDacId&voter=.1uqy.wam&skip=0&limit=100",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "dummyDacId",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "88"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:06:26 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/dacId must NOT have more than 6 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - missing voter id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=nerix&skip=0&limit=100",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "81"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:06:33 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query must have required property 'voter'\"\n    ]\n}"
+				},
+				{
+					"name": "400 - short voter id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=nerix&voter=&skip=0&limit=100",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": "",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "89"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:06:39 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/voter must NOT have fewer than 1 characters\"\n    ]\n}"
+				},
+				{
+					"name": "400 - negative skip",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=nerix&voter=.1uqy.wam&skip=-1&limit=100",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "-1",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "63"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:06:45 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/skip must be >= 0\"\n    ]\n}"
+				},
+				{
+					"name": "400 - skip wrong data type",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=nerix&voter=.1uqy.wam&skip=x&limit=100",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "x",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "66"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:06:52 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/skip must be integer\"\n    ]\n}"
+				},
+				{
+					"name": "400 - invalid limit",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=nerix&voter=.1uqy.wam&skip=0&limit=0",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "0",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "64"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:07:00 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/limit must be >= 1\"\n    ]\n}"
+				},
+				{
+					"name": "400 - limit wrong data type",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/voting_history?dacId=nerix&voter=.1uqy.wam&skip=0&limit=x",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"voting_history"
+							],
+							"query": [
+								{
+									"key": "dacId",
+									"value": "nerix",
+									"description": "DAC Id. <br><br>[Required] [length: 5-6 characters]"
+								},
+								{
+									"key": "voter",
+									"value": ".1uqy.wam",
+									"description": "Wallet Id of voter. <br><br>[Required] [min length: 1]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of items to skip. [min: 0]"
+								},
+								{
+									"key": "limit",
+									"value": "x",
+									"description": "Maximum items to return. <br><br>[min: 1]"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "67"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:07:07 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"bad request\",\n    \"errors\": [\n        \"/query/limit must be integer\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Server health status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/{{version}}/{{prefix}}/health",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{version}}",
+						"{{prefix}}",
+						"health"
+					]
+				},
+				"description": "Responds with server health status"
+			},
+			"response": [
+				{
+					"name": "failed to read current block",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/health",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "910"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:07:22 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"OK\",\n    \"version\": \"2.0.0\",\n    \"timestamp\": \"2023-08-01T11:07:22.373Z\",\n    \"uptimeSeconds\": 2125,\n    \"nodeVersion\": \"v19.7.0\",\n    \"dependencies\": {\n        \"@alien-worlds/aw-antelope\": \"^0.0.30\",\n        \"@alien-worlds/aw-contract-alien-worlds\": \"^0.0.18\",\n        \"@alien-worlds/aw-contract-dao-worlds\": \"^0.0.28\",\n        \"@alien-worlds/aw-contract-index-worlds\": \"^0.0.26\",\n        \"@alien-worlds/aw-contract-stkvt-worlds\": \"^0.0.20\",\n        \"@alien-worlds/aw-contract-token-worlds\": \"^0.0.29\",\n        \"@alien-worlds/aw-core\": \"^0.0.6\",\n        \"@alien-worlds/aw-storage-mongodb\": \"^0.0.6\",\n        \"@fastify/swagger\": \"6.1.1\",\n        \"@shelf/winston-datadog-logs-transport\": \"^1.0.7\",\n        \"ajv\": \"^8.12.0\",\n        \"change-case\": \"^4.1.2\",\n        \"dotenv\": \"^16.0.2\",\n        \"fastify\": \"^3.25.0\",\n        \"fastify-cors\": \"^6.0.2\",\n        \"newrelic\": \"^10.1.0\",\n        \"node-fetch\": \"2.6.11\",\n        \"postman-to-openapi\": \"^3.0.1\",\n        \"reflect-metadata\": \"^0.1.13\",\n        \"ts-mockito\": \"^2.6.1\",\n        \"winston\": \"^3.2.1\"\n    },\n    \"database\": {\n        \"mongodb\": \"OK\"\n    },\n    \"historyApi\": {\n        \"currentBlockNumber\": \"-1\",\n        \"status\": \"FAILED\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/{{version}}/{{prefix}}/ping",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{version}}",
+						"{{prefix}}",
+						"ping"
+					]
+				},
+				"description": "Responds with server health status"
+			},
+			"response": [
+				{
+					"name": "success response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{version}}/{{prefix}}/ping",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{version}}",
+								"{{prefix}}",
+								"ping"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "15"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 01 Aug 2023 11:32:20 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"ping\": \"pong\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://dao-api-test.alienworlds.io/v1/dao",
+			"type": "string"
+		}
+	]
+}

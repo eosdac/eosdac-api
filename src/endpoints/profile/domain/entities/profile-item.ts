@@ -1,11 +1,10 @@
-import { removeUndefinedProperties } from '@alien-worlds/api-core';
-import { ProfileItemDocument } from '../../data/dtos/profile.dto';
-/*imports*/
+import { Entity, UnknownObject } from '@alien-worlds/aw-core';
+
 /**
  * Represents ProfileItem data entity.
  * @class
  */
-export class ProfileItem {
+export class ProfileItem implements Entity {
   /**
    * @private
    * @constructor
@@ -18,43 +17,13 @@ export class ProfileItem {
     public readonly givenName: string,
     public readonly image: string,
     public readonly timezone: string,
-    public readonly url: string,
-  ) { }
+    public readonly url: string
+  ) {}
 
-  /**
-   * Create DTO based on entity data
-   *
-   * @returns {ProfileItemDocument}
-   */
-  public toDto(): ProfileItemDocument {
-    const dto = {
-      description: this.description,
-      email: this.email,
-      familyName: this.familyName,
-      gender: this.gender,
-      givenName: this.givenName,
-      image: this.image,
-      timezone: this.timezone,
-      url: this.url,
-    };
+  id?: string;
+  rest?: UnknownObject;
 
-    // Remove undefined properties so as not to send them to the data source.
-    // This should not happen - the only exception is the "_id" property
-    // which may be undefined if the entity was created on the basis of
-    // DTO without given id, e.g. from the message.
-
-    return removeUndefinedProperties<ProfileItemDocument>(dto);
-  }
-
-  /**
-   * Creates instances of ProfileItem based on a given DTO.
-   *
-   * @static
-   * @public
-   * @param {ProfileItemDocument} dto
-   * @returns {ProfileItem}
-   */
-  public static fromDto(dto: ProfileItemDocument): ProfileItem {
+  toJSON(): UnknownObject {
     const {
       description,
       email,
@@ -64,9 +33,9 @@ export class ProfileItem {
       image,
       timezone,
       url,
-    } = dto;
+    } = this;
 
-    return new ProfileItem(
+    return {
       description,
       email,
       familyName,
@@ -75,7 +44,34 @@ export class ProfileItem {
       image,
       timezone,
       url,
+    };
+  }
+
+  public static create(
+    description: string,
+    email: string,
+    familyName: string,
+    gender: string,
+    givenName: string,
+    image: string,
+    timezone: string,
+    url: string,
+    id?: string,
+    rest?: UnknownObject
+  ): ProfileItem {
+    const entity = new ProfileItem(
+      description,
+      email,
+      familyName,
+      gender,
+      givenName,
+      image,
+      timezone,
+      url
     );
+
+    entity.rest = rest;
+
+    return entity;
   }
 }
-

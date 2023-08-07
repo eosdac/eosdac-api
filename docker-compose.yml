@@ -1,25 +1,25 @@
 version: '3.7'
 services:
   api:
-    image: ghcr.io/alien-worlds/eosdac_api
+    image: ghcr.io/alien-worlds/dao_api
     platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        - NODE_ENV=${NODE_ENV}
+        - ENVIRONMENT=${ENVIRONMENT}
         - GITHUB_TOKEN=${GITHUB_TOKEN}
       cache_from:
-        - ghcr.io/alien-worlds/eosdac_api
+        - ghcr.io/alien-worlds/dao_api
     environment:
-      NODE_ENV: '${NODE_ENV}'
+      ENVIRONMENT: '${ENVIRONMENT}'
       SERVER_PORT: '8800'
       SERVER_ADDR: '0.0.0.0'
     restart: on-failure
     ports:
       - '8800:8800'
     volumes:
-      - eosdac-api:/tmp/
+      - aw-api-dao:/tmp/
 
 networks:
   default:
@@ -27,4 +27,4 @@ networks:
     name: lamington
 
 volumes:
-  eosdac-api:
+  aw-api-dao:

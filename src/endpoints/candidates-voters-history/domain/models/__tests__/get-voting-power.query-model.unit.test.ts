@@ -1,32 +1,30 @@
-import { GetVotingPowerQueryModel } from '../get-voting-power.query-model';
+import { GetVotingPowerQueryBuilder } from '../get-voting-power.query-builder';
 
-/*imports*/
-/*mocks*/
-const voter = "voter";
-const voteTimestamp: Date = new Date("2022-10-20T15:55:46.000Z");
+const voter = 'voter';
+const voteTimestamp: Date = new Date('2022-10-20T15:55:46.000Z');
 
 describe('GetVotingPowerQueryModel Unit tests', () => {
-    it('"GetVotingPowerQueryModel.toQueryParams" should create mongodb query model', async () => {
-        const model = GetVotingPowerQueryModel.create(voter, voteTimestamp);
-
-        expect(model.toQueryParams()).toEqual(
-            {
-                "filter": {
-                    "block_timestamp": {
-                        "$lt": voteTimestamp,
-                    },
-                    "code": "stkvt.worlds",
-                    "data.voter": voter,
-                    "table": "weights",
-                },
-                "options": {
-                    "limit": 1,
-                    "sort": {
-                        "block_timestamp": -1,
-                    },
-                },
-            });
+  it('"GetVotingPowerQueryModel.toQueryParams" should create mongodb query model', async () => {
+    const model = new GetVotingPowerQueryBuilder().with({
+      voter,
+      voteTimestamp,
     });
 
-    /*unit-tests*/
+    expect(model.build()).toEqual({
+      filter: {
+        block_timestamp: {
+          $lt: voteTimestamp,
+        },
+        code: 'stkvt.worlds',
+        'data.voter': voter,
+        table: 'weights',
+      },
+      options: {
+        limit: 1,
+        sort: {
+          block_timestamp: -1,
+        },
+      },
+    });
+  });
 });

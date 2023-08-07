@@ -1,43 +1,151 @@
-# eosDAC API
+# DAO API v1.0.0
 
-Provides DAC specific api endpoints for use by the eosdac-client.
+It provides DAO-specific API endpoints that allow developers to query the database and serve the data populated by the [history tools](https://github.com/Alien-Worlds/eosdac-api-history-tools).
 
-## Requirements
+To learn more about history tools and how to read data from blockchain and populate into database, please refer to the respective repository [eosdac-api-history-tools](https://github.com/Alien-Worlds/eosdac-api-history-tools).
 
-- RabbitMQ ([Install](https://www.rabbitmq.com/download.html))
-- Available State History node
-- MongoDB
-- NodeJS v12
+## API
 
-## Components
+The API uses [fastify](https://www.fastify.io/) as a web server technology and reads data from MongoDB. It serves the data populated by the [eosdac-api-history-tools](https://github.com/Alien-Worlds/eosdac-api-history-tools).
 
-The `eosdac-api` consists of 4 components
+### Swagger Document
 
-### Filler
+All the available endpoints are documented and served as a Swagger document. The Swagger document is auto generated based on Postman API collection and served on the `/v2/dao/docs` endpoint once the API is up and running.
 
-This reads from the state history node and can be run in parallel to process many streams during replay.  The filler listens for interested contracts specified in the config file and if detected, the transaction is put into a queue for later processing from the binary.
+DAO API Swagger document is available in the production environment at the following URL
 
-It only processes enough of a given transaction instead of deserialising all of the payload to save cpu cycles.
+> https://api.alienworlds.io/v2/dao/docs
 
-### Block Range Processor
+## Environments
 
-When the filler is started with the `-r` flag, it will split the replay range into many block ranges and put them on the queue.
+The DAO API is available in three environments - Production, Staging, and Development - each has its own purpose and is used for different stages of the development process.
 
-This process monitors this queue and pulls a range of blocks from the state history.
+1. **Production** (https://api.alienworlds.io)
+   It is the live version of the API being used by end-users.
 
-### Processor
+2. **Staging** (https://api-stage.alienworlds.io)
+   It serves the upcoming release candidate API, where new features and changes are tested by the UI team before being deployed to Production environment.
 
-The processor reads interested jobs from the queue and extracts the data for indexing in mongodb.
+3. **Development** (https://api-dev.alienworlds.io)
+   It is used internally by the API development team to test new features and changes before deploying to staging environment. This environment may have more frequent updates and changes.
 
-The processor will also trigger any registered watchers after processing a state delta or action receipt.
+## Local Development Environment
 
-### API
+### Prerequisites
 
-The API service uses fastify to provide a fast API development platform, it reads data from mongodb.
+Before running the API on your local machine, ensure that you have the following available:
 
-Once running the api will open the configured port and provide document on http://your.domain/v1/dao/docs
+1. [GitHub](https://github.com) account
+2. [Node.js](https://nodejs.org/en)
+3. Node package manager ([yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) or npm)
+4. [MongoDB](https://www.mongodb.com/docs/manual/installation/) native installation or running inside a Docker container
 
-## Settings up a local blockchain for testing (optional)
+#### Additional tools
+
+Optionally, you can choose to install the following tools or any other alternatives.
+
+1. [Compass](https://www.mongodb.com/products/compass) - The GUI for MongoDB
+2. [Docker](https://www.docker.com/) to run API or services on which the API depends. It is also possible to run the API without using Docker when required services (e.g. MongoDB) are installed natively.
+
+### Clone the repository
+
+```
+git clone https://github.com/Alien-Worlds/aw-api-dao.git
+```
+
+### Environment variables
+
+You need a _.env_ file which contains all necessary environment configuration for DAO API. An example config file is available at _[.env-example](https://github.com/Alien-Worlds/aw-api-dao/blob/master/.env-example)_.
+
+You can copy the example config and create a _.env_ file
+
+```
+cp .env-example .env
+```
+
+Afterwards, the newly created _.env_ file can be modified according to your needs.
+
+#### Several environment configurations
+
+You may create separate configuration files for each environment e.g. `.env-stage`, `.env-prod` etc.
+
+In each configuration file, the `ENVIRONMENT` key should contain the name of the environment which will later be used when starting the API.
+
+### Authenticating to GitHub Packages
+
+The API depends on couple of GitHub packages published using npm. In order to install and use these packages locally you will need to authenticate to GitHub Packages by configuring your own Personal Access Token (PAT).
+
+#### Create GitHub Personal Access Token (PAT)
+
+You can follow the official docs [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-personal-access-token-classic) to learn more about GitHub personal access token (PAT) and necessary steps to create a new PAT. Make sure that the created token has `read:packages` scope.
+
+#### Configure environment variable
+
+At the project root, we have a `.npmrc` file (see [here](https://github.com/Alien-Worlds/aw-api-dao/blob/master/.npmrc)).
+It expects that an environment variable `GITHUB_TOKEN` contains your GitHub PAT.
+
+You can run following command to set the environment variable
+
+```
+export GITHUB_TOKEN=<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN>
+```
+
+This should enable us to properly install the npm packages on which the API depends.
+
+### Build API
+
+```
+yarn
+yarn build
+```
+
+### Start API
+
+The API can be started locally by running the following command
+
+```
+yarn api:dev
+```
+
+The API will start on the URL `http://localhost:8800`, unless a different `PORT` is specified in the `.env` file.
+
+The above command `yarn api:dev` starts the API in **watch mode**. On saving new changes in a file under _/src_ directory, it will rebuild and new changes will be served automatically.
+
+#### Without Watch Mode
+
+If _watch mode_ is NOT required, then the API can be started by the following command
+
+```
+yarn api
+```
+
+By default, it will use the configuration specified in `.env` file.
+
+#### Different environment configuration
+
+You can switch between different configuration files by giving a different value to the environment variable `ENVIRONMENT`.
+
+For example, if you have a `.env-prod` config file, you can run the api using that config as follows
+
+```
+ENVIRONMENT=prod yarn api
+```
+
+#### Start API using Docker
+
+In order to start the services in docker, just use the command:
+
+```
+docker compose up --build
+```
+
+As already explained, you can use a different environment configuration file by providing the the environment name as variable e.g. if config file is `.env-prod`, then the command will be
+
+```
+ENVIRONMENT=prod docker compose up --build
+```
+
+### Optional: Setting up a local blockchain for testing
 
 ```
 git clone git@github.com:Alien-Worlds/eosdac-contracts.git
@@ -45,85 +153,122 @@ cd eosdac-contracts
 yarn
 yarn test
 ```
+
 The command `yarn test` will build and start a docker container with a fresh blockchain, compile and deploy the eosdac-contracts and run the tests. The docker container will stay running and the nodeos API node of the blockchain will be exposed on port 8888. You can verify that the blockchain is running from the host system:
 
 ```
 curl http://127.0.0.1:8888/v1/chain/get_info
 ```
 
- It also creates a docker network named `lamington` that you can use to connect to the blockchain from other docker containers.
+It also creates a docker network named `lamington` that you can use to connect to the blockchain from other docker containers.
 
-## Configuring
+### Health Check
 
-Each config is named [name].config.js, copy `example.config.js` to your name of choice, eg. `cp example.config.js jungle.config.js`
+Once the API is running, you can perform a basic health check to ensure that everything is configured properly.
 
-Edit your file to include the correct contract names and endpoints.  `amq.connectionString` is your your RabbitMQ connection string.
+A `/health` endpoint is available and can be accessed at following URL
 
+> <your.domain>/v2/dao/health
 
-## Starting
-
-In order to start the services in docker, just use the command:
-```
-CONFIG=example docker compose up --build
-```
-You can switch between different configs by giving a different value to the CONFIG env variable. 
-
-If you use the default example config, it will automatically try to connect to a blockchain running locally on port 8888. In order to run it, see above.
-
-## Replaying
-
-If you are deploying the api after your contracts have been deployed or you need to refill your database, run the filler directly using the `-r` flag:
-
-`CONFIG=jungle ./eosdac-filler.js -r`
-
-You can also use the `-s` flag to specify a replay with a start block (so you don't have to start from block 0):
-
-`CONFIG=jungle ./eosdac-filler.js -r -s 25629516`
-
-Replays will spawn a number of processes to pull blocks from the chain, if you want to run more filler processes on another machine,
-you can start with the blockrange process using pm2 (it should be started automatically).
-
-`pm2 start --only eosdac-blockrange-jungle`
-
-## API WebSocket
-
-The eosdac-ws process opens a websocket which can be used by external clients to listen 
-for messages about significant events.
-
-Connect to the websocket server, eosDAC provides endpoints at the following locations:
-
-- `ws://api.eosdac.io:3030` - EOS Mainnet
-- `ws://api-jungle.eosdac.io:3030` - Jungle Network
-
-This example will connect and request notifications for a particular DAC ID
+e.g. health check for API running locally on port 8800 (http://localhost:8800/v2/dao/health)
 
 ```
-const endpoint = 'ws://api.dao.io:3030';
-const dac_id = 'dao';
-const ws = new WebSocket(endpoint);
-ws.onmessage = (msg) => {
-    console.log('Received message', msg.data);
-};
-ws.onopen = () => {
-    console.log(`Websocket opened to ${endpoint}`);
-    ws.send(JSON.stringify({type:'register', data:{dac_id}}));
-    console.log(`Sent register message for ${dac_id}`);
-};
+curl --location 'http://localhost:8800/v2/dao/health'
 ```
 
-The following notifications are sent
-
-## Multisig proposals
-```
-MSIG_PROPOSED
-MSIG_APPROVED
-MSIG_UNAPPROVED
-MSIG_CANCELLED
-MSIG_EXECUTED
-```
-## Voting and Elections
+If everything is fine, then you should be able to get a response similar to below
 
 ```
-VOTES_CHANGED
-NEW_PERIOD
+{
+    "status": "OK",
+    "version": "1.0.0",
+    "timestamp": 1683028412016,
+    "uptimeSeconds": 19,
+    "nodeVersion": "v19.7.0",
+    "dependencies": {
+        "@alien-worlds/aw-core": "^0.0.87",
+    },
+    "database": {
+        "status": "OK"
+    },
+    "blockChainHistory": {
+        "currentBlock": "243116553"
+    }
+}
 ```
+
+## Postman API Collection
+
+Postman API collection is placed in the directory
+
+[`.postman/collections/aw-api-dao.postman_collection.json`](https://github.com/Alien-Worlds/aw-api-dao/blob/docs/postman/collections/aw-api-dao.postman_collection.json)
+
+## Unit Tests
+
+[Jest](https://jestjs.io/) is the unit testing framework of choice. Test suite can be executed by the command
+
+```
+yarn test:unit
+```
+
+Unit tests for the component to be tested are co-located under a sub-directory _`__tests__`_. By convention, all unit test files are suffixed with `*.unit.test.ts`
+
+### Executing tests for a specific component
+
+Unit tests can be executed for a single component of interest by specifying relative/absolute path to its directory.
+
+The specified directory path will be taken as the starting point and test runner will execute unit tests placed under its sub-directory _`__tests__`_. Test runner will also include tests for any recursive sub-directories matching the criteria.
+
+```
+yarn test:unit -- <directory path>
+```
+
+For example, `yarn test:unit -- src/endpoints/custodians/domain`
+
+## API Integration Tests
+
+Integration or end-to-end test suite for API endpoints is also implemented using [Jest](https://jestjs.io/).
+
+Each API response is validated against pre-defined JSON schema which determines the test result. We use [Ajv](https://ajv.js.org/) to validate API JSON response against the respective JSON schema. The JSON schemas are expected to follow JSON schema specification [2020-12](https://json-schema.org/specification.html).
+
+For example, JSON response schema for `/health` endpoint can be found at [here](https://github.com/Alien-Worlds/aw-api-dao/blob/develop/src/endpoints/health/schemas/health.response.schema.json).
+
+API Integration tests are suffixed with `*.api.test.ts` and are placed at
+
+```
+tests/api/*.api.test.ts
+```
+
+### How to run API Integration test suite?
+
+Integration tests can be run either using Docker or without using Docker. We describe both approaches below
+
+#### Executing API integration tests using Docker
+
+Open a new terminal window. While being at the project root directory, run the following command in the terminal.
+
+```
+./scripts/run-api-tests.sh
+```
+
+#### Executing API integration tests natively
+
+To run integration tests without using Docker, it is expected that the configured MongoDB instance is up and running.
+
+Run the following command in terminal.
+
+```
+yarn test:api
+```
+
+## Generate Swagger Document
+
+Swagger document is automatically generated based on Postman API collection using [postman-to-openapi](https://joolfe.github.io/postman-to-openapi) library.
+
+After update in Postman collection _[(aw-api-dao.postman_collection.json)](https://github.com/Alien-Worlds/aw-api-dao/blob/develop/postman/collections/aw-api-dao.postman_collection.json)_, run the following command to update the Swagger document.
+
+```
+yarn docs:generate
+```
+
+Latest swagger document can be found at _[./docs/aw-api-dao-oas.yaml](https://github.com/Alien-Worlds/aw-api-dao/blob/develop/docs/aw-api-dao-oas.yaml)_.

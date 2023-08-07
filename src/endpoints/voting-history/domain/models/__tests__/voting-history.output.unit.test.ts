@@ -1,33 +1,30 @@
-import { MongoDB } from '@alien-worlds/api-core';
-import { UserVote } from '@alien-worlds/eosdac-api-common';
-import { VoteAction } from '../../../data/dtos/user-voting-history.dto';
+import { UserVote } from '../../../domain/entities/user-vote';
+import { UserVoteMongoMapper } from '@endpoints/voting-history/data/mappers/user-vote.mapper';
+import { VoteAction } from '../../user-voting-history.enums';
 import { VotingHistoryOutput } from '../voting-history.output';
+import { Result } from '@alien-worlds/aw-core';
 
-/*imports*/
-/*mocks*/
 const userVotes: UserVote[] = [
-	UserVote.fromDocument({
-		dac_id: 'string',
-		voter: 'string',
-		vote_timestamp: new Date(),
-		action: VoteAction.Voted,
-		candidate: 'string',
-		candidate_vote_power: MongoDB.Long.ZERO,
-	})
+  new UserVoteMongoMapper().toEntity({
+    dac_id: 'string',
+    voter: 'string',
+    vote_timestamp: new Date(),
+    action: VoteAction.Voted,
+    candidate: 'string',
+    candidate_vote_power: 0,
+  }),
 ];
 
 describe('VotingHistoryOutput Unit tests', () => {
-	it('"VotingHistoryOutput.create" should create instance', async () => {
-		const output = VotingHistoryOutput.create(userVotes);
+  it('"VotingHistoryOutput.create" should create instance', async () => {
+    const output = VotingHistoryOutput.create(Result.withContent(userVotes));
 
-		expect(output).toBeInstanceOf(VotingHistoryOutput);
-	});
+    expect(output).toBeInstanceOf(VotingHistoryOutput);
+  });
 
-	it('VotingHistoryOutput.toJson should return json object', async () => {
-		const output = VotingHistoryOutput.create(userVotes);
+  it('VotingHistoryOutput.toJson should return json object', async () => {
+    const output = VotingHistoryOutput.create(Result.withContent(userVotes));
 
-		expect(output.toJson()).toBeInstanceOf(Object);
-	});
-
-	/*unit-tests*/
+    expect(output.toJSON()).toBeInstanceOf(Object);
+  });
 });

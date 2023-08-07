@@ -1,37 +1,49 @@
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryInput } from '../models/candidates-voters-history.input';
-import { ContractActionRepository } from '@alien-worlds/eosdac-api-common';
-import { CountVotersHistoryQueryModel } from '../models/count-voters-history.query-model';
+import { CountVotersHistoryQueryBuilder } from '../models/count-voters-history.query-builder';
 
-/*imports*/
 /**
+ * Represents the use case for counting voters' history for a candidate.
  * @class
+ * @implements {UseCase<number>}
  */
 @injectable()
 export class CountVotersHistoryUseCase implements UseCase<number> {
   public static Token = 'COUNT_VOTERS_HISTORY_USE_CASE';
 
-  constructor(/*injections*/
-    @inject(ContractActionRepository.Token)
-    private contractActionRepository: ContractActionRepository
-  ) { }
+  /**
+   * Creates a new instance of CountVotersHistoryUseCase.
+   *
+   * @constructor
+   * @param {DaoWorldsCommon.Actions.DaoWorldsActionRepository} daoWorldsActionRepository - The repository for DAO worlds actions.
+   */
+  constructor(
+    @inject(DaoWorldsCommon.Actions.DaoWorldsActionRepository.Token)
+    private daoWorldsActionRepository: DaoWorldsCommon.Actions.DaoWorldsActionRepository
+  ) {}
 
   /**
+   * Executes the CountVotersHistoryUseCase with the provided input.
+   *
    * @async
-   * @returns {Promise<Result<Number, Error>>}
+   * @public
+   * @param {CandidatesVotersHistoryInput} input - The input containing the DAC ID and candidate ID.
+   * @returns {Promise<Result<number, Error>>} - A promise that resolves with a Result containing the count of voters' history for the candidate.
    */
-  public async execute(input: CandidatesVotersHistoryInput): Promise<Result<number, Error>> {
-    const queryModel = CountVotersHistoryQueryModel.create(input);
+  public async execute(
+    input: CandidatesVotersHistoryInput
+  ): Promise<Result<number, Error>> {
+    const builder = new CountVotersHistoryQueryBuilder().with({ ...input });
+    const allMatchingActionsRes = await this.daoWorldsActionRepository.count(
+      builder
+    );
 
-    const allMatchingActionsRes = await this.contractActionRepository.count(queryModel);
     if (allMatchingActionsRes.isFailure) {
       return Result.withFailure(allMatchingActionsRes.failure);
     }
 
-    return Result.withContent(allMatchingActionsRes.content || 0)
+    return Result.withContent(allMatchingActionsRes.content || 0);
   }
-
-  /*methods*/
 }
-

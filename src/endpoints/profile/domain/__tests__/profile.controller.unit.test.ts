@@ -1,82 +1,187 @@
-import 'reflect-metadata';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as dacUtils from '@common/utils/dac.utils';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 
-import { Container } from '@alien-worlds/api-core';
+import { Container, ContractAction, Failure } from '@alien-worlds/aw-core';
+import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { GetProfilesUseCase } from '../use-cases/get-profiles.use-case';
-import { IndexWorldsContract } from '@alien-worlds/eosdac-api-common';
-import { IsProfileFlaggedUseCase } from '../use-cases/is-profile-flagged.use-case';
 import { ProfileController } from '../profile.controller';
-import { ProfileInput } from '../models/profile.input';
-import { Result } from '@alien-worlds/api-core';
-
-/*imports*/
-
-/*mocks*/
-const getProfilesUseCase = {
-	execute: jest.fn(() => Result.withContent([])),
-};
-
-const isProfileFlaggedUseCase = {
-	execute: jest.fn(() => Result.withContent(1)),
-};
+import { GetProfileInput } from '../models/get-profile.input';
+import { Result } from '@alien-worlds/aw-core';
+import { FilterFlaggedProfilesUseCase } from '../use-cases/filter-flagged-profiles.use-case';
+import { GetProfileFlagsUseCase } from '../use-cases/get-profile-flags.use-case';
+import { FlagRepository } from '../repositories/flag.repository';
 
 let container: Container;
 let controller: ProfileController;
+
+const getProfilesUseCase = {
+  execute: jest.fn(),
+};
+
+const dac = new DacMapper().toDac(
+  new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+    IndexWorldsCommon.Deltas.Types.DacsRawModel
+  >{
+    accounts: [{ key: '2', value: 'dao.worlds' }],
+    symbol: {
+      sym: 'EYE',
+    },
+    refs: [],
+  })
+);
+
+jest.mock('@config', () => {
+  return {
+    config: {
+      dac: {
+        nameCache: {
+          get: jest.fn(),
+        },
+      },
+    },
+  };
+});
+
+jest
+  .spyOn(dacUtils, 'loadDacConfig')
+  .mockResolvedValue(Result.withContent(dac));
+
 const indexWorldsContractService = {
-	fetchDac: jest.fn(),
+  fetchDacs: jest.fn(),
 };
-const input: ProfileInput = {
-	accounts: ['string'],
-	dacId: 'string',
+const input: GetProfileInput = {
+  accounts: ['awtesteroo12', 'awtesteroo13'],
+  dacId: 'testa',
+  toJSON: () => ({
+    accounts: ['awtesteroo12', 'awtesteroo13'],
+    dacId: 'testa',
+  }),
 };
+
+const actions: ContractAction<
+  DaoWorldsCommon.Actions.Entities.Stprofile,
+  DaoWorldsCommon.Actions.Types.StprofileMongoModel
+>[] = [
+  new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
+    'mgaqy.wam',
+    new Date('2021-02-25T04:18:56.000Z'),
+    209788070n,
+    'dao.worlds',
+    'stprofile',
+    65909692153n,
+    1980617n,
+    '591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666C',
+    DaoWorldsCommon.Actions.Entities.Stprofile.create(
+      'awtesteroo12',
+      '{"givenName":"awtesteroo12 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
+      'testa'
+    )
+  ),
+  new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
+    'mgaqy.wam',
+    new Date('2021-02-25T04:18:56.000Z'),
+    209788071n,
+    'dao.worlds',
+    'stprofile',
+    65909692154n,
+    1980618n,
+    '591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666B',
+    DaoWorldsCommon.Actions.Entities.Stprofile.create(
+      'awtesteroo13',
+      '{"givenName":"awtesteroo13 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
+      'testa'
+    )
+  ),
+];
+
+const flagRepository = {
+  aggregate: jest.fn(() => Result.withContent([])),
+} as any;
 
 describe('Profile Controller Unit tests', () => {
-	beforeAll(() => {
-		container = new Container();
-		/*bindings*/
-		container
-			.bind<GetProfilesUseCase>(GetProfilesUseCase.Token)
-			.toConstantValue(getProfilesUseCase as any);
-		container
-			.bind<IsProfileFlaggedUseCase>(IsProfileFlaggedUseCase.Token)
-			.toConstantValue(isProfileFlaggedUseCase as any);
-		container
-			.bind<IndexWorldsContract.Services.IndexWorldsContractService>(
-				IndexWorldsContract.Services.IndexWorldsContractService.Token
-			)
-			.toConstantValue(indexWorldsContractService as any);
-		container
-			.bind<ProfileController>(ProfileController.Token)
-			.to(ProfileController);
-	});
+  beforeAll(() => {
+    container = new Container();
 
-	beforeEach(() => {
-		controller = container.get<ProfileController>(ProfileController.Token);
-	});
+    container
+      .bind<FlagRepository>(FlagRepository.Token)
+      .toConstantValue(flagRepository);
+    container
+      .bind<FilterFlaggedProfilesUseCase>(FilterFlaggedProfilesUseCase.Token)
+      .to(FilterFlaggedProfilesUseCase);
+    container
+      .bind<GetProfileFlagsUseCase>(GetProfileFlagsUseCase.Token)
+      .to(GetProfileFlagsUseCase);
+    container
+      .bind<GetProfilesUseCase>(GetProfilesUseCase.Token)
+      .toConstantValue(getProfilesUseCase as any);
+    container
+      .bind<IndexWorldsCommon.Services.IndexWorldsContractService>(
+        IndexWorldsCommon.Services.IndexWorldsContractService.Token
+      )
+      .toConstantValue(indexWorldsContractService as any);
+    container
+      .bind<ProfileController>(ProfileController.Token)
+      .to(ProfileController);
+  });
 
-	afterAll(() => {
-		jest.clearAllMocks();
-		container = null;
-	});
+  beforeEach(() => {
+    controller = container.get<ProfileController>(ProfileController.Token);
+  });
 
-	it('"Token" should be set', () => {
-		expect(ProfileController.Token).not.toBeNull();
-	});
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-	it('Should execute GetProfilesUseCase', async () => {
-		indexWorldsContractService.fetchDac.mockResolvedValue(
-			Result.withContent([
-				<IndexWorldsContract.Deltas.Types.DacsStruct>{
-					accounts: [{ key: 2, value: 'dao.worlds' }],
-					symbol: {
-						sym: 'EYE',
-					},
-					refs: [],
-				},
-			])
-		);
-		await controller.profile(input);
+  afterAll(() => {
+    container = null;
+  });
 
-		expect(getProfilesUseCase.execute).toBeCalled();
-	});
-	/*unit-tests*/
+  it('"Token" should be set', () => {
+    expect(ProfileController.Token).not.toBeNull();
+  });
+
+  it('should return profile', async () => {
+    getProfilesUseCase.execute.mockResolvedValue(Result.withContent(actions));
+
+    const output = await controller.getProfile(input);
+
+    expect(output.count).toBe(2);
+
+    expect(output.profiles).toBeDefined();
+    expect(output.profiles[0].account).toBe(input.accounts[0]);
+    expect(output.profiles[1].account).toBe(input.accounts[1]);
+  });
+
+  it('should return redacted profile for flagged candidate', async () => {
+    getProfilesUseCase.execute.mockResolvedValue(Result.withContent(actions));
+
+    const output = await controller.getProfile(input);
+
+    expect(output.profiles).toBeDefined();
+    expect(output.profiles[1].account).toBe(input.accounts[1]);
+    expect(output.profiles[1].error).toBeDefined();
+    expect(output.profiles[1].error.name).toBe('Redacted Candidate');
+  });
+
+  it('should return error if indexWorldsContractService fails', async () => {
+    jest
+      .spyOn(dacUtils, 'loadDacConfig')
+      .mockResolvedValueOnce(Result.withFailure('failure'));
+    flagRepository.aggregate.mockResolvedValue(Result.withFailure('failure'));
+    const output = await controller.getProfile(input);
+
+    expect(output.failure).toBeTruthy();
+  });
+
+  it('should return error if getProfilesUseCase fails', async () => {
+    getProfilesUseCase.execute.mockResolvedValue(
+      Result.withFailure(Failure.fromError('error'))
+    );
+
+    const output = await controller.getProfile(input);
+
+    expect(output.failure).toBeTruthy();
+  });
 });

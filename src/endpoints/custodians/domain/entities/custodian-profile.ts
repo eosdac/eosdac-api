@@ -1,90 +1,97 @@
-import {
-	DaoWorldsContract,
-	RequestedPayment,
-	TokenWorldsContract,
-} from '@alien-worlds/eosdac-api-common';
+import * as DaoWorldsContract from '@alien-worlds/aw-contract-dao-worlds';
+import * as TokenWorldsContract from '@alien-worlds/aw-contract-token-worlds';
 
+import { Entity, UnknownObject } from '@alien-worlds/aw-core';
+
+import { Asset } from '@alien-worlds/aw-antelope';
 import { Profile } from '../../../profile/domain/entities/profile';
 
-/*imports*/
 /**
  * Represents Custodian Profile data entity.
  * @class
  */
-export class CustodianProfile {
-	/**
-	 * Creates instances of Custodian based on a given DTO.
-	 *
-	 * @static
-	 * @public
-	 * @returns {CustodianProfile}
-	 */
-	public static create(
-		dacId: string,
-		custodian: DaoWorldsContract.Deltas.Entities.Custodian,
-		profile: Profile,
-		memberTerms: TokenWorldsContract.Deltas.Entities.MemberTerms,
-		agreedTermsVersion: number
-	): CustodianProfile {
-		const { name, requestedPayment, totalVotePower } = custodian;
+export class CustodianProfile implements Entity {
+  /**
+   * Creates instances of CustodianProfile based on a given DTO.
+   *
+   * @static
+   * @public
+   * @param {string} dacId - The ID of the DAC.
+   * @param {DaoWorldsContract.Deltas.Entities.Custodians1} custodian - The DTO containing custodian data.
+   * @param {Profile} profile - The profile entity.
+   * @param {TokenWorldsContract.Deltas.Entities.Memberterms} memberTerms - The member terms entity.
+   * @param {number} agreedTermsVersion - The agreed terms version number.
+   * @returns {CustodianProfile} - The created CustodianProfile instance.
+   */
+  public static create(
+    dacId: string,
+    custodian: DaoWorldsContract.Deltas.Entities.Custodians1,
+    profile: Profile,
+    memberTerms: TokenWorldsContract.Deltas.Entities.Memberterms,
+    agreedTermsVersion: number
+  ): CustodianProfile {
+    const { custName, requestedpay, totalVotePower } = custodian;
 
-		const { version } = memberTerms;
-		const votePower = totalVotePower / 10000n;
+    const { version } = memberTerms;
+    const votePower = totalVotePower / 10000;
 
-		return new CustodianProfile(
-			name,
-			requestedPayment,
-			Number(votePower),
-			profile?.profile,
-			agreedTermsVersion,
-			Number(version) === agreedTermsVersion,
-			!!profile?.error,
-			false,
-			dacId
-		);
-	}
+    return new CustodianProfile(
+      custName,
+      requestedpay,
+      Number(votePower),
+      profile?.profile || {},
+      agreedTermsVersion,
+      Number(version) === agreedTermsVersion,
+      !!profile?.error,
+      dacId
+    );
+  }
 
-	/**
-	 * @private
-	 * @constructor
-	 */
-	private constructor(
-		public readonly walletId: string,
-		public readonly requestedPayment: RequestedPayment,
-		public readonly votePower: number,
-		public readonly profile: object,
-		public readonly agreedTermVersion: number,
-		public readonly currentPlanetMemberTermsSignedValid: boolean,
-		public readonly isFlagged: boolean,
-		public readonly isSelected: boolean,
-		public readonly planetName: string
-	) { }
+  /**
+   * @private
+   * @constructor
+   */
+  private constructor(
+    public readonly account: string,
+    public readonly requestedPay: Asset,
+    public readonly votePower: number,
+    public readonly profile: object,
+    public readonly signedDaoTermsVersion: number,
+    public readonly hasSignedCurrentDaoTerms: boolean,
+    public readonly isFlagged: boolean,
+    public readonly dacId: string
+  ) {}
 
-	public toJson() {
-		const {
-			walletId,
-			requestedPayment,
-			votePower,
-			profile,
-			agreedTermVersion,
-			currentPlanetMemberTermsSignedValid,
-			isFlagged,
-			isSelected,
-			planetName,
-		} = this;
+  public id?: string;
+  public rest?: UnknownObject;
 
-		const p = profile || {};
+  /**
+   * Converts the CustodianProfile instance to a JSON representation.
+   *
+   * @public
+   * @returns {UnknownObject} - The JSON representation of the CustodianProfile.
+   */
+  public toJSON(): UnknownObject {
+    const {
+      account,
+      requestedPay,
+      votePower,
+      profile,
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
+      isFlagged,
+      dacId,
+    } = this;
 
-		return {
-			walletId,
-			requestedpay: `${requestedPayment.value} ${requestedPayment.symbol}`,
-			votePower,
-			...p,
-			agreedTermVersion,
-			currentPlanetMemberTermsSignedValid,
-			isFlagged,
-			isSelected,
-			planetName,
-		};
-	}
+    return {
+      ...profile,
+      account,
+      requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
+      votePower: Number(votePower.toFixed(0)),
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
+      isFlagged,
+      dacId,
+    };
+  }
 }

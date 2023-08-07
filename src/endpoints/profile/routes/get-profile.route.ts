@@ -1,29 +1,34 @@
-import { EntityNotFoundError, GetRoute, Request, Result, RouteHandler } from '@alien-worlds/api-core';
+import {
+  GetRoute,
+  Request,
+  RouteHandler,
+  ValidationResult,
+} from '@alien-worlds/aw-core';
+import {
+  ProfileRequestPathVariables,
+  ProfileRequestQueryParams,
+} from '../data/dtos/profile.dto';
 
-import { ProfileInput } from '../domain/models/profile.input';
-import { ProfileOutput } from '../domain/models/profile.output';
-import { ProfileRequestDto } from '../data/dtos/profile.dto';
-
-/*imports*/
-
-
-
+import { AjvValidator } from '@src/validator/ajv-validator';
+import { GetProfileRequestSchema } from '../schemas';
+import { GetProfileRouteIO } from './get-profile.route-io';
+import ApiConfig from '@src/config/api-config';
 
 /**
  * @class
- * 
- * 
+ *
+ *
  */
 export class GetProfileRoute extends GetRoute {
-  public static create(handler: RouteHandler) {
-    return new GetProfileRoute(handler);
+  public static create(handler: RouteHandler, config: ApiConfig) {
+    return new GetProfileRoute(handler, config);
   }
 
-  private constructor(handler: RouteHandler) {
-    super(['/v1/dao/:dacId/profile', '/v1/eosdac/:dacId/profile'], handler, {
-      hooks: {
-        pre: parseRequestToControllerInput,
-        post: parseResultToControllerOutput,
+  private constructor(handler: RouteHandler, config: ApiConfig) {
+    super(`/${config.urlVersion}/dao/:dacId/profile`, handler, {
+      io: new GetProfileRouteIO(),
+      validators: {
+        request: validateRequest,
       },
     });
   }
@@ -32,45 +37,17 @@ export class GetProfileRoute extends GetRoute {
 /**
  *
  * @param {Request} request
- * @returns
+ * @returns {ValidationResult}
  */
-export const parseRequestToControllerInput = (request: Request<ProfileRequestDto>) => {
-  // parse DTO (query) to the options required by the controller method
-  return ProfileInput.fromRequest(request);
+export const validateRequest = (
+  request: Request<
+    unknown,
+    ProfileRequestPathVariables,
+    ProfileRequestQueryParams
+  >
+): ValidationResult => {
+  return AjvValidator.initialize().validateHttpRequest(
+    GetProfileRequestSchema,
+    request
+  );
 };
-
-/**
- *
- * @param {Result<ProfileOutput>} result
- * @returns
- */
-export const parseResultToControllerOutput = (
-  result: Result<ProfileOutput>
-) => {
-  if (result.isFailure) {
-    const { failure: { error } } = result;
-    if (error) {
-      if (error instanceof EntityNotFoundError) {
-        return {
-          status: 404,
-          body: {
-            error: "profile not found",
-          },
-        };
-      }
-
-      return {
-        status: 500,
-        body: ProfileOutput.create().toJson(),
-      };
-    }
-  }
-
-  const { content } = result;
-
-  return {
-    status: 200,
-    body: ProfileOutput.create(content.results, content.count).toJson(),
-  };
-};
-

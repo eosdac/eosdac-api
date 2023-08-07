@@ -1,98 +1,94 @@
-import 'reflect-metadata';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
 import {
-	Container,
-	ContractAction,
-	Failure,
-	MongoDB,
-	Result,
-} from '@alien-worlds/api-core';
-import { ContractActionRepository, DaoWorldsContract } from '@alien-worlds/eosdac-api-common';
+  Container,
+  ContractAction,
+  Failure,
+  Result,
+} from '@alien-worlds/aw-core';
 
 import { GetProfilesUseCase } from '../get-profiles.use-case';
 import { GetProfilesUseCaseInput } from '../../../../profile/data/dtos/profile.dto';
 
-/*imports*/
-/*mocks*/
-
 const actionRepository = {
-	update: jest.fn(),
-	updateMany: jest.fn(),
-	add: jest.fn(),
-	addOnce: jest.fn(),
-	count: jest.fn(),
-	find: jest.fn(),
-	findOne: jest.fn(),
-	aggregate: jest.fn(),
-	remove: jest.fn(),
-	removeMany: jest.fn(),
+  aggregate: jest.fn(),
 };
 
 let container: Container;
 let useCase: GetProfilesUseCase;
 const useCaseInput: GetProfilesUseCaseInput = {
-	custContract: 'string',
-	dacId: 'string',
-	accounts: ['awtesteroo12'],
+  custContract: 'string',
+  dacId: 'testa',
+  accounts: ['awtesteroo12'],
 };
 
 describe('Get Profile Unit tests', () => {
-	beforeAll(() => {
-		container = new Container();
+  beforeAll(() => {
+    container = new Container();
+    container
+      .bind<DaoWorldsCommon.Actions.DaoWorldsActionRepository>(
+        DaoWorldsCommon.Actions.DaoWorldsActionRepository.Token
+      )
+      .toConstantValue(actionRepository as any);
+    container
+      .bind<GetProfilesUseCase>(GetProfilesUseCase.Token)
+      .to(GetProfilesUseCase);
+  });
 
-		container
-			.bind<ContractActionRepository>(ContractActionRepository.Token)
-			.toConstantValue(actionRepository);
-		container
-			.bind<GetProfilesUseCase>(GetProfilesUseCase.Token)
-			.to(GetProfilesUseCase);
-	});
+  beforeEach(() => {
+    useCase = container.get<GetProfilesUseCase>(GetProfilesUseCase.Token);
+  });
 
-	beforeEach(() => {
-		useCase = container.get<GetProfilesUseCase>(GetProfilesUseCase.Token);
-	});
+  afterAll(() => {
+    jest.clearAllMocks();
+    container = null;
+  });
 
-	afterAll(() => {
-		jest.clearAllMocks();
-		container = null;
-	});
+  it('"Token" should be set', () => {
+    expect(GetProfilesUseCase.Token).not.toBeNull();
+  });
 
-	it('"Token" should be set', () => {
-		expect(GetProfilesUseCase.Token).not.toBeNull();
-	});
+  it('Should return a failure when ...', async () => {
+    actionRepository.aggregate.mockResolvedValue(
+      Result.withFailure(Failure.fromError('error'))
+    );
+    const result = await useCase.execute(
+      useCaseInput.custContract,
+      useCaseInput.dacId,
+      useCaseInput.accounts
+    );
+    expect(result.isFailure).toBeTruthy();
+  });
 
-	it('Should return a failure when ...', async () => {
-		actionRepository.aggregate.mockResolvedValue(
-			Result.withFailure(Failure.fromError('error'))
-		);
-		const result = await useCase.execute(useCaseInput);
-		expect(result.isFailure).toBeTruthy();
-	});
+  it('should return Profile', async () => {
+    const actions: ContractAction<
+      DaoWorldsCommon.Actions.Entities.Stprofile,
+      DaoWorldsCommon.Actions.Types.StprofileMongoModel
+    >[] = [
+      new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
+        'mgaqy.wam',
+        new Date('2021-02-25T04:18:56.000Z'),
+        209788070n,
+        'dao.worlds',
+        'stprofile',
+        65909692153n,
+        1980617n,
+        '591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666C',
+        DaoWorldsCommon.Actions.Entities.Stprofile.create(
+          'awtesteroo12',
+          '{"givenName":"awtesteroo12 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
+          'testa'
+        )
+      ),
+    ];
 
-	it('should return Profile', async () => {
-		const input = {
-			block_num: MongoDB.Long.ZERO,
-			action: {
-				authorization: null,
-				account: 'dao.worlds',
-				name: 'stprofile',
-				data: {
-					cand: 'awtesteroo12',
-					profile:
-						'{"givenName":"awtesteroo12 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
-					dac_id: 'testa',
-				},
-			},
-		};
-		const actions: ContractAction[] = [
-			ContractAction.fromDocument(input, DaoWorldsContract.Actions.Entities.SetProfile.fromDocument),
-		];
+    actionRepository.aggregate.mockResolvedValue(Result.withContent(actions));
 
-		actionRepository.aggregate.mockResolvedValue(Result.withContent(actions));
-
-		const result = await useCase.execute(useCaseInput);
-		expect(result.content).toBeInstanceOf(Array);
-	});
-
-	/*unit-tests*/
+    const result = await useCase.execute(
+      useCaseInput.custContract,
+      useCaseInput.dacId,
+      useCaseInput.accounts
+    );
+    expect(result.content).toBeInstanceOf(Array);
+  });
 });

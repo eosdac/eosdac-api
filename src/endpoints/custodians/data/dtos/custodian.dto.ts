@@ -1,3 +1,3 @@
-export type GetCustodiansRequestDto = {
-	dacId: string;
+export type GetCustodiansRequestPathVariables = {
+  dacId: string;
 };

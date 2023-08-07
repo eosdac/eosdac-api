@@ -1,136 +1,139 @@
-import {
-	DaoWorldsContract,
-	RequestedPayment,
-	TokenWorldsContract,
-} from '@alien-worlds/eosdac-api-common';
-
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import * as TokenWorldsContract from '@alien-worlds/aw-contract-token-worlds';
+import { Entity, UnknownObject } from '@alien-worlds/aw-core';
+import { Asset } from '@alien-worlds/aw-antelope';
 import { Profile } from './../../../profile/domain/entities/profile';
 
-/*imports*/
 /**
  * Represents Candidate Profile data entity.
  * @class
  */
-export class CandidateProfile {
-	/**
-	 * Creates instances of Candidate based on a given DTO.
-	 *
-	 * @static
-	 * @public
-	 * @returns {CandidateProfile}
-	 */
-	public static create(
-		dacId: string,
-		candidate: DaoWorldsContract.Deltas.Entities.Candidate,
-		profile: Profile,
-		memberTerms: TokenWorldsContract.Deltas.Entities.MemberTerms,
-		agreedTermsVersion: number,
-		votedCandidates: string[]
-	): CandidateProfile {
-		const {
-			name,
-			requestedPayment,
-			votersCount,
-			isActive,
-			avgVoteTimestamp,
-			rank,
-			totalVotePower,
-			gapFiller,
-		} = candidate;
+export class CandidateProfile implements Entity {
+  /**
+   * Creates instances of Candidate based on a given DTO.
+   *
+   * @static
+   * @public
+   * @param {string} dacId - The ID of the DAC.
+   * @param {DaoWorldsCommon.Deltas.Entities.Candidates} candidate - The candidate data from the DAO worlds contract.
+   * @param {Profile} profile - The profile data of the candidate.
+   * @param {TokenWorldsContract.Deltas.Entities.Memberterms} memberTerms - The member terms data from the token worlds contract.
+   * @param {number} agreedTermsVersion - The version of the agreed terms.
+   * @returns {CandidateProfile} - The created CandidateProfile instance.
+   */
+  public static create(
+    dacId: string,
+    candidate: DaoWorldsCommon.Deltas.Entities.Candidates,
+    profile: Profile,
+    memberTerms: TokenWorldsContract.Deltas.Entities.Memberterms,
+    agreedTermsVersion: number
+  ): CandidateProfile {
+    const {
+      candidateName,
+      requestedpay,
+      numberVoters,
+      isActive,
+      avgVoteTimeStamp,
+      rank,
+      totalVotePower,
+    } = candidate;
 
-		const { version } = memberTerms;
+    const { version } = memberTerms;
 
-		const voteDecay =
-			new Date(avgVoteTimestamp).getFullYear() > 1970
-				? Math.ceil(
-					(new Date().getTime() - new Date(avgVoteTimestamp).getTime()) /
-					(3600 * 24 * 1000)
-				)
-				: null;
-		const votePower = totalVotePower / 10000n;
+    const voteDecay =
+      new Date(avgVoteTimeStamp).getFullYear() > 1970
+        ? Math.ceil(
+            (new Date().getTime() - new Date(avgVoteTimeStamp).getTime()) /
+              (3600 * 24 * 1000)
+          )
+        : null;
+    const votePower = totalVotePower / 10000;
 
-		return new CandidateProfile(
-			name,
-			requestedPayment,
-			votePower,
-			rank,
-			gapFiller,
-			isActive,
-			votersCount,
-			voteDecay,
-			profile?.profile,
-			agreedTermsVersion,
-			Number(version) === agreedTermsVersion,
-			!!profile?.error,
-			false,
-			votedCandidates.includes(name),
-			false,
-			dacId
-		);
-	}
+    return new CandidateProfile(
+      candidateName,
+      requestedpay,
+      votePower,
+      rank,
+      !!isActive,
+      numberVoters,
+      voteDecay,
+      profile?.profile || {},
+      agreedTermsVersion,
+      Number(version) === agreedTermsVersion,
+      !!profile?.error,
+      dacId
+    );
+  }
 
-	/**
-	 * @private
-	 * @constructor
-	 */
-	private constructor(
-		public readonly walletId: string,
-		public readonly requestedPay: RequestedPayment,
-		public readonly votePower: bigint,
-		public readonly rank: bigint,
-		public readonly gapFiller: bigint,
-		public readonly isActive: boolean,
-		public readonly totalVotes: number,
-		public readonly voteDecay: number,
-		public readonly profile: object,
-		public readonly agreedTermVersion: number,
-		public readonly currentPlanetMemberTermsSignedValid: boolean,
-		public readonly isFlagged: boolean,
-		public readonly isSelected: boolean,
-		public readonly isVoted: boolean,
-		public readonly isVoteAdded: boolean,
-		public readonly planetName: string
-	) { }
+  /**
+   * @private
+   * @constructor
+   * @param {string} account - The account of the candidate.
+   * @param {Asset} requestedPay - The requested pay as an Asset object.
+   * @param {number} votePower - The vote power of the candidate.
+   * @param {number} rank - The rank of the candidate.
+   * @param {boolean} isActive - Indicates whether the candidate is active.
+   * @param {number} totalVotes - The total number of votes received by the candidate.
+   * @param {number} voteDecay - The vote decay value of the candidate.
+   * @param {object} profile - The profile data of the candidate.
+   * @param {number} signedDaoTermsVersion - The version of the signed DAO terms.
+   * @param {boolean} hasSignedCurrentDaoTerms - Indicates whether the candidate has signed the current DAO terms.
+   * @param {boolean} isFlagged - Indicates whether the candidate is flagged.
+   * @param {string} dacId - The ID of the DAC.
+   */
+  private constructor(
+    public readonly account: string,
+    public readonly requestedPay: Asset,
+    public readonly votePower: number,
+    public readonly rank: number,
+    public readonly isActive: boolean,
+    public readonly totalVotes: number,
+    public readonly voteDecay: number,
+    public readonly profile: object,
+    public readonly signedDaoTermsVersion: number,
+    public readonly hasSignedCurrentDaoTerms: boolean,
+    public readonly isFlagged: boolean,
+    public readonly dacId: string
+  ) {}
 
-	public toJson() {
-		const {
-			walletId,
-			requestedPay,
-			votePower,
-			rank,
-			gapFiller,
-			isActive,
-			totalVotes,
-			voteDecay,
-			profile,
-			agreedTermVersion,
-			currentPlanetMemberTermsSignedValid,
-			isFlagged,
-			isSelected,
-			isVoted,
-			isVoteAdded,
-			planetName,
-		} = this;
+  public id?: string;
+  public rest?: UnknownObject;
 
-		const p = profile || {};
+  /**
+   * Converts the CandidateProfile object to a plain JavaScript object.
+   *
+   * @public
+   * @returns {UnknownObject} - The plain JavaScript object representing the CandidateProfile.
+   */
+  public toJSON(): UnknownObject {
+    const {
+      account,
+      requestedPay,
+      votePower,
+      rank,
+      isActive,
+      totalVotes,
+      voteDecay,
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
+      isFlagged,
+      dacId,
+      profile,
+    } = this;
 
-		return {
-			...p,
-			walletId,
-			requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
-			votePower: Number(votePower),
-			rank: Number(rank),
-			gapFiller: Number(gapFiller),
-			isActive: Number(isActive),
-			totalVotes,
-			voteDecay,
-			agreedTermVersion,
-			currentPlanetMemberTermsSignedValid,
-			isFlagged,
-			isSelected,
-			isVoted,
-			isVoteAdded,
-			planetName,
-		};
-	}
+    return {
+      ...profile,
+      account,
+      requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
+      votePower: Number(votePower.toFixed(0)),
+      rank: Number(rank),
+      isActive,
+      totalVotes,
+      voteDecay,
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
+      isFlagged,
+      dacId,
+    };
+  }
 }

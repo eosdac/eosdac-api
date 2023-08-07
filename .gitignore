@@ -7,3 +7,7 @@ coverage
 dist
 
 logs
+
+.env*
+
+*.log

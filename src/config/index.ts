@@ -1,27 +1,28 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { existsSync, statSync } from 'fs';
 
-import AppConfig from './app-config';
+import ApiConfig from './api-config';
 
-const envPath = process.env.NODE_ENV
-	? `./.env-${process.env.NODE_ENV}`
-	: `./.env`;
+const envPath = process.env.ENVIRONMENT
+  ? `./.env-${process.env.ENVIRONMENT}`
+  : `./.env`;
 
 if (!existsSync(envPath)) {
-	throw new Error(
-		`Configuration file not found. Please check path: ${envPath}`
-	);
+  throw new Error(
+    `Configuration file not found. Please check path: ${envPath}`
+  );
 }
 
 const envStats = statSync(envPath);
 
 if (!envStats.isFile()) {
-	throw new Error(
-		`The given path is not a file. Please check path: ${envPath}`
-	);
+  throw new Error(
+    `The given path is not a file. Please check path: ${envPath}`
+  );
 }
 
-require('dotenv').config({ path: envPath });
-
-export const config = new AppConfig();
+export const config = ApiConfig.create(
+  envPath,
+  `${process.cwd()}/package.json`
+);
 export { Config } from './config.types';

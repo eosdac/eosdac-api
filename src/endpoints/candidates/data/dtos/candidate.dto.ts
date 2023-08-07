@@ -1,4 +1,3 @@
-export type GetCandidatesRequestDto = {
-	walletId: string;
-	dacId: string;
+export type GetCandidatesRequestPathVariables = {
+  dacId: string;
 };

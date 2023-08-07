@@ -1,2 +1,2 @@
-
-export const isEmptyArray = (input: unknown): boolean => Array.isArray(input) && input.length === 0;
+export const isEmptyArray = (input: unknown): boolean =>
+  Array.isArray(input) && input.length === 0;

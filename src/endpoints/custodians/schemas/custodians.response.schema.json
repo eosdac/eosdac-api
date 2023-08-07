@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "custodians.response.schema.json",
+  "title": "/:dacId/custodians response schema",
+  "type": "array",
+  "minItems": 0,
+  "items": {
+    "$ref": "#/$defs/custodian"
+  },
+  "$defs": {
+    "custodian": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "familyName": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "givenName": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "account": {
+          "$ref": "#/$defs/account"
+        },
+        "requestedpay": {
+          "type": "string"
+        },
+        "votePower": {
+          "type": "integer"
+        },
+        "signedDaoTermsVersion": {
+          "type": "integer"
+        },
+        "hasSignedCurrentDaoTerms": {
+          "type": "boolean"
+        },
+        "isFlagged": {
+          "type": "boolean"
+        },
+        "dacId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "account",
+        "requestedpay",
+        "votePower",
+        "signedDaoTermsVersion",
+        "hasSignedCurrentDaoTerms",
+        "isFlagged",
+        "dacId"
+      ]
+    },
+    "account": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

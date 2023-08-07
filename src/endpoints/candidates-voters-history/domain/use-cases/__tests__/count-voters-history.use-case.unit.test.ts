@@ -1,68 +1,66 @@
 import 'reflect-metadata';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryInput } from '../../models/candidates-voters-history.input';
-import { ContractActionRepository } from '@alien-worlds/eosdac-api-common';
 import { CountVotersHistoryUseCase } from '../count-voters-history.use-case';
-
-/*imports*/
-/*mocks*/
-
 
 let container: Container;
 let useCase: CountVotersHistoryUseCase;
-const input: CandidatesVotersHistoryInput = CandidatesVotersHistoryInput.fromRequest({
-    dacId: 'string',
-    candidateId: 'string',
-    skip: 0,
-    limit: 20,
-})
+const input: CandidatesVotersHistoryInput = new CandidatesVotersHistoryInput(
+  'string',
+  'string',
+  0,
+  20
+);
 
 const contractActionRepository = {
-    count: jest.fn(),
+  count: jest.fn(),
 };
 
 describe('Count Voters History Unit tests', () => {
-    beforeAll(() => {
-        container = new Container();
+  beforeAll(() => {
+    container = new Container();
+    container
+      .bind<DaoWorldsCommon.Actions.DaoWorldsActionRepository>(
+        DaoWorldsCommon.Actions.DaoWorldsActionRepository.Token
+      )
+      .toConstantValue(contractActionRepository as any);
+    container
+      .bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token)
+      .to(CountVotersHistoryUseCase);
+  });
 
-        container
-            .bind<ContractActionRepository>(ContractActionRepository.Token)
-            .toConstantValue(contractActionRepository as any);
+  beforeEach(() => {
+    useCase = container.get<CountVotersHistoryUseCase>(
+      CountVotersHistoryUseCase.Token
+    );
+  });
 
-        container
-            .bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token)
-            .to(CountVotersHistoryUseCase);
-    });
+  afterAll(() => {
+    jest.clearAllMocks();
+    container = null;
+  });
 
-    beforeEach(() => {
-        useCase = container.get<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token);
-    });
+  it('"Token" should be set', () => {
+    expect(CountVotersHistoryUseCase.Token).not.toBeNull();
+  });
 
-    afterAll(() => {
-        jest.clearAllMocks();
-        container = null;
-    });
+  it('Should return a failure when action repository fails', async () => {
+    contractActionRepository.count.mockResolvedValue(
+      Result.withFailure(Failure.fromError('error'))
+    );
 
-    it('"Token" should be set', () => {
-        expect(CountVotersHistoryUseCase.Token).not.toBeNull();
-    });
+    const result = await useCase.execute(input);
+    expect(result.isFailure).toBeTruthy();
+  });
 
-    it('Should return a failure when action repository fails', async () => {
-        contractActionRepository.count.mockResolvedValue(Result.withFailure(Failure.fromError("error")))
+  it('should return Number', async () => {
+    contractActionRepository.count.mockResolvedValue(Result.withContent(1));
 
-        const result = await useCase.execute(input);
-        expect(result.isFailure).toBeTruthy();
-    });
-
-    it('should return Number', async () => {
-        contractActionRepository.count.mockResolvedValue(Result.withContent(1))
-
-        const result = await useCase.execute(input);
-        expect(result.content).toBe(1);
-    });
-
-    /*unit-tests*/
+    const result = await useCase.execute(input);
+    expect(result.content).toBe(1);
+  });
 });
-

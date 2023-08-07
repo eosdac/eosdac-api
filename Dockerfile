@@ -1,7 +1,7 @@
 FROM node:17-alpine3.12
 
-ARG NODE_ENV
-ENV NODE_ENV=$NODE_ENV
+ARG ENVIRONMENT
+ENV ENVIRONMENT=$ENVIRONMENT
 
 ARG GITHUB_TOKEN
 ENV GITHUB_TOKEN=${GITHUB_TOKEN}
@@ -13,8 +13,8 @@ RUN mkdir -p /var/www/api
 ADD scripts /var/www/api/scripts
 ADD src /var/www/api/src
 
-COPY .npmrc package.json tokens.json tsconfig.json /var/www/api/
-COPY .env-example /var/www/api/.env-${NODE_ENV}
+COPY .npmrc package.json tsconfig.json /var/www/api/
+COPY .env-example /var/www/api/.env-${ENVIRONMENT}
 
 WORKDIR /var/www/api
 
