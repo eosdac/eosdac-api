@@ -1,119 +1,95 @@
+import { Result } from '@alien-worlds/aw-core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  DaoWorldsContract,
-  TokenWorldsContract,
-} from '@alien-worlds/dao-api-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
+
 import { CandidateProfile } from '../../entities/candidate-profile';
+import { ContractAction } from '@alien-worlds/aw-core';
 import { GetCandidatesOutput } from '../get-candidates.output';
 import { Profile } from '../../../../profile/domain/entities/profile';
+import { ActionToProfileMapper } from '@endpoints/profile/data/mappers/action-to-profile.mapper';
+
+const profiles: Profile[] = [
+  ActionToProfileMapper.toEntity(
+    new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
+      'mgaqy.wam',
+      new Date('2021-02-25T04:18:56.000Z'),
+      209788070n,
+      'dao.worlds',
+      'stprofile',
+      65909692153n,
+      1980617n,
+      '591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666C',
+      DaoWorldsCommon.Actions.Entities.Stprofile.create(
+        'awtesteroo12',
+        '{"givenName":"awtesteroo12 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
+        'testa'
+      )
+    )
+  ),
+];
 
 describe('GetCandidatesOutput', () => {
   let dacId: string;
-  let candidates: DaoWorldsContract.Deltas.Entities.Candidate[];
-  let profiles: Profile[];
-  let terms: TokenWorldsContract.Deltas.Entities.MemberTerms;
+  let candidates: DaoWorldsCommon.Deltas.Entities.Candidates[];
   let agreedTerms: Map<string, number>;
-  let votedCandidates: string[];
   let candidateProfiles: CandidateProfile[];
 
   beforeEach(() => {
-    dacId = 'dacId';
+    dacId = 'eyeke';
+
     candidates = [
-      DaoWorldsContract.Deltas.Entities.Candidate.fromStruct({
+      new DaoWorldsCommon.Deltas.Mappers.CandidatesRawMapper().toEntity({
         is_active: 1,
         candidate_name: 'candidate1',
         requestedpay: 'test',
         total_votes: 1,
-        avg_vote_time_stamp: new Date().toISOString(),
+        avg_vote_time_stamp: new Date(),
         rank: 1,
         gap_filler: 1,
         total_vote_power: 1,
       }),
-      DaoWorldsContract.Deltas.Entities.Candidate.fromStruct({
-        is_active: 1,
-        candidate_name: 'candidate2',
-        requestedpay: 'test',
-        total_votes: 1,
-        avg_vote_time_stamp: new Date().toISOString(),
-        rank: 1,
-        gap_filler: 1,
-        total_vote_power: 1,
-      }),
-    ] as any;
-    profiles = [
-      Profile.fromDto({
-        block_num: 1,
-        action: {
-          account: 'candidate1',
-          name: '',
-          data: { cand: '', profile: '{}' },
-        },
-      } as any),
-      Profile.fromDto({
-        block_num: 1,
-        action: {
-          account: 'candidate2',
-          name: '',
-          data: { cand: '', profile: '{}' },
-        },
-      } as any),
-    ] as any;
-    terms = { version: 1n } as any;
+    ];
+
     agreedTerms = new Map<string, number>();
     agreedTerms.set('candidate1', 1);
-    votedCandidates = ['candidate1'];
+
     candidateProfiles = [
       CandidateProfile.create(
         dacId,
         candidates[0],
         profiles[0],
-        TokenWorldsContract.Deltas.Entities.MemberTerms.fromStruct(
-          terms as any
-        ),
-        1,
-        votedCandidates
-      ),
-      CandidateProfile.create(
-        dacId,
-        candidates[1],
-        profiles[1],
-        TokenWorldsContract.Deltas.Entities.MemberTerms.fromStruct(
-          terms as any
-        ),
-        1,
-        votedCandidates
+        new TokenWorldsCommon.Deltas.Mappers.MembertermsRawMapper().toEntity({
+          version: 1,
+        }),
+        1
       ),
     ];
   });
 
   it('should create a GetCandidatesOutput object with the correct properties', () => {
-    const result = GetCandidatesOutput.create(candidateProfiles);
+    const output = GetCandidatesOutput.create(
+      Result.withContent(candidateProfiles)
+    );
 
-    expect(result).toBeInstanceOf(GetCandidatesOutput);
-    expect(result.results).toBeDefined();
+    expect(output).toBeInstanceOf(GetCandidatesOutput);
+    expect(output.result).toBeDefined();
   });
 
   it('should create a CandidateProfile for each candidate in the input array', () => {
-    const result = GetCandidatesOutput.create(candidateProfiles);
+    const output = GetCandidatesOutput.create(
+      Result.withContent(candidateProfiles)
+    );
 
-    expect(result.results).toHaveLength(2);
+    expect(output.result.content).toHaveLength(1);
+  });
 
-    expect(result.results[0]).toBeInstanceOf(CandidateProfile);
-    expect(result.results[0].walletId).toBeDefined();
-    expect(result.results[0].requestedPay).toBeDefined();
-    expect(result.results[0].votePower).toBeDefined();
-    expect(result.results[0].rank).toBeDefined();
-    expect(result.results[0].gapFiller).toBeDefined();
-    expect(result.results[0].isActive).toBeDefined();
-    expect(result.results[0].totalVotes).toBeDefined();
-    expect(result.results[0].voteDecay).toBeDefined();
-    expect(result.results[0].profile).toBeDefined();
-    expect(result.results[0].agreedTermVersion).toBeDefined();
-    expect(result.results[0].currentPlanetMemberTermsSignedValid).toBeDefined();
-    expect(result.results[0].isFlagged).toBeDefined();
-    expect(result.results[0].isSelected).toBeDefined();
-    expect(result.results[0].isVoted).toBeDefined();
-    expect(result.results[0].isVoteAdded).toBeDefined();
-    expect(result.results[0].planetName).toBeDefined();
+  it('should return JSON result object', () => {
+    const result = GetCandidatesOutput.create(
+      Result.withContent(candidateProfiles)
+    );
+    const json = result.toJSON();
+
+    expect(json).toBeDefined();
   });
 });

@@ -1,23 +1,20 @@
 import 'reflect-metadata';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
 import { CandidatesVotersHistoryInput } from '../../models/candidates-voters-history.input';
 import { CountVotersHistoryUseCase } from '../count-voters-history.use-case';
-import { DaoWorldsActionRepository } from '@alien-worlds/dao-api-common/build/contracts/dao-worlds/actions/domain/repositories';
-
-/*imports*/
-/*mocks*/
 
 let container: Container;
 let useCase: CountVotersHistoryUseCase;
-const input: CandidatesVotersHistoryInput =
-  CandidatesVotersHistoryInput.fromRequest({
-    dacId: 'string',
-    candidateId: 'string',
-    skip: 0,
-    limit: 20,
-  });
+const input: CandidatesVotersHistoryInput = new CandidatesVotersHistoryInput(
+  'string',
+  'string',
+  0,
+  20
+);
 
 const contractActionRepository = {
   count: jest.fn(),
@@ -27,7 +24,9 @@ describe('Count Voters History Unit tests', () => {
   beforeAll(() => {
     container = new Container();
     container
-      .bind<DaoWorldsActionRepository>(DaoWorldsActionRepository.Token)
+      .bind<DaoWorldsCommon.Actions.DaoWorldsActionRepository>(
+        DaoWorldsCommon.Actions.DaoWorldsActionRepository.Token
+      )
       .toConstantValue(contractActionRepository as any);
     container
       .bind<CountVotersHistoryUseCase>(CountVotersHistoryUseCase.Token)
@@ -64,6 +63,4 @@ describe('Count Voters History Unit tests', () => {
     const result = await useCase.execute(input);
     expect(result.content).toBe(1);
   });
-
-  /*unit-tests*/
 });

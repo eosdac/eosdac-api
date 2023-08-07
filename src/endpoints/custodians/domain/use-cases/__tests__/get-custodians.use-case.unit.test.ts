@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Unit Test Code
-import { Container, Failure } from '@alien-worlds/api-core';
-
-import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import { Container, Failure } from '@alien-worlds/aw-core';
 import { GetCustodiansUseCase } from '../get-custodians.use-case';
 
 describe('GetCustodiansUseCase', () => {
@@ -10,7 +8,7 @@ describe('GetCustodiansUseCase', () => {
   let useCase: GetCustodiansUseCase;
 
   const mockService = {
-    fetchCustodian: jest.fn(),
+    fetchCustodians1: jest.fn(),
   };
 
   beforeAll(() => {
@@ -32,15 +30,15 @@ describe('GetCustodiansUseCase', () => {
 
   it('should return a list of custodians', async () => {
     const dacId = 'testdac';
-    mockService.fetchCustodian.mockResolvedValue({
+    mockService.fetchCustodians1.mockResolvedValue({
       content: [
-        {
+        <DaoWorldsCommon.Deltas.Types.Custodians1RawModel>{
           cust_name: 'custodian1',
           requestedpay: '10000000 TLM',
           total_vote_power: 1,
           rank: 1,
           number_voters: 1,
-          avg_vote_time_stamp: new Date().toISOString(),
+          avg_vote_time_stamp: new Date(),
         },
       ],
     });
@@ -49,16 +47,16 @@ describe('GetCustodiansUseCase', () => {
     expect(result.content).toBeInstanceOf(Array);
 
     const candidate = result
-      .content[0] as DaoWorldsContract.Deltas.Entities.Custodian;
+      .content[0] as DaoWorldsCommon.Deltas.Entities.Custodians1;
 
     expect(candidate).toBeInstanceOf(
-      DaoWorldsContract.Deltas.Entities.Custodian
+      DaoWorldsCommon.Deltas.Entities.Custodians1
     );
   });
 
   it('should return an empty array if no candidates are found', async () => {
     const dacId = 'emptydac';
-    mockService.fetchCustodian.mockResolvedValue({
+    mockService.fetchCustodians1.mockResolvedValue({
       content: [],
     });
     const result = await useCase.execute(dacId);
@@ -68,7 +66,7 @@ describe('GetCustodiansUseCase', () => {
 
   it('should return a failure if the service fails', async () => {
     const dacId = 'faileddac';
-    mockService.fetchCustodian.mockResolvedValue({
+    mockService.fetchCustodians1.mockResolvedValue({
       failure: Failure.withMessage('error'),
     });
     const result = await useCase.execute(dacId);

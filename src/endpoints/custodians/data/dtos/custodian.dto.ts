@@ -1,3 +1,3 @@
 export type GetCustodiansRequestPathVariables = {
-	dacId: string;
+  dacId: string;
 };

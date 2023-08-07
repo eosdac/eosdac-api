@@ -1,28 +1,14 @@
 import { CandidatesVotersHistoryInput } from '../candidates-voters-history.input';
-import { CandidatesVotersHistoryRequestQueryParams } from '../../../data/dtos/candidates-voters-history.dto';
-
-/*imports*/
-
-/*mocks*/
-const input: CandidatesVotersHistoryRequestQueryParams = {
-  dacId: 'string',
-  candidateId: 'string',
-  limit: 20,
-  skip: 0,
-};
 
 describe('CandidatesVotersHistoryInput Unit tests', () => {
-  it('"CandidatesVotersHistoryInput.fromRequest" should create instance', async () => {
-    const fromReq = CandidatesVotersHistoryInput.fromRequest(input);
+  it('"toJSON" should return json object', async () => {
+    const input = new CandidatesVotersHistoryInput('dacId', 'cand', 20, 10);
 
-    expect(fromReq).toBeInstanceOf(CandidatesVotersHistoryInput);
+    expect(input.toJSON()).toEqual({
+      dacId: 'dacId',
+      candidateId: 'cand',
+      limit: 10,
+      skip: 20,
+    });
   });
-
-  it('CandidatesVotersHistoryInput instance should have proper voter value', async () => {
-    const fromReq = CandidatesVotersHistoryInput.fromRequest(input);
-
-    expect(fromReq.candidateId).toBe(input.candidateId);
-  });
-
-  /*unit-tests*/
 });

@@ -1,5 +1,5 @@
 export class CurrentBlockNotFoundError extends Error {
-    constructor() {
-        super('Current block not found');
-    }
+  constructor() {
+    super('Current block not found');
+  }
 }

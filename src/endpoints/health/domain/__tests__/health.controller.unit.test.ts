@@ -1,48 +1,44 @@
 import 'reflect-metadata';
 
-import { Container } from 'inversify';
+import { Container } from '@alien-worlds/aw-core';
 import { HealthController } from '../health.controller';
-import { HealthUseCase } from '../use-cases/health.use-case';
+import { GetHealthCheckStatusUseCase } from '../use-cases/get-health-check-status.use-case';
 
-/*imports*/
-
-/*mocks*/
 const healthUseCase = {
-    execute: jest.fn(() => ({})),
+  execute: jest.fn(() => ({})),
 };
-
 
 let container: Container;
 let controller: HealthController;
 
 describe('Health Controller Unit tests', () => {
-    beforeAll(() => {
-        container = new Container();
-        /*bindings*/
-        container
-            .bind<HealthUseCase>(HealthUseCase.Token)
-            .toConstantValue(healthUseCase as any);
-        container.bind<HealthController>(HealthController.Token).to(HealthController);
-    });
+  beforeAll(() => {
+    container = new Container();
+    /*bindings*/
+    container
+      .bind<GetHealthCheckStatusUseCase>(GetHealthCheckStatusUseCase.Token)
+      .toConstantValue(healthUseCase as any);
+    container
+      .bind<HealthController>(HealthController.Token)
+      .to(HealthController);
+  });
 
-    beforeEach(() => {
-        controller = container.get<HealthController>(HealthController.Token);
-    });
+  beforeEach(() => {
+    controller = container.get<HealthController>(HealthController.Token);
+  });
 
-    afterAll(() => {
-        jest.clearAllMocks();
-        container = null;
-    });
+  afterAll(() => {
+    jest.clearAllMocks();
+    container = null;
+  });
 
-    it('"Token" should be set', () => {
-        expect(HealthController.Token).not.toBeNull();
-    });
+  it('"Token" should be set', () => {
+    expect(HealthController.Token).not.toBeNull();
+  });
 
-    it('Should execute HealthUseCase', async () => {
-        await controller.health();
+  it('Should execute HealthUseCase', async () => {
+    await controller.healthCheck();
 
-        expect(healthUseCase.execute).toBeCalled();
-    });
-    /*unit-tests*/
+    expect(healthUseCase.execute).toBeCalled();
+  });
 });
-

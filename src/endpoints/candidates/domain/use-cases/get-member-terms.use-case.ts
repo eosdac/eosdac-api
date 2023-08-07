@@ -1,38 +1,41 @@
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { TokenWorldsContract } from '@alien-worlds/dao-api-common';
-
-/*imports*/
-
-const {
-  Entities: { MemberTerms },
-} = TokenWorldsContract.Deltas;
+import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
 /**
+ * Represents a use case for retrieving member terms for a specific DAC.
  * @class
+ * @implements {UseCase<TokenWorldsCommon.Deltas.Entities.Memberterms>}
  */
 @injectable()
 export class GetMemberTermsUseCase
-  implements UseCase<TokenWorldsContract.Deltas.Entities.MemberTerms>
+  implements UseCase<TokenWorldsCommon.Deltas.Entities.Memberterms>
 {
   public static Token = 'GET_MEMBER_TERMS_USE_CASE';
 
+  /**
+   * @constructor
+   * @param {TokenWorldsCommon.Services.TokenWorldsContractService} service - The service used to interact with the TokenWorlds contract.
+   */
   constructor(
-    /*injections*/
-    @inject(TokenWorldsContract.Services.TokenWorldsContractService.Token)
-    private service: TokenWorldsContract.Services.TokenWorldsContractService
+    @inject(TokenWorldsCommon.Services.TokenWorldsContractService.Token)
+    private service: TokenWorldsCommon.Services.TokenWorldsContractService
   ) {}
 
   /**
+   * Executes the GetMemberTermsUseCase to retrieve the member terms for a specific DAC.
+   *
    * @async
-   * @returns {Promise<Result<MemberTerms>>}
+   * @public
+   * @param {string} dacId - The ID of the DAC to retrieve the member terms for.
+   * @param {number} [limit=1] - The maximum number of member terms to retrieve (default: 1).
+   * @returns {Promise<Result<TokenWorldsCommon.Deltas.Entities.Memberterms>>} - The result containing the member terms object.
    */
   public async execute(
     dacId: string,
     limit = 1
-  ): Promise<Result<TokenWorldsContract.Deltas.Entities.MemberTerms>> {
-    const { content: rows, failure } = await this.service.fetchMemberTerms({
+  ): Promise<Result<TokenWorldsCommon.Deltas.Entities.Memberterms>> {
+    const { content: rows, failure } = await this.service.fetchMemberterms({
       scope: dacId.toLowerCase(),
-      code: 'token.worlds',
       limit,
       reverse: true,
     });
@@ -42,9 +45,11 @@ export class GetMemberTermsUseCase
     }
 
     return Result.withContent(
-      rows.length === 0 ? null : MemberTerms.fromStruct(rows[0])
+      rows.length === 0
+        ? null
+        : new TokenWorldsCommon.Deltas.Mappers.MembertermsRawMapper().toEntity(
+            rows[0]
+          )
     );
   }
-
-  /*methods*/
 }

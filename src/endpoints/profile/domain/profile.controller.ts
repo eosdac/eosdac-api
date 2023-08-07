@@ -1,127 +1,69 @@
-import {
-  DacDirectory,
-  IndexWorldsContract,
-} from '@alien-worlds/dao-api-common';
-import { Failure, inject, injectable, Result } from '@alien-worlds/api-core';
-import { config } from '@config';
+import { Services } from '@alien-worlds/aw-contract-index-worlds';
+import { inject, injectable } from '@alien-worlds/aw-core';
 import { GetProfilesUseCase } from './use-cases/get-profiles.use-case';
-import { IsProfileFlaggedUseCase } from './use-cases/is-profile-flagged.use-case';
-import { Profile } from './entities/profile';
-import { ProfileInput } from './models/profile.input';
-import { ProfileOutput } from '../data/dtos/profile.dto';
-import { isEmptyArray } from '@common/utils/dto.utils';
-
-/*imports*/
+import { loadDacConfig } from '@common/utils/dac.utils';
+import { GetProfileInput } from './models/get-profile.input';
+import { GetProfileOutput } from './models/get-profile.output';
+import { FilterFlaggedProfilesUseCase } from './use-cases/filter-flagged-profiles.use-case';
 
 /**
  * @class
- *
- *
  */
 @injectable()
 export class ProfileController {
   public static Token = 'PROFILE_CONTROLLER';
 
   constructor(
-    /*injections*/
-    @inject(IndexWorldsContract.Services.IndexWorldsContractService.Token)
-    private indexWorldsContractService: IndexWorldsContract.Services.IndexWorldsContractService,
+    @inject(Services.IndexWorldsContractService.Token)
+    private indexWorldsContractService: Services.IndexWorldsContractService,
 
     @inject(GetProfilesUseCase.Token)
     private getProfilesUseCase: GetProfilesUseCase,
 
-    @inject(IsProfileFlaggedUseCase.Token)
-    private isProfileFlaggedUseCase: IsProfileFlaggedUseCase
+    @inject(FilterFlaggedProfilesUseCase.Token)
+    private filterFlaggedProfilesUseCase: FilterFlaggedProfilesUseCase
   ) {}
-
-  /*methods*/
 
   /**
    *
-   * @returns {Promise<Result<ProfileOutput, Error>>}
+   * @returns {Promise<GetProfileOutput>}
    */
-  public async profile(
-    input: ProfileInput
-  ): Promise<Result<ProfileOutput, Error>> {
-    const results: Profile[] = [];
-    const dacConfig = await this.loadDacConfig(input.dacId);
-    if (!dacConfig) {
-      return Result.withFailure(
-        Failure.withMessage('unable to load dac config')
-      );
+  public async getProfile(input: GetProfileInput): Promise<GetProfileOutput> {
+    const { dacId, accounts } = input;
+
+    const { content: dacConfig, failure: loadDacConfigFailure } =
+      await loadDacConfig(this.indexWorldsContractService, input.dacId);
+
+    if (loadDacConfigFailure) {
+      return GetProfileOutput.create([], 0, loadDacConfigFailure);
     }
-    const custContract = dacConfig.accounts.custodian;
 
     const { content: profiles, failure: getProfilesFailure } =
-      await this.getProfilesUseCase.execute({
-        custContract,
-        dacId: input.dacId,
-        accounts: input.accounts,
-      });
+      await this.getProfilesUseCase.execute(
+        dacConfig.accounts.custodian,
+        dacId,
+        accounts
+      );
 
     if (getProfilesFailure) {
-      return Result.withFailure(getProfilesFailure);
+      return GetProfileOutput.create([], 0, getProfilesFailure);
     }
 
-    const { content: flags } = await this.isProfileFlaggedUseCase.execute({
-      dacId: input.dacId,
-      accounts: input.accounts,
-    });
+    const { content: filteredProfiles, failure: filterFailure } =
+      await this.filterFlaggedProfilesUseCase.execute(
+        dacId,
+        accounts,
+        profiles
+      );
 
-    profiles.forEach(profile => {
-      const { candidate } = profile.action.data;
-      let isFlagged = false;
+    if (filterFailure) {
+      return GetProfileOutput.create([], 0, getProfilesFailure);
+    }
 
-      if (flags && flags.length) {
-        const flag = flags.find(flag => flag.candidate === candidate);
-        if (flag && flag.block) {
-          isFlagged = true;
-        }
-      }
-
-      if (isFlagged) {
-        results.push(this.getRedactedCandidateResult(candidate));
-      } else {
-        results.push(Profile.fromDto(profile.toDocument()));
-      }
-    });
-
-    return Result.withContent({
-      count: profiles.length || 0,
-      results,
-    });
+    return GetProfileOutput.create(
+      filteredProfiles,
+      filteredProfiles.length,
+      getProfilesFailure
+    );
   }
-
-  private loadDacConfig = async dacId => {
-    const dac_config_cache = config.dac.nameCache.get(dacId);
-
-    if (dac_config_cache) {
-      console.info(`Returning cached dac info`);
-      return dac_config_cache;
-    } else {
-      const result = await this.indexWorldsContractService.fetchDac({
-        scope: config.eos.dacDirectoryContract,
-        limit: 1,
-        lower_bound: dacId,
-        upper_bound: dacId,
-      });
-
-      if (result.isFailure || isEmptyArray(result.content)) {
-        console.warn(`Could not find dac with ID ${dacId}`);
-        return null;
-      }
-
-      const dacConfig = DacDirectory.fromStruct(result.content[0]);
-      config.dac.nameCache.set(dacId, dacConfig);
-
-      return dacConfig;
-    }
-  };
-
-  private getRedactedCandidateResult = (account): Profile => {
-    return Profile.createErrorProfile(account, {
-      name: 'Redacted Candidate',
-      body: `Candidate "${account}" profile has been flagged for supplying inappropriate content.`,
-    });
-  };
 }

@@ -1,41 +1,24 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "candidates.request.schema.json",
-    "title": "/:dacId/candidates?walletId={walletId} request schema",
-    "type": "object",
-    "properties": {
-        "params": {
-            "type": "object",
-            "properties": {
-                "dacId": {
-                    "$ref": "#/$defs/dacId"
-                }
-            },
-            "required": [
-                "dacId"
-            ]
-        },
-        "query": {
-            "type": "object",
-            "properties": {
-                "walletId": {
-                    "$ref": "#/$defs/walletId"
-                }
-            },
-            "required": [
-                "walletId"
-            ]
-        }
-    },
-    "$defs": {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "candidates.request.schema.json",
+  "title": "/:dacId/candidates request schema",
+  "type": "object",
+  "properties": {
+    "params": {
+      "type": "object",
+      "properties": {
         "dacId": {
-            "type": "string",
-            "minLength": 5,
-            "maxLength": 6
-        },
-        "walletId": {
-            "type": "string",
-            "minLength": 1
+          "$ref": "#/$defs/dacId"
         }
+      },
+      "required": ["dacId"]
     }
+  },
+  "$defs": {
+    "dacId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 6
+    }
+  }
 }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { existsSync, statSync } from 'fs';
 
-import AppConfig from './app-config';
+import ApiConfig from './api-config';
 
 const envPath = process.env.ENVIRONMENT
   ? `./.env-${process.env.ENVIRONMENT}`
@@ -21,5 +21,8 @@ if (!envStats.isFile()) {
   );
 }
 
-export const config = AppConfig.create(envPath);
+export const config = ApiConfig.create(
+  envPath,
+  `${process.cwd()}/package.json`
+);
 export { Config } from './config.types';

@@ -1,87 +1,110 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "health.response.schema.json",
-    "title": "/health response schema",
-    "type": "object",
-    "properties": {
-        "status": {
-            "type": "string"
-        },
-        "version": {
-            "$ref": "#/$defs/semanticVerString"
-        },
-        "timestamp": {
-            "type": "integer",
-            "minimum": 0
-        },
-        "uptimeSeconds": {
-            "type": "integer",
-            "minimum": 0
-        },
-        "nodeVersion": {
-            "$ref": "#/$defs/semanticVerStringWithPrefix"
-        },
-        "dependencies": {
-            "type": "object",
-            "properties": {
-                "@alien-worlds/api-core": {
-                    "$ref": "#/$defs/semanticVerString"
-                },
-                "@alien-worlds/dao-api-common": {
-                    "$ref": "#/$defs/semanticVerString"
-                }
-            },
-            "required": [
-                "@alien-worlds/api-core",
-                "@alien-worlds/dao-api-common"
-            ]
-        },
-        "database": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string",
-                    "minLength": 2
-                }
-            },
-            "required": [
-                "status"
-            ]
-        },
-        "blockChainHistory": {
-            "type": "object",
-            "properties": {
-                "currentBlock": {
-                    "$ref": "#/$defs/stringOfAtleastOneDigit"
-                }
-            },
-            "required": [
-                "currentBlock"
-            ]
-        }
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "health.response.schema.json",
+  "title": "/health response schema",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string"
     },
-    "required": [
-        "status",
-        "version",
-        "timestamp",
-        "uptimeSeconds",
-        "nodeVersion",
-        "dependencies",
-        "database",
-        "blockChainHistory"
-    ],
-    "$defs": {
-        "semanticVerString": {
-            "type": "string",
-            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+    "version": {
+      "$ref": "#/$defs/semanticVerString"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "uptimeSeconds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "nodeVersion": {
+      "$ref": "#/$defs/semanticVerStringWithPrefix"
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "@alien-worlds/aw-core": {
+          "$ref": "#/$defs/semanticVerString"
         },
-        "semanticVerStringWithPrefix": {
-            "type": "string",
-            "pattern": "^v(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+        "@alien-worlds/aw-storage-mongodb": {
+          "$ref": "#/$defs/semanticVerString"
         },
-        "stringOfAtleastOneDigit": {
-            "type": "string",
-            "pattern": "^\\d+$"
+        "@alien-worlds/aw-antelope": {
+          "$ref": "#/$defs/semanticVerString"
+        },
+        "@alien-worlds/aw-contract-alien-worlds": {
+          "$ref": "#/$defs/semanticVerString"
+        },
+        "@alien-worlds/aw-contract-dao-worlds": {
+          "$ref": "#/$defs/semanticVerString"
+        },
+        "@alien-worlds/aw-contract-index-worlds": {
+          "$ref": "#/$defs/semanticVerString"
+        },
+        "@alien-worlds/aw-contract-stkvt-worlds": {
+          "$ref": "#/$defs/semanticVerString"
+        },
+        "@alien-worlds/aw-contract-token-worlds": {
+          "$ref": "#/$defs/semanticVerString"
         }
+      },
+      "required": [
+        "@alien-worlds/aw-core",
+        "@alien-worlds/aw-storage-mongodb",
+        "@alien-worlds/aw-antelope",
+        "@alien-worlds/aw-contract-alien-worlds",
+        "@alien-worlds/aw-contract-dao-worlds",
+        "@alien-worlds/aw-contract-index-worlds",
+        "@alien-worlds/aw-contract-stkvt-worlds",
+        "@alien-worlds/aw-contract-token-worlds"
+      ]
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "mongodb": {
+          "type": "string",
+          "minLength": 2
+        }
+      },
+      "required": ["mongodb"]
+    },
+    "historyApi": {
+      "type": "object",
+      "properties": {
+        "currentBlockNumber": {
+          "$ref": "#/$defs/stringOfAtleastOneDigit"
+        },
+        "status": {
+          "type": "string",
+          "minLength": 2
+        }
+      },
+      "required": ["currentBlockNumber", "status"]
     }
+  },
+  "required": [
+    "status",
+    "version",
+    "timestamp",
+    "uptimeSeconds",
+    "nodeVersion",
+    "dependencies",
+    "database",
+    "historyApi"
+  ],
+  "$defs": {
+    "semanticVerString": {
+      "type": "string",
+      "pattern": "^[^~]*(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+    },
+    "semanticVerStringWithPrefix": {
+      "type": "string",
+      "pattern": "^v(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+    },
+    "stringOfAtleastOneDigit": {
+      "type": "string",
+      "pattern": "^-*\\d+$"
+    }
+  }
 }

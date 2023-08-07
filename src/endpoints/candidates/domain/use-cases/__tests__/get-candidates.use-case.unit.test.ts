@@ -1,18 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// Unit Test Code
-import { Container, Failure } from '@alien-worlds/api-core';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
+import { Container, Failure } from '@alien-worlds/aw-core';
+
 import { GetCandidatesUseCase } from '../get-candidates.use-case';
 
-const Entities = DaoWorldsContract.Deltas.Entities;
+const Entities = DaoWorldsCommon.Deltas.Entities;
 
 describe('GetCandidatesUseCase', () => {
   let container: Container;
   let useCase: GetCandidatesUseCase;
 
   const mockService = {
-    fetchCandidate: jest.fn(),
+    fetchCandidates: jest.fn(),
   };
 
   beforeAll(() => {
@@ -34,7 +33,7 @@ describe('GetCandidatesUseCase', () => {
 
   it('should return a list of candidates', async () => {
     const dacId = 'testdac';
-    mockService.fetchCandidate.mockResolvedValue({
+    mockService.fetchCandidates.mockResolvedValue({
       content: [
         {
           requestedpay: '10000 TLM',
@@ -51,14 +50,14 @@ describe('GetCandidatesUseCase', () => {
     expect(result.content).toBeInstanceOf(Array);
 
     const candidate = result
-      .content[0] as DaoWorldsContract.Deltas.Entities.Candidate;
+      .content[0] as DaoWorldsCommon.Deltas.Entities.Candidates;
 
-    expect(candidate).toBeInstanceOf(Entities.Candidate);
+    expect(candidate).toBeInstanceOf(Entities.Candidates);
   });
 
   it('should return an empty array if no candidates are found', async () => {
     const dacId = 'emptydac';
-    mockService.fetchCandidate.mockResolvedValue({
+    mockService.fetchCandidates.mockResolvedValue({
       content: [],
     });
     const result = await useCase.execute(dacId);
@@ -68,7 +67,7 @@ describe('GetCandidatesUseCase', () => {
 
   it('should return a failure if the service fails', async () => {
     const dacId = 'faileddac';
-    mockService.fetchCandidate.mockResolvedValue({
+    mockService.fetchCandidates.mockResolvedValue({
       failure: Failure.withMessage('error'),
     });
     const result = await useCase.execute(dacId);

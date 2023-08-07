@@ -2,6 +2,6 @@ import CandidatesVotersHistoryRequestSchema from './candidates-voters-history.re
 import CandidatesVotersHistoryResponseSchema from './candidates-voters-history.response.schema.json';
 
 export {
-    CandidatesVotersHistoryRequestSchema,
-    CandidatesVotersHistoryResponseSchema
+  CandidatesVotersHistoryRequestSchema,
+  CandidatesVotersHistoryResponseSchema,
 };

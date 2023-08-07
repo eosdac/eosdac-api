@@ -1,53 +1,86 @@
-import { CandidatesVotersHistoryControllerOutput, CandidatesVotersHistoryOutputItem } from '../../data/dtos/candidates-voters-history.dto';
+/* eslint-disable sort-imports */
+import {
+  VotesModel,
+  VoteModel,
+} from '../../data/dtos/candidates-voters-history.dto';
 
-import { removeUndefinedProperties } from '@alien-worlds/api-core';
+import { Failure, IO, removeUndefinedProperties } from '@alien-worlds/aw-core';
 
-export class CandidatesVotersHistoryOutput {
-	public static create(
-		data: CandidatesVotersHistoryControllerOutput
-	): CandidatesVotersHistoryOutput {
-		return new CandidatesVotersHistoryOutput(data.results || [], data.total || 0);
-	}
+/**
+ * Represents the output for querying candidates' voters history for a specific DAC and candidate.
+ * @class
+ * @implements {IO}
+ */
+export class CandidatesVotersHistoryOutput implements IO {
+  /**
+   * Creates a new instance of CandidatesVotersHistoryOutput.
+   *
+   * @public
+   * @static
+   * @param {VoteModel[]} results - The array of vote models.
+   * @param {number} total - The total number of records.
+   * @param {Failure} failure - The failure object, if any.
+   * @returns {CandidatesVotersHistoryOutput} - The created CandidatesVotersHistoryOutput instance.
+   */
+  public static create(
+    results: VoteModel[],
+    total: number,
+    failure?: Failure
+  ): CandidatesVotersHistoryOutput {
+    return new CandidatesVotersHistoryOutput(
+      results || [],
+      total || 0,
+      failure
+    );
+  }
+  /**
+   * @constructor
+   * @param {VoteModel[]} results - The array of vote models.
+   * @param {number} total - The total number of records.
+   * @param {Failure} failure - The failure object, if any.
+   */
+  constructor(
+    public readonly results: VoteModel[],
+    public readonly total: number,
+    public readonly failure: Failure
+  ) {}
 
-	private constructor(
-		public readonly results: CandidatesVotersHistoryOutputItem[],
-		public readonly total: number
-	) { }
+  /**
+   * Converts the CandidatesVotersHistoryOutput object to a JSON representation.
+   *
+   * @public
+   * @returns {VotesModel} - The JSON representation of the CandidatesVotersHistoryOutput object.
+   */
+  public toJSON(): VotesModel {
+    const { results, total, failure } = this;
 
-	public toJson(): CandidatesVotersHistoryOutput {
-		const { results, total } = this;
+    if (failure) {
+      return { results: [], total: 0 };
+    }
 
-		const result = {
-			results: results.map(this.parseCandidatesVotersHistoryItemToResult),
-			total,
-		};
+    const result = {
+      results: results.map(item => {
+        const {
+          voter,
+          votingPower,
+          action,
+          candidate,
+          voteTimestamp,
+          transactionId,
+        } = item;
 
-		return removeUndefinedProperties<CandidatesVotersHistoryOutput>(result);
-	}
+        return removeUndefinedProperties<VoteModel>({
+          voter,
+          votingPower: votingPower.toString(),
+          action,
+          candidate,
+          voteTimestamp,
+          transactionId,
+        });
+      }),
+      total,
+    };
 
-	/**
-	 * Get Json object from the entity
-	 *
-	 */
-	private parseCandidatesVotersHistoryItemToResult(item: CandidatesVotersHistoryOutputItem) {
-		const {
-			voter,
-			votingPower,
-			action,
-			candidate,
-			voteTimestamp,
-			transactionId
-		} = item;
-
-		const dto = {
-			voter,
-			votingPower: votingPower.toString(),
-			action,
-			candidate,
-			voteTimestamp,
-			transactionId
-		};
-
-		return removeUndefinedProperties<CandidatesVotersHistoryOutputItem>(dto);
-	}
+    return removeUndefinedProperties<VotesModel>(result);
+  }
 }

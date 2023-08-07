@@ -1,4 +1,4 @@
-import { log } from '@alien-worlds/api-core';
+import { log } from '@alien-worlds/aw-core';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { Environment } from './config.types';
@@ -47,7 +47,9 @@ export const parseEnvFile = (buffer: Buffer | string): Environment => {
 export const readEnvFile = (envPath?: string): Environment => {
   try {
     const env: Environment = parseEnvFile(
-      readFileSync(envPath || path.resolve(process.cwd(), '.env'), { encoding: 'utf8' })
+      readFileSync(envPath || path.resolve(process.cwd(), '.env'), {
+        encoding: 'utf8',
+      })
     );
     return env;
   } catch (error) {

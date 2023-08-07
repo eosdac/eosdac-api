@@ -1,84 +1,63 @@
-import {
-  DacDirectory,
-  IndexWorldsContract,
-} from '@alien-worlds/dao-api-common';
-import { Failure, inject, injectable, Result } from '@alien-worlds/api-core';
-import { config } from '@config';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
+import { Failure, inject, injectable } from '@alien-worlds/aw-core';
 import { GetCustodiansInput } from './models/get-custodians.input';
 import { GetCustodiansOutput } from './models/get-custodians.output';
 import { ListCustodianProfilesUseCase } from './use-cases/list-custodian-profiles.use-case';
+import { loadDacConfig } from '@common/utils/dac.utils';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
-import { isEmptyArray } from '@common/utils/dto.utils';
-
-/*imports*/
 
 /**
+ * Represents the controller for handling custodians.
  * @class
- *
- *
  */
 @injectable()
 export class CustodiansController {
   public static Token = 'CUSTODIANS_CONTROLLER';
 
+  /**
+   * Creates an instance of CustodiansController.
+   * @constructor
+   * @param {IndexWorldsCommon.Services.IndexWorldsContractService} indexWorldsContractService - The service for the Index Worlds contract.
+   * @param {ListCustodianProfilesUseCase} listCustodianProfilesUseCase - The use case for listing custodian profiles.
+   */
   constructor(
-    /*injections*/
-    @inject(IndexWorldsContract.Services.IndexWorldsContractService.Token)
-    private indexWorldsContractService: IndexWorldsContract.Services.IndexWorldsContractService,
+    @inject(IndexWorldsCommon.Services.IndexWorldsContractService.Token)
+    private indexWorldsContractService: IndexWorldsCommon.Services.IndexWorldsContractService,
 
     @inject(ListCustodianProfilesUseCase.Token)
     private listCustodianProfilesUseCase: ListCustodianProfilesUseCase
   ) {}
 
-  /*methods*/
-
   /**
+   * Lists custodians along with their profiles for a given DAC ID.
    *
-   * @returns {Promise<Result<GetCustodiansOutput, Error>>}
+   * @async
+   * @public
+   * @param {GetCustodiansInput} input - The input data containing the DAC ID.
+   * @returns {Promise<GetCustodiansOutput>} - A Promise that resolves to a GetCustodiansOutput containing an array of custodian profiles or a failure object in case of an error.
    */
-  public async list(
-    input: GetCustodiansInput
-  ): Promise<Result<GetCustodiansOutput, Error>> {
+  public async list(input: GetCustodiansInput): Promise<GetCustodiansOutput> {
     const { dacId } = input;
-    const dacConfig = await this.loadDacConfig(input.dacId);
+
+    const { content: dacConfig } = await loadDacConfig(
+      this.indexWorldsContractService,
+      input.dacId
+    );
 
     if (!dacConfig) {
-      return Result.withFailure(Failure.fromError(new LoadDacConfigError()));
+      return GetCustodiansOutput.create(
+        [],
+        Failure.fromError(new LoadDacConfigError())
+      );
     }
 
     const { content: profiles, failure } =
       await this.listCustodianProfilesUseCase.execute(dacId, dacConfig);
 
     if (failure) {
-      return Result.withFailure(failure);
+      return GetCustodiansOutput.create([], failure);
     }
 
-    return Result.withContent(GetCustodiansOutput.create(profiles));
+    return GetCustodiansOutput.create(profiles);
   }
-
-  private loadDacConfig = async dacId => {
-    const dac_config_cache = config.dac.nameCache.get(dacId);
-
-    if (dac_config_cache) {
-      console.info(`Returning cached dac info`);
-      return dac_config_cache;
-    } else {
-      const result = await this.indexWorldsContractService.fetchDac({
-        scope: config.eos.dacDirectoryContract,
-        limit: 1,
-        lower_bound: dacId,
-        upper_bound: dacId,
-      });
-
-      if (result.isFailure || isEmptyArray(result.content)) {
-        console.warn(`Could not find dac with ID ${dacId}`);
-        return null;
-      }
-
-      const dacConfig = DacDirectory.fromStruct(result.content[0]);
-      config.dac.nameCache.set(dacId, dacConfig);
-
-      return dacConfig;
-    }
-  };
 }

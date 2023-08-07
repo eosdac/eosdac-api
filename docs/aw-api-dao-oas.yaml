@@ -1,0 +1,1571 @@
+openapi: 3.0.0
+info:
+  title: aw-api-dao
+  description: >-
+    This document describes APIs for DAO related operations.
+
+
+    All paths are prefixed with `/v2/dao`.
+
+
+    The old prefix i.e. `/v1/eosdac` is currently supported but it will soon be
+    permanently removed.  
+
+    API clients are encouraged to start migrating their apps to utilise the new
+    prefix.
+  version: 1.0.0
+servers:
+  - url: https://dao-api-test.alienworlds.io/v2/dao
+    description: Test server
+  - url: https://dao-api.alienworlds.io/v2/dao
+    description: Production DAO API server
+  - url: https://api.alienworlds.io/v2/dao
+    description: Producton API server
+paths:
+  /dacs:
+    get:
+      tags:
+        - default
+      summary: List all DACs and their respective info
+      description: >-
+        Provides list of all available DACs along with their respective detailed
+        information e.g. balance, statistics and globals.
+      parameters:
+        - name: dacId
+          in: query
+          schema:
+            type: string
+          description: 'Filter the list by dacId. <br><br>[length: 5-6 characters]'
+          example: eyeke
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: 'Maximum items to return. <br><br>[min: 1]'
+          example: '2'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: list all dacs
+                  value:
+                    results:
+                      - dacId: eyeke
+                        owner: eyeke.dac
+                        title: Eyeke
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: EYE
+                          precision: 4
+                        refs:
+                          '12': QmUXjmrQ6j2ukCdPjacdQ48MmYo853u4Y5y3kb5b4HBuuF
+                          logoUrl: QmW1SeninpNQUMLstTPFTv7tMkRdBZMHBJTgf17Znr1uKK
+                          description: >-
+                            Also known as Second Earth or Terra Alterna as it is
+                            the nearest, and closest, of all Alien Worlds to
+                            Earth. Humans found Eyeke inhabited by a Monastic
+                            order of Greys who believe that Eyeke is a spiritual
+                            place. Despite initial fears, Trilium mining seems
+                            to be tolerated by the Monks at this time.
+                        accounts:
+                          auth: eyeke.world
+                          treasury: eyeke.world
+                          custodian: dao.worlds
+                          msigOwned: eyeke.dac
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: eyeke.dac
+                        dacTreasury:
+                          balance: 8148085.9744 TLM
+                        dacStats:
+                          supply: 9221737.242 EYE
+                          maxSupply: 10000000000 EYE
+                          issuer: federation
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '2023-07-26T05:07:45'
+                          lastPeriodTime: '2023-07-26T02:39:14'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 EYE
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 16
+                          numElected: 5
+                          periodLength: 604800
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: '421963069221'
+                          totalWeightOfVotes: '84755997865'
+                          voteQuorumPercent: 1
+                      - dacId: kavian
+                        owner: kavian.dac
+                        title: Kavian
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: KAV
+                          precision: 4
+                        refs:
+                          '12': QmdihYLTt6T1G3N9jHs1bnUSGRTZHyQJPYwh9edLsnjPiK
+                          logoUrl: QmY9n6yWcyYLKJuZ2EVnL1m7iSFovA1GCabhgDa4H1gbZN
+                          description: >-
+                            Although most land on Kavian is rocky and icy, there
+                            are some unusual areas where  diverse bio-systems
+                            have flourished. Legend has it that these areas were
+                            terraformed by ancient aliens. Kavian has a number
+                            of small Reptiloid villages.
+                        accounts:
+                          auth: kavian.world
+                          treasury: kavian.world
+                          custodian: dao.worlds
+                          msigOwned: kavian.dac
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: kavian.dac
+                        dacTreasury:
+                          balance: 15943979.9359 TLM
+                        dacStats:
+                          supply: 9017494.2203 KAV
+                          maxSupply: 10000000000 KAV
+                          issuer: federation
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '2023-07-26T14:46:11'
+                          lastPeriodTime: '2023-07-26T02:39:14'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 KAV
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 12
+                          numElected: 5
+                          periodLength: 604800
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: '287041240908'
+                          totalWeightOfVotes: '57935556857'
+                          voteQuorumPercent: 1
+                      - dacId: magor
+                        owner: magor.dac
+                        title: Magor
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: MAG
+                          precision: 4
+                        refs:
+                          '12': Qmd41ZeVAzUoaVbvuEYcuTm3D2j2rwNJ8WjSnrFk7TneAq
+                          logoUrl: QmTSecCGktdAt7xLZs7vqiXuxe3zMNpvsSy16LQ7ShwNN5
+                          description: >-
+                            Magor has the most hostile planetary environment in
+                            the federation. Due to the volcanic activity, the
+                            sky is covered in smoke and the terrain is extremely
+                            mountainous. There are no permanent settlements but
+                            the sandy part of Magor is considered an anomaly; It
+                            is rumoured that the sand covers many ancient
+                            secrets.
+                        accounts:
+                          auth: magor.world
+                          treasury: magor.world
+                          custodian: dao.worlds
+                          msigOwned: magor.dac
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: magor.dac
+                        dacTreasury:
+                          balance: 7802897.1845 TLM
+                        dacStats:
+                          supply: 6310323.5658 MAG
+                          maxSupply: 10000000000 MAG
+                          issuer: federation
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '2023-07-26T02:40:14'
+                          lastPeriodTime: '2023-07-26T02:39:14'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 MAG
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 17
+                          numElected: 5
+                          periodLength: 604800
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: '197495629715'
+                          totalWeightOfVotes: '41143031533'
+                          voteQuorumPercent: 1
+                      - dacId: naron
+                        owner: naron.dac
+                        title: Naron
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: NAR
+                          precision: 4
+                        refs:
+                          '12': QmX2ui6n2thrF1JZuDfsu3VHsMCHhzQe3CxsJ3raUnjsPj
+                          logoUrl: QmRNzgY1gBqAS3H7nadRNg19g6aTW8hqB2EJCMX8nXFcpx
+                          description: >-
+                            Naron is also a striped planet and it's geological
+                            structure has given rise to distinctive bands of
+                            environments. Large icy caps give way to mountainous
+                            terrains on both hemispheres. Then come rocky and
+                            grassy terrains with 2 huge lakes and sandy desert
+                            nearer the equator. The island in the largest lake
+                            (Lake Nyari) is held sacred by many alien races and
+                            has rival claims have caused major conflicts.
+                        accounts:
+                          auth: naron.world
+                          treasury: naron.world
+                          custodian: dao.worlds
+                          msigOwned: naron.dac
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: naron.dac
+                        dacTreasury:
+                          balance: 8292655.1424 TLM
+                        dacStats:
+                          supply: 9990612.5942 NAR
+                          maxSupply: 10000000000 NAR
+                          issuer: federation
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '2023-07-29T13:04:31'
+                          lastPeriodTime: '2023-07-26T02:39:14'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 NAR
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 18
+                          numElected: 5
+                          periodLength: 604800
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: '161054465541'
+                          totalWeightOfVotes: '41148463271'
+                          voteQuorumPercent: 1
+                      - dacId: nerix
+                        owner: neri.dac
+                        title: Neri
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: NER
+                          precision: 4
+                        refs:
+                          '12': QmWeJmvhfG3WioNYCRwM9584xEd5tJU8cihXNRGncLz3xg
+                          logoUrl: QmbpdwnKXR2YHkgo7vQSvrQUbMJ4QYJMiAXKs8hj26XyNW
+                          description: >-
+                            A striped planet with largest forest and sandy
+                            areas, Neri also has some of the largest areas of
+                            methane swamplands. Large numbers of little green
+                            people have made the forests of Neri their home but
+                            they aim to live in balance with nature so casual
+                            visitors may not even notice the colonies.
+                        accounts:
+                          auth: neri.world
+                          treasury: neri.world
+                          custodian: dao.worlds
+                          msigOwned: neri.dac
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: neri.dac
+                        dacTreasury:
+                          balance: 20999014.8565 TLM
+                        dacStats:
+                          supply: 12576663.9948 NER
+                          maxSupply: 10000000000 NER
+                          issuer: federation
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '2023-07-26T07:18:52'
+                          lastPeriodTime: '2023-07-26T02:39:14'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 NER
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 21
+                          numElected: 5
+                          periodLength: 604800
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: '334834616185'
+                          totalWeightOfVotes: '68860425592'
+                          voteQuorumPercent: 1
+                      - dacId: testa
+                        owner: testadacdacc
+                        title: Test A
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: TESTA
+                          precision: 4
+                        refs:
+                          '12': QmPWAMikwcE6CCEiZ7VtoET1Lp5NT1Z7gvNk31stNSgLbN
+                          logoUrl: QmSVnZ6gLCGTqwWeDuGnD8XqT7iBMfnwiZhD8eNcNwvcZ4
+                          description: >-
+                            This would be the description of Test A DAO. This
+                            text is simply a place holder. The image and the map
+                            image has been copied from Veles for convenience.
+                        accounts:
+                          auth: testdaca.dac
+                          treasury: testdaca.dac
+                          custodian: dao.worlds
+                          msigOwned: testadacdacc
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: testadacdacc
+                        dacTreasury:
+                          balance: 1459.5258 TLM
+                        dacStats:
+                          supply: 11000000 TESTA
+                          maxSupply: 10000000000 TESTA
+                          issuer: ameet.worlds
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '2023-02-27T14:45:01'
+                          lastPeriodTime: '2023-06-23T16:16:23'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 TESTA
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 19
+                          numElected: 5
+                          periodLength: 60
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: '52411712359'
+                          totalWeightOfVotes: '8365320037'
+                          voteQuorumPercent: 1
+                      - dacId: testb
+                        owner: testb.dac
+                        title: Test B
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: TESTB
+                          precision: 4
+                        refs: {}
+                        accounts:
+                          treasury: testbdacdacc
+                          custodian: dao.worlds
+                          msigOwned: testb.dac
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: testb.dac
+                        dacStats:
+                          supply: 1000000000 TESTB
+                          maxSupply: 10000000000 TESTB
+                          issuer: ameet.worlds
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '1970-01-01T00:00:00'
+                          lastPeriodTime: '2022-10-16T11:49:49'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 TESTB
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 12
+                          numElected: 5
+                          periodLength: 60
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: 1002777776
+                          totalWeightOfVotes: 1000000000
+                          voteQuorumPercent: 1
+                      - dacId: veles
+                        owner: veles.dac
+                        title: Veles
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: VEL
+                          precision: 4
+                        refs:
+                          '12': QmPWAMikwcE6CCEiZ7VtoET1Lp5NT1Z7gvNk31stNSgLbN
+                          logoUrl: QmSVnZ6gLCGTqwWeDuGnD8XqT7iBMfnwiZhD8eNcNwvcZ4
+                          description: >-
+                            With almost as much of a water world as Earth, Veles
+                            has some of the most beautiful landscapes found thus
+                            far in the universe. It's islands are home to some
+                            unique exoflora. Nordic aliens often visit Veles on
+                            their travels and some have made it their main home.
+                        accounts:
+                          auth: veles.world
+                          treasury: veles.world
+                          custodian: dao.worlds
+                          msigOwned: veles.dac
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: veles.dac
+                        dacTreasury:
+                          balance: 7381439.3068 TLM
+                        dacStats:
+                          supply: 4233130.028 VEL
+                          maxSupply: 10000000000 VEL
+                          issuer: federation
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '2023-07-29T23:47:39'
+                          lastPeriodTime: '2023-07-26T02:39:14'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 VEL
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 14
+                          numElected: 5
+                          periodLength: 604800
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: '116315151726'
+                          totalWeightOfVotes: '24001359597'
+                          voteQuorumPercent: 1
+                    count: 8
+                example-1:
+                  summary: filter by dacId
+                  value:
+                    results:
+                      - dacId: kavian
+                        owner: kavian.dac
+                        title: Kavian
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: KAV
+                          precision: 4
+                        refs:
+                          '12': QmdihYLTt6T1G3N9jHs1bnUSGRTZHyQJPYwh9edLsnjPiK
+                          logoUrl: QmY9n6yWcyYLKJuZ2EVnL1m7iSFovA1GCabhgDa4H1gbZN
+                          description: >-
+                            Although most land on Kavian is rocky and icy, there
+                            are some unusual areas where  diverse bio-systems
+                            have flourished. Legend has it that these areas were
+                            terraformed by ancient aliens. Kavian has a number
+                            of small Reptiloid villages.
+                        accounts:
+                          auth: kavian.world
+                          treasury: kavian.world
+                          custodian: dao.worlds
+                          msigOwned: kavian.dac
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: kavian.dac
+                        dacTreasury:
+                          balance: 15943979.9359 TLM
+                        dacStats:
+                          supply: 9017494.2203 KAV
+                          maxSupply: 10000000000 KAV
+                          issuer: federation
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '2023-07-26T14:46:11'
+                          lastPeriodTime: '2023-07-26T02:39:14'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 KAV
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 12
+                          numElected: 5
+                          periodLength: 604800
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: '287041240908'
+                          totalWeightOfVotes: '57935556857'
+                          voteQuorumPercent: 1
+                    count: 1
+                example-2:
+                  summary: apply limit to list
+                  value:
+                    results:
+                      - dacId: eyeke
+                        owner: eyeke.dac
+                        title: Eyeke
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: EYE
+                          precision: 4
+                        refs:
+                          '12': QmUXjmrQ6j2ukCdPjacdQ48MmYo853u4Y5y3kb5b4HBuuF
+                          logoUrl: QmW1SeninpNQUMLstTPFTv7tMkRdBZMHBJTgf17Znr1uKK
+                          description: >-
+                            Also known as Second Earth or Terra Alterna as it is
+                            the nearest, and closest, of all Alien Worlds to
+                            Earth. Humans found Eyeke inhabited by a Monastic
+                            order of Greys who believe that Eyeke is a spiritual
+                            place. Despite initial fears, Trilium mining seems
+                            to be tolerated by the Monks at this time.
+                        accounts:
+                          auth: eyeke.world
+                          treasury: eyeke.world
+                          custodian: dao.worlds
+                          msigOwned: eyeke.dac
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: eyeke.dac
+                        dacTreasury:
+                          balance: 8148085.9744 TLM
+                        dacStats:
+                          supply: 9221737.242 EYE
+                          maxSupply: 10000000000 EYE
+                          issuer: federation
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '2023-07-26T05:07:45'
+                          lastPeriodTime: '2023-07-26T02:39:14'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 EYE
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 16
+                          numElected: 5
+                          periodLength: 604800
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: '421963069221'
+                          totalWeightOfVotes: '84755997865'
+                          voteQuorumPercent: 1
+                      - dacId: kavian
+                        owner: kavian.dac
+                        title: Kavian
+                        isDacActive: false
+                        symbol:
+                          contract: token.worlds
+                          code: KAV
+                          precision: 4
+                        refs:
+                          '12': QmdihYLTt6T1G3N9jHs1bnUSGRTZHyQJPYwh9edLsnjPiK
+                          logoUrl: QmY9n6yWcyYLKJuZ2EVnL1m7iSFovA1GCabhgDa4H1gbZN
+                          description: >-
+                            Although most land on Kavian is rocky and icy, there
+                            are some unusual areas where  diverse bio-systems
+                            have flourished. Legend has it that these areas were
+                            terraformed by ancient aliens. Kavian has a number
+                            of small Reptiloid villages.
+                        accounts:
+                          auth: kavian.world
+                          treasury: kavian.world
+                          custodian: dao.worlds
+                          msigOwned: kavian.dac
+                          proposals: prop.worlds
+                          escrow: escrw.worlds
+                          voteWeight: stkvt.worlds
+                          activation: newperiodctl
+                          referendum: ref.worlds
+                          spendings: kavian.dac
+                        dacTreasury:
+                          balance: 15943979.9359 TLM
+                        dacStats:
+                          supply: 9017494.2203 KAV
+                          maxSupply: 10000000000 KAV
+                          issuer: federation
+                          transferLocked: false
+                        electionGlobals:
+                          authThresholdHigh: 3
+                          authThresholdLow: 2
+                          authThresholdMid: 3
+                          budgetPercentage: 200
+                          initialVoteQuorumPercent: 2
+                          lastClaimBudgetTime: '2023-07-26T14:46:11'
+                          lastPeriodTime: '2023-07-26T02:39:14'
+                          lockupReleaseTimeDelay: 1
+                          lockupAsset:
+                            quantity: 5000.0000 KAV
+                            contract: token.worlds
+                          maxVotes: 2
+                          metInitialVotesThreshold: 1
+                          numberActiveCandidates: 12
+                          numElected: 5
+                          periodLength: 604800
+                          requestedPayMax:
+                            quantity: 0.0000 TLM
+                            contract: alien.worlds
+                          shouldPayViaServiceProvider: 0
+                          tokenSupplyTheshold: 100000000
+                          totalVotesOnCandidates: '287041240908'
+                          totalWeightOfVotes: '57935556857'
+                          voteQuorumPercent: 1
+                    count: 2
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - short dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have fewer than 5 characters
+                example-1:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have more than 6 characters
+                example-2:
+                  summary: 400 - invalid limit
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/limit must be >= 1
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: >-
+                  Data with dummy in scope: 'index.worlds' table: 'dacs' scope
+                  not found
+  /{dacId}/profile:
+    get:
+      tags:
+        - default
+      summary: Get member profile
+      description: Get user profile
+      parameters:
+        - name: account
+          in: query
+          schema:
+            type: string
+          required: true
+          description: >-
+            Account(s) to fetch. It can accept multiple accounts separated by a
+            comma. <br><br>[min length: 1]
+          example: suzqu.wam,mgaqy.wam
+        - name: dacId
+          in: path
+          schema:
+            type: string
+          required: true
+          description: 'DAC Id. <br><br>[Required] [length: 5-6 characters]'
+          example: nerix
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: single account
+                  value:
+                    results:
+                      - blockNumber: '105578904'
+                        account: suzqu.wam
+                        profile:
+                          description: I am squanching in here
+                          familyName: Squanch
+                          givenName: Squanchy
+                          image: >-
+                            https://vignette1.wikia.nocookie.net/rickandmorty/images/5/56/S2e10_squanchy_close.png/revision/latest?cb=20160923052032
+                    count: 1
+                example-1:
+                  summary: flagged candidate
+                  value:
+                    results:
+                      - account: awtesteroo12
+                        error:
+                          name: Redacted Candidate
+                          body: >-
+                            Candidate "awtesteroo12" profile has been flagged
+                            for supplying inappropriate content.
+                    count: 1
+                example-2:
+                  summary: multiple accounts
+                  value:
+                    results:
+                      - blockNumber: '209788070'
+                        account: mgaqy.wam
+                        profile:
+                          description: "Together We Grow\_\n\nThe Goiter is the longest standing political party in all of Alien Worlds. We predate everyone and stand fast to all commitments. \n\nDon't worry, you can trust us....\n\nt.me/thegoiter\nhttps://twitter.com/nftstan"
+                          givenName: The Goiter
+                          image: >-
+                            https://gateway.pinata.cloud/ipfs/Qmci9dg78RySNm3dbQuSynd7PuEbiaUFdaWwQV7WTZDAxu
+                      - blockNumber: '105578904'
+                        account: suzqu.wam
+                        profile:
+                          description: I am squanching in here
+                          familyName: Squanch
+                          givenName: Squanchy
+                          image: >-
+                            https://vignette1.wikia.nocookie.net/rickandmorty/images/5/56/S2e10_squanchy_close.png/revision/latest?cb=20160923052032
+                    count: 2
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - missing account
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/account must NOT have fewer than 1 characters
+                example-1:
+                  summary: 400 - missing dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have fewer than 5 characters
+                example-2:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have more than 6 characters
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: profile not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                results: []
+                count: 0
+  /{dacId}/candidates:
+    get:
+      tags:
+        - default
+      summary: Get candidates by planet
+      description: Get candidates
+      parameters:
+        - name: dacId
+          in: path
+          schema:
+            type: string
+          required: true
+          description: 'DAC Id. <br><br>[Required] [length: 5-6 characters]'
+          example: nerix
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - account: .p2bu.wam
+                  requestedpay: 0 TLM
+                  votePower: 9123638
+                  rank: 6882300
+                  isActive: true
+                  totalVotes: 19
+                  voteDecay: 16
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: 2dybi.wam
+                  requestedpay: 0 TLM
+                  votePower: 3
+                  rank: 6670369
+                  isActive: true
+                  totalVotes: 3
+                  voteDecay: 6
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: a52qw.wam
+                  requestedpay: 0 TLM
+                  votePower: 17118124
+                  rank: 6895312
+                  isActive: true
+                  totalVotes: 369
+                  voteDecay: 5
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: b52qw.wam
+                  requestedpay: 0 TLM
+                  votePower: 14320239
+                  rank: 6888855
+                  isActive: true
+                  totalVotes: 271
+                  voteDecay: 16
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: bsskq.c.wam
+                  requestedpay: 0 TLM
+                  votePower: 5453
+                  rank: 6780202
+                  isActive: true
+                  totalVotes: 2
+                  voteDecay: 1
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: c353u.c.wam
+                  requestedpay: 0 TLM
+                  votePower: 0
+                  rank: 0
+                  isActive: true
+                  totalVotes: 0
+                  voteDecay: null
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: e3yqy.wam
+                  requestedpay: 0 TLM
+                  votePower: 26722
+                  rank: 6746255
+                  isActive: true
+                  totalVotes: 5
+                  voteDecay: 172
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: gtanu.c.wam
+                  requestedpay: 0 TLM
+                  votePower: 25000
+                  rank: 6714308
+                  isActive: true
+                  totalVotes: 4
+                  voteDecay: 265
+                  signedDaoTermsVersion: 3
+                  hasSignedCurrentDaoTerms: false
+                  isFlagged: false
+                  dacId: nerix
+                - account: i4p3u.c.wam
+                  requestedpay: 0 TLM
+                  votePower: 6842525
+                  rank: 6883401
+                  isActive: true
+                  totalVotes: 11
+                  voteDecay: 1
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: ihvb2.wam
+                  requestedpay: 0 TLM
+                  votePower: 7263
+                  rank: 6768207
+                  isActive: true
+                  totalVotes: 6
+                  voteDecay: 50
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: jyora.wam
+                  requestedpay: 0 TLM
+                  votePower: 122
+                  rank: 6631069
+                  isActive: true
+                  totalVotes: 5
+                  voteDecay: 284
+                  signedDaoTermsVersion: 3
+                  hasSignedCurrentDaoTerms: false
+                  isFlagged: false
+                  dacId: nerix
+                - account: mgaqy.wam
+                  requestedpay: 0 TLM
+                  votePower: 57164
+                  rank: 6762040
+                  isActive: true
+                  totalVotes: 4
+                  voteDecay: 158
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: mu5xq.wam
+                  requestedpay: 0 TLM
+                  votePower: 0
+                  rank: 0
+                  isActive: true
+                  totalVotes: 0
+                  voteDecay: null
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: neyau.wam
+                  requestedpay: 0 TLM
+                  votePower: 71083
+                  rank: 6795646
+                  isActive: true
+                  totalVotes: 21
+                  voteDecay: 66
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: pwxue.wam
+                  requestedpay: 0 TLM
+                  votePower: 25000
+                  rank: 6797954
+                  isActive: true
+                  totalVotes: 2
+                  voteDecay: 14
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: qstm4.wam
+                  requestedpay: 0 TLM
+                  votePower: 2378218
+                  rank: 6847626
+                  isActive: true
+                  totalVotes: 14
+                  voteDecay: 62
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: rlxqw.wam
+                  requestedpay: 0 TLM
+                  votePower: 14844659
+                  rank: 6890686
+                  isActive: true
+                  totalVotes: 51
+                  voteDecay: 12
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: t1dbe.wam
+                  requestedpay: 0 TLM
+                  votePower: 1689
+                  rank: 6746763
+                  isActive: true
+                  totalVotes: 3
+                  voteDecay: 51
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: x4iqw.wam
+                  requestedpay: 0 TLM
+                  votePower: 128013
+                  rank: 6771688
+                  isActive: true
+                  totalVotes: 8
+                  voteDecay: 164
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: yciky.c.wam
+                  requestedpay: 0 TLM
+                  votePower: 5446
+                  rank: 6727232
+                  isActive: true
+                  totalVotes: 1
+                  voteDecay: 160
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: zbo2m.c.wam
+                  requestedpay: 0 TLM
+                  votePower: 37758
+                  rank: 6726016
+                  isActive: true
+                  totalVotes: 2
+                  voteDecay: 248
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - missing dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have fewer than 5 characters
+                example-1:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have more than 6 characters
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+              example: []
+  /{dacId}/custodians:
+    get:
+      tags:
+        - default
+      summary: Get custodians by planet
+      description: Get custodians for the provided planet
+      parameters:
+        - name: dacId
+          in: path
+          schema:
+            type: string
+          required: true
+          description: 'DAC Id. <br><br>[Required] [length: 5-6 characters]'
+          example: nerix
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - account: .p2bu.wam
+                  requestedpay: 0 TLM
+                  votePower: 9124138
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: a52qw.wam
+                  requestedpay: 0 TLM
+                  votePower: 17116881
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: b52qw.wam
+                  requestedpay: 0 TLM
+                  votePower: 14318693
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: i4p3u.c.wam
+                  requestedpay: 0 TLM
+                  votePower: 6842432
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+                - account: rlxqw.wam
+                  requestedpay: 0 TLM
+                  votePower: 14844811
+                  signedDaoTermsVersion: 5
+                  hasSignedCurrentDaoTerms: true
+                  isFlagged: false
+                  dacId: nerix
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - short dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have fewer than 5 characters
+                example-1:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /params/dacId must NOT have more than 6 characters
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+              example: []
+  /candidates_voters_history:
+    get:
+      tags:
+        - default
+      summary: Votes history - candidate's or custodian's perspective
+      parameters:
+        - name: dacId
+          in: query
+          schema:
+            type: string
+          required: true
+          description: 'DAC Id. <br><br>[length: 5-6 characters]'
+          example: nerix
+        - name: candidateId
+          in: query
+          schema:
+            type: string
+          required: true
+          description: 'Wallet Id of candidate or custodian. <br><br>[min length: 1]'
+          example: 51mqs.wam
+        - name: skip
+          in: query
+          schema:
+            type: integer
+          description: 'Number of items to skip. [min: 0]'
+          example: '0'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: 'Maximum items to return. <br><br>[min: 1]'
+          example: '5'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: votes history
+                  value:
+                    results:
+                      - voter: tl2aw.wam
+                        votingPower: '0'
+                        action: votecust
+                        candidate: 51mqs.wam
+                        voteTimestamp: '2022-10-20T15:55:46.000Z'
+                        transactionId: >-
+                          81A90E17CCEC6BC418E83C9E300695B563587BBD2A7A77FA0A0B95731C514A92
+                      - voter: pwxue.wam
+                        votingPower: '0'
+                        action: votecust
+                        candidate: 51mqs.wam
+                        voteTimestamp: '2022-10-20T16:33:59.000Z'
+                        transactionId: >-
+                          2DAAD670A587BF5B8EC36E71C41DAC9DAF8EBA11ABBA36F664CCC04F2E517166
+                      - voter: 51mqs.wam
+                        votingPower: '0'
+                        action: votecust
+                        candidate: 51mqs.wam
+                        voteTimestamp: '2022-10-20T16:49:20.000Z'
+                        transactionId: >-
+                          0839C6563259A7C1B2F7FF1456B662D9E0D31110FB54537742715D4168C9522D
+                      - voter: bptls.c.wam
+                        votingPower: '0'
+                        action: votecust
+                        candidate: 51mqs.wam
+                        voteTimestamp: '2022-10-20T16:50:28.000Z'
+                        transactionId: >-
+                          7416D9444EB0D2951B4BC512ED98021AF3B71670E1344F7C218CACFD68FDE08C
+                      - voter: s.h.y.c.wam
+                        votingPower: '0'
+                        action: votecust
+                        candidate: 51mqs.wam
+                        voteTimestamp: '2022-10-20T18:47:21.000Z'
+                        transactionId: >-
+                          9473E0494F769B0CF2AD506C52245C921726DE92C1008FA234071AFC070DD6FB
+                    total: 579
+                example-1:
+                  summary: invalid dacId
+                  value:
+                    results: []
+                    total: 0
+                example-2:
+                  summary: invalid candidate Id
+                  value:
+                    results: []
+                    total: 0
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - missing dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query must have required property 'dacId'
+                example-1:
+                  summary: 400 - short dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have fewer than 5 characters
+                example-2:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have more than 6 characters
+                example-3:
+                  summary: 400 - missing candidate Id
+                  value:
+                    message: bad request
+                    errors:
+                      - /query must have required property 'candidateId'
+                example-4:
+                  summary: 400 - negative skip
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/skip must be >= 0
+                example-5:
+                  summary: 400 - skip wrong data type
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/skip must be integer
+                example-6:
+                  summary: 400 - invalid limit
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/limit must be >= 1
+                example-7:
+                  summary: 400 - limit wrong data type
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/limit must be integer
+  /voting_history:
+    get:
+      tags:
+        - default
+      summary: Votes history - voter's perspective
+      parameters:
+        - name: dacId
+          in: query
+          schema:
+            type: string
+          required: true
+          description: 'DAC Id. <br><br>[length: 5-6 characters]'
+          example: nerix
+        - name: voter
+          in: query
+          schema:
+            type: string
+          required: true
+          description: 'Wallet Id of voter. <br><br>[min length: 1]'
+          example: .1uqy.wam
+        - name: skip
+          in: query
+          schema:
+            type: integer
+          description: 'Number of items to skip. [min: 0]'
+          example: '0'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: 'Maximum items to return. <br><br>[min: 1]'
+          example: '100'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: votes history
+                  value:
+                    results:
+                      - dacId: nerix
+                        voter: .1uqy.wam
+                        voteTimestamp: '2022-11-22T13:08:31.000Z'
+                        candidate: 51mqs.wam
+                        candidateVotePower: '47476171264'
+                        action: voted
+                      - dacId: nerix
+                        voter: .1uqy.wam
+                        voteTimestamp: '2022-11-22T13:08:31.000Z'
+                        candidate: a52qw.wam
+                        candidateVotePower: '40472384237'
+                        action: voted
+                    count: 2
+                example-1:
+                  summary: invalid dacId
+                  value:
+                    results: []
+                    count: 0
+                example-2:
+                  summary: invalid voter
+                  value:
+                    results: []
+                    count: 0
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: 400 - missing dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query must have required property 'dacId'
+                example-1:
+                  summary: 400 - short dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have fewer than 5 characters
+                example-2:
+                  summary: 400 - long dacId
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/dacId must NOT have more than 6 characters
+                example-3:
+                  summary: 400 - missing voter id
+                  value:
+                    message: bad request
+                    errors:
+                      - /query must have required property 'voter'
+                example-4:
+                  summary: 400 - short voter id
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/voter must NOT have fewer than 1 characters
+                example-5:
+                  summary: 400 - negative skip
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/skip must be >= 0
+                example-6:
+                  summary: 400 - skip wrong data type
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/skip must be integer
+                example-7:
+                  summary: 400 - invalid limit
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/limit must be >= 1
+                example-8:
+                  summary: 400 - limit wrong data type
+                  value:
+                    message: bad request
+                    errors:
+                      - /query/limit must be integer
+  /health:
+    get:
+      tags:
+        - default
+      summary: Server health status
+      description: Responds with server health status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: OK
+                version: 2.0.0
+                timestamp: '2023-08-01T11:07:22.373Z'
+                uptimeSeconds: 2125
+                nodeVersion: v19.7.0
+                dependencies:
+                  '@alien-worlds/aw-antelope': ^0.0.30
+                  '@alien-worlds/aw-contract-alien-worlds': ^0.0.18
+                  '@alien-worlds/aw-contract-dao-worlds': ^0.0.28
+                  '@alien-worlds/aw-contract-index-worlds': ^0.0.26
+                  '@alien-worlds/aw-contract-stkvt-worlds': ^0.0.20
+                  '@alien-worlds/aw-contract-token-worlds': ^0.0.29
+                  '@alien-worlds/aw-core': ^0.0.6
+                  '@alien-worlds/aw-storage-mongodb': ^0.0.6
+                  '@fastify/swagger': 6.1.1
+                  '@shelf/winston-datadog-logs-transport': ^1.0.7
+                  ajv: ^8.12.0
+                  change-case: ^4.1.2
+                  dotenv: ^16.0.2
+                  fastify: ^3.25.0
+                  fastify-cors: ^6.0.2
+                  newrelic: ^10.1.0
+                  node-fetch: 2.6.11
+                  postman-to-openapi: ^3.0.1
+                  reflect-metadata: ^0.1.13
+                  ts-mockito: ^2.6.1
+                  winston: ^3.2.1
+                database:
+                  mongodb: OK
+                historyApi:
+                  currentBlockNumber: '-1'
+                  status: FAILED
+  /ping:
+    get:
+      tags:
+        - default
+      summary: Ping
+      description: Responds with server health status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                ping: pong

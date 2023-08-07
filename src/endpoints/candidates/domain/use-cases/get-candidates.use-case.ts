@@ -1,37 +1,41 @@
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
-import { DaoWorldsContract } from '@alien-worlds/dao-api-common';
+import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 
-const {
-  Entities: { Candidate },
-} = DaoWorldsContract.Deltas;
-
-/*imports*/
 /**
+ * Represents a use case for retrieving candidates for a specific DAC.
  * @class
+ * @implements {UseCase<DaoWorldsCommon.Deltas.Entities.Candidates[]>}
  */
 @injectable()
 export class GetCandidatesUseCase
-  implements UseCase<DaoWorldsContract.Deltas.Entities.Candidate[]>
+  implements UseCase<DaoWorldsCommon.Deltas.Entities.Candidates[]>
 {
   public static Token = 'GET_CANDIDATES_USE_CASE';
 
+  /**
+   * @constructor
+   * @param {DaoWorldsCommon.Services.DaoWorldsContractService} service - The service used to interact with the DaoWorlds contract.
+   */
   constructor(
-    /*injections*/
-    @inject(DaoWorldsContract.Services.DaoWorldsContractService.Token)
-    private service: DaoWorldsContract.Services.DaoWorldsContractService
+    @inject(DaoWorldsCommon.Services.DaoWorldsContractService.Token)
+    private service: DaoWorldsCommon.Services.DaoWorldsContractService
   ) {}
 
   /**
+   * Executes the GetCandidatesUseCase to retrieve candidates for a specific DAC.
+   *
    * @async
-   * @returns {Promise<Result<Candidate[]>>}
+   * @public
+   * @param {string} dacId - The ID of the DAC to retrieve candidates for.
+   * @param {number} [limit=100] - The maximum number of candidates to retrieve (default: 100).
+   * @returns {Promise<Result<DaoWorldsCommon.Deltas.Entities.Candidates[]>>} - The result containing the array of candidate objects.
    */
   public async execute(
     dacId: string,
     limit = 100
-  ): Promise<Result<DaoWorldsContract.Deltas.Entities.Candidate[]>> {
-    const { content: rows, failure } = await this.service.fetchCandidate({
+  ): Promise<Result<DaoWorldsCommon.Deltas.Entities.Candidates[]>> {
+    const { content: rows, failure } = await this.service.fetchCandidates({
       scope: dacId.toLowerCase(),
-      code: 'dao.worlds',
       limit,
     });
 
@@ -43,11 +47,13 @@ export class GetCandidatesUseCase
       return Result.withContent([]);
     }
 
-    const filteredRows = rows.filter(row => row.is_active);
-    const candidates = filteredRows.map(row => Candidate.fromStruct(row));
+    const candidatesRawMapper =
+      new DaoWorldsCommon.Deltas.Mappers.CandidatesRawMapper();
+
+    const candidates = rows
+      .filter(row => row.is_active)
+      .map(candidatesRawMapper.toEntity);
 
     return Result.withContent(candidates);
   }
-
-  /*methods*/
 }

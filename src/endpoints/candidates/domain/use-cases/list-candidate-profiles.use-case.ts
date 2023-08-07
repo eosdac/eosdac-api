@@ -1,16 +1,16 @@
-import { inject, injectable, Result, UseCase } from '@alien-worlds/api-core';
+import { inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
+
 import { CandidateProfile } from '../entities/candidate-profile';
-import { DacDirectory } from '@alien-worlds/dao-api-common';
+import { Dac } from '@endpoints/dacs/domain/entities/dacs';
 import { GetCandidatesUseCase } from './get-candidates.use-case';
 import { GetMembersAgreedTermsUseCase } from './get-members-agreed-terms.use-case';
 import { GetMemberTermsUseCase } from './get-member-terms.use-case';
 import { GetProfilesUseCase } from '../../../profile/domain/use-cases/get-profiles.use-case';
-import { GetVotedCandidateIdsUseCase } from './get-voted-candidate-ids.use-case';
-import { Profile } from '../../../profile/domain/entities/profile';
 
-/*imports*/
 /**
+ * Represents a use case for listing candidate profiles for a specific DAC.
  * @class
+ * @implements {UseCase<CandidateProfile[]>}
  */
 @injectable()
 export class ListCandidateProfilesUseCase
@@ -18,8 +18,14 @@ export class ListCandidateProfilesUseCase
 {
   public static Token = 'LIST_CANDIDATE_PROFILES_USE_CASE';
 
+  /**
+   * @constructor
+   * @param {GetCandidatesUseCase} getCandidatesUseCase - The use case to get candidates for a specific DAC.
+   * @param {GetProfilesUseCase} getProfilesUseCase - The use case to get profiles for candidate accounts.
+   * @param {GetMemberTermsUseCase} getMemberTermsUseCase - The use case to get member terms for a specific DAC.
+   * @param {GetMembersAgreedTermsUseCase} getMembersAgreedTermsUseCase - The use case to get agreed terms for DAC members.
+   */
   constructor(
-    /*injections*/
     @inject(GetCandidatesUseCase.Token)
     private getCandidatesUseCase: GetCandidatesUseCase,
     @inject(GetProfilesUseCase.Token)
@@ -27,19 +33,21 @@ export class ListCandidateProfilesUseCase
     @inject(GetMemberTermsUseCase.Token)
     private getMemberTermsUseCase: GetMemberTermsUseCase,
     @inject(GetMembersAgreedTermsUseCase.Token)
-    private getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase,
-    @inject(GetVotedCandidateIdsUseCase.Token)
-    private getVotedCandidateIdsUseCase: GetVotedCandidateIdsUseCase
+    private getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase
   ) {}
 
   /**
+   * Executes the ListCandidateProfilesUseCase to list candidate profiles for a specific DAC.
+   *
    * @async
-   * @returns {Promise<Result<CandidateProfile[]>>}
+   * @public
+   * @param {string} dacId - The ID of the DAC to list candidate profiles for.
+   * @param {Dac} dacConfig - The configuration of the DAC.
+   * @returns {Promise<Result<CandidateProfile[]>>} - The result containing the array of candidate profile objects.
    */
   public async execute(
     dacId: string,
-    walletId: string,
-    dacConfig: DacDirectory
+    dacConfig: Dac
   ): Promise<Result<CandidateProfile[]>> {
     const { content: candidates, failure } =
       await this.getCandidatesUseCase.execute(dacId);
@@ -48,21 +56,13 @@ export class ListCandidateProfilesUseCase
       return Result.withFailure(failure);
     }
 
-    const accounts = candidates.map(candidate => candidate.name);
-
-    const { content: votedCandidates, failure: getVotedCandidateIdsFailure } =
-      await this.getVotedCandidateIdsUseCase.execute(dacId, walletId);
-
-    if (getVotedCandidateIdsFailure) {
-      return Result.withFailure(getVotedCandidateIdsFailure);
-    }
-
+    const accounts = candidates.map(candidate => candidate.candidateName);
     const { content: profiles, failure: getProfilesFailure } =
-      await this.getProfilesUseCase.execute({
-        custContract: dacConfig.accounts.custodian,
+      await this.getProfilesUseCase.execute(
+        dacConfig.accounts.custodian,
         dacId,
-        accounts,
-      });
+        accounts
+      );
 
     if (getProfilesFailure) {
       return Result.withFailure(getProfilesFailure);
@@ -85,23 +85,22 @@ export class ListCandidateProfilesUseCase
     const result: CandidateProfile[] = [];
 
     for (const candidate of candidates) {
-      const profile = profiles.find(item => item.id === candidate.name);
-      const agreedTermsVersion = agreedTerms.get(candidate.name);
+      const profile = profiles.find(
+        item => item.id === candidate.candidateName
+      );
+      const agreedTermsVersion = agreedTerms.get(candidate.candidateName);
 
       result.push(
         CandidateProfile.create(
           dacId,
           candidate,
-          profile ? Profile.fromDto(profile.toDocument()) : null,
+          profile || null,
           terms,
-          agreedTermsVersion,
-          votedCandidates
+          agreedTermsVersion
         )
       );
     }
 
     return Result.withContent(result);
   }
-
-  /*methods*/
 }

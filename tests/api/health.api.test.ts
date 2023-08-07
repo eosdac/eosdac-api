@@ -12,26 +12,26 @@ const validator = AjvValidator.initialize();
 
 // meta
 const Api = {
-    method: HTTP_METHOD.GET,
-    url: `/${config.version}/dao/health`,
+  method: HTTP_METHOD.GET,
+  url: `/${config.urlVersion}/dao/health`,
 };
 
 describe('Health API Test', () => {
-    it('should return status 200', async () => {
-        const response = await getApiResponse(Api.method, Api.url);
+  it('should return status 200', async () => {
+    const response = await getApiResponse(Api.method, Api.url);
 
-        expect(response.statusCode).toEqual(HTTP_STATUS.OK);
-    });
+    expect(response.statusCode).toEqual(HTTP_STATUS.OK);
+  });
 
-    it('should return health status', async () => {
-        const response = await getApiResponse(Api.method, Api.url);
-        const jsonResponse = JSON.parse(response.body);
+  it('should return health status', async () => {
+    const response = await getApiResponse(Api.method, Api.url);
+    const jsonResponse = JSON.parse(response.body);
 
-        validator.assert(HealthResponseSchema, jsonResponse);
-    });
+    validator.assert(HealthResponseSchema, jsonResponse);
+  });
 });
 
 // helpers
 const getApiResponse = async function (method, url) {
-    return await environment.server.inject({ method, url });
+  return await environment.server.inject({ method, url });
 };

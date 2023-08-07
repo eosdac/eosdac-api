@@ -1,108 +1,92 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "candidates.response.schema.json",
-    "title": "/:dacId/candidates?walletId={walletId} response schema",
-    "type": "array",
-    "minItems": 0,
-    "items": {
-        "$ref": "#/$defs/candidate"
-    },
-    "$defs": {
-        "candidate": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "familyName": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "givenName": {
-                    "type": "string"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "timezone": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                },
-                "walletId": {
-                    "$ref": "#/$defs/walletId"
-                },
-                "requestedpay": {
-                    "type": "string"
-                },
-                "votePower": {
-                    "type": "integer"
-                },
-                "rank": {
-                    "type": "integer"
-                },
-                "gapFiller": {
-                    "type": "integer"
-                },
-                "isActive": {
-                    "type": "integer"
-                },
-                "totalVotes": {
-                    "type": "integer"
-                },
-                "voteDecay": {
-                    "type": "integer"
-                },
-                "agreedTermVersion": {
-                    "type": "integer"
-                },
-                "currentPlanetMemberTermsSignedValid": {
-                    "type": "boolean"
-                },
-                "isFlagged": {
-                    "type": "boolean"
-                },
-                "isSelected": {
-                    "type": "boolean"
-                },
-                "isVoted": {
-                    "type": "boolean"
-                },
-                "isVoteAdded": {
-                    "type": "boolean"
-                },
-                "planetName": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "walletId",
-                "requestedpay",
-                "votePower",
-                "rank",
-                "gapFiller",
-                "isActive",
-                "totalVotes",
-                "voteDecay",
-                "agreedTermVersion",
-                "currentPlanetMemberTermsSignedValid",
-                "isFlagged",
-                "isSelected",
-                "isVoted",
-                "isVoteAdded",
-                "planetName"
-            ]
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "candidates.response.schema.json",
+  "title": "/:dacId/candidates?walletId={walletId} response schema",
+  "type": "array",
+  "minItems": 0,
+  "items": {
+    "$ref": "#/$defs/candidate"
+  },
+  "$defs": {
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
         },
-        "walletId": {
-            "type": "string",
-            "minLength": 1
+        "email": {
+          "type": "string"
+        },
+        "familyName": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "givenName": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "account": {
+          "$ref": "#/$defs/account"
+        },
+        "requestedpay": {
+          "type": "string"
+        },
+        "votePower": {
+          "type": "integer"
+        },
+        "rank": {
+          "type": "integer"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "totalVotes": {
+          "type": "integer"
+        },
+        "voteDecay": {
+          "type": "integer"
+        },
+        "signedDaoTermsVersion": {
+          "type": "integer"
+        },
+        "hasSignedCurrentDaoTerms": {
+          "type": "boolean"
+        },
+        "isFlagged": {
+          "type": "boolean"
+        },
+        "dacId": {
+          "type": "string"
         }
+      },
+      "required": [
+        "account",
+        "requestedpay",
+        "votePower",
+        "rank",
+        "isActive",
+        "totalVotes",
+        "voteDecay",
+        "signedDaoTermsVersion",
+        "hasSignedCurrentDaoTerms",
+        "isFlagged",
+        "dacId"
+      ]
+    },
+    "account": {
+      "type": "string",
+      "minLength": 1
     }
+  }
 }

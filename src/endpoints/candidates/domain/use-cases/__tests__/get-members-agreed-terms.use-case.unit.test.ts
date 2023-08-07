@@ -1,103 +1,89 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as TokenWorldsContract from '@alien-worlds/aw-contract-token-worlds';
 
-// Unit test code
-import { anything, instance, mock, verify, when } from 'ts-mockito';
+import { Container, Failure, Result } from '@alien-worlds/aw-core';
 
-import { Failure } from '@alien-worlds/api-core';
 import { GetMembersAgreedTermsUseCase } from '../get-members-agreed-terms.use-case';
-import { TokenWorldsContract } from '@alien-worlds/dao-api-common';
+
+let container: Container;
+let useCase: GetMembersAgreedTermsUseCase;
+const tokenWorldsContractService = {
+  fetchMembers: jest.fn(),
+};
 
 describe('GetMembersAgreedTermsUseCase', () => {
-  let getMembersAgreedTermsUseCase: GetMembersAgreedTermsUseCase;
-  let tokenWorldsContractService: TokenWorldsContract.Services.TokenWorldsContractService;
+  beforeAll(() => {
+    container = new Container();
+
+    container
+      .bind<TokenWorldsContract.Services.TokenWorldsContractService>(
+        TokenWorldsContract.Services.TokenWorldsContractService.Token
+      )
+      .toConstantValue(tokenWorldsContractService as any);
+
+    container
+      .bind<GetMembersAgreedTermsUseCase>(GetMembersAgreedTermsUseCase.Token)
+      .to(GetMembersAgreedTermsUseCase);
+  });
 
   beforeEach(() => {
-    tokenWorldsContractService = mock(
-      TokenWorldsContract.Services.TokenWorldsContractServiceImpl
+    useCase = container.get<GetMembersAgreedTermsUseCase>(
+      GetMembersAgreedTermsUseCase.Token
     );
-    getMembersAgreedTermsUseCase = new GetMembersAgreedTermsUseCase(
-      instance(tokenWorldsContractService)
-    );
+  });
+
+  afterAll(() => {
+    jest.clearAllMocks();
+    container = null;
+  });
+
+  it('"Token" should be set', () => {
+    expect(GetMembersAgreedTermsUseCase.Token).not.toBeNull();
   });
 
   it('should return a map of accounts and agreed terms version', async () => {
     const dacId = 'daccustodian';
     const accounts = ['account1', 'account2'];
 
-    const rows = [
-      { sender: 'account1', agreedtermsversion: 2 },
-      { sender: 'account2', agreedtermsversion: 3 },
-    ];
-
-    when(tokenWorldsContractService.fetchMembers(anything())).thenResolve({
-      content: rows,
-    } as any);
-
-    const result = await getMembersAgreedTermsUseCase.execute(dacId, accounts);
-
-    expect(result.content).toEqual(
-      new Map([
-        ['account1', 2],
-        ['account2', 3],
+    tokenWorldsContractService.fetchMembers.mockResolvedValue(
+      Result.withContent([
+        { sender: accounts[0], agreedtermsversion: 5 },
+        { sender: accounts[1], agreedtermsversion: 4 },
       ])
     );
 
-    verify(tokenWorldsContractService.fetchMembers(anything())).once();
+    const result = await useCase.execute(dacId, accounts);
+
+    expect(result.content).toEqual(
+      new Map([
+        [accounts[0], 5],
+        [accounts[1], 4],
+      ])
+    );
+  });
+
+  it('should return default version of agreed terms version if service does not specify', async () => {
+    const dacId = 'daccustodian';
+    const accounts = ['account1'];
+
+    tokenWorldsContractService.fetchMembers.mockResolvedValue(
+      Result.withContent([{ sender: accounts[0] }])
+    );
+
+    const result = await useCase.execute(dacId, accounts);
+
+    expect(result.content).toEqual(new Map([[accounts[0], 1]]));
   });
 
   it('should return a failure if fetching members fails', async () => {
     const dacId = 'daccustodian';
     const accounts = ['account1', 'account2'];
 
-    when(tokenWorldsContractService.fetchMembers(anything())).thenResolve({
-      failure: Failure.withMessage('error'),
-    } as any);
+    tokenWorldsContractService.fetchMembers.mockResolvedValue(
+      Result.withFailure(Failure.withMessage('error'))
+    );
 
-    const result = await getMembersAgreedTermsUseCase.execute(dacId, accounts);
+    const result = await useCase.execute(dacId, accounts);
 
     expect(result.failure).toBeTruthy();
-
-    verify(tokenWorldsContractService.fetchMembers(anything())).once();
   });
 });
-// Unit Test Code
-// import { Container, Failure } from '@alien-worlds/api-core';
-// import { GetMemberTermsUseCase } from '../get-member-terms.use-case';
-// import { MemberTerms } from '@alien-worlds/dao-api-common';
-
-// describe('GetMemberTermsUseCase', () => {
-// 	let container: Container;
-// 	let useCase: GetMemberTermsUseCase;
-
-// 	const mockService = {
-// 		fetchMembersTerms: jest.fn(),
-// 	};
-
-// 	beforeAll(() => {
-// 		container = new Container();
-
-// 		container
-// 			.bind<GetMemberTermsUseCase>(GetMemberTermsUseCase.Token)
-// 			.toConstantValue(new GetMemberTermsUseCase(mockService as any));
-// 	});
-
-// 	beforeEach(() => {
-// 		useCase = container.get<GetMemberTermsUseCase>(GetMemberTermsUseCase.Token);
-// 	});
-
-// 	afterAll(() => {
-// 		jest.clearAllMocks();
-// 		container = null;
-// 	});
-
-// 	it('should return a Member Terms object', async () => {
-// 		const result = await useCase.execute('dac');
-// 		expect(result.content).toBeInstanceOf(MemberTerms);
-// 	});
-
-// 	it('should return a failure if the service fails', async () => {
-// 		const result = await useCase.execute('dac');
-
-// 		expect(result.failure).toBeInstanceOf(Failure);
-// 	});
-// });

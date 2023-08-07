@@ -1,31 +1,28 @@
-
-import { inject, injectable, Result } from '@alien-worlds/api-core';
-import { HealthOutput } from './entities/health-output';
-import { HealthUseCase } from './use-cases/health.use-case';
-/*imports*/
+import { inject, injectable } from '@alien-worlds/aw-core';
+import { GetHealthCheckStatusUseCase } from './use-cases/get-health-check-status.use-case';
+import { HealthCheckOutput } from './models/health-check.output';
 
 /**
  * @class
- * 
- * 
+ *
+ *
  */
 @injectable()
 export class HealthController {
   public static Token = 'HEALTH_CONTROLLER';
 
   constructor(
-    @inject(HealthUseCase.Token) private healthUseCase: HealthUseCase
-    /*injections*/
-  ) { }
-
-  /*methods*/
+    @inject(GetHealthCheckStatusUseCase.Token)
+    private healthUseCase: GetHealthCheckStatusUseCase
+  ) {}
 
   /**
-   * 
-   * @returns {Promise<Result<HealthOutput, Error>>}
+   *
+   * @returns {Promise<HealthCheckOutput>}
    */
-  public async health(): Promise<Result<HealthOutput, Error>> {
-    return this.healthUseCase.execute();
+  public async healthCheck(): Promise<HealthCheckOutput> {
+    const result = await this.healthUseCase.execute();
+
+    return HealthCheckOutput.create(result);
   }
 }
-

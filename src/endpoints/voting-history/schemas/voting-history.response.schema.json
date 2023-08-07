@@ -1,69 +1,66 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "voting-history.response.schema.json",
-    "title": "/voting_history?dacId=${dacId}&voter={voter}&skip={skip}&limit={limit} response schema",
-    "type": "object",
-    "properties": {
-        "results": {
-            "type": "array",
-            "minItems": 0,
-            "items": {
-                "type": "object",
-                "properties": {
-                    "dacId": {
-                        "$ref": "#/$defs/dacId"
-                    },
-                    "voter": {
-                        "$ref": "#/$defs/walletId"
-                    },
-                    "voteTimestamp": {
-                        "type": "string"
-                    },
-                    "candidate": {
-                        "$ref": "#/$defs/walletId"
-                    },
-                    "candidateVotePower": {
-                        "$ref": "#/$defs/stringOfAtleastOneDigit"
-                    },
-                    "action": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "dacId",
-                    "voter",
-                    "voteTimestamp",
-                    "candidate",
-                    "candidateVotePower",
-                    "action"
-                ]
-            }
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "voting-history.response.schema.json",
+  "title": "/voting_history?dacId=${dacId}&voter={voter}&skip={skip}&limit={limit} response schema",
+  "type": "object",
+  "properties": {
+    "results": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "properties": {
+          "dacId": {
+            "$ref": "#/$defs/dacId"
+          },
+          "voter": {
+            "$ref": "#/$defs/account"
+          },
+          "voteTimestamp": {
+            "type": "string"
+          },
+          "candidate": {
+            "$ref": "#/$defs/account"
+          },
+          "candidateVotePower": {
+            "$ref": "#/$defs/stringOfAtleastOneDigit"
+          },
+          "action": {
+            "type": "string"
+          }
         },
-        "count": {
-            "$ref": "#/$defs/zeroOrGreaterInteger"
-        }
+        "required": [
+          "dacId",
+          "voter",
+          "voteTimestamp",
+          "candidate",
+          "candidateVotePower",
+          "action"
+        ]
+      }
     },
-    "required": [
-        "results",
-        "count"
-    ],
-    "$defs": {
-        "dacId": {
-            "type": "string",
-            "minLength": 5,
-            "maxLength": 6
-        },
-        "walletId": {
-            "type": "string",
-            "minLength": 1
-        },
-        "zeroOrGreaterInteger": {
-            "type": "integer",
-            "minimum": 0
-        },
-        "stringOfAtleastOneDigit": {
-            "type": "string",
-            "pattern": "^\\d+$"
-        }
+    "count": {
+      "$ref": "#/$defs/zeroOrGreaterInteger"
     }
+  },
+  "required": ["results", "count"],
+  "$defs": {
+    "dacId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 6
+    },
+    "account": {
+      "type": "string",
+      "minLength": 1
+    },
+    "zeroOrGreaterInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "stringOfAtleastOneDigit": {
+      "type": "string",
+      "pattern": "^\\d+$"
+    }
+  }
 }

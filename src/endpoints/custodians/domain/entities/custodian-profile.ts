@@ -1,45 +1,48 @@
-import {
-  DaoWorldsContract,
-  RequestedPayment,
-  TokenWorldsContract,
-} from '@alien-worlds/dao-api-common';
+import * as DaoWorldsContract from '@alien-worlds/aw-contract-dao-worlds';
+import * as TokenWorldsContract from '@alien-worlds/aw-contract-token-worlds';
 
+import { Entity, UnknownObject } from '@alien-worlds/aw-core';
+
+import { Asset } from '@alien-worlds/aw-antelope';
 import { Profile } from '../../../profile/domain/entities/profile';
 
-/*imports*/
 /**
  * Represents Custodian Profile data entity.
  * @class
  */
-export class CustodianProfile {
+export class CustodianProfile implements Entity {
   /**
-   * Creates instances of Custodian based on a given DTO.
+   * Creates instances of CustodianProfile based on a given DTO.
    *
    * @static
    * @public
-   * @returns {CustodianProfile}
+   * @param {string} dacId - The ID of the DAC.
+   * @param {DaoWorldsContract.Deltas.Entities.Custodians1} custodian - The DTO containing custodian data.
+   * @param {Profile} profile - The profile entity.
+   * @param {TokenWorldsContract.Deltas.Entities.Memberterms} memberTerms - The member terms entity.
+   * @param {number} agreedTermsVersion - The agreed terms version number.
+   * @returns {CustodianProfile} - The created CustodianProfile instance.
    */
   public static create(
     dacId: string,
-    custodian: DaoWorldsContract.Deltas.Entities.Custodian,
+    custodian: DaoWorldsContract.Deltas.Entities.Custodians1,
     profile: Profile,
-    memberTerms: TokenWorldsContract.Deltas.Entities.MemberTerms,
+    memberTerms: TokenWorldsContract.Deltas.Entities.Memberterms,
     agreedTermsVersion: number
   ): CustodianProfile {
-    const { name, requestedPayment, totalVotePower } = custodian;
+    const { custName, requestedpay, totalVotePower } = custodian;
 
     const { version } = memberTerms;
-    const votePower = totalVotePower / 10000n;
+    const votePower = totalVotePower / 10000;
 
     return new CustodianProfile(
-      name,
-      requestedPayment,
+      custName,
+      requestedpay,
       Number(votePower),
-      profile?.profile,
+      profile?.profile || {},
       agreedTermsVersion,
       Number(version) === agreedTermsVersion,
       !!profile?.error,
-      false,
       dacId
     );
   }
@@ -49,42 +52,46 @@ export class CustodianProfile {
    * @constructor
    */
   private constructor(
-    public readonly walletId: string,
-    public readonly requestedPayment: RequestedPayment,
+    public readonly account: string,
+    public readonly requestedPay: Asset,
     public readonly votePower: number,
     public readonly profile: object,
-    public readonly agreedTermVersion: number,
-    public readonly currentPlanetMemberTermsSignedValid: boolean,
+    public readonly signedDaoTermsVersion: number,
+    public readonly hasSignedCurrentDaoTerms: boolean,
     public readonly isFlagged: boolean,
-    public readonly isSelected: boolean,
-    public readonly planetName: string
+    public readonly dacId: string
   ) {}
 
-  public toJson() {
+  public id?: string;
+  public rest?: UnknownObject;
+
+  /**
+   * Converts the CustodianProfile instance to a JSON representation.
+   *
+   * @public
+   * @returns {UnknownObject} - The JSON representation of the CustodianProfile.
+   */
+  public toJSON(): UnknownObject {
     const {
-      walletId,
-      requestedPayment,
+      account,
+      requestedPay,
       votePower,
       profile,
-      agreedTermVersion,
-      currentPlanetMemberTermsSignedValid,
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
       isFlagged,
-      isSelected,
-      planetName,
+      dacId,
     } = this;
 
-    const p = profile || {};
-
     return {
-      walletId,
-      requestedpay: `${requestedPayment.value} ${requestedPayment.symbol}`,
-      votePower,
-      ...p,
-      agreedTermVersion,
-      currentPlanetMemberTermsSignedValid,
+      ...profile,
+      account,
+      requestedpay: `${requestedPay.value} ${requestedPay.symbol}`,
+      votePower: Number(votePower.toFixed(0)),
+      signedDaoTermsVersion,
+      hasSignedCurrentDaoTerms,
       isFlagged,
-      isSelected,
-      planetName,
+      dacId,
     };
   }
 }

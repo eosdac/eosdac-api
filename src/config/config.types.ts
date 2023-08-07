@@ -1,5 +1,9 @@
-import { DacDirectory } from '@alien-worlds/dao-api-common';
-import { MongoConfig } from '@alien-worlds/api-core';
+import { Dac } from '@endpoints/dacs/domain/entities/dacs';
+import { MongoConfig } from '@alien-worlds/aw-storage-mongodb';
+
+export type PackagedDependencyJsonModel = {
+  [name: string]: string;
+};
 
 export type Environment = {
   MONGO_HOSTS?: string;
@@ -17,12 +21,13 @@ export type Environment = {
   HOST?: string;
   VERSION?: string;
 
-  EOS_CHAIN_ID?: string;
-  EOS_ENDPOINT?: string;
-  EOS_DAC_DIRECTORY_CONTRACT?: string;
-  EOS_LEGACY_DACS?: string;
-  EOS_DAC_DIRECTORY_MODE?: string;
-  EOS_DAC_DIRECTORY_DAC_ID?: string;
+  ANTELOPE_CHAIN_ID?: string;
+  ANTELOPE_ENDPOINT?: string;
+  ANTELOPE_DAC_DIRECTORY_CONTRACT?: string;
+  ANTELOPE_LEGACY_DACS?: string;
+  ANTELOPE_DAC_DIRECTORY_MODE?: string;
+  ANTELOPE_DAC_DIRECTORY_DAC_ID?: string;
+  HYPERION_URL?: string;
 
   DOCS_HOST?: string;
   DOCS_ROUTE_PREFIX?: string;
@@ -35,26 +40,31 @@ export type Environment = {
   NEW_RELIC_ENABLED?: string;
   NEW_RELIC_LICENSE_KEY?: string;
   NEW_RELIC_APP_NAME?: string;
+
+  HISTORY_API_HOST?: string;
+  HISTORY_API_ROUTE_PREFIX?: string;
 };
 
 export type Config = {
   host: string;
   port: number;
   mongo: MongoConfig;
-  eos: EOSConfig;
+  antelope: AntelopeConfig;
   logger: LoggerConfig;
   docs: DocsConfig;
   dac: DACConfig;
   newRelic: NewRelicConfig;
+  historyApi: HistoryApiConfig;
 };
 
-export type EOSConfig = {
+export type AntelopeConfig = {
   chainId: string;
   endpoint: string;
   dacDirectoryContract: string;
   legacyDacs: string[];
   dacDirectoryMode: string;
   dacDirectoryDacId: string;
+  hyperionUrl: string;
 };
 
 export type LoggerConfig = {
@@ -74,11 +84,16 @@ export type DocsConfig = {
 };
 
 export type DACConfig = {
-  nameCache: Map<string, DacDirectory>;
+  nameCache: Map<string, Dac>;
 };
 
 export type NewRelicConfig = {
   newRelicEnabled: boolean;
   appName: string;
   licenseKey: string;
+};
+
+export type HistoryApiConfig = {
+  host: string;
+  routePrefix: string;
 };

@@ -1,19 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
-import { Container, Failure, Result } from '@alien-worlds/api-core';
+import * as dacUtils from '@common/utils/dac.utils';
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
+import { Container, Result } from '@alien-worlds/aw-core';
+
 import { config } from '@config';
 import { CustodiansController } from '../custodians.controller';
+import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { GetCustodiansInput } from '../models/get-custodians.input';
-import { IndexWorldsContract } from '@alien-worlds/dao-api-common';
 import { ListCustodianProfilesUseCase } from '../use-cases/list-custodian-profiles.use-case';
 import { LoadDacConfigError } from '@common/api/domain/errors/load-dac-config.error';
 
-/*imports*/
-
-/*mocks*/
-
-jest.mock('@config');
+jest.mock('@config', () => {
+  return {
+    config: {
+      dac: {
+        nameCache: {
+          get: jest.fn(),
+        },
+      },
+    },
+  };
+});
 
 const mockedConfig = config as jest.Mocked<typeof config>;
 
@@ -27,15 +35,32 @@ const listCandidateProfilesUseCase = {
 };
 const input: GetCustodiansInput = {
   dacId: 'string',
+  toJSON: () => ({
+    dacId: 'string',
+  }),
 };
+const dac = new DacMapper().toDac(
+  new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
+    IndexWorldsCommon.Deltas.Types.DacsRawModel
+  >{
+    accounts: [{ key: '2', value: 'dao.worlds' }],
+    symbol: {
+      sym: 'EYE',
+    },
+    refs: [],
+  })
+);
+jest
+  .spyOn(dacUtils, 'loadDacConfig')
+  .mockResolvedValue(Result.withContent(dac));
 
-describe('Candidate Controller Unit tests', () => {
+describe('Custodians Controller Unit tests', () => {
   beforeAll(() => {
     container = new Container();
     /*bindings*/
     container
-      .bind<IndexWorldsContract.Services.IndexWorldsContractService>(
-        IndexWorldsContract.Services.IndexWorldsContractService.Token
+      .bind<IndexWorldsCommon.Services.IndexWorldsContractService>(
+        IndexWorldsCommon.Services.IndexWorldsContractService.Token
       )
       .toConstantValue(indexWorldsContractService as any);
     container
@@ -50,17 +75,7 @@ describe('Candidate Controller Unit tests', () => {
     controller = container.get<CustodiansController>(
       CustodiansController.Token
     );
-    indexWorldsContractService.fetchDac.mockResolvedValue(
-      Result.withContent([
-        <IndexWorldsContract.Deltas.Types.DacsStruct>{
-          accounts: [{ key: 2, value: 'dao.worlds' }],
-          symbol: {
-            sym: 'EYE',
-          },
-          refs: [],
-        },
-      ])
-    );
+
     listCandidateProfilesUseCase.execute.mockResolvedValue(
       Result.withContent([])
     );
@@ -82,11 +97,11 @@ describe('Candidate Controller Unit tests', () => {
 
   it('Should result with LoadDacConfigError when dac config could not be loaded', async () => {
     mockedConfig.dac.nameCache.get = () => null;
-    indexWorldsContractService.fetchDac.mockResolvedValue(
-      Result.withFailure(Failure.withMessage('error'))
-    );
+    jest
+      .spyOn(dacUtils, 'loadDacConfig')
+      .mockResolvedValueOnce(Result.withFailure('failure'));
+
     const result = await controller.list(input);
     expect(result.failure.error).toBeInstanceOf(LoadDacConfigError);
   });
-  /*unit-tests*/
 });
