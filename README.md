@@ -166,9 +166,9 @@ It also creates a docker network named `lamington` that you can use to connect t
 
 Once the API is running, you can perform a basic health check to ensure that everything is configured properly.
 
-A `/health` endpoint is available and can be accessed at following URL
+A `/health` endpoint is available and can be accessed at following path
 
-> <your.domain>/v2/dao/health
+> `/v2/dao/health`
 
 e.g. health check for API running locally on port 8800 (http://localhost:8800/v2/dao/health)
 
