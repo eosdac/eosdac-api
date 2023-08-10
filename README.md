@@ -55,19 +55,19 @@ git clone https://github.com/Alien-Worlds/aw-api-dao.git
 
 ### Environment variables
 
-You need a _.env_ file which contains all necessary environment configuration for DAO API. An example config file is available at _[.env-example](https://github.com/Alien-Worlds/aw-api-dao/blob/master/.env-example)_.
+You need a _.env_ file which contains all necessary environment configuration for DAO API. An example config file is available at _[.env.example](https://github.com/Alien-Worlds/aw-api-dao/blob/master/.env.example)_.
 
 You can copy the example config and create a _.env_ file
 
 ```
-cp .env-example .env
+cp .env.example .env
 ```
 
 Afterwards, the newly created _.env_ file can be modified according to your needs.
 
 #### Several environment configurations
 
-You may create separate configuration files for each environment e.g. `.env-stage`, `.env-prod` etc.
+You may create separate configuration files for each environment e.g. `.env.stage`, `.env.production` etc.
 
 In each configuration file, the `ENVIRONMENT` key should contain the name of the environment which will later be used when starting the API.
 
@@ -125,7 +125,7 @@ By default, it will use the configuration specified in `.env` file.
 
 You can switch between different configuration files by giving a different value to the environment variable `ENVIRONMENT`.
 
-For example, if you have a `.env-prod` config file, you can run the api using that config as follows
+For example, if you have a `.env.production` config file, you can run the api using that config as follows
 
 ```
 ENVIRONMENT=prod yarn api
@@ -139,7 +139,7 @@ In order to start the services in docker, just use the command:
 docker compose up --build
 ```
 
-As already explained, you can use a different environment configuration file by providing the the environment name as variable e.g. if config file is `.env-prod`, then the command will be
+As already explained, you can use a different environment configuration file by providing the the environment name as variable e.g. if config file is `.env.production`, then the command will be
 
 ```
 ENVIRONMENT=prod docker compose up --build
