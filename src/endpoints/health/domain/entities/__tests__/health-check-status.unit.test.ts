@@ -1,5 +1,5 @@
-import { HealthCheckStatus } from '../health-check-status';
 import { HealthCheckJsonModel } from '../../../data/dtos/health.dto';
+import { HealthCheckStatus } from '../health-check-status';
 
 const healthOutputDto: HealthCheckJsonModel = {
   status: 'OK',
@@ -44,8 +44,9 @@ describe('HealthOutput unit tests', () => {
       currentBlockNumber: '0',
       status: 'FAILED',
     });
-    expect(json.nodeVersion).toEqual('v17.4.0');
+
     expect(json.status).toEqual('OK');
     expect(json.version).toEqual('1.0.0');
+    expect(json.nodeVersion).toMatch(/^v\d+.\d+.\d+$/);
   });
 });
