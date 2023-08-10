@@ -1,12 +1,12 @@
-# DAO API v1.0.0
+# DAO API v2.0.0
 
-It provides DAO-specific API endpoints that allow developers to query the database and serve the data populated by the [history tools](https://github.com/Alien-Worlds/eosdac-api-history-tools).
+It provides DAO-specific API endpoints that allow developers to query the database and serve the data populated by its respective [history tools implementation](https://github.com/Alien-Worlds/aw-history-dao).
 
-To learn more about history tools and how to read data from blockchain and populate into database, please refer to the respective repository [eosdac-api-history-tools](https://github.com/Alien-Worlds/eosdac-api-history-tools).
+To learn more about history tools and how to read data from blockchain and populate into database, please refer to the respective repository [aw-history-dao](https://github.com/Alien-Worlds/aw-history-dao).
 
 ## API
 
-The API uses [fastify](https://www.fastify.io/) as a web server technology and reads data from MongoDB. It serves the data populated by the [eosdac-api-history-tools](https://github.com/Alien-Worlds/eosdac-api-history-tools).
+The API uses [fastify](https://www.fastify.io/) as a web server technology and reads data from MongoDB. It serves the data populated by the [aw-history-dao](https://github.com/Alien-Worlds/aw-history-dao).
 
 ### Swagger Document
 
@@ -71,27 +71,6 @@ You may create separate configuration files for each environment e.g. `.env.stag
 
 In each configuration file, the `ENVIRONMENT` key should contain the name of the environment which will later be used when starting the API.
 
-### Authenticating to GitHub Packages
-
-The API depends on couple of GitHub packages published using npm. In order to install and use these packages locally you will need to authenticate to GitHub Packages by configuring your own Personal Access Token (PAT).
-
-#### Create GitHub Personal Access Token (PAT)
-
-You can follow the official docs [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-personal-access-token-classic) to learn more about GitHub personal access token (PAT) and necessary steps to create a new PAT. Make sure that the created token has `read:packages` scope.
-
-#### Configure environment variable
-
-At the project root, we have a `.npmrc` file (see [here](https://github.com/Alien-Worlds/aw-api-dao/blob/master/.npmrc)).
-It expects that an environment variable `GITHUB_TOKEN` contains your GitHub PAT.
-
-You can run following command to set the environment variable
-
-```
-export GITHUB_TOKEN=<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN>
-```
-
-This should enable us to properly install the npm packages on which the API depends.
-
 ### Build API
 
 ```
@@ -111,16 +90,6 @@ The API will start on the URL `http://localhost:8800`, unless a different `PORT`
 
 The above command `yarn api:dev` starts the API in **watch mode**. On saving new changes in a file under _/src_ directory, it will rebuild and new changes will be served automatically.
 
-#### Without Watch Mode
-
-If _watch mode_ is NOT required, then the API can be started by the following command
-
-```
-yarn api
-```
-
-By default, it will use the configuration specified in `.env` file.
-
 #### Different environment configuration
 
 You can switch between different configuration files by giving a different value to the environment variable `ENVIRONMENT`.
@@ -128,7 +97,7 @@ You can switch between different configuration files by giving a different value
 For example, if you have a `.env.production` config file, you can run the api using that config as follows
 
 ```
-ENVIRONMENT=prod yarn api
+ENVIRONMENT=production yarn api
 ```
 
 #### Start API using Docker
@@ -181,18 +150,27 @@ If everything is fine, then you should be able to get a response similar to belo
 ```
 {
     "status": "OK",
-    "version": "1.0.0",
-    "timestamp": 1683028412016,
-    "uptimeSeconds": 19,
-    "nodeVersion": "v19.7.0",
+    "version": "2.0.0",
+    "timestamp": "2023-08-10T14:17:37.935Z",
+    "uptimeSeconds": 2124,
+    "nodeVersion": "v18.15.0",
     "dependencies": {
-        "@alien-worlds/aw-core": "^0.0.87",
+        "@alien-worlds/aw-antelope": "^0.0.40",
+        "@alien-worlds/aw-contract-alien-worlds": "^0.0.24",
+        "@alien-worlds/aw-contract-dao-worlds": "^0.0.32",
+        "@alien-worlds/aw-contract-index-worlds": "^0.0.29",
+        "@alien-worlds/aw-contract-stkvt-worlds": "^0.0.23",
+        "@alien-worlds/aw-contract-token-worlds": "^0.0.32",
+        "@alien-worlds/aw-core": "^0.0.15",
+        "@alien-worlds/aw-storage-mongodb": "^0.0.10",
+        "fastify": "^3.25.0",
     },
     "database": {
-        "status": "OK"
+        "mongodb": "OK"
     },
-    "blockChainHistory": {
-        "currentBlock": "243116553"
+    "historyApi": {
+        "currentBlockNumber": "260412883",
+        "status": "OK"
     }
 }
 ```
