@@ -14,7 +14,7 @@ ADD scripts /var/www/api/scripts
 ADD src /var/www/api/src
 
 COPY .npmrc package.json tsconfig.json /var/www/api/
-COPY .env-example /var/www/api/.env-${ENVIRONMENT}
+COPY .env.example /var/www/api/.env.${ENVIRONMENT}
 
 WORKDIR /var/www/api
 

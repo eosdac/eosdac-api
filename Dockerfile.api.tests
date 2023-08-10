@@ -10,7 +10,7 @@ ARG GITHUB_TOKEN
 ENV GITHUB_TOKEN=${GITHUB_TOKEN}
 
 COPY . /var/www/api
-COPY .env-test /var/www/api/.env-test
+COPY .env.test /var/www/api/.env.test
 
 WORKDIR /var/www/api
 
