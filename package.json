@@ -4,18 +4,17 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "api:prod": "cross-env NEW_RELIC_NO_CONFIG_FILE=true node -r newrelic -r ts-node/register -r tsconfig-paths/register dist/src/index.js",
     "api:dev": "tsc-watch --onSuccess \"node -r dotenv/config -r newrelic -r ts-node/register -r tsconfig-paths/register src/index.ts\"",
+    "api:prod": "cross-env NEW_RELIC_NO_CONFIG_FILE=true node -r newrelic -r ts-node/register -r tsconfig-paths/register dist/src/index.js",
     "test:unit": "jest --config=jest.config.unit.ts",
     "test:api": "jest --config=jest.config.api.ts --forceExit --runInBand",
     "clean": "rm -rf ./dist",
     "build": "yarn clean && tsc",
-    "lint": "eslint \"src/**/*\" \"tests/**/*\"",
+    "docs:generate": "p2o ./postman/collections/aw-api-dao.postman_collection.json -f ./docs/aw-api-dao-oas.yaml -o ./docs/config-oas.json""lint": "eslint \"src/**/*\" \"tests/**/*\"",
     "lint:fix": "eslint --fix \"src/**/*\" \"tests/**/*\"",
     "prettier:check": "yarn prettier --check \"src/**/*\" \"tests/**/*\"",
     "prettier:fix": "yarn prettier --write \"src/**/*\" \"tests/**/*\"",
     "format": "yarn prettier:fix && yarn lint:fix",
-    "docs:generate": "p2o ./postman/collections/aw-api-dao.postman_collection.json -f ./docs/aw-api-dao-oas.yaml -o ./docs/config-oas.json"
   },
   "dependencies": {
     "@alien-worlds/aw-antelope": "^0.0.40",

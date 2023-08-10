@@ -8,20 +8,27 @@ export type PackagedDependencyJsonModel = {
 };
 
 export const EnvironmentSchema = {
+  ENVIRONMENT: envalid.str(),
+  HOST: envalid.str(),
+  PORT: envalid.port({
+    desc: 'port for Node server to run',
+    example: '8800',
+  }),
+  VERSION: envalid.str({
+    desc: 'API semantic version',
+    example: '2.0.0',
+  }),
+
   MONGO_HOSTS: envalid.str(),
   MONGO_PORTS: envalid.str(),
   MONGO_USER: envalid.str(),
   MONGO_PASSWORD: envalid.str(),
-  MONGO_SRV: envalid.str(),
-  MONGO_SSL: envalid.str(),
-  MONGO_REPLICA_SET: envalid.str(),
-  MONGO_AUTH_MECHANISM: envalid.str(),
-  MONGO_AUTH_SOURCE: envalid.str(),
   MONGO_DB_NAME: envalid.str(),
-
-  PORT: envalid.port(),
-  HOST: envalid.str(),
-  VERSION: envalid.str(),
+  MONGO_SRV: envalid.str({ default: '' }),
+  MONGO_SSL: envalid.str({ default: '' }),
+  MONGO_REPLICA_SET: envalid.str({ default: '' }),
+  MONGO_AUTH_MECHANISM: envalid.str({ default: '' }),
+  MONGO_AUTH_SOURCE: envalid.str({ default: '' }),
 
   ANTELOPE_CHAIN_ID: envalid.str(),
   ANTELOPE_ENDPOINT: envalid.str(),
@@ -32,19 +39,19 @@ export const EnvironmentSchema = {
   HYPERION_URL: envalid.str(),
 
   DOCS_HOST: envalid.str(),
-  DOCS_ROUTE_PREFIX: envalid.str(),
-  DOCS_EXPOSE_ROUTE: envalid.str(),
-  LOGGER_LEVEL: envalid.str(),
-  LOGGER_ENVIRONMENT: envalid.str(),
-  LOGGER_DATADOG_API_KEY: envalid.str(),
-  ENVIRONMENT: envalid.str(),
-
-  NEW_RELIC_ENABLED: envalid.bool(),
-  NEW_RELIC_LICENSE_KEY: envalid.str(),
-  NEW_RELIC_APP_NAME: envalid.str(),
+  DOCS_ROUTE_PREFIX: envalid.str({ default: '/dao/docs' }),
+  DOCS_EXPOSE_ROUTE: envalid.bool({ default: true }),
 
   HISTORY_API_HOST: envalid.str(),
   HISTORY_API_ROUTE_PREFIX: envalid.str(),
+
+  NEW_RELIC_ENABLED: envalid.bool({ default: false }),
+  NEW_RELIC_LICENSE_KEY: envalid.str({ default: '' }),
+  NEW_RELIC_APP_NAME: envalid.str({ default: '' }),
+
+  LOGGER_LEVEL: envalid.str(),
+  LOGGER_ENVIRONMENT: envalid.str(),
+  LOGGER_DATADOG_API_KEY: envalid.str({ default: '' }),
 };
 
 export type Config = {

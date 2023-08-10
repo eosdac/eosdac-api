@@ -75,7 +75,7 @@ export default class ApiConfig implements Config {
     const docs: DocsConfig = {
       host: environment.DOCS_HOST,
       routePrefix: environment.DOCS_ROUTE_PREFIX,
-      exposeRoute: Boolean(environment.DOCS_EXPOSE_ROUTE),
+      exposeRoute: environment.DOCS_EXPOSE_ROUTE,
     };
 
     const logger: LoggerConfig = {
@@ -91,7 +91,7 @@ export default class ApiConfig implements Config {
     };
 
     const newRelic: NewRelicConfig = {
-      newRelicEnabled: Boolean(environment.NEW_RELIC_ENABLED),
+      newRelicEnabled: environment.NEW_RELIC_ENABLED,
       appName: environment.NEW_RELIC_APP_NAME || `${packageJson.name}-${env}`,
       licenseKey: environment.NEW_RELIC_LICENSE_KEY,
     };
