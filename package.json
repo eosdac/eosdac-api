@@ -10,11 +10,12 @@
     "test:api": "jest --config=jest.config.api.ts --forceExit --runInBand",
     "clean": "rm -rf ./dist",
     "build": "yarn clean && tsc",
-    "docs:generate": "p2o ./postman/collections/aw-api-dao.postman_collection.json -f ./docs/aw-api-dao-oas.yaml -o ./docs/config-oas.json""lint": "eslint \"src/**/*\" \"tests/**/*\"",
+    "docs:generate": "p2o ./postman/collections/aw-api-dao.postman_collection.json -f ./docs/aw-api-dao-oas.yaml -o ./docs/config-oas.json",
+    "lint": "eslint \"src/**/*\" \"tests/**/*\"",
     "lint:fix": "eslint --fix \"src/**/*\" \"tests/**/*\"",
     "prettier:check": "yarn prettier --check \"src/**/*\" \"tests/**/*\"",
     "prettier:fix": "yarn prettier --write \"src/**/*\" \"tests/**/*\"",
-    "format": "yarn prettier:fix && yarn lint:fix",
+    "format": "yarn prettier:fix && yarn lint:fix"
   },
   "dependencies": {
     "@alien-worlds/aw-antelope": "^0.0.40",

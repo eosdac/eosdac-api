@@ -106,6 +106,3 @@ export type HistoryApiConfig = {
   host: string;
   routePrefix: string;
 };
-
-
-

@@ -1,4 +1,4 @@
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 import * as envalid from 'envalid';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -21,20 +21,18 @@ export default class ApiConfig implements Config {
   public static Token = 'API_CONFIG';
 
   public static create(dotEnvPath: string, packageJsonPath: string): ApiConfig {
-
     /*
-     * Load config file at `dotEnvPath` as env vars. 
-     * If a particular env var is already set in the environment, 
+     * Load config file at `dotEnvPath` as env vars.
+     * If a particular env var is already set in the environment,
      * it will NOT be overriden by the values in config file
      */
     dotenv.config({ path: dotEnvPath });
 
     /*
      * Validate that all necessary config are available as environment variables.
-     * Additionally, convert from string to defined data types in EnvironmentSchema 
+     * Additionally, convert from string to defined data types in EnvironmentSchema
      */
     const environment = envalid.cleanEnv(process.env, EnvironmentSchema);
-
 
     const packageJsonContent = readFileSync(packageJsonPath, 'utf-8');
     const packageJson = packageJsonContent
@@ -42,7 +40,6 @@ export default class ApiConfig implements Config {
       : {};
     const name = packageJson.name || '';
     const dependencies = packageJson.dependencies || {};
-
 
     const env = environment.ENVIRONMENT;
     const version = environment.VERSION || packageJson.version;
@@ -53,7 +50,7 @@ export default class ApiConfig implements Config {
       chainId: environment.ANTELOPE_CHAIN_ID,
       endpoint: environment.ANTELOPE_ENDPOINT,
       dacDirectoryContract: environment.ANTELOPE_DAC_DIRECTORY_CONTRACT,
-      legacyDacs: (environment.ANTELOPE_LEGACY_DACS).split(' '),
+      legacyDacs: environment.ANTELOPE_LEGACY_DACS.split(' '),
       dacDirectoryMode: environment.ANTELOPE_DAC_DIRECTORY_MODE,
       dacDirectoryDacId: environment.ANTELOPE_DAC_DIRECTORY_DAC_ID,
       hyperionUrl: environment.HYPERION_URL,
