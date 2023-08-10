@@ -26,13 +26,18 @@ export default class ApiConfig implements Config {
      * If a particular env var is already set in the environment,
      * it will NOT be overriden by the values in config file
      */
-    dotenv.config({ path: dotEnvPath });
+    console.info(`attempt to load config from '${dotEnvPath}'`);
+    const dotenvConfig = dotenv.config({ path: dotEnvPath });
+    if (dotenvConfig.error) {
+      console.error(`could not load config from '${dotEnvPath}' due to error: (${dotenvConfig.error.message})`);
+    }
 
     /*
      * Validate that all necessary config are available as environment variables.
      * Additionally, convert from string to defined data types in EnvironmentSchema
      */
     const environment = envalid.cleanEnv(process.env, EnvironmentSchema);
+    console.info('required configuration found in environment...');
 
     const packageJsonContent = readFileSync(packageJsonPath, 'utf-8');
     const packageJson = packageJsonContent
