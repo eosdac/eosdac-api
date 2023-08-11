@@ -1,23 +1,4 @@
-import { HealthCheckJsonModel } from '../../../data/dtos/health.dto';
 import { HealthCheckStatus } from '../health-check-status';
-
-const healthOutputDto: HealthCheckJsonModel = {
-  status: 'OK',
-  version: '1.0.0',
-  timestamp: new Date('2023-02-15T13:41:25.153Z'),
-  uptimeSeconds: 100,
-  nodeVersion: 'v17.3.0',
-  database: {
-    mongodb: 'OK',
-  },
-  dependencies: {
-    '@alien-worlds/aw-core': '0.0.68',
-  },
-  historyApi: {
-    currentBlockNumber: '0',
-    status: 'OK',
-  },
-};
 
 const healthOutput = HealthCheckStatus.create(
   '1.0.0',

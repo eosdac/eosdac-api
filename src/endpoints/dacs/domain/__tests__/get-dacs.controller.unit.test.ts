@@ -1,18 +1,18 @@
+import { ExtendedSymbolRawModel, Pair } from '@alien-worlds/aw-antelope';
 import * as AlienWorldsCommon from '@alien-worlds/aw-contract-alien-worlds';
 import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
 import { Container, Failure, Result } from '@alien-worlds/aw-core';
-import { ExtendedSymbolRawModel, Pair } from '@alien-worlds/aw-antelope';
-
 import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
-import { GetAllDacsUseCase } from '../use-cases/get-all-dacs.use-case';
-import { GetDacInfoUseCase } from '../use-cases/get-dac-info.use-case';
+
 import { DacsController } from '../dacs.controller';
 import { GetDacsInput } from '../models/dacs.input';
+import { CreateAggregatedDacRecords } from '../use-cases/create-aggregated-dac-records.use-case';
+import { GetAllDacsUseCase } from '../use-cases/get-all-dacs.use-case';
+import { GetDacInfoUseCase } from '../use-cases/get-dac-info.use-case';
 import { GetDacTokensUseCase } from '../use-cases/get-dac-tokens.use-case';
 import { GetDacTreasuryUseCase } from '../use-cases/get-dac-treasury.use-case';
-import { CreateAggregatedDacRecords } from '../use-cases/create-aggregated-dac-records.use-case';
 
 const getAllDacsUseCase = {
   execute: jest.fn(() =>
@@ -20,35 +20,35 @@ const getAllDacsUseCase = {
       new DacMapper().toDac(
         new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
           IndexWorldsCommon.Deltas.Types.DacsRawModel
-        >{
-          owner: 'eyeke.dac',
-          dac_id: 'eyeke',
-          title: 'Eyeke',
-          symbol: <ExtendedSymbolRawModel>{
-            sym: '4,EYE',
-            contract: 'token.worlds',
-          },
-          dac_state: 0,
-          refs: [
-            {
-              key: '1',
-              value: 'QmW1SeninpNQUMLstTPFTv7tMkRdBZMHBJTgf17Znr1uKK',
+          >{
+            owner: 'eyeke.dac',
+            dac_id: 'eyeke',
+            title: 'Eyeke',
+            symbol: <ExtendedSymbolRawModel>{
+              sym: '4,EYE',
+              contract: 'token.worlds',
             },
-            {
-              key: '2',
-              value:
-                'Also known as Second Earth or Terra Alterna as it is the nearest, and closest, of all Alien Worlds to Earth. Humans found Eyeke inhabited by a Monastic order of Greys who believe that Eyeke is a spiritual place. Despite initial fears, Trilium mining seems to be tolerated by the Monks at this time.',
-            },
-            {
-              key: '12',
-              value: 'QmUXjmrQ6j2ukCdPjacdQ48MmYo853u4Y5y3kb5b4HBuuF',
-            },
-          ] as Pair<string, string>[],
-          accounts: [{ key: '0', value: 'eyeke.world' }] as Pair<
-            string,
-            string
-          >[],
-        })
+            dac_state: 0,
+            refs: [
+              {
+                key: '1',
+                value: 'QmW1SeninpNQUMLstTPFTv7tMkRdBZMHBJTgf17Znr1uKK',
+              },
+              {
+                key: '2',
+                value:
+                  'Also known as Second Earth or Terra Alterna as it is the nearest, and closest, of all Alien Worlds to Earth. Humans found Eyeke inhabited by a Monastic order of Greys who believe that Eyeke is a spiritual place. Despite initial fears, Trilium mining seems to be tolerated by the Monks at this time.',
+              },
+              {
+                key: '12',
+                value: 'QmUXjmrQ6j2ukCdPjacdQ48MmYo853u4Y5y3kb5b4HBuuF',
+              },
+            ] as Pair<string, string>[],
+            accounts: [{ key: '0', value: 'eyeke.world' }] as Pair<
+              string,
+              string
+            >[],
+          })
       ),
     ])
   ),
@@ -59,9 +59,9 @@ const getDacTreasuryUseCase = {
     Result.withContent([
       new AlienWorldsCommon.Deltas.Mappers.AccountsRawMapper().toEntity(<
         AlienWorldsCommon.Deltas.Types.AccountsRawModel
-      >{
-        balance: 'string',
-      }),
+        >{
+          balance: 'string',
+        }),
     ])
   ),
 };
@@ -121,19 +121,6 @@ const getDacInfoUseCase = {
 };
 
 const getDacTokensUseCase = {
-  execute: jest.fn(() =>
-    Result.withContent([
-      new TokenWorldsCommon.Deltas.Mappers.StatRawMapper().toEntity({
-        supply: '1660485.1217 EYE',
-        max_supply: '10000000000.0000 EYE',
-        issuer: 'federation',
-        transfer_locked: false,
-      }),
-    ])
-  ),
-};
-
-const createAggregatedDacRecords = {
   execute: jest.fn(() =>
     Result.withContent([
       new TokenWorldsCommon.Deltas.Mappers.StatRawMapper().toEntity({
