@@ -34,7 +34,7 @@ describe('VotingHistoryQueryModel Unit tests', () => {
       options: {
         skip: input.skip,
         limit: input.limit,
-        sort: { block_num: 1 },
+        sort: { block_number: 1 },
       },
     });
   });
@@ -57,7 +57,7 @@ describe('VotingHistoryQueryModel Unit tests', () => {
       options: {
         skip: input.skip,
         limit: Number.MAX_VALUE,
-        sort: { block_num: 1 },
+        sort: { block_number: 1 },
       },
     });
   });

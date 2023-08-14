@@ -1,4 +1,5 @@
 import { Query, QueryBuilder } from '@alien-worlds/aw-core';
+
 import { MongoDB } from '@alien-worlds/aw-storage-mongodb';
 
 type ProfileQueryArgs = {
@@ -22,19 +23,19 @@ export class ListProfileActionsQueryBuilder extends QueryBuilder {
           'action.data.cand': { $in: accounts },
         },
       },
-      { $sort: { block_num: -1 } },
+      { $sort: { block_number: -1 } },
       {
         $group: {
           _id: '$action.data.cand',
-          block_num: { $first: '$block_num' },
+          block_number: { $first: '$block_number' },
           profile: { $first: '$action.data.profile' },
           account: { $first: '$action.data.cand' },
           action: { $first: '$action' },
-          recv_sequence: { $first: '$recv_sequence' },
+          receiver_sequence: { $first: '$receiver_sequence' },
           global_sequence: { $first: '$global_sequence' },
         },
       },
-      { $sort: { block_num: -1 } },
+      { $sort: { block_number: -1 } },
     ];
 
     const options: MongoDB.AggregateOptions = {};

@@ -27,7 +27,7 @@ describe('CandidatesVotersHistoryQueryBuilder Unit tests', () => {
             'action.data.newvotes': input.candidateId,
           },
         },
-        { $sort: { block_num: 1 } },
+        { $sort: { block_number: 1 } },
       ],
       options: {},
     });

@@ -15,19 +15,19 @@ const queryModel = {
         'action.data.cand': { $in: ['awtesteroo12'] },
       },
     },
-    { $sort: { block_num: -1 } },
+    { $sort: { block_number: -1 } },
     {
       $group: {
         _id: '$action.data.cand',
-        block_num: { $first: '$block_num' },
+        block_number: { $first: '$block_number' },
         profile: { $first: '$action.data.profile' },
         account: { $first: '$action.data.cand' },
         action: { $first: '$action' },
-        recv_sequence: { $first: '$recv_sequence' },
+        receiver_sequence: { $first: '$receiver_sequence' },
         global_sequence: { $first: '$global_sequence' },
       },
     },
-    { $sort: { block_num: -1 } },
+    { $sort: { block_number: -1 } },
   ],
   options: {},
 };

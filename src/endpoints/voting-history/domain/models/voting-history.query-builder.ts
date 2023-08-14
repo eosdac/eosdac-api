@@ -36,7 +36,7 @@ export class VotingHistoryQueryBuilder extends QueryBuilder {
     const options: MongoDB.FindOptions = {
       skip: skip || 0,
       limit: limit || Number.MAX_VALUE,
-      sort: { block_num: 1 },
+      sort: { block_number: 1 },
     };
 
     return { filter, options };

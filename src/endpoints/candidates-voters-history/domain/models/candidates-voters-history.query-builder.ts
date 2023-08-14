@@ -34,7 +34,7 @@ export class CandidatesVotersHistoryQueryBuilder extends QueryBuilder {
       },
       {
         $sort: {
-          block_num: 1,
+          block_number: 1,
         },
       },
     ];
