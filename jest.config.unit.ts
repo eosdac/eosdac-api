@@ -30,6 +30,7 @@ export default {
     '!src/**/*.dto.ts',
     '!src/**/*.types.ts',
     '!src/**/*.route.ts',
+    '!src/**/*ioc.ts',
     '!src/**/*ioc.config.ts',
     '!src/api-handlers/**/*',
     '!src/**/*.interface.ts',

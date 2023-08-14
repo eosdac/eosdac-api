@@ -1,16 +1,18 @@
-import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 import { ExtendedSymbolRawModel, Pair } from '@alien-worlds/aw-antelope';
-
+import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 import { config } from '@config';
 import { Dac } from '@endpoints/dacs/domain/entities/dacs';
+
 import { loadDacConfig } from '../dac.utils';
 
 jest.mock('@config', () => {
   return {
     config: {
+      antelope: 'index.worlds',
       dac: {
         nameCache: {
           get: jest.fn(),
+          set: jest.fn(),
         },
       },
     },
@@ -111,6 +113,8 @@ describe('"DAC utils" unit tests', () => {
       lower_bound: dacId,
       upper_bound: dacId,
     });
-    expect(result).toBeNull();
+
+    expect(result).toBeDefined();
+    expect(result.isFailure).toBeTruthy();
   });
 });

@@ -2,17 +2,7 @@ import * as dotenv from 'dotenv';
 import * as envalid from 'envalid';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  AntelopeConfig,
-  Config,
-  DACConfig,
-  DocsConfig,
-  EnvironmentSchema,
-  HistoryApiConfig,
-  LoggerConfig,
-  NewRelicConfig,
-  PackagedDependencyJsonModel,
-} from './config.types';
+import { AntelopeConfig, Config, DACConfig, DocsConfig, EnvironmentSchema, HistoryApiConfig, LoggerConfig, NewRelicConfig, PackagedDependencyJsonModel } from './config.types';
 
 import { MongoConfig } from '@alien-worlds/aw-storage-mongodb';
 import { readFileSync } from 'fs';
@@ -36,6 +26,7 @@ export default class ApiConfig implements Config {
      * Validate that all necessary config are available as environment variables.
      * Additionally, convert from string to defined data types in EnvironmentSchema
      */
+
     const environment = envalid.cleanEnv(process.env, EnvironmentSchema);
     console.info('required configuration found in environment...');
 
@@ -51,6 +42,7 @@ export default class ApiConfig implements Config {
 
     const host = environment.HOST;
     const port = Number(environment.PORT);
+
     const antelope: AntelopeConfig = {
       chainId: environment.ANTELOPE_CHAIN_ID,
       endpoint: environment.ANTELOPE_ENDPOINT,
@@ -137,7 +129,7 @@ export default class ApiConfig implements Config {
     public readonly newRelic: NewRelicConfig,
     public readonly historyApi: HistoryApiConfig
   ) {
-    const versionRegex = /^(\d+)\.(\d+)\.(\d+)(.*)?$/;
+    const versionRegex = /^(\d+)(?:\.(\d+))?(?:\.(\d+))?(.*)?$/;
     const match = version.match(versionRegex);
 
     if (match) {
