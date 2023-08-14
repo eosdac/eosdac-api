@@ -1,7 +1,7 @@
 export const profileResponse = {
   results: [
     {
-      block_num: '105578904',
+      block_number: '105578904',
       account: 'suzqu.wam',
       profile: {
         description: 'I am squanching in here',
@@ -18,7 +18,7 @@ export const profileResponse = {
 export const multipleProfilesResponse = {
   results: [
     {
-      block_num: '209788070',
+      block_number: '209788070',
       account: 'mgaqy.wam',
       profile: {
         description:
@@ -29,7 +29,7 @@ export const multipleProfilesResponse = {
       },
     },
     {
-      block_num: '105578904',
+      block_number: '105578904',
       account: 'suzqu.wam',
       profile: {
         description: 'I am squanching in here',

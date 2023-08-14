@@ -16,7 +16,7 @@ export class ListProfileFlagsQueryBuilder extends QueryBuilder {
 
     const pipeline: object[] = [
       { $match: { dac_id: dacId, cand: { $in: accounts } } },
-      { $sort: { block_num: -1 } },
+      { $sort: { block_number: -1 } },
       {
         $group: {
           _id: { cand: '$cand' },

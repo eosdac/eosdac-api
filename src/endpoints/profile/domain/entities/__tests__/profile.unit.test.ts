@@ -27,7 +27,7 @@ describe('Profile unit tests', () => {
   it('"toDto" should return a dto based on entity', async () => {
     // const profile = Profile.fromDto(profileDto);
     // expect(profile.toDto()).toEqual({
-    //   block_num: MongoDB.Long.ZERO,
+    //   block_number: MongoDB.Long.ZERO,
     //   action: {
     //     account: 'dao.worlds',
     //     name: 'stprofile',

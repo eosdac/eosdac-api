@@ -28,7 +28,7 @@ const input: CandidatesVotersHistoryInput = new CandidatesVotersHistoryInput(
 const actions: ContractAction[] = [
   // ContractAction.fromDocument(
   //   {
-  //     block_num: MongoDB.Long.ZERO,
+  //     block_number: MongoDB.Long.ZERO,
   //     action: {
   //       authorization: null,
   //       account: 'dao.worlds',
