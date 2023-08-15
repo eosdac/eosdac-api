@@ -22,7 +22,7 @@ export class ProfileController {
 
     @inject(FilterFlaggedProfilesUseCase.Token)
     private filterFlaggedProfilesUseCase: FilterFlaggedProfilesUseCase
-  ) {}
+  ) { }
 
   /**
    *
@@ -57,7 +57,7 @@ export class ProfileController {
       );
 
     if (filterFailure) {
-      return GetProfileOutput.create([], 0, getProfilesFailure);
+      return GetProfileOutput.create([], 0, filterFailure);
     }
 
     return GetProfileOutput.create(

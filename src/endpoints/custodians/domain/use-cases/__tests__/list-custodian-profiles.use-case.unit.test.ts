@@ -11,8 +11,6 @@ import { ListCustodianProfilesUseCase } from '../list-custodian-profiles.use-cas
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
-/*mocks*/
-
 let container: Container;
 let useCase: ListCustodianProfilesUseCase;
 
@@ -32,19 +30,19 @@ const getMembersAgreedTermsUseCase = {
 const dacConfig = new DacMapper().toDac(
   new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
     IndexWorldsCommon.Deltas.Types.DacsRawModel
-  >{
-    // accounts: [{ key: 2, value: 'dao.worlds' }],
-    // sym: {
-    //   symbol: 'EYE',
-    // },
-    // refs: [],
-  })
+    >{
+      // accounts: [{ key: 2, value: 'dao.worlds' }],
+      // sym: {
+      //   symbol: 'EYE',
+      // },
+      // refs: [],
+    })
 );
 
 describe('ListCustodianProfilesUseCase Unit tests', () => {
   beforeAll(() => {
     container = new Container();
-    /*bindings*/
+
     container
       .bind<GetCustodiansUseCase>(GetCustodiansUseCase.Token)
       .toConstantValue(getCustodiansUseCase as any);

@@ -3,8 +3,8 @@ import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
 
-import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { DacAggregateRecord } from '../dac-aggregate-record';
+import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { Pair } from '@alien-worlds/aw-antelope';
 
 const dacDir = new DacMapper().toDac(
@@ -22,7 +22,39 @@ const dacTreasury =
 
 const dacGlobals =
   new DaoWorldsCommon.Deltas.Mappers.DacglobalsRawMapper().toEntity({
-    data: [],
+    data: [
+      {
+        key: 'auth_threshold_high',
+        value: ['uint8', 3],
+      },
+      {
+        key: 'lastclaimbudgettime',
+        value: ['time_point_sec', '2023-08-10T10:23:43'],
+      },
+      {
+        key: 'lastperiodtime',
+        value: ['time_point_sec', '2023-08-09T03:00:15'],
+      },
+      {
+        key: 'lockupasset',
+        value: [
+          'extended_asset',
+          { quantity: '5000.0000 EYE', contract: 'token.worlds' }
+        ],
+      },
+      {
+        key: 'maxvotes',
+        value: ['uint8', 2],
+      },
+      {
+        key: 'numelected',
+        value: ['uint8', 5],
+      },
+      {
+        key: 'periodlength',
+        value: ['uint32', 604800],
+      }
+    ] as Pair<string, any>[],
   });
 
 const dacStats = new TokenWorldsCommon.Deltas.Mappers.StatRawMapper().toEntity({
@@ -32,8 +64,8 @@ const dacStats = new TokenWorldsCommon.Deltas.Mappers.StatRawMapper().toEntity({
   transfer_locked: false,
 });
 
-describe('GetDacOutput Unit tests', () => {
-  it('"GetDacOutput.create" should create instance', async () => {
+describe('DacAggregateRecord Unit tests', () => {
+  it('"DacAggregateRecord.create" should create instance', async () => {
     const output = DacAggregateRecord.create(
       dacDir,
       dacTreasury,
@@ -44,7 +76,7 @@ describe('GetDacOutput Unit tests', () => {
     expect(output).toBeInstanceOf(DacAggregateRecord);
   });
 
-  it('GetDacOutput.toJson should return json object', async () => {
+  it('DacAggregateRecord.toJSON should return json object', async () => {
     const output = DacAggregateRecord.create(
       dacDir,
       dacTreasury,

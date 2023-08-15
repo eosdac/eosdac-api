@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
 import { Container } from '@alien-worlds/aw-core';
-import { HealthController } from '../health.controller';
 import { GetHealthCheckStatusUseCase } from '../use-cases/get-health-check-status.use-case';
+import { HealthController } from '../health.controller';
 
 const healthUseCase = {
   execute: jest.fn(() => ({})),
@@ -14,7 +14,7 @@ let controller: HealthController;
 describe('Health Controller Unit tests', () => {
   beforeAll(() => {
     container = new Container();
-    /*bindings*/
+
     container
       .bind<GetHealthCheckStatusUseCase>(GetHealthCheckStatusUseCase.Token)
       .toConstantValue(healthUseCase as any);
