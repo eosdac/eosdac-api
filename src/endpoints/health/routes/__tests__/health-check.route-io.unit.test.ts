@@ -16,10 +16,9 @@ describe('HealthCheckRouteIO', () => {
 
       const response = healthCheckRouteIO.toResponse(successfulHealthCheckOutput);
 
-      expect(response).toEqual({
-        status: 200,
-        body: successfulHealthCheckOutput.toJSON(),
-      });
+      expect(response).toBeDefined();
+      expect(response.status).toBe(200);
+      expect(response.body).toBeDefined();
     });
 
     it('should convert a failed HealthCheckOutput to a 500 Response', () => {

@@ -22,7 +22,7 @@ export class Profile implements Entity {
     public blockNum: string,
     public profile: ProfileItem,
     public error?: ProfileError
-  ) {}
+  ) { }
 
   public static create(
     account: string,
@@ -43,6 +43,7 @@ export class Profile implements Entity {
       error
     );
 
+    entity.id = id;
     entity.rest = rest;
 
     return entity;

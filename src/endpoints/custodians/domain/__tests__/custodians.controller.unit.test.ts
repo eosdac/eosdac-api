@@ -42,13 +42,13 @@ const input: GetCustodiansInput = {
 const dac = new DacMapper().toDac(
   new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
     IndexWorldsCommon.Deltas.Types.DacsRawModel
-  >{
-    accounts: [{ key: '2', value: 'dao.worlds' }],
-    symbol: {
-      sym: 'EYE',
-    },
-    refs: [],
-  })
+    >{
+      accounts: [{ key: '2', value: 'dao.worlds' }],
+      symbol: {
+        sym: 'EYE',
+      },
+      refs: [],
+    })
 );
 jest
   .spyOn(dacUtils, 'loadDacConfig')
@@ -57,7 +57,7 @@ jest
 describe('Custodians Controller Unit tests', () => {
   beforeAll(() => {
     container = new Container();
-    /*bindings*/
+
     container
       .bind<IndexWorldsCommon.Services.IndexWorldsContractService>(
         IndexWorldsCommon.Services.IndexWorldsContractService.Token

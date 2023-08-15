@@ -1,14 +1,15 @@
-import { AssetRawMapper, Pair } from '@alien-worlds/aw-antelope';
 import * as AlienWorldsCommon from '@alien-worlds/aw-contract-alien-worlds';
 import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import * as TokenWorldsCommon from '@alien-worlds/aw-contract-token-worlds';
+
+import { AssetRawMapper, Pair } from '@alien-worlds/aw-antelope';
 import {
-  removeUndefinedProperties,
   UnknownObject,
+  removeUndefinedProperties,
 } from '@alien-worlds/aw-core';
-import { camelCase } from 'change-case';
 
 import { Dac } from '../entities/dacs';
+import { camelCase } from 'change-case';
 
 /**
  * The `DacAggregateRecord` class is responsible for creating an aggregated record that contains information about a DAC
@@ -38,7 +39,7 @@ export class DacAggregateRecord {
     public readonly dacTreasury: AlienWorldsCommon.Deltas.Entities.Accounts,
     public readonly dacGlobals: DaoWorldsCommon.Deltas.Entities.Dacglobals,
     public readonly dacStats: TokenWorldsCommon.Deltas.Entities.Stat
-  ) {}
+  ) { }
 
   /**
    * Converts the `DacAggregateRecord` into a JSON representation.
@@ -96,6 +97,8 @@ export class DacAggregateRecord {
 
     if (dacGlobals) {
       result.electionGlobals = {};
+
+      console.dir(dacGlobals, { depth: null });
 
       dacGlobals.data.forEach(eg => {
         const { second, value } = eg;

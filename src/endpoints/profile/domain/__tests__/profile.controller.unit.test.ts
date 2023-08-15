@@ -3,7 +3,7 @@ import * as dacUtils from '@common/utils/dac.utils';
 import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 import * as IndexWorldsCommon from '@alien-worlds/aw-contract-index-worlds';
 
-import { Container, ContractAction, Failure } from '@alien-worlds/aw-core';
+import { Container, ContractAction } from '@alien-worlds/aw-core';
 import { DacMapper } from '@endpoints/dacs/data/mappers/dacs.mapper';
 import { GetProfilesUseCase } from '../use-cases/get-profiles.use-case';
 import { ProfileController } from '../profile.controller';
@@ -12,6 +12,8 @@ import { Result } from '@alien-worlds/aw-core';
 import { FilterFlaggedProfilesUseCase } from '../use-cases/filter-flagged-profiles.use-case';
 import { GetProfileFlagsUseCase } from '../use-cases/get-profile-flags.use-case';
 import { FlagRepository } from '../repositories/flag.repository';
+import { ActionToProfileMapper } from '@endpoints/profile/data/mappers/action-to-profile.mapper';
+import { Profile } from '../entities/profile';
 
 let container: Container;
 let controller: ProfileController;
@@ -20,16 +22,20 @@ const getProfilesUseCase = {
   execute: jest.fn(),
 };
 
+const filterFlaggedProfilesUseCase = {
+  execute: jest.fn(),
+};
+
 const dac = new DacMapper().toDac(
   new IndexWorldsCommon.Deltas.Mappers.DacsRawMapper().toEntity(<
     IndexWorldsCommon.Deltas.Types.DacsRawModel
-  >{
-    accounts: [{ key: '2', value: 'dao.worlds' }],
-    symbol: {
-      sym: 'EYE',
-    },
-    refs: [],
-  })
+    >{
+      accounts: [{ key: '2', value: 'dao.worlds' }],
+      symbol: {
+        sym: 'EYE',
+      },
+      refs: [],
+    })
 );
 
 jest.mock('@config', () => {
@@ -51,6 +57,7 @@ jest
 const indexWorldsContractService = {
   fetchDacs: jest.fn(),
 };
+
 const input: GetProfileInput = {
   accounts: ['awtesteroo12', 'awtesteroo13'],
   dacId: 'testa',
@@ -64,37 +71,41 @@ const actions: ContractAction<
   DaoWorldsCommon.Actions.Entities.Stprofile,
   DaoWorldsCommon.Actions.Types.StprofileMongoModel
 >[] = [
-  new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
-    'mgaqy.wam',
-    new Date('2021-02-25T04:18:56.000Z'),
-    209788070n,
-    'dao.worlds',
-    'stprofile',
-    65909692153n,
-    1980617n,
-    '591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666C',
-    DaoWorldsCommon.Actions.Entities.Stprofile.create(
-      'awtesteroo12',
-      '{"givenName":"awtesteroo12 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
-      'testa'
-    )
-  ),
-  new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
-    'mgaqy.wam',
-    new Date('2021-02-25T04:18:56.000Z'),
-    209788071n,
-    'dao.worlds',
-    'stprofile',
-    65909692154n,
-    1980618n,
-    '591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666B',
-    DaoWorldsCommon.Actions.Entities.Stprofile.create(
-      'awtesteroo13',
-      '{"givenName":"awtesteroo13 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
-      'testa'
-    )
-  ),
-];
+    new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
+      'mgaqy.wam',
+      new Date('2021-02-25T04:18:56.000Z'),
+      209788070n,
+      'dao.worlds',
+      'stprofile',
+      65909692153n,
+      1980617n,
+      '591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666C',
+      DaoWorldsCommon.Actions.Entities.Stprofile.create(
+        'awtesteroo12',
+        '{"givenName":"awtesteroo12 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
+        'testa'
+      )
+    ),
+    new ContractAction<DaoWorldsCommon.Actions.Entities.Stprofile>(
+      'mgaqy.wam',
+      new Date('2021-02-25T04:18:56.000Z'),
+      209788071n,
+      'dao.worlds',
+      'stprofile',
+      65909692154n,
+      1980618n,
+      '591B113058F8AD3FBFF99C7F2BA92A921919F634A73CBA4D8059FAE8D2F5666B',
+      DaoWorldsCommon.Actions.Entities.Stprofile.create(
+        'awtesteroo13',
+        '{"givenName":"awtesteroo13 name","familyName":"awtesteroo12Family Name","image":"https://support.hubstaff.com/wp-content/uploads/2019/08/good-pic.png","description":"Here\'s a description of this amazing candidate with the name: awtesteroo12.\\n And here\'s another line about something."}',
+        'testa'
+      )
+    ),
+  ];
+
+const profiles = actions.map(action =>
+  ActionToProfileMapper.toEntity(action)
+)
 
 const flagRepository = {
   aggregate: jest.fn(() => Result.withContent([])),
@@ -109,7 +120,7 @@ describe('Profile Controller Unit tests', () => {
       .toConstantValue(flagRepository);
     container
       .bind<FilterFlaggedProfilesUseCase>(FilterFlaggedProfilesUseCase.Token)
-      .to(FilterFlaggedProfilesUseCase);
+      .toConstantValue(filterFlaggedProfilesUseCase as any);
     container
       .bind<GetProfileFlagsUseCase>(GetProfileFlagsUseCase.Token)
       .to(GetProfileFlagsUseCase);
@@ -143,7 +154,8 @@ describe('Profile Controller Unit tests', () => {
   });
 
   it('should return profile', async () => {
-    getProfilesUseCase.execute.mockResolvedValue(Result.withContent(actions));
+    getProfilesUseCase.execute.mockResolvedValue(Result.withContent(profiles));
+    filterFlaggedProfilesUseCase.execute.mockResolvedValue(Result.withContent(profiles));
 
     const output = await controller.getProfile(input);
 
@@ -155,7 +167,14 @@ describe('Profile Controller Unit tests', () => {
   });
 
   it('should return redacted profile for flagged candidate', async () => {
-    getProfilesUseCase.execute.mockResolvedValue(Result.withContent(actions));
+    getProfilesUseCase.execute.mockResolvedValue(Result.withContent(profiles));
+    filterFlaggedProfilesUseCase.execute.mockResolvedValue(Result.withContent([
+      profiles[0],
+      Profile.createErrorProfile(profiles[1].account, {
+        name: 'Redacted Candidate',
+        body: `Candidate "${profiles[1].account}" profile has been flagged for supplying inappropriate content.`,
+      })
+    ]));
 
     const output = await controller.getProfile(input);
 
@@ -163,6 +182,15 @@ describe('Profile Controller Unit tests', () => {
     expect(output.profiles[1].account).toBe(input.accounts[1]);
     expect(output.profiles[1].error).toBeDefined();
     expect(output.profiles[1].error.name).toBe('Redacted Candidate');
+  });
+
+  it('should return error when filterFlaggedProfilesUseCase fails', async () => {
+    getProfilesUseCase.execute.mockResolvedValue(Result.withContent(profiles));
+    filterFlaggedProfilesUseCase.execute.mockResolvedValue(Result.withFailure('error'));
+
+    const output = await controller.getProfile(input);
+
+    expect(output.failure).toBeTruthy();
   });
 
   it('should return error if indexWorldsContractService fails', async () => {
@@ -176,9 +204,7 @@ describe('Profile Controller Unit tests', () => {
   });
 
   it('should return error if getProfilesUseCase fails', async () => {
-    getProfilesUseCase.execute.mockResolvedValue(
-      Result.withFailure(Failure.fromError('error'))
-    );
+    getProfilesUseCase.execute.mockResolvedValue(Result.withFailure('error'));
 
     const output = await controller.getProfile(input);
 

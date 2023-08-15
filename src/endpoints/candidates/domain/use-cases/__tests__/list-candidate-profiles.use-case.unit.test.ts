@@ -33,19 +33,19 @@ const getMembersAgreedTermsUseCase = {
 const dacConfig = new DacMapper().toDac(
   new IndexWorldsContract.Deltas.Mappers.DacsRawMapper().toEntity(<
     IndexWorldsContract.Deltas.Types.DacsRawModel
-  >{
-    accounts: [{ key: '2', value: 'dao.worlds' }] as Pair[],
-    sym: {
-      symbol: 'EYE',
-    },
-    refs: [],
-  })
+    >{
+      accounts: [{ key: '2', value: 'dao.worlds' }] as Pair[],
+      sym: {
+        symbol: 'EYE',
+      },
+      refs: [],
+    })
 );
 
 describe('ListCandidateProfilesUseCase Unit tests', () => {
   beforeAll(() => {
     container = new Container();
-    /*bindings*/
+
     container
       .bind<GetCandidatesUseCase>(GetCandidatesUseCase.Token)
       .toConstantValue(getCandidatesUseCase as any);
