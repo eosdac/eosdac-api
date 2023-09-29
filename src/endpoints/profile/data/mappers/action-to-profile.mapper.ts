@@ -1,6 +1,7 @@
 import * as DaoWorldsCommon from '@alien-worlds/aw-contract-dao-worlds';
 
-import { ContractAction } from '@alien-worlds/aw-core';
+import { ContractAction, log } from '@alien-worlds/aw-core';
+
 import { Profile } from '@endpoints/profile/domain/entities/profile';
 import { ProfileItem } from '@endpoints/profile/domain/entities/profile-item';
 import { ProfileItemDocument } from '../dtos/profile.dto';
@@ -23,9 +24,14 @@ export class ActionToProfileMapper {
 
     const { profile, cand } = data;
 
-    let profileJson;
+    let profileJson = null;
     if (typeof profile === 'string') {
-      profileJson = JSON.parse(profile);
+      try {
+        profileJson = JSON.parse(profile);
+      }
+      catch (error) {
+        log(`Error trying to parse profile for candidate "${data.cand}"`);
+      }
     }
 
     return Profile.create(
@@ -33,7 +39,7 @@ export class ActionToProfileMapper {
       account,
       name,
       blockNumber.toString(),
-      ProfileItemMapper.toEntity(profileJson),
+      profileJson ? ProfileItemMapper.toEntity(profileJson) : null,
       null,
       null,
       null

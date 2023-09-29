@@ -1,15 +1,9 @@
 import { Actions } from '@alien-worlds/aw-contract-dao-worlds';
-import {
-  ContractAction,
-  inject,
-  injectable,
-  Result,
-  UseCase,
-} from '@alien-worlds/aw-core';
-
-import { ListProfileActionsQueryBuilder } from '../models/list-profile-actions.query-builder';
-import { Profile } from '../entities/profile';
+import { ContractAction, inject, injectable, Result, UseCase } from '@alien-worlds/aw-core';
 import { ActionToProfileMapper } from '@endpoints/profile/data/mappers/action-to-profile.mapper';
+
+import { Profile } from '../entities/profile';
+import { ListProfileActionsQueryBuilder } from '../models/list-profile-actions.query-builder';
 
 /**
  * @class
@@ -21,7 +15,7 @@ export class GetProfilesUseCase implements UseCase<Profile[]> {
   constructor(
     @inject(Actions.DaoWorldsActionRepository.Token)
     private daoWorldsActionRepository: Actions.DaoWorldsActionRepository
-  ) {}
+  ) { }
 
   /**
    * @async
@@ -50,9 +44,7 @@ export class GetProfilesUseCase implements UseCase<Profile[]> {
       return Result.withFailure(failure);
     }
 
-    const profiles = actions.map(action =>
-      ActionToProfileMapper.toEntity(action)
-    );
+    const profiles = actions.map(action => ActionToProfileMapper.toEntity(action));
 
     return Result.withContent(profiles);
   }
